@@ -1,6 +1,6 @@
 <app-loading-page *ngIf="isLoadingPage"></app-loading-page>
 
-<div class="grid px-4 py-2" [style.background]="'#FAF9FB'">
+<!-- <div class="grid px-4 py-2" [style.background]="'#FAF9FB'">
   <div class="flex b-w-100 mb-2">
     <div class="col-9">
       <div class="flex justify-content-between mb-2">
@@ -147,4 +147,61 @@
       </div>
     </div>
   </div>
+</div> -->
+
+
+<!-- <ul class="layout-topbar-actions">
+  <li #profile class="topbar-item profile-item">
+      <a href="#">
+      <span class="profile-image-wrapper">
+          <img style="border-radius: 50%;" alt="mirage-layout" />
+      </span>
+      <span class="profile-info-wrapper">
+          <h3></h3>
+      </span>
+      </a>
+      <ul class="profile-item-submenu fadeInDown">
+          <div class="b-new-div-account-display">
+               <div class="b-avt-detail">
+                   <img class="b-avt-detail">
+               </div>
+               <div class="b-name-detail">
+                   <p class="b-display-name"></p>
+                   <p class="b-email-detail"></p>
+               </div>
+               <div class="b-manage-account">
+                   <p class="b-manage-account-text">Quản lý tài khoản của bạn</p>
+               </div>
+               <div class="b-logout-detail">
+                  <button>Đăng xuất</button>
+               </div>
+          </div>
+       </ul>
+
+  </li>
+</ul> -->
+
+
+<!-- <p-menubar>
+  <ng-template pTemplate="start">
+      <img src="https://primefaces.org/cdn/primeng/images/primeng.svg" height="40" class="mr-2" />
+  </ng-template>
+  <ng-template>
+    <h3>Test</h3>
+</ng-template>
+  <ng-template pTemplate="end">
+      <input type="text" pInputText placeholder="Search" class="w-full" />
+  </ng-template>
+</p-menubar> -->
+
+<div class="">
+  <p-menubar [model]="items" class="">
+    <ng-template pTemplate="start">
+      <img src="../../assets/layout/images/KHOME.png" height="100" class="ml-4"/>
+    </ng-template>
+    <ng-template pTemplate="end">
+      <!-- <input type="text" pInputText placeholder="Search" class="w-full" class="mr-4"/> -->
+      <p-button label="Đăng nhập" styleClass="p-button-outlined" class="ml-4"></p-button>
+    </ng-template>
+  </p-menubar>
 </div>
