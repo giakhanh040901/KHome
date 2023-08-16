@@ -1,0 +1,139 @@
+<div *ngIf="isGranted([PermissionCompanyShareConst.CompanyShare_BTKH_TTCT_FileChinhSach_DanhSach])" class="grid ml-0 mr-0 mt-0">
+    <div class="col-12">
+        <div class="card p-0">
+            <p-toast></p-toast>
+            <p-confirmDialog [style]="{width: 'auto'}" [baseZIndex]="10000"></p-confirmDialog>
+            <p-table 
+                #userTable 
+                selectionMode="multiple" responsiveLayout="scroll" scrollHeight="{{(screenHeight*0.56) + 'px'}}"
+                dataKey="policyFileId" styleClass="custom-table" [value]="rows" [rowHover]="true"
+                [paginator]="false" [scrollable]="true" editMode="row">
+                <ng-template pTemplate="caption">
+                    <div class="flex justify-content-between flex-column sm:flex-row">
+                        <div class="flex justify-content-between flex-column sm:flex-row"></div>
+                        <div class="">
+                            <button 
+                                *ngIf="isGranted([PermissionCompanyShareConst.CompanyShare_BTKH_TTCT_FileChinhSach_UploadFileChinhSach])"
+                                pButton pRipple label="Upload file chính sách" icon="pi pi-cloud-upload"
+                                class="p-button-success mr-2" (click)="create()">
+                            </button>
+                        </div>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="max-width:5rem; min-width: 5rem; border-right: 1px solid #dee2e6 !important;" pFrozenColumn
+                            alignFrozen="left"> #ID </th>
+                    
+                        <th style="min-width:10rem;"> Tên chính sách </th>
+                    
+                        <th style="max-width: 10rem; min-width:10rem;" pFrozenColumn alignFrozen="right"></th>
+                    </tr>
+                </ng-template>
+                
+                <ng-template pTemplate="body" let-row let-rowIndex="rowIndex" let-columns="columns">
+                    <tr>
+                        <td style="max-width:5rem; min-width: 5rem; border-right: 1px solid #dee2e6 !important;" pFrozenColumn
+                            alignFrozen="left"> {{ row?.policyFileId }} </td>
+                        <td style="min-width:10rem; justify-content: space-between;">{{row?.name}} <span style="display:flex;">
+                            <i
+                            *ngIf="isGranted([PermissionCompanyShareConst.CompanyShare_BTKH_TTCT_FileChinhSach_Download])" class="pi pi-download" 
+                            (click)="downloadFile(row?.url)" style="cursor:pointer; margin-left: 0.5rem;">
+                            </i>
+                            <i 
+                            *ngIf="isGranted([PermissionCompanyShareConst.CompanyShare_BTKH_TTCT_FileChinhSach_XemFile])" class="pi pi-eye b-icon" 
+                            style="margin-left: 0.5rem;" (click)="viewFile(row.url)">
+                            </i></span>
+                        </td>
+                    
+                        <td style="max-width: 10rem; min-width:10rem;" pFrozenColumn alignFrozen="right">
+                            <div class="flex">
+                                <!-- <p-splitButton class="button-actions" (onDropdownClick)="clickDropdown(row)"
+                                    [model]="actionsDisplay" appendTo="body"
+                                    *ngIf="row.status != StatusCompanyShareSecondaryFileConst.RESPONSE_TRUE">
+                                </p-splitButton> -->
+                                <i class="pi pi-ellipsis-h" style="cursor:pointer;" (click)="menu.toggle($event)" *ngIf="row.status != StatusCompanyShareSecondaryFileConst.RESPONSE_TRUE"></i>
+                                <p-menu 
+                                    #menu [popup]="true"class="button-actions"
+                                    [model]="listAction[rowIndex]" appendTo="body"
+                                    >
+                                </p-menu>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+            <p-paginator styleClass="at-paginator-sm" 
+                [totalRecords]="page.totalItems" [rows]="page.pageSize" (onPageChange)="setPage($event)"></p-paginator>
+        </div>
+        <!-- THEM & SUA-->
+        <p-dialog [(visible)]="modalDialog" [style]="{width: '600px'}" [header]="headerTitle" [modal]="true"
+            class="p-fluid">
+            <ng-template pTemplate="content">
+                <div style="margin-top: 10px" class="grid formgrid">
+                    <div class="field col-12">
+                        <span class="p-float-label">
+                            <input type="text" id="name" name="name" maxlength="100" pInputText [(ngModel)]="policyFile.name"
+                                [ngClass]="{'ng-invalid ng-dirty' : submitted && !policyFile.name}" />
+                            <label for="name">Tên chính sách <span class="required-field"> * </span> </label>
+                        </span>
+                    </div>
+                    <div class="col-12 md:col-6">
+                        <div class="field">
+                            <label for="effectiveDate">Ngày có hiệu lực <span class="required-field"> * </span></label>
+                            <p-calendar 
+                                inputId="effectiveDate" dateFormat="dd/mm/yy" locale="vi" appendTo="body" utc="true" placeholder="dd/mm/yyyy"
+                                [(ngModel)]="policyFile.effectiveDate"
+                                [showIcon]="true">
+                            </p-calendar>
+                        </div>
+                    </div>
+                    <div class="col-12 md:col-6">
+                        <div class="field">
+                            <label for="expirationDate"> Ngày hết hiệu lực <span class="required-field"> * </span></label>
+                            <p-calendar 
+                                inputId="expirationDate" dateFormat="dd/mm/yy" appendTo="body" placeholder="dd/mm/yyyy" 
+                                [(ngModel)]="policyFile.expirationDate"
+                                [minDate]="policyFile.effectiveDate" 
+                                [showIcon]="true">
+                            </p-calendar>
+                        </div>
+                    </div>
+                    <div class="field col-12">
+                        <p-fileUpload 
+                            name="demo[]" customUpload="true" class="wrapper-files-upload" accept=".pdf,.doc"
+                            (onSelect)="myUploader($event)" [showUploadButton]="false" [showCancelButton]="false"
+                            chooseLabel="Chọn file" maxFileSize="100000000">
+                        </p-fileUpload>
+                    </div>
+                    <div class="field col-12" style="display: none;">
+                            <input placeholder="Đường dẫn file" type="text" id="url" name="url" disabled pInputText [value]="policyFile.url || ''" required autofocus />
+                            <!-- <label for="url">Đường dẫn file</label> -->
+                    </div>
+                </div>
+            </ng-template>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Hủy" icon="pi pi-times" class="p-button-text"
+                    (click)="hideDialog()"></button>
+                <button pButton pRipple label="Lưu" icon="pi pi-check" class="p-button-text"
+                    [disabled]="!validForm() || submitted" (click)="save()"></button>
+            </ng-template>
+        </p-dialog>
+        <!-- Xem file pdf -->
+        <app-form-view-pdf-file (onClose)="hideDialog()" [modalDialogPDF]="modalDialogPDF" [urlfilePDF]="urlfilePDF"> </app-form-view-pdf-file>
+
+        <!-- XOA -->
+        <!-- <p-dialog [(visible)]="deleteItemDialog" header="Xóa tài khoản" [modal]="true" [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                <span *ngIf="policyFile">Bạn có chắc chắn xóa mẫu hợp đồng {{ policyFile.name }} ?</span>
+            </div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"
+                    (click)="deleteItemDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes"
+                    (click)="confirmDelete()"></button>
+            </ng-template>
+        </p-dialog> -->
+    </div>
+</div>

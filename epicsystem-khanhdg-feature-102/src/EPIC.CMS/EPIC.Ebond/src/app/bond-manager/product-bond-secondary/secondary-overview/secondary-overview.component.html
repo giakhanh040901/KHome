@@ -1,0 +1,240 @@
+<!-- <p-toast></p-toast> -->
+<p-confirmDialog [style]="{width: 'auto'}" [baseZIndex]="10000"></p-confirmDialog>
+<form [formGroup]="postForm">
+    <div class="p-fluid p-formgrid grid b-header">
+        <div class="card col-12 md:col-12 b-actions">
+            <div class="flex justify-content-between flex-wrap card-container purple-container">
+                <h4 class="title-info mb-0 ml-0"> </h4>
+                <div>
+                    <ng-container>
+                        <p-button 
+                            *ngIf="isGranted([PermissionBondConst.Bond_BTKH_TongQuan_CapNhat])"
+                            styleClass="p-button-sm custom-button" [label]="isEdit ? 'Lưu lại' : 'Chỉnh sửa'"
+                            icon="pi {{ isEdit ? 'pi-save' : 'pi-pencil' }}" (click)="changeEdit()">
+                        </p-button>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="p-fluid p-formgrid grid">
+            <div class="col-12 md:col-12">
+                <h5 htmlFor="mainImg">Ảnh nổi bật</h5>
+                <div class="grid">
+                    <div class="col-6">
+                        <div class="img-zone mt-1">
+                            <img class="col-12 "  *ngIf="overView.overviewImageUrl;
+                            " src="{{baseUrl}}/{{ overView.overviewImageUrl }}"  object-fit: cover/>
+                        </div>
+                    </div>
+                    <div class="col-6 mt-2">
+                        <button 
+                            *ngIf="isGranted([PermissionBondConst.Bond_BTKH_TongQuan_ChonAnh])"
+                            [disabled]="!isEdit" (click)="selectImg()" pButton type="button" label="Chọn ảnh"
+                            class="p-button-primary mb-1">
+                        </button>
+                        <p-message *ngIf="!overView.overviewImageUrl" severity="error" text="Chưa chọn ảnh đại diện hoặc chưa tải ảnh">
+                        </p-message>
+                        <p-message *ngIf="overView.overviewImageUrl" severity="success" text="Đã chọn ảnh"></p-message>
+    
+                    </div> 
+                </div>
+            </div> 
+            <div class="field col-12"> 
+                <h5 htmlFor="content">Mô tả</h5>
+                <p-selectButton  [disabled]="!isEdit" formControlName="contentType"  optionValue="value" class="mb-2 mt-2" [options]="htmlMarkdownOptions" optionLabel="name"></p-selectButton>
+            </div>
+            <div class="field {{ postForm.value.contentType == 'MARKDOWN' ? 'col-6' : 'col-12' }}">
+                <label htmlFor="overviewContent">Nội dung</label>
+                <div *ngIf="postForm.value.contentType == 'MARKDOWN'">
+                    <textarea #myTextArea (click)="getCaretPos(myTextArea)" (keyup)="getCaretPos(myTextArea)" pInputTextarea [rows]="11" formControlName="overviewContent" id="emailContent"
+                        class="custom-input"></textarea>
+                    <div style="width: 150px;">
+                        <p-button [disabled]="!isEdit"  (click)="insertImage()" class="p-button-outlined p-button-info" label="Chèn ảnh"
+                            icon="pi pi-image" iconPos="left"></p-button>
+                    </div>
+                </div>
+
+                <div *ngIf="postForm.value.contentType == 'HTML'">
+                    <angular-editor formControlName="overviewContent" id="content" class="custom-input"
+                        [placeholder]="'Nhập nội dung'" [config]="{height: '15rem', editable: isEdit, sanitize: false }">
+                    </angular-editor>
+                </div>
+            </div>
+            <div *ngIf="postForm.value.contentType=='MARKDOWN'"  class=" field col-6 md:col-6 ">
+                <label htmlFor=" overviewContent">Nội dung xem trước</label>
+                <markdown class="border-box" [data]="postForm.value.overviewContent">
+                </markdown>
+            </div>
+        </div>
+    </div>
+    </form>
+
+    <div style="padding-bottom: 10rem;" class="card">
+            <!-- Tổ chức liên quan -->
+            <p-table 
+                *ngIf="isGranted([PermissionBondConst.Bond_BTKH_TongQuan_ThemToChuc])"
+                #userTable [value]="overView.bondSecondaryOverviewOrgs"
+                selectionMode="multiple" responsiveLayout="scroll" dataKey="id"
+                styleClass="p-datatable-gridlines custom-table" [rowHover]="true"
+                    [scrollable]="true">
+                <ng-template pTemplate="caption">
+                    <div class="flex justify-content-between flex-column sm:flex-row">
+                        <div class="flex justify-content-between flex-column sm:flex-row">
+                            <h5>Tổ chức liên quan</h5>
+                        </div>
+                        <div class="">
+                            <button 
+                                *ngIf="isGranted([PermissionBondConst.Bond_BTKH_TongQuan_DanhSach_ToChuc])"
+                                pButton pRipple label="Thêm tổ chức phát hành" icon="pi pi-plus-circle"
+                                class="p-button-success mr-2" [disabled]="!isEdit" (click)="createOrg()"></button>
+                        </div>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="max-width:3rem; min-width:3rem;"> # </th>
+                        <th style="min-width:20rem;"> Tên tổ chức </th>
+                        <th style="min-width:20rem; max-width:20rem;"> Mã tổ chức </th>
+                        <th style="min-width:8rem; max-width:8rem"></th>
+                        <th style="min-width:8rem; max-width:8rem"></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-row let-rowIndex="rowIndex" let-columns="columns">
+                    <tr>
+                        <td style="max-width:3rem; min-width:3rem;"></td>
+                        <td style="min-width:20rem;"> {{ row?.name }}</td>
+                        <td style="min-width:20rem; max-width:20rem;"> {{ row?.orgCode }}</td>
+                        <td style="text-align:center;min-width:8rem; max-width:8rem">
+                            <button pButton pRipple type="button" icon="pi pi-pencil" [disabled]="!isEdit" (click)="editOrg(row)" class="p-button-rounded p-button-text"></button>
+                        </td>
+                        <td style="text-align:center;min-width:8rem; max-width:8rem">
+                            <button pButton pRipple type="button" [disabled]="!isEdit" (click)="deleteOrg(row)" icon="pi pi-trash"
+                                class="p-button-rounded p-button-text"></button>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+
+            <!-- FILE DINH KEM -->
+            <p-table 
+                *ngIf="isGranted([PermissionBondConst.Bond_BTKH_TongQuan_UploadFile])"
+                #userTable [value]="overView.bondSecondaryOverviewFiles"
+                selectionMode="multiple" responsiveLayout="scroll" dataKey="id"
+                styleClass="p-datatable-gridlines custom-table" [rowHover]="true"
+                    [scrollable]="true" editMode="row">
+                <ng-template pTemplate="caption">
+                    <div style="margin-top: 100px" class="flex justify-content-between flex-column sm:flex-row">
+                        <div class="flex justify-content-between flex-column sm:flex-row">
+                            <h5>File đính kèm</h5>
+                        </div>
+                        <div class="">
+                            <button 
+                                *ngIf="isGranted([PermissionBondConst.Bond_BTKH_TongQuan_DanhSach_File])"
+                                pButton pRipple label="Upload file" icon="pi pi-plus-circle"
+                                class="p-button-success mr-2" [disabled]="!isEdit" (click)="createFile()"></button>
+                        </div>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="max-width:3rem; min-width:3rem;"> # </th>
+                        <th style="width:100%"> Tiêu đề </th>
+                        <th style="min-width:8rem; max-width:8rem"></th>
+                        <th style="min-width:8rem; max-width:8rem"></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-editing="editing" let-row let-rowIndex="rowIndex" let-columns="columns">
+                    <tr [pEditableRow]="row">
+                        <td style="max-width:3rem; min-width:3rem;">
+                            <button pButton pRipple type="button" (click)="downloadFile(row)" icon="pi pi-download" 
+                                class="p-button-rounded p-button-text"> </button>
+                        </td>
+                        <td style="min-width:20rem;"> {{ row?.title }}</td>
+                        <td style="text-align:center;min-width:8rem; max-width:8rem">
+                            <button pButton pRipple type="button" icon="pi pi-pencil" [disabled]="!isEdit" (click)="editFile(row)" class="p-button-rounded p-button-text"></button>
+                        </td>
+                        <td style="text-align:center;min-width:8rem; max-width:8rem">
+                            <button pButton pRipple type="button" [disabled]="!isEdit" (click)="deleteFile(row)" icon="pi pi-trash"
+                                class="p-button-rounded p-button-text"></button>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+    </div> 
+
+    <!-- THEM & SUA File-->
+    <p-dialog [(visible)]="modalDialog" [style]="{width: '600px', height: '35%'}" [header]="headerTitle" [modal]="true"
+        class="p-fluid">
+        <ng-template pTemplate="content">
+            <div class="grid formgrid">
+
+                <div style="margin-top: 1rem;" class="field col-8">
+                    <span class="p-float-label">
+                        <input type="text" id="title" name="title" pInputText
+                            [(ngModel)]="projectOverviewFile.title" />
+                        <label for="title">Tiêu đề file <span class="required-field"> * </span> </label>
+                    </span>
+                </div>
+                <div style="margin-top: 1rem;" class="field col-4">
+                    <p-fileUpload name="demo[]" accept=".pdf,.doc" [customUpload]="true" class="custom-file-upload"
+                        chooseIcon="pi pi-cloud-upload" (uploadHandler)="myUploader($event)"
+                        [auto]="true" chooseLabel="Chọn file upload">
+                    </p-fileUpload>
+                </div>
+            </div>
+        </ng-template>
+        <div class="p-dialog-footer" style="width: 100%; position: fixed; left: 0; bottom: 0; margin-top: 5rem;">
+            <button type="reset" pButton pRipple label="Hủy" icon="pi pi-times" class="p-button-text mr-2" (click)="close()"></button>
+            <button type="submit" [disabled]="!validFormFile() || submitted" pButton pRipple label="Lưu lại" icon="pi pi-save" (click)="saveFile()"></button>
+        </div>
+    </p-dialog>
+
+    <!-- THEM & SUA TO CHUC-->
+    <p-dialog [(visible)]="modalDialogOrgs" [style]="{width: '600px'}" [header]="headerTitle" [modal]="true"
+        class="p-fluid">
+        <ng-template pTemplate="content">
+            <div class="grid formgrid">
+
+                <div style="margin-top: 1rem;" class="field col-12">
+                    <span class="p-float-label">
+                        <input type="text" id="name" name="name" pInputText [(ngModel)]="projectOverviewOrg.name"/>
+                        <label for="title">Tên tổ chức <span class="required-field"> * </span> </label>
+                    </span>
+                </div>
+
+                <div style="margin-top: 1rem;" class="field col-12">
+                    <span class="p-float-label">
+                        <input type="text" id="orgCode" name="orgCode" pInputText [(ngModel)]="projectOverviewOrg.orgCode"/>
+                        <label for="title">Mã tổ chức <span class="required-field"> * </span> </label>
+                    </span>
+                </div>
+
+                <div style="margin-top: 1rem;" class="field col-12">
+                    <span class="p-float-label">
+                        <input type="text" id="url" name="url" pInputText [(ngModel)]="projectOverviewOrg.url"/>
+                        <label for="title">Đường dẫn</label>
+                    </span>
+                </div>
+
+                <div class="col-6">
+                    <div class="img-zone mt-1">
+                        <img class="col-12 "  *ngIf="projectOverviewOrg.icon " src="{{baseUrl}}/{{ projectOverviewOrg.icon }}"  object-fit: cover/>
+                    </div>
+                </div>
+                <div class="col-6 mt-2">
+                    <button (click)="selectAvatar()" pButton type="button" label="Chọn Avatar"
+                        class="p-button-primary mb-1">
+                    </button>
+                    <p-message *ngIf="!projectOverviewOrg.icon " severity="error" text="Chưa chọn ảnh đại diện hoặc chưa tải ảnh">
+                    </p-message>
+                    <p-message *ngIf="projectOverviewOrg.icon " severity="success" text="Đã chọn ảnh"></p-message>
+                </div> 
+            </div>
+        </ng-template>
+        <div class="p-dialog-footer" style="width: 100%; position: fixed; left: 0; bottom: 0;">
+            <button type="reset" pButton pRipple label="Hủy" icon="pi pi-times" class="p-button-text mr-2" (click)="close()"></button>
+            <button type="submit" [disabled]="!validForm() || submitted" pButton pRipple label="Lưu lại" icon="pi pi-save" (click)="saveOgr()"></button>
+        </div>
+    </p-dialog>

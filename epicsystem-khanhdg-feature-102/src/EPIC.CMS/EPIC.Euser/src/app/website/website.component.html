@@ -1,0 +1,77 @@
+
+<!-- ConfirmService -->
+<app-loading-page *ngIf="isLoading"></app-loading-page>
+<div class="grid ml-0 mr-0 mt-0 {{ isLoading ? 'b-loading' : ''}}">
+    <div class="col-12">
+        <div class="card b-list">
+            <div class="p-fluid p-formgrid grid b-header">
+                <div class="col-12 md:col-7 b-title">
+                    <h4 style="display:inline"> Danh sách website </h4>
+                </div>
+                <div class="col-12 md:col-5 b-action">
+                    <!-- <button pButton pRipple label="Thêm mới" icon="pi pi-plus" class="p-button-success mr-2" (click)="create()"></button> -->
+                </div>
+            </div>
+            <p-table 
+                #webTable 
+                [value]="websites" 
+                [loading]="isLoading" [rowHover]="true"
+                responsiveLayout="scroll" dataKey="code"
+                [scrollable]="true" scrollHeight="{{ (screenHeight*0.65) + 'px' }}" styleClass="custom-table" >
+                <ng-template pTemplate="caption">
+					<div class="flex justify-content-between flex-column sm:flex-row">
+						<span class="block mt-2 md:mt-0 p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            <input 
+                                pInputText type="text" placeholder="Tìm kiếm..." style="min-width: 300px;"
+                                [(ngModel)]="keyword" (keyup)="changeKeyword($event)"
+                            />
+                        </span>
+					</div>
+                </ng-template>
+                <ng-template pTemplate="header">
+					<tr>
+                        <th style="width: 12rem;"> Tên website </th>
+                        <th style="width: 20rem;"> Đường dẫn </th>
+                        <th style="width: 12rem;"> Mô tả </th>
+                        <!-- <th style="width: 7rem; max-width: 7rem;" pFrozenColumn alignFrozen="right" [frozen]="true" class="b-border-frozen-right"> Trạng thái </th>                 -->
+                        <th style="width: 5rem; max-width: 5rem; justify-content: center;" pFrozenColumn alignFrozen="right" [frozen]="true"></th>
+					</tr>
+				</ng-template>
+                <ng-template pTemplate="body" let-row let-rowIndex="rowIndex">
+                    <tr>
+                        <td style="width: 12rem;"> {{ row.name }} </td>
+                        <td style="width: 20rem;"> {{ row.url }} </td>
+                        <td style="width: 12rem;"> {{ row.description }} </td>
+                        <!-- <td style="width: 7rem; max-width: 7rem;" pFrozenColumn alignFrozen="right" [frozen]="true" class="b-border-frozen-right">  -->
+                            <!-- <p-tag class="wrapper-status-phsc" severity="{{ ProductBondInfoConst.getStatusSeverity(row.status) }}" value="{{ ProductBondInfoConst.getStatusName(row.status) }}"></p-tag>  -->
+                        <!-- </td>              -->
+                        <td style="width: 5rem; max-width: 5rem;" pFrozenColumn alignFrozen="right" [frozen]="true" class="b-table-actions">
+                            <div class="flex">
+                                <!-- (mouseenter) event hover -->
+                                <i class="pi pi-ellipsis-h" (click)="menu.toggle($event)"></i>
+                                <p-menu 
+                                    #menu [popup]="true"class="button-actions"
+                                    [model]="listAction[rowIndex]" appendTo="body">
+                                </p-menu>
+                            </div>
+                        </td>
+                        
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+					<tr>
+						<td colspan="7">Không có dữ liệu.</td>
+					</tr>
+				</ng-template>
+				<ng-template pTemplate="loadingbody">
+					<tr>
+						<td colspan="7"> Đang tải dữ liệu ... </td>
+					</tr>
+				</ng-template>
+            </p-table>
+        </div>
+		<!-- THEM & SUA-->
+    </div>
+</div>
+

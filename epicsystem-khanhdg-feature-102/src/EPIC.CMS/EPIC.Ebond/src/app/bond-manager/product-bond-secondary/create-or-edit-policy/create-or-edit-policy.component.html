@@ -1,0 +1,226 @@
+<p-dialog [(visible)]="modalDialog" [style]="{width: '1000px'}" (onHide)="hideDialog()" [header]="!policy.bondPolicyId ? 'Thêm chính sách' : 'Cập nhật chính sách'" [modal]="true" class="p-fluid" styleClass="b-dialog">
+	<ng-template pTemplate="content">
+		<div class="card">
+			<div class="grid formgrid">
+				<div class="col-12 md:col-3" *ngIf="!policy.bondPolicyId">
+					<div class="field">
+						<label htmlFor="productBondId"> <b> <i> Chọn mẫu chính sách</i>  </b></label>
+						<p-dropdown 
+							appendTo="body" #fubauto 
+							[options]="search.listPolicy" 
+							[(ngModel)]="search.policy" 
+							(onChange)="selectPolicy($event)"
+							class="w-17rem" placeholder="Chọn chính sách"
+							[filter]="true" filterBy="name" optionLabel="name">
+						</p-dropdown>
+					</div>
+				</div>
+				<div class="col-12 md:col-{{ !policy.bondPolicyId ? '3' : '3' }}">
+					<div class="field">
+						<label htmlFor="productBondId">Mã chính sách <span class="required-field"> * </span></label>
+						<input 
+							type="text" id="code" code="code" pInputText 
+							[disabled]="!allowEdit" 
+							[(ngModel)]="policy.code" 
+							maxlength="100"
+							[ngClass]="{'ng-invalid ng-dirty' : submitted && !policy.code}"
+						/>
+					</div>
+				</div>
+				<div class="col-12 md:col-{{ !policy.bondPolicyId ? '6' : '9' }}">
+					<div class="field">
+						<label htmlFor="name">Tên chính sách <span class="required-field"> * </span> </label>
+						<input 
+							type="text" id="name" name="name" pInputText maxlength="256"
+							[disabled]="!allowEdit" 
+							[(ngModel)]="policy.name"
+							[ngClass]="{'ng-invalid ng-dirty' : submitted && !policy.name}"/>
+					</div>
+				</div>
+				<div class="col-12 md:col-3">
+					<div class="field">
+						<label htmlFor="type">Kiểu chính sách <span class="required-field"> * </span></label>
+						<p-dropdown 
+							optionLabel="name" optionValue="code" 
+							[disabled]="!allowEdit" 
+							[options]="ProductPolicyConst.types" 
+							[(ngModel)]="policy.type" 
+							[ngClass]="{'ng-invalid ng-dirty' : submitted && !policy.type}">
+						</p-dropdown>
+					</div>
+				</div>
+				<div class="col-12 md:col-3">
+					<div class="field">
+						<label htmlFor="classify">Phân loại <span class="required-field"> * </span></label>
+						<p-dropdown 
+							optionLabel="name" optionValue="code" 
+							[disabled]="!allowEdit" 
+							[options]="ProductPolicyConst.listClassify" 
+							[(ngModel)]="policy.classify" 
+							[ngClass]="{'ng-invalid ng-dirty' : submitted && !policy.classify}">
+						</p-dropdown>
+					</div>
+				</div>
+				<div class="col-12 md:col-3">
+					<div class="field">
+						<label htmlFor="investorType">Loại nhà đầu tư <span class="required-field"> * </span></label>
+						<p-dropdown 
+							optionLabel="name" optionValue="code" 
+							[disabled]="!allowEdit" 
+							[options]="ProductPolicyConst.investorTypes" [(ngModel)]="policy.investorType" [autoDisplayFirst]="false"  
+							[ngClass]="{'ng-invalid ng-dirty' : submitted && !policy.investorType}">
+						</p-dropdown>
+					</div>
+				</div>
+				<div class="col-12 md:col-3">
+					<div class="field">
+						<label htmlFor="minMoney">Số tiền đầu tư tối thiểu <span class="required-field"> * </span> </label>
+						<p-inputNumber 
+							id="minMoney" locale="de-DE" 
+							[disabled]="!allowEdit" 
+							[(ngModel)]="policy.minMoney" 
+							min="0" mode="decimal"
+							[ngClass]="{'ng-invalid ng-dirty' : submitted && !policy.minMoney}" >
+						</p-inputNumber>
+					</div>
+				</div>
+				<div class="col-12 md:col-3">
+					<div class="field">
+						<label htmlFor="incomeTax">Thuế lợi nhuận (%) <span class="required-field"> * </span> </label>
+						<input
+						type="number"
+						id="incomeTax"
+						pInputText
+						[disabled]="!allowEdit" 
+						[pKeyFilter]="blockText"
+						[(ngModel)]="policy.incomeTax" 
+						[ngClass]="{'ng-invalid ng-dirty' : submitted && !policy.incomeTax}" >
+					</div>
+				</div>
+				<div class="col-12 md:col-3">
+					<div class="field">
+						<label htmlFor="transferTax">Thuế chuyển nhượng (%) <span class="required-field"> * </span> </label>
+							<input  type="number"
+									id="transferTax" 
+									pInputText
+									[disabled]="!allowEdit" 
+									[pKeyFilter]="blockText"
+									[(ngModel)]="policy.transferTax" 
+									[ngClass]="{'ng-invalid ng-dirty' : submitted && !policy.transferTax}"
+							/>
+						</div>
+				</div>
+				<div class="col-12 md:col-3">
+					<div class="field">
+						<label htmlFor="startDate">Ngày bắt đầu </label>
+						<p-calendar inputId="startDate" dateFormat="dd/mm/yy" locale="vi" 
+							appendTo="body" utc="true" 
+							[(ngModel)]="policy.startDate"
+							(onSelect)="onChangeStartDate($event)" 							
+							[ngClass]="{'ng-invalid ng-dirty' : submitted && policy?.startDate}"
+							[showIcon]="true" 
+							[disabled]="!allowEdit" >
+						</p-calendar>
+					</div>
+				</div>
+				<div class="col-12 md:col-3">
+					<div class="field">
+						<label htmlFor="endDate">Ngày hết hiệu lực </label>
+						<p-calendar 
+							inputId="endDate" dateFormat="dd/mm/yy" locale="vi" 
+							appendTo="body" utc="true" 
+							[(ngModel)]="policy.endDate" 
+							[ngClass]="{'ng-invalid ng-dirty' : submitted && policy?.endDate}"
+							[showIcon]="true" 
+							[minDate]="policy.startDate"
+							[disabled]="!allowEdit" >
+						</p-calendar>
+					</div>
+				</div>
+				<div class="col-12 md:col-12">
+					<div class="field">
+						<label htmlFor="description"> Mô tả </label>
+						<textarea maxlength="2048" pInputTextarea [(ngModel)]="policy.description" [disabled]="!allowEdit"></textarea>
+					</div>
+				</div>
+			</div>
+			<!-- {{ policy | json }} -->
+			<p-table 
+				#policyDetailTempalteTable 
+				styleClass="custom-table-border-none" isLoading="isLoading"
+				[value]="policy.details" *ngIf="policy.bondPolicyId"
+				[scrollable]="true" responsiveLayout="scroll" dataKey="bondPolicyDetailId">
+				<ng-template pTemplate="caption">
+					<div class="flex justify-content-between flex-column sm:flex-row">
+						<div class="">
+							<button pButton pRipple label="Thêm kỳ hạn" icon="pi pi-plus"
+								class="p-button-success mr-2" (click)="createPolicyDetail()"></button>
+						</div>
+					</div>
+				</ng-template>
+				<ng-template pTemplate="header">
+					<tr>
+						<th style="min-width: 5rem; max-width: 5rem;"> STT </th>
+						<th style="min-width: 8rem;"> Kỳ đầu tư </th>
+						<th style="min-width: 5rem; justify-content: end;"> Lợi tức</th>
+						<th style="min-width: 5rem; justify-content: end;"> Số ngày </th>
+						<th style="min-width: 5rem;"> Kiểu trả lãi </th>
+						<th style="min-width: 5rem;"> Kỳ lợi tức </th>
+						<th style="min-width: 5rem;"> Trạng thái </th>
+						<th style="min-width: 10rem; justify-content: center;"> Thao tác</th>
+					</tr>
+				</ng-template>
+				<ng-template pTemplate="body" let-policyDetail let-expanded="expanded" let-rowIndex="rowIndex">
+					<tr>
+						<td style="min-width: 5rem; max-width: 5rem;">{{ policyDetail?.stt }}</td>
+						<td style="min-width: 5rem;">
+							{{ policyDetail?.periodQuantity }} 
+							{{ ProductBondPolicyDetailTemplateConst.getNameInterestPeriodType(policyDetail.periodType) }}
+						</td>
+						<td style="min-width: 5rem; justify-content: end;">{{ policyDetail?.profit ? utils.transformPercent(policyDetail?.profit) + '%' : '' }}</td>
+						<td style="min-width: 5rem; justify-content: end;">{{ utils.transformMoney(policyDetail?.interestDays) }}</td>
+						<td style="min-width: 5rem;">
+							{{ ProductBondPolicyDetailTemplateConst.getNameInterestType(policyDetail.interestType)}}
+						</td>
+						<td style="min-width: 5rem;">
+							{{ policyDetail?.interestPeriodQuantity }} 
+							{{ ProductBondPolicyDetailTemplateConst.getNameInterestPeriodType(policyDetail?.interestPeriodType) }}
+						</td>
+						<td style="min-width: 8rem">
+							<p-tag 
+								styleClass="p-tag-{{ ProductPolicyConst.getStatusName(policyDetail.status, 'severity') }}"
+								severity="{{ ProductPolicyConst.getStatusName(policyDetail.status, 'severity') }}"
+								value="{{ ProductPolicyConst.getStatusName(policyDetail.status, 'name') }}">
+							</p-tag>
+						</td>
+						<td style="min-width: 10rem; justify-content: center;">
+							<div class="flex">
+                                <i class="pi pi-ellipsis-h" (click)="menu.toggle($event)"></i>
+                                <p-menu #menu [popup]="true" class="button-actions" [model]="listPolicyDetailAction[rowIndex]"
+                                    appendTo="body">
+                                </p-menu>
+                            </div>
+						</td>
+					</tr>
+				</ng-template>
+			</p-table>
+		</div>
+	</ng-template>
+	<ng-template pTemplate="footer">
+		<button pButton pRipple label="Hủy" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+		<!-- Thêm mới chính sách -->
+		<button 
+			*ngIf="!policy?.bondPolicyId" 
+			pButton pRipple label="Thêm chính sách" icon="pi pi-check" class="p-button-text" 
+			[disabled]="submitted" 
+			(click)="savePolicy()">
+		</button>
+		<!-- Cập nhật chính sách --> 
+		<button 
+			*ngIf="policy?.bondPolicyId" 
+			pButton pRipple label="Lưu" icon="pi pi-check" class="p-button-text" 
+			[disabled]="submitted" 
+			(click)="editByOnClickSave()">
+		</button>
+	</ng-template>
+</p-dialog>

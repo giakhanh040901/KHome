@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Implements\1pntaflf.ac4~" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="11.0.1" />
+	<PackageReference Include="ClosedXML" Version="0.100.3" />
+    <PackageReference Include="DocumentFormat.OpenXml" Version="2.17.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.1" />
+    <PackageReference Include="Net.Codecrete.QrCodeGenerator" Version="2.0.3" />
+    <PackageReference Include="SkiaSharp" Version="2.88.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\EPIC.CoreService\EPIC.CoreRepositories\EPIC.CoreRepositories.csproj" />
+    <ProjectReference Include="..\..\EPIC.ImageService\EPIC.FileDomain\EPIC.FileDomain.csproj" />
+    <ProjectReference Include="..\..\EPIC.RocketchatService\EPIC.RocketchatDomain\EPIC.RocketchatDomain.csproj" />
+    <ProjectReference Include="..\..\EPIC.SharedService\EPIC.Notification\EPIC.Notification.csproj" />
+    <ProjectReference Include="..\..\EPIC.SharedService\EPIC.SharedDomain\EPIC.SharedDomain.csproj" />
+    <ProjectReference Include="..\EPIC.BondRepositories\EPIC.BondRepositories.csproj" />
+    <ProjectReference Include="..\EPIC.Entities\EPIC.Entities.csproj" />
+  </ItemGroup>
+
+</Project>

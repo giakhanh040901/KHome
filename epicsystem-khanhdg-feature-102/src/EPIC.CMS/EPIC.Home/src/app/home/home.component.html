@@ -1,0 +1,139 @@
+<app-loading-page *ngIf="isLoading"></app-loading-page>
+<div [style.height.px]="0">
+    <p-image [src]="src" width="0" [preview]="true" #avatarView (onHide)="src=''"></p-image>
+</div>
+<div class="grid layout-dashboard ml-0 mr-0">
+    <div class="col-12 lg:col-12 xl:col-12 md:col-12">
+        <div class="card b-home">
+            <div class="grid p-fluid">
+                <div class="col-12 text-center">
+                    <div class="b-profile-image">
+                        <div class="action-avatar" (click)="menu.toggle($event)">
+                            <img [src]="avatar" alt="mirage-layout" [width]="85" [height]="85" style="border-radius: 50%;" >
+                        </div>
+                        <p-menu 
+                            #menu [popup]="true"class="button-actions"
+                            [model]="actions" appendTo="body"
+                        >
+                        </p-menu>
+                    </div>
+                    <div>
+                        <h3 class="mt-3">
+                            Xin chào {{ userInfo?.displayName }}
+                        </h3>   
+                        <p class="b-color-text"> 
+                            Quản lý thông tin, quyền riêng tư và chế độ bảo mật để Epic hoạt động hiệu quả cho bạn 
+                            <a href="javascript:void(0)" (click)="logout()">Thoát tài khoản</a>
+                        </p>
+                    </div>
+                </div>
+                <div class="col-7 lg:col-7 md:col-7">
+                    <div style="border: 1px solid #E2E6F2; border-radius: 12px;" class="p-3">
+                        <h4> Quyền riêng tư và cá nhân hóa </h4>
+                        <div class="grid">
+                            <div class="col-8">
+                                <div> 
+                                    <p class="b-color-text"> Bạn đã đăng nhập thành công vào hệ thống </p> 
+                                    <p class="b-color-text"> Đăng nhập gần nhất: {{ privacyInfo.lastLogin}} </p> 
+                                    <p class="b-color-text"> Thiết bị đăng nhập gần nhất: {{ privacyInfo.lastDevice}} </p> 
+                                    <p class="b-color-text"> Hết hạn mật khẩu: {{ privacyInfo.expirePass}} </p> 
+                                </div>
+                            </div>
+                            <div class="col-4 text-center">
+                                <div>
+                                    <p-image src="assets/layout/images/home/khien.png" alt="Image" width="auto"></p-image> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-5 lg:col-5 md:col-5">
+                    <div>
+                        <div class="grid">
+                            <div class="col-12">
+                                <p-image src="assets/layout/images/home/button.png" alt="Image" width="330px"></p-image>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 lg:col-12 md:col-12">
+                <h1> Các sản phẩm của Epic</h1>
+                <div class="grid">
+                    <div (click)="navigate(AppConsts.core)" class="col-6 lg:col-6 md:col-6 b-hover-pointer" *ngIf="isGranted(PermissionWebConst.CoreWebsite)">
+                        <h5>
+                            <p-image src="assets/layout/images/home/logo-epic.png" alt="Image" width="25px"></p-image>
+                            <span class="b-epic-product-name b-epic-padding">ECore</span>
+                        </h5>
+                        <p class="b-color-text">Hệ thống quản lý thông tin khách hàng, thông báo, truyền thông</p>
+                    </div>
+                    <!--  -->
+                    <div (click)="navigate(AppConsts.invest)" class="col-6 lg:col-6 md:col-6 b-hover-pointer" *ngIf="isGranted(PermissionWebConst.InvestWebsite)">
+                        <h5>
+                            <p-image src="assets/layout/images/home/logo-epic.png" alt="Image" width="25px"></p-image>
+                            <span class="b-epic-product-name b-epic-padding">EInvest</span>
+                        </h5>
+                        <p class="b-color-text">Hệ thống quản lý sản phẩm đầu tư Tài chính</p>
+                    </div>
+                    <!--  -->
+                    <div (click)="navigate(AppConsts.realEState)" class="col-6 lg:col-6 md:col-6 b-hover-pointer">
+                        <h5>
+                            <p-image src="assets/layout/images/home/logo-epic.png" alt="Image" width="25px"></p-image>
+                            <span class="b-epic-product-name b-epic-padding">EHomes</span>
+                        </h5>
+                        <p class="b-color-text">Hệ thống phân phối Bất động sản</p>
+                    </div>
+                    <!--  -->
+                    <div (click)="navigate(AppConsts.garner)" class="col-6 lg:col-6 md:col-6 b-hover-pointer" *ngIf="isGranted(PermissionWebConst.GarnerWebsite)">
+                        <h5>
+                            <p-image src="assets/layout/images/home/logo-epic.png" alt="Image" width="25px"></p-image>
+                            <span class="b-epic-product-name b-epic-padding">EGarner</span>
+                        </h5>
+                        <p class="b-color-text">Hệ thống quản lý sản phẩm đầu tư Tích lũy</p>
+                    </div>                    
+                    <!--  -->
+                    <div (click)="navigate(AppConsts.bond)" class="col-6 lg:col-6 md:col-6 b-hover-pointer" *ngIf="isGranted(PermissionWebConst.BondWebsite)">
+                        <h5>
+                            <p-image src="assets/layout/images/home/logo-epic.png" alt="Image" width="25px"></p-image>
+                            <span class="b-epic-product-name b-epic-padding">EBond</span>
+                        </h5>
+                        <p class="b-color-text"> Hệ thống quản lý sản phẩm đầu tư Trái phiếu</p>
+                    </div>
+                    <!--  -->
+                    <div (click)="navigate(AppConsts.support)" class="col-6 lg:col-6 md:col-6 b-hover-pointer"  *ngIf="isGranted(PermissionWebConst.SupportWebsite)">
+                        <h5>
+                            <p-image src="assets/layout/images/home/logo-epic.png" alt="Image" width="25px"></p-image>
+                            <span class="b-epic-product-name b-epic-padding"> ESupport </span> 
+                        </h5>
+                        <p class="b-color-text">Hệ thống hỗ trợ Khách hàng</p>
+                    </div>
+                    <!--  -->
+                    <div (click)="navigate(AppConsts.user)" class="col-6 lg:col-6 md:col-6 b-hover-pointer" *ngIf="isGranted(PermissionWebConst.UserWebsite)">
+                        <h5>
+                            <p-image src="assets/layout/images/home/logo-epic.png" alt="Image" width="25px"></p-image>
+                            <span class="b-epic-product-name b-epic-padding">EUser</span>
+                        </h5>
+                        <p class="b-color-text">Hệ thống phân quyền quản lý</p>
+                    </div>
+                    <!--  -->
+                    <div (click)="navigate(AppConsts.loyalty)" class="col-6 lg:col-6 md:col-6 b-hover-pointer">
+                        <h5>
+                            <p-image src="assets/layout/images/home/logo-epic.png" alt="Image" width="25px"></p-image>
+                            <span class="b-epic-product-name b-epic-padding">Eloyalty</span>
+                        </h5>
+                        <p class="b-color-text">Hệ thống quản lý Voucher</p>
+                    </div>
+                    <!--  -->
+                    <div (click)="navigate(AppConsts.events)" class="col-6 lg:col-6 md:col-6 b-hover-pointer">
+                        <h5>
+                            <p-image src="assets/layout/images/home/logo-epic.png" alt="Image" width="25px"></p-image>
+                            <span class="b-epic-product-name b-epic-padding">Events</span>
+                        </h5>
+                        <p class="b-color-text">Hệ thống quản lý sự kiện</p>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>

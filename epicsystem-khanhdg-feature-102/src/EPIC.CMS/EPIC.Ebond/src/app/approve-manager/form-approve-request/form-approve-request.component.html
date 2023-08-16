@@ -1,0 +1,17 @@
+<div class="grid p-fluid">
+    <div class="col-12 md:col-12">
+        <div class="checkbox_approve mb-4">
+            <p-radioButton  [(ngModel)]="radioApprove" [value]="true" styleClass="b-radio-button" class="approve_button mr-5" label="Xác nhận phê duyệt" name="approve" ></p-radioButton>
+            <p-radioButton  [(ngModel)]="radioApprove" [value]="false" styleClass="b-radio-button" name="unapprove" label="Hủy dyệt"></p-radioButton>
+            <br>
+        </div>
+        <div class="field">
+            <label> Ghi chú </label>
+            <textarea pInputTextarea [(ngModel)]="dataApprove.approveNote"></textarea>         
+        </div>
+    </div>
+</div>
+<div class="p-dialog-footer" style="width: 100%; position: fixed; left: 0; bottom: 0;">
+    <button pButton pRipple label="Hủy" icon="pi pi-times" class="p-button-text p-confirm-dialog-reject" (click)="cancel()"></button>
+    <button pButton pRipple label="Đồng ý" icon="pi pi-check" class="p-button-text p-confirm-dialog-approve" [disabled]="submitted" (click)="save()"></button>
+</div>

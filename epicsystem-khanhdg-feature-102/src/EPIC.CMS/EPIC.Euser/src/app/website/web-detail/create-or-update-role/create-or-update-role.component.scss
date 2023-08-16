@@ -1,0 +1,116 @@
+::ng-deep .b-permission-dialog {
+    .p-dialog-content {
+        padding: 0;
+        .card {
+            padding: 0;
+            .permission-tree {
+                // height: 75vh;
+                border: none;
+                .p-treenode {
+                    border-left: 1px dashed rgba(0, 0, 0, .3);
+
+                    .p-tree-toggler-icon{
+                        padding-right: 1rem;
+                        padding-left: 1rem;
+                    }
+                    position: relative;
+                    .p-treenode-content{
+                        padding: 0.1rem 0.5rem;
+                        .p-tree-toggler:focus{
+                                outline-style: none;
+                                box-shadow: none;
+                                border-color: transparent;
+                        }
+                        //
+                        &:focus {
+                            box-shadow: none;
+                        }
+                        //
+                        .p-checkbox {
+                            .p-checkbox-box {
+                                .pi-minus::before {
+                                    content: "\e909" !important;
+                                }
+                            }
+                            //
+                            .p-indeterminate {
+                                .p-checkbox-icon {
+                                    color: white !important;
+                                }
+                            }
+                        }
+
+                        &.p-highlight {
+                            background-color: white !important;
+                            color: black !important;
+                            box-shadow: unset !important;
+                            .p-treenode-icon {
+                                color: black !important;
+                            }
+                            button {
+                                color: #525B73 !important;
+                            }
+                        }
+
+                    }
+                    .p-treenode-children {
+                        padding: 0 0 0 2rem;
+                        // border-left: 1px dashed black;
+                    }
+                    //
+                    &.permission-parents {
+                        > .p-treenode-content {
+                            .p-treenode-label {
+                                font-weight: bold;
+                                color: #4c566a;
+                            }
+                        }
+                        .p-treenode-content {   
+                            .p-treenode-label{
+                                &::before{
+                                    content: "";
+                                    position: absolute;
+                                    background: white;
+                                    width: 45px;
+                                    height: 0px;
+                                    border-top: 1px dashed black;
+                                    margin-left: -4.8rem;
+                                    top: 1.8rem;
+                                    opacity: 0.3;
+                                }
+                            }
+                        }
+
+                        &.node-0 {
+                            > .p-treenode-content {
+                                .p-treenode-label{
+                                    &::before{
+                                        margin-left: -6.3rem !important;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }  
+            }
+        }
+    }
+    // custom style srcoll bar
+    ::-webkit-scrollbar {
+        width: 6px !important; //scroll-y
+        height: 10px !important; //scroll-x
+    }
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+        box-shadow: inset 0 0 5px rgb(231, 231, 231); 
+        // border-radius: 5px;
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+        background: #b3b3b3; 
+        border-radius: 10px;
+    }
+}
+

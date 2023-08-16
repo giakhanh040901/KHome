@@ -1,0 +1,13 @@
+.b-input-otp {
+    text-align: center;
+    font-weight: bold;
+}
+
+::ng-deep .ng-otp-input-wrapper {
+    text-align: center !important;
+    .otp-input {
+        font-size: 25px !important;
+        height: 45px !important;
+        width: 45px !important;
+    }
+}

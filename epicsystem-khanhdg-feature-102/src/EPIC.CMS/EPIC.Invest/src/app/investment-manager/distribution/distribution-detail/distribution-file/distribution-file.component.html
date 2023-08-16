@@ -1,0 +1,86 @@
+<div>
+    <p-toast></p-toast>
+    <p-confirmDialog [style]="{width: 'auto'}" [baseZIndex]="10000"></p-confirmDialog>
+    <div [id]="idHeader"> 
+        <div class="grid tabview-table-header">
+            <div class="col-12 md:col-6">
+                <h4 class="m-0"> Danh sách file </h4>
+            </div>
+            <div class="col-12 md:col-6 flex justify-content-end flex-column sm:flex-row">
+                <p-button 
+                    *ngIf="isGranted([PermissionInvestConst.InvestPPDT_FileChinhSach_ThemMoi])"
+                    label="Upload file chính sách" icon="pi pi-cloud-upload" class="p-button-success" 
+                    (click)="create()">
+                </p-button>
+            </div>
+        </div>
+    </div>
+    <e-table
+        [rows]="rows"
+        [(page)]="page"
+        [columns]="columns"
+        [isLoading]="isLoading"
+        [listAction]="listAction"
+        [tabContentHeight]="contentHeight"
+        [idHeader]="idHeader"
+        [columnCacheName]="constructor.name"
+        [isShowIconFilter]="false"
+        (_onPageChange)="setPage($event)">
+    </e-table>
+    <!-- THEM & SUA-->
+    <p-dialog [(visible)]="modalDialog" [style]="{width: '600px'}" [header]="headerTitle" [modal]="true" class="p-fluid">
+        <ng-template pTemplate="content">
+            <div class="grid formgrid">
+                <div style="margin-bottom: 0;" class="field col-12">
+                    <div class="field">
+                        <label htmlFor="name">Tên chính sách (<span class="required-field"> * </span>) </label>
+                        <input type="text" id="name" name="name" pInputText [(ngModel)]="policyFile.name" maxlength="100"
+                            [ngClass]="{'ng-invalid ng-dirty' : submitted && !policyFile.name}"/>
+                    </div>
+                </div>
+                <div class="col-12 md:col-6">
+                    <div class="field">
+                        <label for="effectiveDate">Ngày có hiệu lực (<span class="required-field"> * </span>)</label>
+                        <p-calendar 
+                            inputId="effectiveDate" dateFormat="dd/mm/yy" locale="vi" appendTo="body" utc="true" placeholder="dd/mm/yyyy"
+                            [(ngModel)]="policyFile.effectiveDate"
+                            [showIcon]="true">
+                        </p-calendar>
+                    </div>
+                </div>
+                <div class="col-12 md:col-6">
+                    <div class="field">
+                        <label for="expirationDate"> Ngày hết hiệu lực (<span class="required-field"> * </span>)</label>
+                        <p-calendar 
+                            inputId="expirationDate" dateFormat="dd/mm/yy" locale="vi" appendTo="body" utc="true" placeholder="dd/mm/yyyy" 
+                            [(ngModel)]="policyFile.expirationDate"
+                            [minDate]="policyFile.effectiveDate" 
+                            [showIcon]="true">
+                        </p-calendar>
+                    </div>
+                </div>
+                <div class="field col-12">
+                    <p-fileUpload 
+                        name="demo[]" customUpload="true" class="wrapper-files-upload" accept=".pdf,.doc"
+                        (onSelect)="myUploader($event)" [showUploadButton]="false" [showCancelButton]="false"
+                        chooseLabel="Chọn file" maxFileSize="100000000">
+                    </p-fileUpload>
+                </div>
+                <div class="field col-12">
+                    <div class="field">
+                        <label for="url">Đường dẫn file</label>
+                        <input type="text" id="url" name="url" disabled pInputText [value]="policyFile.url || ''"
+                            required autofocus />
+                    </div>
+                </div>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="footer">
+            <button pButton pRipple label="Hủy" icon="pi pi-times" class="p-button-text"
+                (click)="hideDialog()"></button>
+            <button pButton pRipple label="Lưu" icon="pi pi-check" class="p-button-text"
+                [disabled]="!validForm() || submitted" (click)="save()"></button>
+        </ng-template>
+    </p-dialog>
+    <app-form-view-pdf-file (onClose)="hideDialog()" [modalDialogPDF]="modalDialogPDF" [urlfilePDF]="urlfilePDF"> </app-form-view-pdf-file>
+</div>

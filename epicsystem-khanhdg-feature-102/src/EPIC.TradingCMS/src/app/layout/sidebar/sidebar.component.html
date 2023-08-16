@@ -1,0 +1,120 @@
+<nav class="sidebar sidebar-offcanvas" id="sidebar">
+  <ul class="nav">
+    <li class="nav-item" [ngClass]="{ 'active': home.isActive }" (click)="hideOtherDropdownMenu()">
+      <a class="nav-link" routerLink="/home" routerLinkActive #home="routerLinkActive">
+        <i class="ti-home menu-icon"></i>
+        <span class="menu-title">Home</span>
+      </a>
+    </li>
+    <li class="nav-item" [ngClass]="{ 'active': user.isActive }" (click)="hideOtherDropdownMenu()">
+      <a class="nav-link" routerLink="/user" routerLinkActive #user="routerLinkActive">
+        <i class="mdi mdi-account-multiple menu-icon"></i>
+        <span class="menu-title">Tài khoản</span>
+      </a>
+    </li>
+    <!--  -->
+    <li class="nav-item" [ngClass]="{'active' : issuer.isActive || tradingProvider.isActive || depositProvider.isActive || calendar.isActive || productBondType.isActive || productCategory.isActive || productBondInterest.isActive || productPolicy.isActive }" (click)="hideOtherDropdownMenu('setting')">
+      <a class="nav-link" (click)="uiSetting = !uiSetting" [attr.aria-expanded]="uiSetting" aria-controls="ui-setting">
+        <i class="mdi mdi-settings menu-icon"></i>
+        <span class="menu-title">Cài đặt</span>
+        <i class="menu-arrow"></i>
+      </a>
+      <div class="collapse" id="ui-setting" [ngbCollapse]="!uiSetting">
+        <ul class="nav flex-column sub-menu">
+          <li class="nav-item">
+            <a class="nav-link" routerLink="setting/issuer" routerLinkActive="active" #issuer="routerLinkActive" title="Tổ chức phát hành">
+              Tổ chức phát hành
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="setting/trading-provider" routerLinkActive="active" #tradingProvider="routerLinkActive" title="Đại lý sơ cấp">
+              Đại lý sơ cấp
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="setting/deposit-provider" routerLinkActive="active" #depositProvider="routerLinkActive" title="Đại lý lưu ký">
+              Đại lý lưu ký
+            </a>
+          </li>
+          <!-- <li class="nav-item">
+            <a class="nav-link" routerLink="setting/product-bond-info" routerLinkActive="active" #productBondInfo="routerLinkActive" title="Sản phẩm trái phiếu">
+               Sản phẩm trái phiếu
+            </a>
+          </li> -->
+          <li class="nav-item">
+            <a class="nav-link" routerLink="setting/product-category" routerLinkActive="active" #productCategory="routerLinkActive" title="Danh mục trái phiếu">
+              Danh mục trái phiếu
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="setting/product-policy" routerLinkActive="active" #productPolicy="routerLinkActive" title="Chính sách sản phẩm TP">
+              Chính sách
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="setting/product-bond-type" routerLinkActive="active" #productBondType="routerLinkActive" title="Thông tin loại sản phẩm trái phiếu">
+              Loại trái phiếu
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="setting/product-bond-interest" routerLinkActive="active" #productBondInterest="routerLinkActive" title="Thông tin chi tiết lãi của trái phiếu">
+              Lãi suất trái phiếu
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="setting/calendar" routerLinkActive="active" #calendar="routerLinkActive" title="Cấu hình ngày nghỉ lễ">
+              Cấu hình ngày nghỉ lễ
+            </a>
+          </li>
+        </ul>
+      </div>
+    </li>
+    <!--  -->
+    <li class="nav-item" [ngClass]="{'active' : productBondDetail.isActive || productBondInfo.isActive || contractType.isActive }" (click)="hideOtherDropdownMenu('bond-manager')">
+      <a class="nav-link" (click)="uiBondManager = !uiBondManager" [attr.aria-expanded]="uiBondManager" aria-controls="ui-bond-manager">
+        <i class="fas fa-bold menu-icon"></i>
+        <span class="menu-title">Quản lý trái phiếu</span>
+        <i class="menu-arrow"></i>
+      </a>
+      <div class="collapse" id="ui-bond-manager" [ngbCollapse]="!uiBondManager">
+        <ul class="nav flex-column sub-menu">
+          <li class="nav-item">
+            <a class="nav-link" routerLink="bond-manager/product-bond-info" routerLinkActive="active" #productBondInfo="routerLinkActive" title="Phát hành sơ cấp">
+              Lô trái phiếu
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="bond-manager/product-bond-detail" routerLinkActive="active" #productBondDetail="routerLinkActive" title="Lô trái phiếu">
+              Phát hành trái phiếu
+            </a>
+          </li>
+          <li class="nav-item" style="display: none;">
+            <a class="nav-link" routerLink="bond-manager/hop-dong-phan-phoi" routerLinkActive="active" #hopDongPhanPhoi="routerLinkActive" title="Gói sản phẩm trái phiếu">
+              Hợp đồng phân phối
+            </a>
+          </li>
+          <li class="nav-item" style="display: none;">
+            <a class="nav-link" routerLink="bond-manager/ban-theo-ky-han" routerLinkActive="active" #banTheoKyHan="routerLinkActive" title="Gói sản phẩm trái phiếu">
+              Bán theo kỳ hạn
+            </a>
+          </li>
+          <li class="nav-item" style="display: none;">
+            <a class="nav-link" routerLink="bond-manager/hop-dong-dai-ly" routerLinkActive="active" #hopDongDaiLy="routerLinkActive" title="Gói sản phẩm trái phiếu">
+              Hợp đồng đại lý
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="bond-manager/contract-template" routerLinkActive="active" #hopDongPhanPhoi="routerLinkActive" title="Mẫu hợp đồng cho sản phẩm">
+              Danh mục mẫu hợp đồng
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="bond-manager/contract-type" routerLinkActive="active" #contractType="routerLinkActive" title="Danh mục loại hợp đồng">
+              Danh mục loại hợp đồng
+            </a>
+          </li>
+        </ul>
+      </div>
+    </li>
+  </ul>
+</nav>

@@ -1,0 +1,24 @@
+<div [ngClass]="'field' + classContainer">
+  <label [ngClass]="'title-info' + classLabel" *ngIf="showLabel">
+    {{ label }}
+    <span class="required-field" *ngIf="isRequired"> * </span></label
+  >
+  <p-inputNumber
+    [(ngModel)]="ngModelValue"
+    [placeholder]="placeholder"
+    [ngClass]="'custom-input b-disabled' + classInput"
+    [disabled]="isDisabled"
+    [showButtons]="showButtons"
+    [buttonLayout]="'horizontal'"
+    [inputId]="'horizontal'"
+    [min]="min"
+    [max]="max"
+    [incrementButtonIcon]="'pi pi-plus'"
+    [decrementButtonIcon]="'pi pi-minus'"
+    [decrementButtonClass]="'p-button-primary'"
+    [incrementButtonClass]="'p-button-primary'"
+    [useGrouping]="!isNotMask"
+    (onInput)="handleInput($event)"
+  >
+  </p-inputNumber>
+</div>

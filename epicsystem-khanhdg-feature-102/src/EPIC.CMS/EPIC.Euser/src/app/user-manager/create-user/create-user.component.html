@@ -1,0 +1,150 @@
+<!-- Xử lý mật khẩu focus tự động điền vào ô input. Lấy 1 input type password để thay thế -->
+
+<input type="password" name="password" id="password" value="password" style="opacity: 0; position: absolute; pointer-events: none;">
+<!--  -->
+<div class="card p-1">
+    <app-loading-page *ngIf="isLoading"></app-loading-page>
+    <div class="grid p-fluid {{ isLoading ? 'b-loading' : ''}}">
+        <ng-container *ngIf="!user.userId">
+            <!-- FORM EPIC -->
+            <ng-container *ngIf="UserTypes.TYPE_EPICS.includes(userLogin?.user_type)">
+                <!-- {{ isPartner | json }} -->
+                <ng-container *ngIf="userLogin.user_type == UserTypes.EPIC_ROOT">
+                    <div class="col-12 md:col-6">
+                        <div class="field-radiobutton b-radio-button mb-0">
+                            <label for="city1" class="ml-0 mr-2">Tài khoản đối tác</label>
+                            <p-radioButton name="partner" [value]="true" [(ngModel)]="isPartner" inputId="account-partner" (onClick)="changeTypeAccount($event)"></p-radioButton>
+                        </div>
+                    </div>
+                    <div class="col-12 md:col-6">
+                        <div class="field-radiobutton b-radio-button mb-0">
+                            <label for="city1" class="ml-0 mr-2">Tài khoản Epic</label>
+                            <p-radioButton name="epic" [value]="false" [(ngModel)]="isPartner" inputId="account-pic" (onClick)="changeTypeAccount($event)"></p-radioButton>  
+                        </div>
+                    </div>
+                </ng-container>
+                <div class="col-12 md:col-12" *ngIf="(isPartner && userLogin.user_type == UserTypes.EPIC_ROOT) || (userLogin.user_type == UserTypes.EPIC)">
+                    <div class="field mb-0">
+                        <label for="displayName"> Đối tác (<span class="required-field"> * </span>)</label>
+                        <p-dropdown
+                            class="custom-input-disabled"
+                            id="partner" appendTo="body" name="partner" optionLabel="name" optionValue="partnerId"
+                            [options]="partners"
+                            [autoDisplayFirst]="false"
+                            [disabled]="user.userId"
+                            [filter]="true"
+                            [(ngModel)]="user.partnerId">
+                        </p-dropdown>         
+                    </div>
+                </div>
+            </ng-container>
+            <!-- FORM PARTNER -->
+            <ng-container *ngIf="UserTypes.TYPE_PARTNERS.includes(userLogin?.user_type)">
+                <ng-container *ngIf="userLogin.user_type == UserTypes.PARTNER_ROOT">
+                    <div class="col-12 md:col-6">
+                        <div class="field-radiobutton b-radio-button mb-0">
+                            <label for="city1" class="ml-0 mr-2">Tài khoản đối tác</label>
+                            <p-radioButton name="partner" [value]="true" [(ngModel)]="isPartner" inputId="account-partner" (onClick)="changeTypeAccount($event)"></p-radioButton>
+                        </div>
+                    </div>
+                    <div class="col-12 md:col-6">
+                        <div class="field-radiobutton b-radio-button mb-0">
+                            <label for="city1" class="ml-0 mr-2">Tài khoản đại lý root</label>
+                            <p-radioButton name="tradingProvider" [value]="false" [(ngModel)]="isPartner" inputId="account-trading-provider" (onClick)="changeTypeAccount($event)"></p-radioButton>  
+                        </div>
+                    </div>
+                </ng-container>
+                <div class="col-12 md:col-12" *ngIf="!isPartner || userLogin.user_type == UserTypes.PARTNER">
+                    <div class="field mb-0">
+                        <label for="displayName"> Đại lý (<span class="required-field"> * </span>) </label>
+                        <p-dropdown
+                            class="custom-input-disabled"
+                            appendTo="body" id="tradingProvider" name="tradingProvider" optionLabel="name" optionValue="tradingProviderId"
+                            [options]="tradingProviders"
+                            [autoDisplayFirst]="false"
+                            [disabled]="user.userId"
+                            [filter]="true"
+                            [(ngModel)]="user.tradingProviderId">
+                        </p-dropdown>         
+                    </div>
+                </div>
+            </ng-container>
+            <!-- THÊM MỚI CẦN TÀI KHOẢN XÁC THỰC -->
+            <div class="col-12 md:col-12">
+                <div class="field mb-0">
+                    <label for="displayName"> Tài khoản xác thực </label>
+                    <p-autoComplete
+                        class="custom-input-disabled"
+                        field="labelName" placeholder="Nhập SĐT, Mã KH..." 
+                        [(ngModel)]="investorName" [suggestions]="investor" (completeMethod)="searchInvestor($event.query)"
+                        (onSelect)="onSelect($event)" [delay]="600">
+                    </p-autoComplete>         
+                </div>
+            </div>
+        </ng-container>
+        <!--  -->
+        <div class="col-12 md:col-12">
+            <div class="field mb-0">
+                <label for="displayName"> Tên hiển thị (<span class="required-field"> * </span>)</label>
+                <input type="text" [disabled]="user.userId && !isUpdate" id="displayName" name="displayName" pInputText [(ngModel)]="user.displayName" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !user.userName}" class="custom-input-disabled"/>         
+            </div>
+        </div>
+        <div *ngIf="!isUpdate" class="col-12 md:col-6">
+            <div class="field mb-0">
+                <label for="userName"> Tên đăng nhập (<span class="required-field"> * </span>)</label>
+                <input type="text" id="userName" [disabled]="user.userId" name="userName" pInputText [(ngModel)]="user.userName" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !user.userName}" class="custom-input-disabled"/>         
+            </div>
+        </div>
+
+        <div *ngIf="!isUpdate" class="col-12 md:col-6">
+            <div class="field mb-0">
+                <label for="password1" class="mr-3 mb-2"> Mật khẩu (<span class="required-field"> * </span>)</label> 
+                <p-password [(ngModel)]="user.password" [toggleMask]="true" [feedback]="false" autocomplete="off"></p-password>
+            </div>
+        </div>
+        <!--  -->
+        <ng-container *ngIf="!isUpdate">
+            <div class="col-12 md:col-10">
+                <div class="field mb-0">
+                    <label for="password1"> Tạo mật khẩu tự động </label> 
+                </div>
+            </div>
+            <div class="col-12 md:col-2">
+                <div class="field mb-0 text-right">
+                    <p-inputSwitch styleClass="b-input-switch" (onChange)="randomPassword($event.checked)"></p-inputSwitch>
+                </div>
+            </div>
+        </ng-container>
+        <!--  -->
+        <ng-container *ngIf="!isUpdate">
+            <div class="col-12 md:col-10">
+                <div class="field mb-0">
+                    <label for="password1"> Yêu cầu thay đổi mật khẩu </label> 
+                </div>
+            </div>
+            <div class="col-12 md:col-2">
+                <div class="field mb-0 text-right">
+                    <p-inputSwitch [(ngModel)]="user.changePasswordLogin" styleClass="b-input-switch"></p-inputSwitch>
+                </div>
+            </div>
+        </ng-container>
+        <!--  -->
+        <ng-container>
+            <!-- <div class="col-12 md:col-10">
+                <div class="field mb-0">
+                    <label for="password1"> Tạo mật khẩu và gửi thông tin tài khoản về email </label> 
+                </div>
+            </div>
+            <div class="col-12 md:col-2">
+                <div class="field mb-0 text-right">
+                    <p-inputSwitch [(ngModel)]="user.sendMail" styleClass="b-input-switch"></p-inputSwitch>
+                </div>
+            </div> -->
+        </ng-container>
+    </div>
+    <div class="p-dialog-footer" style="width: 100%; position: fixed; left: 0; bottom: 0;">
+        <button pButton pRipple label="Hủy" icon="pi pi-times" class="p-button-text p-confirm-dialog-reject" (click)="cancel()"></button>
+        <button pButton pRipple label="Đồng ý" icon="pi pi-check" class="p-button-text p-confirm-dialog-approve" (click)="save()"></button>
+    </div>
+</div>
+

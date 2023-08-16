@@ -1,0 +1,71 @@
+<div class="grid ml-0 mr-0 mt-0 h-full">
+  <div class="col-12 h-full px-4">
+    <div #divHeader class="flex b-header justify-content-between">
+      <div class="b-title">
+        <h4>Quản lý khách cá nhân</h4>
+      </div>
+      <div class="flex b-action">
+        <form-button  *ngIf="this.isGranted([this.PermissionLoyaltyConst.Loyalty_KhachHangCaNhan_XuatDuLieu])"     
+          [icon]="'pi pi-download'" [label]="'Xuất dữ liệu'" (_onClick)="exportExcel($event)"></form-button>
+      </div>
+    </div>
+    <form-table
+      [style.height]="'calc(100% - ' + divHeader.getBoundingClientRect().height + 'px)'"
+      class="block auto-height-form-table"
+      [columns]="selectedColumns"
+      [dataSource]="dataSource"
+      [isLoading]="isLoading"
+      [scrollHeight]="'calc(100% - 2rem - ' + divFilter.getBoundingClientRect().height + 'px)'"
+      [listAction]="listAction"
+      [page]="page"
+      (_setColumn)="setColumn($event)"
+      (_changePage)="setPage($event)"
+      (_onSort)="onSort($event)"
+    >
+      <ng-container filter>
+        <div #divFilter class="flex flex-column sm:flex-row w-full">
+          <form-input
+            class="col-2 pl-0"
+            [floatLabel]="true"
+            [placeholder]="'Nhập SĐT/ Mã KH/ Tên KH'"
+            [label]="'Tìm kiếm'"
+            [(ngModelValue)]="filter.keyword"
+            (_onChange)="changeFilter($event)"
+          ></form-input>
+          <form-dropdown
+            class="col-2"
+            [floatLabel]="true"
+            [options]="listGender"
+            [(ngModelValue)]="filter.gender"
+            [label]="'Giới tính'"
+            (_onChange)="changeFilter($event)"
+          ></form-dropdown>
+          <form-dropdown
+            class="col-2"
+            [floatLabel]="true"
+            [options]="listVoucherLevel"
+            [(ngModelValue)]="filter.voucherLevel"
+            [label]="'Cấp voucher'"
+            (_onChange)="changeFilter($event)"
+          ></form-dropdown>
+          <form-dropdown
+            class="col-2"
+            [floatLabel]="true"
+            [options]="listAccountType"
+            [(ngModelValue)]="filter.account"
+            [label]="'Tài khoản'"
+            (_onChange)="changeFilter($event)"
+          ></form-dropdown>
+          <form-dropdown
+            class="col-2"
+            [floatLabel]="true"
+            [options]="listClass"
+            [(ngModelValue)]="filter.class"
+            [label]="'Hạng'"
+            (_onChange)="changeFilter($event)"
+          ></form-dropdown>
+        </div>
+      </ng-container>
+    </form-table>
+  </div>
+</div>

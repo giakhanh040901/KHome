@@ -1,0 +1,110 @@
+
+<div *ngIf="isGranted([PermissionBondConst.Bond_BTKH_TTCT_BangGia_DanhSach])" class="grid">
+    <div class="col-12">
+        <div class="card pt-0">
+            <p-toast></p-toast> 
+            <!-- <p-table
+                #productBondSecondPrice dataKey="priceId"
+                selectionMode="multiple" responsiveLayout="scroll" [scrollHeight]="'500px'" styleClass="p-datatable-gridlines custom-table"
+                [value]="rows" [rowHover]="true" [paginator]="false" [scrollable]="true" [loading]="isLoading"
+                dataKey="priceId" editMode="row" responsiveLayout="scroll"> -->
+                <p-table 
+                #productBondSecondPrice dataKey="priceId"
+                selectionMode="multiple" responsiveLayout="scroll" scrollHeight="{{(screenHeight*0.6) + 'px'}}" styleClass="p-datatable-gridlines custom-table"
+                [value]="rows" [rowHover]="true" [paginator]="false" [scrollable]="true" [loading]="isLoading" dataKey="priceId" editMode="row">
+                <ng-template pTemplate="caption">
+					<div class="flex justify-content-between flex-column sm:flex-row">
+                        <div class="flex" >
+                            <p-fileUpload 
+                                *ngIf="isGranted([PermissionBondConst.Bond_BTKH_TTCT_BangGia_ImportExcelBG])"    
+                                #fubauto mode="basic" name="demo[]" accept=".xlsx,.doc" [customUpload]="true"
+                                chooseIcon="pi pi-cloud-upload" 
+                                (uploadHandler)="myUploader($event)"
+                                chooseLabel="Import excel bảng giá"
+                                [auto]="true"
+                                >
+                            </p-fileUpload>
+                            <button *ngIf="isGranted([PermissionBondConst.Bond_BTKH_TTCT_BangGia_DownloadFileMau])" class="ml-3" pButton 
+                            type="button" label="Download file mẫu" (click)="downloadFile()">
+                            </button>
+						</div>
+                        <div class="">
+							<button *ngIf="isGranted([PermissionBondConst.Bond_BTKH_TTCT_BangGia_XoaBangGia])" pButton pRipple label="Xoá bảng giá" icon="pi pi-trash" class="p-button-success mr-2" (click)="delete()"></button>
+						</div>
+					</div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+
+                        <th style="width: 15rem;" > Ngày  </th>
+                        <th style="width: 15rem;" > Giá </th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-row let-expanded="expanded" let-index="rowIndex">
+                    <tr>
+                        <td style="width: 15rem;" > {{ row.priceDate | dateview}}</td>
+                        <td style="width: 15rem;" > {{ utils.transformMoney(row.price)}} </td>
+                    </tr>
+                </ng-template> -->
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="width:3rem">Ngày</th>
+                        <th style="width:3rem">Giá</th>
+                        <th style="width:1rem"></th>
+                    </tr>
+                </ng-template>
+                    <ng-template pTemplate="body" let-row let-editing="editing" let-expanded="expanded" let-index="rowIndex">
+                    <tr [pEditableRow]="row">
+                        <td style="width:100%">
+                            <p-cellEditor>
+                                <ng-template pTemplate="input">
+                                    <!-- <input pInputText type="text" [(ngModel)]="row.priceDate" required> -->
+                                    {{row.priceDate |dateview }}
+                                </ng-template>
+                                <ng-template pTemplate="output">
+                                    {{ row.priceDate | dateview }}
+                                </ng-template>
+                            </p-cellEditor>
+                        </td>
+                        <td style="width:100%">
+                            <p-cellEditor>
+                                <ng-template pTemplate="input">
+                                    <p-inputNumber [(ngModel)]="row.price" locale="de-DE" [maxFractionDigits]="4" required></p-inputNumber >
+                                </ng-template>
+                                <ng-template pTemplate="output">
+                                    {{ utils.transformMoney(row.price)}}
+                                </ng-template>
+                            </p-cellEditor>
+                        </td>
+
+                        <td style="text-align:center;width:1rem">
+                            <button *ngIf="!editing" pButton pRipple type="button"  pInitEditableRow
+                                icon="pi pi-pencil" class="p-button-rounded p-button-text"></button>
+                            <button *ngIf="editing" pButton pRipple type="button" pSaveEditableRow
+                                icon="pi pi-check" (click)="edit(row)"
+                                class="p-button-rounded p-button-text p-button-success mr-2 custom-button-save-row-table">
+                            </button>
+                            <button *ngIf="editing" pButton pRipple type="button" pCancelEditableRow icon="pi pi-times" class="p-button-rounded p-button-text p-button-danger"></button>
+                        </td>
+                    </tr>
+                </ng-template>
+                
+            </p-table>
+            <p-paginator *ngIf="page.totalItems" styleClass="at-paginator-sm" [totalRecords]="page.totalItems" [rows]="page.pageSize" (onPageChange)="setPage($event)"></p-paginator>
+        </div>
+
+        <!-- <p-dialog [(visible)]="deleteItemDialog" header="Xóa phát hành sơ cấp" [modal]="true" [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                <span *ngIf="bondSecondPrice">Bạn có chắc chắn xóa bảng giá bán theo kỳ hạn ?</span>
+            </div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="Không" (click)="deleteItemDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Có" (click)="confirmDelete()"></button>
+            </ng-template>
+        </p-dialog> -->
+    </div>
+</div>
+
+
+

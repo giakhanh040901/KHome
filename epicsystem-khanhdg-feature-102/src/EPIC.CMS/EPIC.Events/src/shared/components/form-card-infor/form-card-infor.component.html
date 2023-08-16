@@ -1,0 +1,13 @@
+<div class="flex w-full container">
+  <div class="div-icon" [style.background]="bgIcon">
+    <form-image [imageSource]="icon" [isDisabled]="true"></form-image>
+  </div>
+  <div class="content ml-4" #divContent>
+    <div [style.lineHeight.px]="32">
+      <span class="text-base" [style.color]="colorLabel">{{ label }}</span>
+    </div>
+    <div [style.lineHeight.px]="32">
+      <span class="text-3xl font-bold" [style.color]="colorValue">{{ value }}</span>
+    </div>
+  </div>
+</div>

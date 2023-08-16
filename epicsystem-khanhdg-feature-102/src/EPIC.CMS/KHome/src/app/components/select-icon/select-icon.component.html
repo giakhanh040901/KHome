@@ -1,0 +1,49 @@
+<div class="ui-dialog-content-custom"> 
+    <div class="flex justify-content-between flex-column sm:flex-row">
+        <div class="flex justify-content-between flex-column sm:flex-row mt-3">
+            <div class="b-wr-20 wrapper-filter">
+                <input-search
+                    [(keyword)]="filter.keyword"
+                    (_onChange)="changeFilter()">
+                </input-search>
+            </div>
+            <span class="p-float-label b-custom ml-3">
+                <p-multiSelect 
+                    [style]="{ width: '16rem' }" (onChange)="changeFilter()"
+                    [options]="listType" [(ngModel)]="filter.type" defaultLabel="Chọn khu" optionLabel="name" optionValue="code" selectedItemsLabel="{0} mục đã chọn">
+                </p-multiSelect>
+                <!-- <label class="font-normal" for="ownerFilter">Loại</label> -->
+            </span>
+
+            <span class="p-float-label b-custom b-ml-3">
+                <p-multiSelect 
+                    [style]="{ width: '16rem' }" (onChange)="changeFilter()"
+                    [options]="listGroupUtility" [(ngModel)]="filter.groupUtilityId" defaultLabel="Chọn loại tiện ích" optionLabel="name" optionValue="code" selectedItemsLabel="{0} mục đã chọn">
+                </p-multiSelect>
+                <!-- <label class="font-normal" for="ownerFilter">Loại tiện ích</label> -->
+            </span>
+        </div>
+        <hr>
+    </div>
+
+    <div class="flex grid p-fluid col-12 md:col-12 mt-3" style="flex-wrap: wrap; height: 50vh; overflow: scroll;">
+        <div *ngFor="let icon of listIcon" class="item-wrap">
+            <div class="flex b-container">
+
+                <p-image src="{{icon?.path}}" 
+                    alt="Image" [width]="100" [height]="100" 
+                    [imageStyle]="imageStyle">
+                </p-image>
+                <!-- <p-checkbox style="position: absolute; top: 10px; right: 5px;" [(ngModel)]="checked" [binary]="true" inputId="binary"></p-checkbox> -->
+                <p-checkbox [disabled]="isUpdate && selectedIcon.length > 0 && selectedIcon[0] != icon" class="b-check-box" [value]="icon"  [(ngModel)]="selectedIcon"></p-checkbox>
+            </div>
+            <p style="width: 140px; text-align: center;">{{icon?.name}}</p>
+       </div>
+    </div>
+</div>
+<div class="p-dialog-footer e-custom-dialog-footer">
+    <button pButton pRipple label="Hủy" icon="pi pi-times" class="p-button-text p-confirm-dialog-reject"
+        (click)="hideDialog()"></button>
+    <button pButton pRipple label="Hoàn thành" icon="pi pi-check" class="p-button-text p-confirm-dialog-approve"
+        (click)="save()"></button>
+</div>

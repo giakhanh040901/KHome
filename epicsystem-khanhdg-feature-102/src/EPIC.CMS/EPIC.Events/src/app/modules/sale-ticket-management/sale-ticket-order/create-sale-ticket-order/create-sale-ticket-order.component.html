@@ -1,0 +1,11 @@
+<div class="card">
+  <div class="p-fluid p-formgrid grid b-header">
+    <div class="w-full flex b-header justify-content-between px-2">
+      <div class="b-title">
+        <h5>Thêm mới sổ lệnh</h5>
+      </div>
+    </div>
+  </div>
+  <form-steps [(activeIndex)]="activeIndex" [stepsItems]="steps" [readonly]="true"></form-steps>
+  <router-outlet></router-outlet>
+</div>

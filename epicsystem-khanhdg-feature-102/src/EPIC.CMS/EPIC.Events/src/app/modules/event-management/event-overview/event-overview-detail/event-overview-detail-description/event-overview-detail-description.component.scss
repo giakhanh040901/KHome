@@ -1,0 +1,11 @@
+div.button-description-content {
+  position: absolute;
+  right: 18px;
+  top: -4px;
+}
+
+:host ::ng-deep {
+  markdown.content-markdown {
+    height: 460px !important;
+  }
+}

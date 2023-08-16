@@ -1,0 +1,41 @@
+<!--  -->
+<app-loading-page *ngIf="isLoading"></app-loading-page>
+<div  class="grid p-fluid {{ isLoading ? 'b-loading' : '' }}">
+    <ng-container>
+        <div class="col-12 md:col-6">
+            <div class="field mb-0">
+                <label htmlFor="code"> userName </label>
+                <input pInputText [disabled]="true" value="{{ user?.userName }}" class="custom-input-disabled"/>
+            </div>
+        </div>
+        <div class="col-12 md:col-6">
+            <div class="field mb-0">
+                <label htmlFor="code"> Tên hiển thị </label>
+                <input pInputText [disabled]="true" value="{{ user?.displayName }}" class="custom-input-disabled"/>
+            </div>
+        </div>
+        <ng-container *ngFor="let web of websites">
+            <div class="col-12 md:col-12">
+                <div class="field mb-0">
+                    <label htmlFor="quantity"> <b> Vai trò trong {{ web?.name }} </b> </label>
+                    <p-multiSelect
+                        styleClass="b-multiselect"
+                        appendTo="body"
+                        [showHeader]="false"
+                        [options]="getRoleWeb(web.webKey)" 
+                        [(ngModel)]="roleSelected" 
+                        defaultLabel="Chọn vai trò"
+                        emptyMessage="Không có dữ liệu"
+                        optionLabel="name">
+                    </p-multiSelect>
+                </div>
+            </div>
+        </ng-container>
+    </ng-container>
+</div>
+<div class="p-dialog-footer" style="width: 100%; position: fixed; left: 0; bottom: 0;">
+    <button pButton pRipple label="Hủy" icon="pi pi-times" class="p-button-text" (click)="close()"></button>
+    <button pButton pRipple label="Lưu" icon="pi pi-check" class="p-button-text" [disabled]="submitted" (click)="save()"></button>
+</div>
+
+         

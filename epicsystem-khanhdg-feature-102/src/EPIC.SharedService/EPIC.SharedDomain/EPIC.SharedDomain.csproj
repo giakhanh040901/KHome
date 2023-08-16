@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="11.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\EPIC.BondService\EPIC.Utils\EPIC.Utils.csproj" />
+    <ProjectReference Include="..\..\EPIC.CoreService\EPIC.CoreEntities\EPIC.CoreEntities.csproj" />
+    <ProjectReference Include="..\..\EPIC.CoreService\EPIC.CoreRepositories\EPIC.CoreRepositories.csproj" />
+    <ProjectReference Include="..\..\EPIC.InvestService\EPIC.InvestDomain\EPIC.InvestDomain.csproj" />
+    <ProjectReference Include="..\..\EPIC.InvestService\EPIC.InvestRepositories\EPIC.InvestRepositories.csproj" />
+    <ProjectReference Include="..\EPIC.SharedEntities\EPIC.SharedEntities.csproj" />
+    <ProjectReference Include="..\EPIC.SharedRepositories\EPIC.SharedRepositories.csproj" />
+  </ItemGroup>
+
+</Project>

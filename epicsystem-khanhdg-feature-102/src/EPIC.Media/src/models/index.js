@@ -1,0 +1,16 @@
+module.exports.Token = require('./token.model');
+module.exports.User = require('./user.model');
+module.exports.News = require('./news.model');
+module.exports.Media = require('./media.model');
+module.exports.Notification = require('./notification.model');
+module.exports.SystenNotification = require('./system-notification-template');
+module.exports.SendingList = require('./sending-list.model');
+module.exports.NotificationTemplate = require('./notification-template.model');
+module.exports.Knowledge = require('./knowledge.model');
+module.exports.ProductImage = require('./product-image.model');
+module.exports.SentNotification = require('./sent-notifications.model');
+module.exports.TradingProviderNotificationConfig = require('./trading-provider-config.model');
+module.exports.Feedback = require('./feedback.model');
+module.exports.GarnerDescription = require('./garner-description.model');
+module.exports.FacebookPost = require('./facebook-post.model');
+module.exports.Call = require('./call.model');

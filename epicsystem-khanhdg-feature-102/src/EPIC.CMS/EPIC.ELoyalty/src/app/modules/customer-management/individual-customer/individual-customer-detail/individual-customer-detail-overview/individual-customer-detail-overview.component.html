@@ -1,0 +1,149 @@
+<div *ngIf="this.isGranted([this.PermissionLoyaltyConst.Loyalty_KhachHangCaNhan_ThongTinChung_ChiTiet])" class="col-12">
+  <div>
+    <h5 class="title-info">Thông tin khách hàng</h5>
+  </div>
+  <div class="p-fluid p-formgrid grid">
+    <div class="flex b-w-100">
+      <div class="col-2">
+        <form-image [imageSource]="faceImage" [isDisabled]="true"></form-image>
+      </div>
+      <div class="col-10">
+        <div class="flex b-w-100">
+          <div class="col-divide-5">
+            <form-input [label]="'Mã khách hàng'" [(ngModelValue)]="overview.code" [isDisabled]="true"></form-input>
+          </div>
+          <div class="col-divide-5">
+            <form-input
+              [label]="'Họ và tên'"
+              [isRequired]="true"
+              [(ngModelValue)]="overview.name"
+              [isDisabled]="true"
+            ></form-input>
+          </div>
+          <div class="col-divide-5">
+            <form-input-calendar
+              [label]="'Ngày sinh'"
+              [isRequired]="true"
+              [(ngModelValue)]="overview.birthday"
+              [isDisabled]="true"
+              [showIcon]="false"
+            ></form-input-calendar>
+          </div>
+          <div class="col-divide-5">
+            <form-dropdown
+              [label]="'Giới tính'"
+              [isRequired]="true"
+              [options]="listGender"
+              [(ngModelValue)]="overview.gender"
+              [isDisabled]="true"
+            ></form-dropdown>
+          </div>
+          <div class="col-divide-5">
+            <form-input
+              [label]="'Mã giới thiệu'"
+              [isRequired]="true"
+              [(ngModelValue)]="overview.referralCode"
+              [isDisabled]="true"
+            ></form-input>
+          </div>
+        </div>
+        <div class="flex b-w-100">
+          <div class="col-divide-5">
+            <form-input
+              [label]="'Số điện thoại'"
+              [(ngModelValue)]="overview.numberPhone"
+              [isDisabled]="true"
+            ></form-input>
+          </div>
+          <div class="col-divide-5 col-grow-2">
+            <form-input [label]="'Email'" [(ngModelValue)]="overview.email" [isDisabled]="true"></form-input>
+          </div>
+          <div class="col-divide-5">
+            <form-input [label]="'Loại giấy tờ'" [(ngModelValue)]="overview.cardType" [isDisabled]="true"></form-input>
+          </div>
+          <div class="col-divide-5">
+            <form-input [label]="'Mã số'" [(ngModelValue)]="overview.cardNumber" [isDisabled]="true"></form-input>
+          </div>
+        </div>
+        <div class="flex b-w-100">
+          <div class="col-6">
+            <form-input
+              [label]="'Địa chỉ liên hệ'"
+              [(ngModelValue)]="overview.address"
+              [isDisabled]="true"
+            ></form-input>
+          </div>
+          <div class="col-divide-5">
+            <form-input-calendar
+              [label]="'Ngày tham gia'"
+              [isRequired]="true"
+              [(ngModelValue)]="overview.joinDate"
+              [isDisabled]="true"
+              [showIcon]="false"
+            ></form-input-calendar>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="">
+    <h5 class="title-info">Thông tin tích điểm</h5>
+  </div>
+  <div class="p-fluid p-formgrid grid">
+    <div class="flex b-w-100">
+      <div class="col-2">
+        <form-input [label]="'Tổng điểm'" [(ngModelValue)]="accumulate.totalPoint" [isDisabled]="true"></form-input>
+      </div>
+      <div class="col-2">
+        <form-input [label]="'Điểm tiêu'" [(ngModelValue)]="accumulate.usePoint" [isDisabled]="true"></form-input>
+      </div>
+      <div class="col-2">
+        <form-input [label]="'Điểm còn lại'" [(ngModelValue)]="accumulate.remainPoint" [isDisabled]="true"></form-input>
+      </div>
+      <div class="col-2">
+        <form-input [label]="'Hạng thành viên'" [(ngModelValue)]="accumulate.membershipClass" [isDisabled]="true"></form-input>
+      </div>
+    </div>
+  </div>
+  <div>
+    <h5 class="title-info">Lịch sử tích điểm</h5>
+  </div>
+  <div class="p-fluid p-formgrid grid">
+    <div class="flex b-w-100">
+      <div class="col-2">
+        <form-dropdown
+          [label]="'Loại'"
+          [options]="listType"
+          [(ngModelValue)]="filter.type"
+          [placeholder]="'Tất cả'"
+          (_onChange)="onChangeType($event)"
+        ></form-dropdown>
+      </div>
+      <div class="col-2">
+        <form-dropdown
+          [label]="'Lý do'"
+          [options]="listReason"
+          [(ngModelValue)]="filter.reason"
+          [placeholder]="'Tất cả'"
+          (_onChange)="onChangeReason($event)"
+        ></form-dropdown>
+      </div>
+      <div class="flex align-items-end col-2" [style.marginBottom.px]="5">
+        <form-button [icon]="'pi pi-replay'" [label]="'Tải lại'" (_onClick)="resetFilter($event)"></form-button>
+      </div>
+    </div>
+    <div class="flex b-w-100">
+      <div class="col-12">
+        <form-table
+          class="b-w-100"
+          [columns]="headerColumns"
+          [dataSource]="dataSource"
+          [isLoading]="isLoading"
+          [scrollHeight]="'300px'"
+          [page]="page"
+          (_changePage)="setPage($event)"
+        ></form-table>
+      </div>
+    </div>
+  </div>
+</div>

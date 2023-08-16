@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\EPIC.BondService\EPIC.Entities\EPIC.Entities.csproj" />
+    <ProjectReference Include="..\..\EPIC.ConnectThirdPart\EPIC.MSB\EPIC.MSB.csproj" />
+    <ProjectReference Include="..\..\EPIC.ConnectThirdPart\EPIC.Pvcb\EPIC.Pvcb.csproj" />
+    <ProjectReference Include="..\..\EPIC.CoreService\EPIC.CoreRepositories\EPIC.CoreRepositories.csproj" />
+    <ProjectReference Include="..\..\EPIC.CoreService\EPIC.CoreRepositoryExtensions\EPIC.CoreRepositoryExtensions.csproj" />
+    <ProjectReference Include="..\..\EPIC.EventService\EPIC.EventDomain\EPIC.EventDomain.csproj" />
+    <ProjectReference Include="..\..\EPIC.GarnerService\EPIC.GarnerDomain\EPIC.GarnerDomain.csproj" />
+    <ProjectReference Include="..\..\EPIC.GarnerService\EPIC.GarnerRepositories\EPIC.GarnerRepositories.csproj" />
+    <ProjectReference Include="..\..\EPIC.InvestService\EPIC.InvestDomain\EPIC.InvestDomain.csproj" />
+    <ProjectReference Include="..\..\EPIC.RealEstateService\EPIC.RealEstateDomain\EPIC.RealEstateDomain.csproj" />
+    <ProjectReference Include="..\..\EPIC.SharedService\EPIC.Notification\EPIC.Notification.csproj" />
+    <ProjectReference Include="..\EPIC.PaymentRepositories\EPIC.PaymentRepositories.csproj" />
+    <ProjectReference Include="..\EPIC.PaymentSharedEntities\EPIC.PaymentSharedEntities.csproj" />
+  </ItemGroup>
+
+</Project>

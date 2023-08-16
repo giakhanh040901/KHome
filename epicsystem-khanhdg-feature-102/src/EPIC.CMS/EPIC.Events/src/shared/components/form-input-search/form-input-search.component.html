@@ -1,0 +1,14 @@
+<span class="block mt-2 md:mt-0 p-input-icon-left">
+    <i class="pi pi-search"></i>
+    <input
+        pInputText
+        type="text"
+        [class]="class"
+        [placeholder]="placeholder"
+        [style.width.px]="width"
+        [style.width.%]="!width && 100"
+        [(ngModel)]="keyword"
+        [disabled]="disabled"
+        (input)="changeKeyword($event)"
+    />
+</span>

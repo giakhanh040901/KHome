@@ -1,0 +1,129 @@
+<p-toast [baseZIndex]="10000" key="policyTemp"></p-toast>
+<e-loading *ngIf="isLoading"></e-loading>
+<div class="grid p-fluid p-fluid-custom ml-3">
+    <!-- <p-toast key="policyContract"></p-toast> -->
+    <p-confirmDialog
+    [style]="{ width: '400px' }"
+    [baseZIndex]="10000"
+  ></p-confirmDialog>
+  
+    <ng-container>
+        <div class="col-12 md:col-6">
+            <div class="field mb-0">
+            <label> Tiêu đề<span class="required-field"> * </span></label>
+            <input 
+                type="text" id="name" name="name" pInputText 
+                [(ngModel)]="shareItem.title" maxlength="256" required
+                [disabled]="!isEdit" placeholder="Nhập tiêu đề" 
+            />
+            </div>
+        </div>
+
+        <!--  -->
+        <div class="col-12 md:col-12">
+            <div *ngIf="isEdit" class="col-12 md:col-2">
+                <button                     
+                    pButton pRipple label="Thêm hình ảnh" icon="pi pi-plus" [disabled]="!isEdit"
+                    class="p-button-success mr-2" (click)="insertImageFile()">
+                </button>
+            </div>
+        </div>
+        <ng-container *ngFor="let item of shareItem.imageFiles; let index = index">
+            <div class="item-wrap mt-3 mb-3">
+                <div>
+                    <p-image [id]="index + 'bc'" src="{{baseUrl}}/{{item.fileUrl}}" 
+                        [alt]="'abc'+index" [width]="150" [height]="150" 
+                        [preview]="true" [imageStyle]="imageStyle">
+                    </p-image>
+
+                    <div *ngIf="isEdit" class="flex mt-3 show-img">
+                        <i class="pi pi-pencil b-icon cursor-pointer" title="Sửa" (click)="editImage(item)"></i>
+                        <i class="pi pi-trash b-icon b-icon-delete cursor-pointer" title="Xóa" (click)="deleteImage(item.id)"></i>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+    </ng-container>
+
+        <div class="b-w-100 col-12">
+          <p-selectButton
+            optionValue="value"
+            optionLabel="name"
+            class="mb-2 mt-2"
+            [options]="htmlMarkdownOptions"
+            [(ngModel)]="shareItem.contentType"
+            [disabled]="!isEdit"
+          ></p-selectButton>
+        </div>
+        <div class="flex b-w-100 pb-5">
+          <div
+            class="field {{
+                shareItem.contentType === MARKDOWN_OPTIONS.MARKDOWN
+                ? 'col-6'
+                : 'col-12'
+            }}"
+          >
+            <label>Nhập thông tin</label>
+            <div
+              *ngIf="shareItem.contentType === MARKDOWN_OPTIONS.MARKDOWN"
+            >
+              <textarea
+                #myTextArea
+                (click)="getCaretPos(myTextArea)"
+                (keyup)="getCaretPos(myTextArea)"
+                pInputTextarea
+                [rows]="15"
+                [(ngModel)]="shareItem.overviewContent"
+                placeholder="Nhập nội dung mô tả"
+                class="custom-input"
+                [disabled]="!isEdit"
+              ></textarea>
+                <div style="width: 150px" class="mt-2">
+                    <p-button
+                        *ngIf="isEdit"
+                        [disabled]="!isEdit" 
+                        (click)="insertImage()"
+                        class="p-button-outlined p-button-info"
+                        label="Chèn ảnh"
+                        icon="pi pi-image"
+                        iconPos="left"
+                    >
+                    </p-button>
+                </div>
+            </div>
+    
+            <div *ngIf="shareItem.contentType === MARKDOWN_OPTIONS.HTML">
+              <angular-editor
+                [(ngModel)]="shareItem.overviewContent"
+                class="custom-input"
+                [placeholder]="'Nhập nội dung'"
+                [config]="{ height: '18rem', sanitize: false, editable: isEdit }"
+                [disabled]="!isEdit"
+              >
+              </angular-editor>
+            </div>
+          </div>
+          <div
+            *ngIf="shareItem.contentType === MARKDOWN_OPTIONS.MARKDOWN"
+            class="field col-6"
+          >
+            <label>Hiển thị</label>
+            <markdown class="border-box" style="height: 20rem;" [data]="displayContent"> </markdown>
+          </div>
+        </div>
+</div>
+<div class="p-dialog-footer e-custom-dialog-footer" >
+    <button
+        pButton
+        pRipple
+        label="Hủy"
+        icon="pi pi-times"
+        class="p-button-text p-confirm-dialog-reject"
+        (click)="close($event)"
+    ></button>
+    <button
+        *ngIf="isEdit" pButton pRipple label="Lưu"
+        icon="pi pi-check" class="p-button-text p-confirm-dialog-approve"
+        (click)="save()"
+    ></button>
+</div>

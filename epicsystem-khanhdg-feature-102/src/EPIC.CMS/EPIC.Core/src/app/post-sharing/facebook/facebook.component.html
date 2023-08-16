@@ -1,0 +1,52 @@
+
+
+
+<div class="grid main-content">
+    <div class="col-12">
+        <button type="button" pButton title="Login facebook" (click)="loginWithFacebook()">Kết nối tài khoản facebook</button>
+        <p-message class="ml-1" severity="info" text="Bấm kết nối tài khoản facebook để hiển thị danh sách các trang fanpage"></p-message>   
+        <div class="ui-dialog-footer-custom mt-2" style="float: right;"> 
+            <button class="p-button-success" pButton iconPos="left" label="Hoàn thành" icon="pi pi-check" (click)="save()"></button>
+        </div>
+    </div>
+   
+    <div class="col-4">
+        <h5>Danh sách trang bạn đang quản lý</h5>
+        <div class="page-list">
+            <div *ngFor="let page of pages">
+                <div class="product-item" (click)="selectPage(page)"> 
+                    <div class="image-container mr-4">  
+                        <p-avatar  size="xlarge" shape="circle" image="{{page.picture?.data.url}}"></p-avatar>
+                    </div>
+                    <div class="product-list-detail">
+                        <h6 class="mb-2">{{page.name}}</h6>
+                        <i class="pi pi-tag product-category-icon"></i>
+                        <span class="product-category">{{page.category}}</span>
+                    </div>
+                     
+                </div>
+            </div>
+            <p-message *ngIf="!selectedPage && pages.length == 0" class="ml-1" severity="info" text="Bạn đang không quản lý trang nào"></p-message>   
+        </div> 
+    </div>
+    <div class="col-8">
+        <h5>Danh sách bài viết trang {{selectedPage.name}}</h5>
+        <div class="page-list">
+            <div *ngFor="let post of posts">
+                <div class="product-item" > 
+                    <div class="image-container mr-4">  
+                        <p-avatar  size="xlarge" image="{{post.full_picture}}"></p-avatar>
+                    </div>
+                    <div class="product-list-detail">
+                        <h6 class="mb-2">Đăng ngày: {{post.updated_time | date:"dd/MM/yy"}}</h6>
+                        <i class="pi pi-tag product-category-icon"></i>
+                        <span class="product-category">{{post.message}}</span>
+                    </div>
+                    <div > 
+                        <button [disabled]="listPostIds.includes(post.id)" (click)="addPost(post)" icon="pi pi-check"  class="p-button-sm ml-3 p-button-info" type="button" pButton label="{{listPostIds.includes(post.id) ? 'Đã nhập' : 'Nhập bài viết'}}" ></button>
+                    </div>
+                </div>
+            </div>
+        </div> 
+    </div>
+</div>

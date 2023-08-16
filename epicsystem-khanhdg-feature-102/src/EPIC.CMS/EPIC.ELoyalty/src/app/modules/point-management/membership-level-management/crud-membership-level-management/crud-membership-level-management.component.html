@@ -1,0 +1,95 @@
+<div class="p-fluid p-formgrid grid" [style.paddingBottom.px]="70">
+  <div class="flex b-w-100">
+    <div class="col-6">
+      <form-input
+        [label]="'Số điểm bắt đầu'"
+        [isRequired]="true"
+        [type]="'number'"
+        [(ngModelValue)]="crud.startPoint"
+        [placeholder]="'Nhập số điểm bắt đầu'"
+        [isDisabled]="isDisable"
+      ></form-input>
+    </div>
+    <div class="col-6">
+      <form-input
+        [label]="'Số điểm kết thúc'"
+        [isRequired]="true"
+        [type]="'number'"
+        [(ngModelValue)]="crud.endPoint"
+        [placeholder]="'Nhập số điểm kết thúc'"
+        [isDisabled]="isDisable"
+      ></form-input>
+    </div>
+  </div>
+  <div class="flex b-w-100">
+    <div class="col-12">
+      <form-input
+        [label]="'Tên hạng'"
+        [isRequired]="true"
+        [(ngModelValue)]="crud.name"
+        [placeholder]="'Nhập tên hạng'"
+        [isDisabled]="isDisable"
+      ></form-input>
+    </div>
+  </div>
+  <div class="flex b-w-100">
+    <div class="col-12">
+      <form-textarea
+        [label]="'Mô tả'"
+        [rows]="2"
+        [(ngModelValue)]="crud.description"
+        [placeholder]="'Nhập nội dung mô tả'"
+        [isDisabled]="isDisable"
+      ></form-textarea>
+    </div>
+  </div>
+  <div class="flex b-w-100">
+    <div class="col-6">
+      <form-input-calendar
+        [label]="'Ngày áp dụng'"
+        [isRequired]="true"
+        [(ngModelValue)]="crud.applyDate"
+        [placeholder]="'dd/mm/yy'"
+        [isDisabled]="isDisable"
+      ></form-input-calendar>
+    </div>
+    <div class="col-6">
+      <form-input-calendar
+        [label]="'Ngày hủy kích hoạt'"
+        [(ngModelValue)]="crud.deactiveDate"
+        [placeholder]="'dd/mm/yy'"
+        [isDisabled]="isDisable"
+      ></form-input-calendar>
+    </div>
+  </div>
+  <div class="flex b-w-100">
+    <div class="col-6">
+      <form-input-calendar
+        [label]="'Ngày tạo'"
+        [(ngModelValue)]="crud.createDate"
+        [isDisabled]="true"
+        [placeholder]="'dd/mm/yy'"
+        [showIcon]="false"
+      ></form-input-calendar>
+    </div>
+    <div class="col-6">
+      <form-input [label]="'Người tạo'" [(ngModelValue)]="crud.createUser" [isDisabled]="true"></form-input>
+    </div>
+  </div>
+</div>
+<div *ngIf="!isDisable" class="p-dialog-footer" style="width: 100%; position: fixed; left: 0; bottom: 0">
+  <form-button
+    [isTypeRipple]="true"
+    [classButton]="'p-button-text p-confirm-dialog-reject'"
+    [label]="'Hủy'"
+    [icon]="'pi pi-times'"
+    (_onClick)="close($event)"
+  ></form-button>
+  <form-button
+    [isTypeRipple]="true"
+    [classButton]="'p-button-text p-confirm-dialog-approve'"
+    [label]="'Lưu'"
+    [icon]="'pi pi-check'"
+    (_onClick)="save($event)"
+  ></form-button>
+</div>

@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "EPIC.InvestUnitTest": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}

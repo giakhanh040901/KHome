@@ -1,0 +1,430 @@
+<div class="row">
+    <div class="col-12 grid-margin">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12 px-0">
+                        <span class="mb-0 h3 pr-1" style="color: #172b4d;"> {{ titlePage }} </span>
+                    </div>
+                </div>
+                <div class="row mt-2 mb-3">
+                    <div class="col-md-6 pl-0 d-flex align-items-end">
+                        <button class="btn btn-sm btn-primary" (click)="create()"><i
+                                class="mdi mdi-plus-circle mr-1"></i> Thêm lô trái phiếu </button>
+                    </div>
+                    <div class="col-md-6 d-flex justify-content-end pr-0">
+                        <div class="input-group input-search">
+                            <input type="text" class="form-control form-control-sm border-radius-default" name="keyword"
+                                [placeholder]="'Tìm kiếm...'" [(ngModel)]="keyword" (keyup)="changeKeyword()"
+                                (keyup.enter)="setPage({ offset: offset })" />
+                            <div class="input-group-append">
+                                <button class="btn btn-sm btn-primary" type="button"
+                                    (click)="setPage({ offset: offset })">
+                                    <i class="icon-magnifier"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 px-0">
+                        <ngx-datatable class="ngx-datatable-custom frozen-right" #productBondInfoTable [rows]="rows"
+                            [columnMode]="ColumnMode.force" [footerHeight]="42" [rowHeight]="50" [headerHeight]="50"
+                            [footerHeight]="42" [scrollbarV]="true" [scrollbarH]="true" [virtualization]="false"
+                            [externalPaging]="true" [count]="page.totalItems" [offset]="page.pageNumber"
+                            [limit]="page.pageSize" [messages]="datatableMessage" (page)="setPage($event)"
+                            [busy]="isLoading">
+                            <ngx-datatable-row-detail [rowHeight]="350" #myDetailRow (toggle)="onDetailToggle($event)">
+                                <ng-template let-row="row" let-expanded="expanded" ngx-datatable-row-detail-template>
+                                    <div class="card wrapper-detail" style="overflow-y: scroll;">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <label> Mã trái phiếu </label>
+                                                    <p> {{ row.bondCode ?? '-' }} </p>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label> Tên trái phiếu </label>
+                                                    <p> {{ row.bondName ?? '-' }} </p>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label> Tổ chức phát hành </label>
+                                                    <p> {{ row.issuerName ?? '-' }} </p>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label> Đại lý sơ cấp </label>
+                                                    <p> {{ row.tradingProviderName ?? '-' }} </p>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label> Đại lý lưu ký </label>
+                                                    <p> {{ row.depositProviderName ?? '-' }} </p>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label> Loại trái phiếu </label>
+                                                    <p> {{ row.bondTypeName ?? '-' }} </p>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <label> Mô tả </label>
+                                                    <p> {{ row.description ?? '-' }} </p>
+
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label> Nội dung </label>
+                                                    <p> {{ row.content ?? '-' }} </p>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <label> Ngày phát hành </label>
+                                                    <p> {{ row.issueDate ? (row.issueDate | dateview) : '-' }} </p>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label> Ngày đáo hạn </label>
+                                                    <p> {{ row.dueDate ? (row.dueDate | dateview) : '-' }} </p>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label> Mệnh giá </label>
+                                                    <p> {{ row.parValue ? (row.parValue | number:'1.0-2') : '-' }} </p>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label> Tổng giá trị phát hành </label>
+                                                    <p> {{ row.totalValue ? (row.totalValue | number:'1.0-2') : '-' }} </p>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <label> Kỳ hạn </label>
+                                                    <p> {{ row.bondPeriod ?? '-' }} </p>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label> Đơn vị kỳ hạn </label>
+                                                    <p> {{ ProductBondInfoConst.getPeriodUnits(row.bondPeriodUnit) ?? '-' }} </p>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label> Lãi suất </label>
+                                                    <p> {{ row.interestRate ?? '-' }} </p>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label> Kỳ hạn trả lãi </label>
+                                                    <p> {{ row.interestPeriod ?? '-' }} </p>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label> Đơn vị kỳ hạn trả lãi </label>
+                                                    <p> {{ ProductBondInfoConst.getPeriodUnits(row.interestPeriodUnit) ?? '-' }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <label> Loại lợi tức </label>
+                                                    <p> {{ ProductBondInfoConst.getCouponTypes(row.interestType) ?? '-' }} </p>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label> Kiểu lãi suất </label>
+                                                    <p> {{ ProductBondInfoConst.getInterestRateTypes(row.interestRateType) ?? '-' }} </p>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label> Kiểu lãi theo Coupon </label>
+                                                    <p> {{ ProductBondInfoConst.getInterestCouponTypes(row.interestCouponType) ?? '-' }}
+                                                    </p>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label> Loại coupon </label>
+                                                    <p> {{ ProductBondInfoConst.getCouponTypes(row.couponBondType) ?? '-' }} </p>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label> Có bảo lãnh thanh toán không? </label>
+                                                    <p> {{ ProductBondInfoConst.getBoolean(row.isPaymentGuarantee) ?? '-' }}
+                                                    </p>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label> Có cho phép bán lại trước hạn không? </label>
+                                                    <p> {{ ProductBondInfoConst.getBoolean(row.allowSbd) ?? '-' }} </p>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label> Số ngày nắm giữ tối thiểu được phép bán lại </label>
+                                                    <p> {{ row.allowSbdMonth ?? '-' }} </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ng-template>
+                            </ngx-datatable-row-detail>
+                            <ngx-datatable-column [width]="30" [resizeable]="false" [sortable]="false"
+                                [draggable]="false" [canAutoResize]="false" frozenLeft="true">
+                                <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+                                    <a style="font-size: 25px;" href="javascript:void(0)"
+                                        [class.datatable-icon-right]="!expanded" [class.datatable-icon-down]="expanded"
+                                        title="Expand/Collapse Row" (click)="toggleExpandRow(row, expanded)">
+                                    </a>
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="bondCode" [width]="180" [sortable]="false" frozenLeft="true">
+                                <ng-template let-column="column" ngx-datatable-header-template> Mã trái phiếu
+                                </ng-template>
+                                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                    <div>
+                                        {{ value }}
+                                    </div>
+                                </ng-template>
+                            </ngx-datatable-column>
+
+                            <ngx-datatable-column name="bondName" [width]="180" [sortable]="false" frozenLeft="true">
+                                <ng-template let-column="column" ngx-datatable-header-template> Tên trái phiếu
+                                </ng-template>
+                                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                    {{ value }}
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="issuerId" [width]="180" [sortable]="false">
+                                <ng-template let-column="column" ngx-datatable-header-template>
+                                    <div class="ml-8px">
+                                        Tổ chức phát hành
+                                    </div>
+                                </ng-template>
+                                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                    <div title="{{ getNameIssuer(value) }}" class="ml-8px">
+                                        {{ getNameIssuer(value) | truncate:[40]}}
+                                    </div>
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="tradingProviderId" [width]="180" [sortable]="false">
+                                <ng-template let-column="column" ngx-datatable-header-template> Đại lý sơ cấp
+                                </ng-template>
+                                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                    <div>
+                                        {{ getNameTrandingProvider(value) }}
+                                    </div>
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="depositProviderId" [width]="180" [sortable]="false">
+                                <ng-template let-column="column" ngx-datatable-header-template> Đại lý lưu kí
+                                </ng-template>
+                                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                    <div>
+                                        {{ getNameDepositProvider(value) }}
+                                    </div>
+                                </ng-template>
+                            </ngx-datatable-column>
+
+                            <ngx-datatable-column name="bondTypeId" [width]="180" [sortable]="false">
+                                <ng-template let-column="column" ngx-datatable-header-template> Loại trái phiếu
+                                </ng-template>
+                                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                    <div>
+                                        {{ getNameBondType(value) }}
+                                    </div>
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="description" [width]="180" [sortable]="false">
+                                <ng-template let-column="column" ngx-datatable-header-template> Mô tả </ng-template>
+                                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                    <div>
+                                        {{ value }}
+                                    </div>
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="content" [width]="180" [sortable]="false">
+                                <ng-template let-column="column" ngx-datatable-header-template> Nội dung </ng-template>
+                                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                    <div>
+                                        {{ value }}
+                                    </div>
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="issueDate" [width]="180" [sortable]="false">
+                                <ng-template let-column="column" ngx-datatable-header-template> Ngày phát hành
+                                </ng-template>
+                                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                    <div>
+                                        {{ value | dateview }}
+                                    </div>
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="dueDate" [width]="180" [sortable]="false">
+                                <ng-template let-column="column" ngx-datatable-header-template> Ngày đáo hạn
+                                </ng-template>
+                                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                    <div>
+                                        {{ value | dateview }}
+                                    </div>
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="parValue" [width]="180" [sortable]="false">
+                                <ng-template let-column="column" ngx-datatable-header-template> Mệnh giá </ng-template>
+                                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                    <div>
+                                        {{ value | number:'1.0-2' }}
+                                    </div>
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="totalValue" [width]="180" [sortable]="false">
+                                <ng-template let-column="column" ngx-datatable-header-template> Tổng giá trị phát hành
+                                </ng-template>
+                                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                    <div>
+                                        {{ value | number:'1.0-2' }}
+                                    </div>
+                                </ng-template>
+                            </ngx-datatable-column>
+
+                            <ngx-datatable-column name="interestRate" [width]="180" [sortable]="false">
+                                <ng-template let-column="column" ngx-datatable-header-template> Lãi suất (%)
+                                </ng-template>
+                                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                    <div>
+                                        {{ value }}
+                                    </div>
+                                </ng-template>
+                            </ngx-datatable-column>
+
+                            <ngx-datatable-column name="bondPeriod" [width]="180" [sortable]="false">
+                                <ng-template let-column="column" ngx-datatable-header-template> Kỳ hạn </ng-template>
+                                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                    <div>
+                                        {{ value }}
+                                    </div>
+                                </ng-template>
+                            </ngx-datatable-column>
+
+                            <ngx-datatable-column name="bondPeriodUnit" [width]="180" [sortable]="false">
+                                <ng-template let-column="column" ngx-datatable-header-template> Đơn vị kỳ hạn
+                                </ng-template>
+                                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                    <div>
+                                        {{ ProductBondInfoConst.getPeriodUnits(value) }}
+                                    </div>
+                                </ng-template>
+                            </ngx-datatable-column>
+
+                            <ngx-datatable-column name="interestRate" [width]="180" [sortable]="false">
+                                <ng-template let-column="column" ngx-datatable-header-template> Kỳ hạn trả lãi
+                                </ng-template>
+                                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                    <div>
+                                        {{ value }}
+                                    </div>
+                                </ng-template>
+                            </ngx-datatable-column>
+
+                            <ngx-datatable-column name="interestPeriodUnit" [width]="180" [sortable]="false">
+                                <ng-template let-column="column" ngx-datatable-header-template> Đơn vị kỳ hạn trả lãi
+                                </ng-template>
+                                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                    <div>
+                                        {{ ProductBondInfoConst.getPeriodUnits(value) }}
+                                    </div>
+                                </ng-template>
+                            </ngx-datatable-column>
+
+                            <ngx-datatable-column name="interestType" [width]="180" [sortable]="false">
+                                <ng-template let-column="column" ngx-datatable-header-template> Loại lợi tức
+                                </ng-template>
+                                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                    <div>
+                                        {{ ProductBondInfoConst.getCouponTypes(value) }}
+                                    </div>
+                                </ng-template>
+                            </ngx-datatable-column>
+
+                            <ngx-datatable-column name="interestRateType" [width]="180" [sortable]="false">
+                                <ng-template let-column="column" ngx-datatable-header-template> Kiểu lãi suất
+                                </ng-template>
+                                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                    <div>
+                                        {{ ProductBondInfoConst.getInterestRateTypes(value) }}
+                                    </div>
+                                </ng-template>
+                            </ngx-datatable-column>
+
+                            <ngx-datatable-column name="interestCouponType" [width]="180" [sortable]="false">
+                                <ng-template let-column="column" ngx-datatable-header-template> Kiểu lãi theo Coupon
+                                </ng-template>
+                                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                    <div>
+                                        {{ ProductBondInfoConst.getInterestCouponTypes(value) }}
+                                    </div>
+                                </ng-template>
+                            </ngx-datatable-column>
+
+                            <ngx-datatable-column name="couponBondType" [width]="180" [sortable]="false">
+                                <ng-template let-column="column" ngx-datatable-header-template> Loại Coupon
+                                </ng-template>
+                                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                    <div>
+                                        {{ ProductBondInfoConst.getCouponTypes(value) }}
+                                    </div>
+                                </ng-template>
+                            </ngx-datatable-column>
+
+                            <ngx-datatable-column name="isPaymentGuarantee" [width]="280" [sortable]="false">
+                                <ng-template let-column="column" ngx-datatable-header-template> Có bảo lãnh thanh toán
+                                    không? </ng-template>
+                                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                    <div>
+                                        {{ ProductBondInfoConst.getBoolean(value) }}
+                                    </div>
+                                </ng-template>
+                            </ngx-datatable-column>
+
+                            <ngx-datatable-column name="allowSbd" [width]="280" [sortable]="false">
+                                <ng-template let-column="column" ngx-datatable-header-template> Có cho phép bán lại
+                                    trước hạn không? </ng-template>
+                                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                    <div>
+                                        {{ ProductBondInfoConst.getBoolean(value) }}
+                                    </div>
+                                </ng-template>
+                            </ngx-datatable-column>
+
+                            <ngx-datatable-column name="allowSbdMonth" [width]="180" [sortable]="false">
+                                <ng-template let-column="column" ngx-datatable-header-template> Số ngày nắm giữ tối
+                                    thiểu </ng-template>
+                                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                    <div>
+                                        {{ value }}
+                                    </div>
+                                </ng-template>
+                            </ngx-datatable-column>
+
+                            <ngx-datatable-column name="ghiChu" [width]="200" [sortable]="false">
+                                <ng-template let-column="column" ngx-datatable-header-template> Ghi chú </ng-template>
+                                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                    <div class="mr-10px" [title]="value">
+                                        {{ value | truncate:[70] }}
+                                    </div>
+                                </ng-template>
+                            </ngx-datatable-column>
+
+                            <ngx-datatable-column [width]="100" [sortable]="false" frozenRight="True">
+                                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                    <div class="dropdown" dropdown #dropdown="bs-dropdown" [autoClose]="true">
+                                        <button dropdownToggle class="btn btn-action-table dropdown-toggle"
+                                            type="button" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true"
+                                            aria-expanded="false">
+                                            Thao tác
+                                        </button>
+                                        <div class="dropdown-menu table-dropdown-menu" *dropdownMenu
+                                            aria-labelledby="dropdownMenu">
+                                            <span>
+                                                <a class="dropdown-item dropdown-item-wrapper"
+                                                    (click)="edit(row.productBondId)">
+                                                    <i class="fas fa-pencil-alt"></i> Sửa
+                                                </a>
+                                                <a class="dropdown-item dropdown-item-wrapper" (click)="delete(row)">
+                                                    <i class="fas fa-trash"></i>&nbsp; Xoá
+                                                </a>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </ng-template>
+                            </ngx-datatable-column>
+                        </ngx-datatable>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

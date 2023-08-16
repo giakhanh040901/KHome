@@ -1,0 +1,13 @@
+::ng-deep .b-radio-button {
+    .p-radiobutton-box {
+        &.p-highlight, &:hover {
+            border-color: #ced4da !important;
+            background: white !important;
+        }
+        //
+        .p-radiobutton-icon {
+            background-color: #5346E0;
+        }
+        
+    }
+}

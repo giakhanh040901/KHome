@@ -1,0 +1,15 @@
+::ng-deep .action-avatar{
+    width: 85px;
+    height: 85px;
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+
+    p-image {
+        img {
+            border-radius: 50% !important;
+        }
+    }
+}
+
+

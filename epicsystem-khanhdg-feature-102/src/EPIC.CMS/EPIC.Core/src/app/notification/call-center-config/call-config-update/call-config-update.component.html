@@ -1,0 +1,51 @@
+<p-table 
+    #partnerTable 
+    [value]="rows" 
+    [loading]="isLoading" [rowHover]="true" [showCurrentPageReport]="true" [paginator]="false" 
+    responsiveLayout="scroll" dataKey="userId" 
+    [resizableColumns]="false" [scrollable]="true" scrollHeight="{{ (screenHeight*0.65) + 'px' }}" styleClass="custom-table">
+
+    <ng-template pTemplate="header" let-columns>
+        <tr>
+            <th style="max-width: 5rem; min-width: 5rem;" pFrozenColumn alignFrozen="left"> Id </th>
+                <th style="min-width: 20rem;" > Tên đầy đủ </th>
+                <th style="min-width: 9rem;" > Sắp xếp ưu tiên  </th>
+                <th style="max-width: 8rem; min-width: 8rem;" pFrozenColumn alignFrozen="right"> 
+                    <button pButton pRipple label="Lưu lại" class="p-button-success mr-2" 
+                    (click)="save()"></button> 
+                </th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-item let-editing="editing" let-rowIndex="rowIndex" let-columns="columns">
+        <tr [pEditableRow]="item">
+            <td style="max-width: 5rem; min-width: 5rem;" pFrozenColumn alignFrozen="left"> {{ item.userId }} </td>
+           
+            <td style="min-width: 20rem;"> 
+                {{ item?.fullName}}
+            </td>
+            <td style="min-width: 9rem;"> 
+                <p-inputNumber 
+                    mode="decimal" locale="de-DE"
+                    [(ngModel)]="item.sortOrder"
+                    
+                    >
+                </p-inputNumber>
+            </td>
+            <td style="max-width: 8rem; min-width: 8rem;" pFrozenColumn alignFrozen="right"> </td>
+        </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+        <tr>
+            <td colspan="7">Không có dữ liệu.</td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="loadingbody">
+        <tr>
+            <td colspan="7"> Đang tải dữ liệu ... </td>
+        </tr>
+    </ng-template>
+</p-table>
+
+
+         

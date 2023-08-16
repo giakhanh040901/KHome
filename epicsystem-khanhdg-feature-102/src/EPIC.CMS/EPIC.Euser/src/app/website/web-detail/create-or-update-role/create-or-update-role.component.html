@@ -1,0 +1,30 @@
+<p-dialog [(visible)]="modalDialog" [header]="header" [style]="{width: '450px', 'max-height': '100%', height: '100%'}" selectable="false" (onHide)="hideDialog()" [modal]="true" class="p-fluid" styleClass="b-permission-dialog" position="right" [draggable]="false" [resizable]="false">
+	<div class="grid m-2">
+		<div class="col-12 md:col-12">
+			<div class="field mb-0">
+				<label htmlFor="nation"> Tên vai trò (<span class="required-field"> * </span>) </label>
+				<input pInputText [(ngModel)]="role.name"/>   
+			</div>
+			<!-- <div class="field mb-0 mt-3">
+				<label htmlFor="nation"> Mô tả </label>
+				<textarea rows="3" pInputTextarea [(ngModel)]="role.description" [autoResize]="true"></textarea>
+			</div> -->
+		</div>
+	</div>
+	<!--  -->
+	<ng-template pTemplate="content">
+		<div class="card {{ (isLoading && submitted) ? 'b-loading' : '' }}">
+			<app-loading-page *ngIf="isLoading"></app-loading-page>
+			<p-tree *ngIf="!isLoading || (isLoading && submitted)"
+				[value]="permissionsTree" selectionMode="checkbox" styleClass="permission-tree pt-0"
+				[(selection)]="selecteds" 
+				(onNodeSelect)="selectedNote($event.node)"
+				(onNodeUnselect)="unSelectedNote($event.node)">
+			</p-tree>
+		</div>
+	</ng-template>
+	<ng-template pTemplate="footer">
+        <button pButton pRipple label="Hủy" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+        <button pButton pRipple label="Lưu" icon="pi pi-check" class="p-button-text" [disabled]="!validForm() || submitted" (click)="save()"></button>
+    </ng-template>
+</p-dialog>

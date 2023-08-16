@@ -1,0 +1,15 @@
+
+.e-multiple-clear-icon {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    margin-top: -0.5rem;
+    right: 2.357rem;
+    z-index: 1;
+}
+
+::ng-deep .button-clear {
+    .p-multiselect-label {
+        padding-right: 0.85rem;
+    }
+}

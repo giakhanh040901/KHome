@@ -1,0 +1,3 @@
+<app-loading-page *ngIf="isLoading"></app-loading-page>
+<app-partner-detail *ngIf="!isLoading && UserTypes.TYPE_PARTNERS.includes(this.userLogin.user_type) && isGranted([PermissionCoreConst.CoreThongTinDoanhNghiep])" [partnerId]="partnerId"> </app-partner-detail>
+<app-business-customer-detail *ngIf="!isLoading && UserTypes.TYPE_TRADING_PROVIDERS.includes(this.userLogin.user_type) && isGranted([PermissionCoreConst.CoreThongTinDoanhNghiep])" [businessCustomerId]="businessCustomerId"></app-business-customer-detail>

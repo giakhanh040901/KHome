@@ -1,0 +1,273 @@
+<form class="form-horizontal" autocomplete="off" #createModal="ngForm" (ngSubmit)="save()" [busy]="isLoading">
+    <abp-modal-header [title]="title" (onCloseClick)="bsModalRef.hide()"></abp-modal-header>
+    <div class="grid-margin stretch-card">
+        <div class="card">
+          <div class="card-body" #wrapperForm>
+            <ul role="tablist" class="justify-content-start nav nav-pills">
+                <li class="nav-item">
+                    <a href="javascript:void(0)" role="tab" class="nav-link active" id="ngb-tab-0" (click)="showTab('tab1','contentTab1')" #tab1>
+                    1.Thông tin tổ chức phát hành
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="javascript:void(0)" role="tab" class="nav-link" id="ngb-tab-1" (click)="showTab('tab2','contentTab2')" #tab2>
+                        2.Thông tin đăng ký kinh doanh
+                    </a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-body active" #contentTab1>
+                    <div class="row">
+                        
+                            <div class="form-group required col-lg-3">
+                                <label for="code">Mã tổ chức phát hành (<span class="field-required"> * </span>) </label>
+                                <input type="text" class="form-control form-control-sm" name="code" id="code" #code required
+                                    maxlength="10" [(ngModel)]="issuer.code" #codeModel="ngModel" #codeEl placeholder="Mã tổ chức phát hành" />
+                                <abp-validation-summary [control]="codeModel" [controlEl]="codeEl"></abp-validation-summary>
+                            </div>
+                            <div class="form-group required col-lg-3">
+                                <label for="name" #nameValidation>Tên tổ chức phát hành (<span class="field-required"> * </span>)</label>
+                                <input type="text" class="form-control form-control-sm" name="name" id="name" #name required
+                                    maxlength="200" [(ngModel)]="issuer.name" #nameModel="ngModel" #nameEl placeholder="Tên tổ chức phát hành" />
+                                <abp-validation-summary [control]="nameModel" [controlEl]="nameEl"></abp-validation-summary>
+                            </div>
+                            <div class="form-group required col-lg-3">
+                                <label for="nameEn">Tên Tiếng Anh</label>
+                                <input type="text" class="form-control form-control-sm" name="nameEn" id="nameEn" #nameEn
+                                    maxlength="200" [(ngModel)]="issuer.nameEn" #nameEnModel="ngModel" #nameEnEl placeholder="Tên Tiếng Anh" />
+                                <abp-validation-summary [control]="nameEnModel" [controlEl]="nameEnEl"></abp-validation-summary>
+                            </div>
+
+                            <div class="form-group required col-lg-3">
+                                <label for="shortName">Tên viết tắt (<span class="field-required"> * </span>)</label>
+                                <input type="text" class="form-control form-control-sm" name="shortName" id="shortName" #shortName required
+                                    maxlength="100" [(ngModel)]="issuer.shortName" #shortNameModel="ngModel" #shortNameEl placeholder="Tên viết tắt" />
+                                <abp-validation-summary [control]="shortNameModel" [controlEl]="shortNameEl"></abp-validation-summary>
+                            </div>
+                            <div class="form-group required col-lg-3">
+                                <label for="type"> Loại tổ chức phát hành (<span class="field-required"> * </span>) </label>
+                                <ng-select type="text" name="type" id="type" [notFoundText]="'Không có dữ liệu'" #type required
+                                [(ngModel)]="issuer.type"
+                                placeholder="Chọn loại tổ chức phát hành"
+                                [multiple]="false"
+                                [clearable]="false"
+                                #typeModel="ngModel" #typeEl>
+                                <ng-option *ngFor="let item of typeConst" [value]="item.code" [title]="item.name">{{ item.name }}</ng-option>
+                                </ng-select>
+                                <abp-validation-summary [control]="typeModel" [controlEl]="typeEl"></abp-validation-summary>
+                            </div>
+                       
+                            <div class="form-group required col-lg-3">
+                                <label for="phone"> Số điện thoại (<span class="field-required"> * </span>) </label>
+                                <input type="text" class="form-control form-control-sm" name="phone" id="phone" #phone maxlength="50"
+                                (keypress)="phoneNumber($event)" required
+                                [(ngModel)]="issuer.phone"
+                                placeholder="Số điện thoại"
+                                #phoneModel="ngModel" #phoneEl>
+                                <abp-validation-summary [control]="phoneModel" [controlEl]="phoneEl"></abp-validation-summary>
+                            </div>
+
+                            <div class="form-group required col-lg-3">
+                                <label for="email"> Email (<span class="field-required"> * </span>) </label>
+                                <input type="email" class="form-control form-control-sm" name="email" id="email" rows="1" #email required
+                                    placeholder="Email" maxlength="50" [(ngModel)]="issuer.email" #emailModel="ngModel" #emailEl/>
+                                <abp-validation-summary [control]="emailModel" [controlEl]="emailEl"></abp-validation-summary>
+                            </div>
+
+                            <div class="form-group required col-lg-3">
+                                <label for="mobile"> Mobile </label>
+                                <input type="text" class="form-control form-control-sm" name="mobile" id="mobile" #mobile maxlength="50"
+                                (keypress)="phoneNumber($event)"
+                                [(ngModel)]="issuer.mobile"
+                                placeholder="Mobile"
+                                #mobileModel="ngModel" #mobileEl />
+                                <abp-validation-summary [control]="mobileModel" [controlEl]="mobileEl"></abp-validation-summary>
+                            </div>
+
+                            <div class="form-group required col-lg-3">
+                                <label for="fax">Fax</label>
+                                <input type="text" class="form-control form-control-sm" name="fax" id="fax" #fax (keypress)="phoneNumber($event)"
+                                    placeholder="Fax" maxlength="50" [(ngModel)]="issuer.fax" #faxModel="ngModel" #faxEl />
+                                <abp-validation-summary [control]="faxModel" [controlEl]="faxEl"></abp-validation-summary>
+                            </div>
+
+                            <div class="form-group required col-lg-9">
+                                <label for="address"> Địa chỉ (<span class="field-required">*</span>) </label>
+                                <input type="text" class="form-control form-control-sm" name="address" id="address" required
+                                    placeholder="Địa chỉ" maxlength="100" #address [(ngModel)]="issuer.address" #addressModel="ngModel" #addressEl />
+                                <abp-validation-summary [control]="addressModel" [controlEl]="addressEl"></abp-validation-summary>
+                            </div>
+                        
+                            <div class="form-group required col-lg-3">
+                                <label for="taxCode">Mã số thuế</label>
+                                <input type="text" class="form-control form-control-sm" name="taxCode" id="taxCode" #taxCode (keypress)="numberOnly($event, [45])"
+                                    placeholder="Mã số thuế" maxlength="50" [(ngModel)]="issuer.taxCode" #taxCodeModel="ngModel" #taxCodeEl />
+                                <abp-validation-summary [control]="taxCodeModel" [controlEl]="taxCodeEl"></abp-validation-summary>
+                            </div>
+
+
+
+                            <div class="form-group required col-lg-3">
+                                <label for="bankAccNo">Số tài khoản ngân hàng</label>
+                                <input type="text" class="form-control form-control-sm" name="bankAccNo" id="bankAccNo" #bankAccNo (keypress)="numberOnly($event)"
+                                    placeholder="Số tài khoản ngân hàng" maxlength="100" [(ngModel)]="issuer.bankAccNo" #bankAccNoModel="ngModel" #bankAccNoEl />
+                                <abp-validation-summary [control]="bankAccNoModel" [controlEl]="bankAccNoEl"></abp-validation-summary>
+                            </div>
+
+                            <div class="form-group required col-lg-3">
+                                <label for="bankName">Tên ngân hàng</label>
+                                <input type="text" class="form-control form-control-sm" name="bankName" id="bankName" #bankName
+                                    placeholder="Tên ngân hàng" maxlength="200" [(ngModel)]="issuer.bankName" #bankNameModel="ngModel" #bankNameEl />
+                                <abp-validation-summary [control]="bankNameModel" [controlEl]="bankNameEl"></abp-validation-summary>
+                            </div>
+
+                            <div class="form-group required col-lg-3">
+                                <label for="bankBranchName"> Chi nhánh ngân hàng </label>
+                                <input type="text" class="form-control form-control-sm" name="bankBranchName" id="bankBranchName" rows="1" #bankBranchName
+                                    placeholder="Chi nhánh ngân hàng" maxlength="200" [(ngModel)]="issuer.bankBranchName" #bankBranchNameModel="ngModel" #bankBranchNameEl>
+                                <abp-validation-summary [control]="bankBranchNameModel" [controlEl]="bankBranchNameEl"></abp-validation-summary>
+                            </div>
+                        
+                    
+                            <div class="form-group required col-lg-3">
+                                <label for="foundationNo"> Số đăng ký CP </label>
+                                <input type="text" class="form-control form-control-sm" name="foundationNo" id="foundationNo" #foundationNo (keypress)="numberOnly($event, [45])"
+                                    placeholder="Số đăng ký CP" maxlength="50" [(ngModel)]="issuer.foundationNo" #foundationNoModel="ngModel" #foundationNoEl />
+                                <abp-validation-summary [control]="foundationNoModel" [controlEl]="foundationNoEl"></abp-validation-summary>
+                            </div>
+
+                            <div class="form-group required col-lg-3">
+                                <label for="foundationDate">Ngày đăng ký CP</label>
+                                <input type="text" placeholder="Ngày đăng ký CP" class="form-control form-control-sm" #foundationDate
+                                bsDatepicker name="foundationDate" maxlength="10" placeholder="Ngày đăng ký CP"
+                                (keypress)="numberOnly($event)"
+                                (bsValueChange)="changeDatePicker('foundationDate', $event)"
+                                [(ngModel)]="issuerFieldDateDisplays.foundationDate"
+                                [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY' }"
+                                placement="left top"
+                                #foundationDateModel="ngModel" #foundationDateEl>
+                                <abp-validation-summary [control]="foundationDateModel" [controlEl]="foundationDateEl"></abp-validation-summary>
+                            </div>
+
+                            <div class="form-group required col-lg-3">
+                                <label for="foundationIssuer"> Nơi đăng ký CP </label>
+                                <input type="text" class="form-control form-control-sm" name="foundationIssuer" id="foundationIssuer" #foundationIssuer
+                                    placeholder="Nơi đăng ký CP" maxlength="50" [(ngModel)]="issuer.foundationIssuer" #foundationIssuerModel="ngModel" #foundationIssuerEl />
+                                <abp-validation-summary [control]="foundationIssuerModel" [controlEl]="foundationIssuerEl"></abp-validation-summary>
+                            </div>
+                            <div class="form-group required col-lg-3" *ngIf="issuer.issuerId">
+                                <label for="status"> Trạng thái </label>
+                                <ng-select type="text" name="status" id="status" [notFoundText]="'Không có dữ liệu'" #status
+                                [(ngModel)]="issuer.status"
+                                placeholder="Trại thái"
+                                [multiple]="false"
+                                [clearable]="false"
+                                #statusModel="ngModel" #statusEl requried>
+                                <ng-option *ngFor="let item of statusConst" [value]="item.code">{{ item.name }}</ng-option>
+                                </ng-select>
+                                <abp-validation-summary [control]="statusModel" [controlEl]="statusEl"></abp-validation-summary>
+
+                            </div>
+                     
+                    </div>
+                </div>
+                <div class="tab-body" #contentTab2>
+                    <div class="row">
+                        <div class="form-group required col-lg-3">
+                            <label for="licenseNo"> Số đăng ký giấy phép ĐKKD </label>
+                            <input type="text" class="form-control form-control-sm" name="licenseNo" id="licenseNo" #licenseNo (keypress)="numberOnly($event, [45])"
+                                placeholder="Số đăng ký giấy phép ĐKKD" maxlength="50" [(ngModel)]="issuer.licenseNo" #licenseNoModel="ngModel" #licenseNoEl/>
+                            <abp-validation-summary [control]="licenseNoModel" [controlEl]="licenseNoEl"></abp-validation-summary>
+                        </div>
+                        <div class="form-group required col-lg-3">
+                            <label for="licenseDate"> Ngày cấp giấy phép ĐKKD </label>
+                            <input type="text" placeholder="Ngày cấp phép ĐKKD" class="form-control form-control-sm" #licenseDate
+                            bsDatepicker name="licenseDate" maxlength="10"
+                            (keypress)="numberOnly($event)" placeholder="Ngày cấp giấy phép ĐKKD"
+                            (bsValueChange)="changeDatePicker('licenseDate', $event)"
+                            [(ngModel)]="issuerFieldDateDisplays.licenseDate"
+                            [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY' }"
+                            #licenseDateModel="ngModel" #licenseDateEl>
+                            <abp-validation-summary [control]="licenseDateModel" [controlEl]="licenseDateEl"></abp-validation-summary>
+                        </div>
+                        <div class="form-group required col-lg-3">
+                            <label for="licenseIssuer">Nơi cấp giấy phép ĐKKD</label>
+                            <input type="text" class="form-control form-control-sm" name="licenseIssuer" id="licenseIssuer" #licenseIssuer
+                                placeholder="Nơi cấp giấy phép ĐKKD" maxlength="50" [(ngModel)]="issuer.licenseIssuer" #licenseIssuerModel="ngModel" #licenseIssuerEl />
+                            <abp-validation-summary [control]="licenseIssuerModel" [controlEl]="licenseIssuerEl"></abp-validation-summary>
+                        </div>
+                        <div class="form-group required col-lg-3">
+                            <label for="capital">Vốn điều lệ</label>
+                            <input type="text" class="form-control form-control-sm" name="capital" id="capital" #capital (keyup)="changeCurrency('capital',$event.target.value)"
+                                placeholder="Vốn điều lệ" maxlength="22" [(ngModel)]="issuerFieldCurrencyDisplays.capital" #capitalModel="ngModel" #capitalEl (keypress)="numberOnly($event)" />
+                            <abp-validation-summary [control]="capitalModel" [controlEl]="capitalEl"></abp-validation-summary>
+                        </div>
+                        <div class="form-group required col-lg-3">
+                            <label for="repName"> Họ tên người đại diện (<span class="field-required"> * </span>) </label>
+                            <input type="text" class="form-control form-control-sm" name="repName" id="repName" #repName required
+                                placeholder="Họ tên người đại diện" maxlength="256" [(ngModel)]="issuer.repName" #repNameModel="ngModel" #repNameEl />
+                            <abp-validation-summary [control]="repNameModel" [controlEl]="repNameEl"></abp-validation-summary>
+                        </div>
+                        <div class="form-group required col-lg-3">
+                            <label for="repPosition"> Vị trí người đại diện (<span class="field-required"> * </span>) </label>
+                            <input type="text" class="form-control form-control-sm" name="repPosition" id="repPosition" #repPosition required
+                                placeholder="Vị trí người đại diện" maxlength="256" [(ngModel)]="issuer.repPosition" #repPositionModel="ngModel" #repPositionEl />
+                            <abp-validation-summary [control]="repPositionModel" [controlEl]="repPositionEl"></abp-validation-summary>
+                        </div>
+                        <div class="form-group required col-lg-3">
+                            <label for="repIdNo"> Số CMND/CCCD người đại diện </label>
+                            <input type="text" class="form-control form-control-sm" name="repIdNo" id="repIdNo" #repIdNo (keypress)="numberOnly($event)"
+                                placeholder="Số CMND/CCCD người đại diện" maxlength="256" [(ngModel)]="issuer.repIdNo" #repIdNoModel="ngModel" #repIdNoEl />
+                            <abp-validation-summary [control]="repIdNoModel" [controlEl]="repIdNoEl"></abp-validation-summary>
+                        </div>
+                        <div class="form-group required col-lg-3">
+                            <label for="repIdDate"> Ngày cấp CMND/CCCD </label>
+                            <input type="text" placeholder="Ngày cấp CMND/CCCD người đại diện" class="form-control form-control-sm"
+                            bsDatepicker name="repIdDate" #repIdDate maxlength="10"
+                            (keypress)="numberOnly($event)"
+                            (bsValueChange)="changeDatePicker('repIdDate', $event)"
+                            [(ngModel)]="issuerFieldDateDisplays.repIdDate"
+                            [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY' }"
+                            placement="left top"
+                            #repIdDateModel="ngModel" #repIdDateEl>
+                            <abp-validation-summary [control]="repIdDateModel" [controlEl]="repIdDateEl"></abp-validation-summary>
+                        </div>
+                        <div class="form-group required col-lg-3 col-md-4">
+                            <label for="repIdIssuer">Nơi cấp CMND/CCCD</label>
+                            <input type="text" class="form-control form-control-sm" name="repIdIssuer" id="repIdIssuer" #repIdIssuer
+                                placeholder="Nơi cấp CMND/CCCD" maxlength="100" [(ngModel)]="issuer.repIdIssuer" #repIdIssuerModel="ngModel" #repIdIssuerEl />
+                            <abp-validation-summary [control]="repIdIssuerModel" [controlEl]="repIdIssuerEl"></abp-validation-summary>
+                        </div>
+                        <div class="form-group required col-lg-3 col-md-4">
+                            <label for="business">Lĩnh vực kinh doanh (<span class="field-required"> * </span>)</label>
+                            <textarea type="text" class="form-control form-control-sm" name="business" id="business" rows="1" #business required
+                                placeholder="Lĩnh vực kinh doanh" maxlength="100" [(ngModel)]="issuer.business" #businessModel="ngModel" #businessEl></textarea>
+                            <abp-validation-summary [control]="businessModel" [controlEl]="businessEl"></abp-validation-summary>
+                        </div>
+                        <div class="form-group required col-lg-6 col-md-8">
+                            <label for="description">Mô tả lĩnh vực kinh doanh</label>
+                            <textarea type="text" class="form-control form-control-sm" name="description" id="description" [rows]="1" #description
+                                placeholder="Mô tả lĩnh vực kinh doanh" maxlength="100" [(ngModel)]="issuer.description" #descriptionModel="ngModel" #descriptionEl></textarea>
+                            <abp-validation-summary [control]="descriptionModel" [controlEl]="descriptionEl"></abp-validation-summary>
+                        </div>
+                        <div class="form-group required col-lg-12 col-md-12">
+                            <label for="content">Nội dung giới thiệu</label>
+                            <textarea type="text" class="form-control form-control-sm" name="content" id="content" #content
+                                placeholder="Nội dung giới thiệu" maxlength="2000" [(ngModel)]="issuer.content" #contentModel="ngModel" #contentEl></textarea>
+                            <abp-validation-summary [control]="contentModel" [controlEl]="contentEl"></abp-validation-summary>
+                        </div>
+                        <div class="form-group required col-lg-12 col-md-12">
+                            <label for="links"> Đường dẫn pháp lý </label>
+                            <input type="text" class="form-control form-control-sm" name="links" id="links" #links
+                                placeholder="Đường dẫn pháp lý" maxlength="2000" [(ngModel)]="issuer.links" #linksModel="ngModel" #linksEl />
+                            <abp-validation-summary [control]="linksModel" [controlEl]="linksEl"></abp-validation-summary>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    <abp-modal-footer [cancelDisabled]="saving" [saveDisabled]="!createModal.form.valid || saving"
+        (onCancelClick)="bsModalRef.hide()"></abp-modal-footer>
+</form>

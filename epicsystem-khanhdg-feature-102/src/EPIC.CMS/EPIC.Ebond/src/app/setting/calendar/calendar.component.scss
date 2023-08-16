@@ -1,0 +1,76 @@
+.card-body {
+    position: relative;
+    .wrapper-header {}
+
+    .wrapper-body {
+        .table-responsive {
+            padding: 20px 20px 0px 0px;
+            margin-left: 50px;
+            overflow-x: scroll;
+
+            #calendar {
+                border-top: none;
+                font-size: 14px;
+
+                thead {
+                    tr {
+                        background: darkseagreen;
+
+                        th {
+                            padding: 5px;
+                            text-align: center;
+                        }
+
+                        th:first-child {
+                            background: white;
+                            border: none;
+                            padding: 0;
+                        }
+                    }
+                }
+
+                tbody {
+                    tr {
+                        td:first-child {
+                            position: absolute;
+                        }
+                        td {
+                            padding: 10px;
+                            text-align: center;
+                            border: 1px solid #a9a9a9a8;
+
+                            .tick {
+                                color: red;
+                                font-weight: bold;
+                            }
+
+                            .tool-tip {
+                                display: none;
+                            }
+                        }
+
+                        td:hover {
+                            background: lightblue;
+                            cursor: pointer;
+                            // transform: scale(1.2);
+                        }
+
+                        td:first-child {
+                            font-weight: bold;
+                            background: lemonchiffon;
+                            // position: absolute;
+                            width: 50px;
+                            left: 0;
+                            top: auto;
+                            margin-top: -1px;
+                        }
+                    }
+
+                    tr:hover {
+                        background: lightgray;
+                    }
+                }
+            }
+        }
+    }
+}

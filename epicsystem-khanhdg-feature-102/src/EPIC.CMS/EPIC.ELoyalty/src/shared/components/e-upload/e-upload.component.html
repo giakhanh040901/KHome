@@ -1,0 +1,34 @@
+<div class="ui-dialog-content-custom">
+    <p-fileUpload
+        #pUpload 
+        [multiple]="dialogData.multiple" customUpload="true" auto="true"
+        styleClass="e-file-upload {{ files?.length > 3 ? 'fix-height' : '' }}"
+        [accept]="dialogData.accept | acceptFile" 
+        [chooseLabel]="'Chọn file tải lên'"
+        maxFileSize="100000000"
+        (onSelect)="onSelectedFiles($event)">
+        <ng-template let-file pTemplate="file"></ng-template>
+        <ng-template pTemplate="content">
+            <p-progressBar *ngIf="isUploading" mode="indeterminate"></p-progressBar>
+            <div *ngFor="let image of files; index as index" class="gallery">
+                <div
+                    (click)="preview(image)" 
+                    class="gallery-image" 
+                    style="background: url({{image?.objectURL?.changingThisBreaksApplicationSecurity}});">
+                    <div class="overlay-preview">
+                        <icon class="pi pi-eye"></icon>
+                    </div>
+                </div>
+                <div class="icon-trash" (click)="removeFile(index, fileUpload)">
+                    <i class="remove-img pi pi-trash"></i>
+                </div>
+            </div>
+        </ng-template>
+    </p-fileUpload>
+
+    <!-- <input type="file" id="chooseFile"/> -->
+</div>
+<div class="p-dialog-footer e-custom-dialog-footer">
+    <button type="button" class="mr-2 p-button-secondary" pButton iconPos="left" label="Hủy" icon="pi pi-times" (click)="hideDialog()"></button>
+    <button type="submit" class="p-button-success" pButton iconPos="left" label="Hoàn thành" icon="pi pi-check" (click)="onUpload()"></button>
+</div>

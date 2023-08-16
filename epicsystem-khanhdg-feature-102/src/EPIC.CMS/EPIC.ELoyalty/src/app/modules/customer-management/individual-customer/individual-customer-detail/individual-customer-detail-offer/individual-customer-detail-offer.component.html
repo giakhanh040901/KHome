@@ -1,0 +1,46 @@
+<div *ngIf="this.isGranted([this.PermissionLoyaltyConst.Loyalty_KhachHangCaNhan_UuDai_DanhSach])"  class="grid mx-0 mt-2">
+  <div class="col-12">
+    <div>
+      <h5 class="title-info">Danh sách ưu đãi</h5>
+    </div>
+    <form-table
+      [columns]="selectedColumns"
+      [dataSource]="dataSource"
+      [isLoading]="isLoading"
+      [scrollHeight]="screenHeight * 0.5 + 'px'"
+      [listAction]="listAction"
+      [page]="page"
+      (_changePage)="setPage($event)"
+      (_setColumn)="setColumn($event)"
+    >
+      <ng-container filter>
+        <div class="flex flex-column sm:flex-row w-full">
+          <form-input
+            class="col-2 pl-0"
+            [floatLabel]="true"
+            [placeholder]="'Tìm kiếm...'"
+            [label]="'Tìm kiếm'"
+            [(ngModelValue)]="filter.keyword"
+            (_onChange)="changeFilter($event)"
+          ></form-input>
+          <form-dropdown
+            class="col-2"
+            [floatLabel]="true"
+            [options]="listVoucherType"
+            [(ngModelValue)]="filter.voucherType"
+            [label]="'Loại hình'"
+            (_onChange)="changeFilter($event)"
+          ></form-dropdown>
+          <form-dropdown
+            class="col-2"
+            [floatLabel]="true"
+            [options]="listStatus"
+            [(ngModelValue)]="filter.status"
+            [label]="'Trạng thái'"
+            (_onChange)="changeFilter($event)"
+          ></form-dropdown>
+        </div>
+      </ng-container>
+    </form-table>
+  </div>
+</div>

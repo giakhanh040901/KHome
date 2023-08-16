@@ -1,0 +1,430 @@
+<div class="wrapper-lucky-spin mt-3" (mouseleave)="mouseOut()">
+    <div class="grid m-0">
+        <div class="col-7">
+            <!-- CÀI ĐẶT -->
+            <div class="setting">
+                <!-- MẪU TEMPLATE -->
+                <div class="template-image-backgrounds">
+                    <div class="grid">
+                        <div class="col-6 flex align-item-center">
+                            <h6 class="mb-0"> Mẫu vòng quay may mắn: </h6>
+                        </div>
+                        <div class="col-6 flex align-item-end justify-content-end">
+                            <p-button 
+                                (click)="hiddenDiv('template')"
+                                icon="{{ !displayDiv.template ? 'pi pi-eye' : 'pi pi-eye-slash' }}" iconPos="right"
+                                styleClass="shadow-none p-button-sm e-button display-show-button"
+                                label="{{ displayDiv.template ? 'Ẩn' : 'Hiện' }} mẫu vòng quay"
+                                >
+                            </p-button>
+                        </div>
+                    </div>
+                    <div class="wrapper-template mt-3" *ngIf="displayDiv.template">
+                        <ng-container *ngFor="let item of templates; index as index">
+                            <div 
+                                class="item-template {{ item.key === luckySpinSetting.template ? 'template-active' : '' }} {{ item.class }}" 
+                                (click)="changeTemplate(item.key, index)"
+                            >
+                                <img [src]="item.image">
+                            </div>
+                        </ng-container>
+                    </div>
+                </div>
+                <!-- CÀI ĐẶT ẨN HIỆN CÁC NÚT, BANNER, ICON_HOME, THÔNG BÁO TRÚNG THƯỞNG ... -->
+                <div class="button">
+                    <div class="grid">
+                        <div class="col-6 flex align-item-center">
+                            <h6 class="mb-0"> Cho phép hiển thị</h6>
+                        </div>
+                        <div class="col-6 flex align-item-end justify-content-end">
+                            <p-button 
+                                (click)="hiddenDiv('displayButton')"
+                                icon="{{ !displayDiv.displayButton ? 'pi pi-eye' : 'pi pi-eye-slash' }}" iconPos="right"
+                                styleClass="shadow-none p-button-sm e-button display-show-button"
+                                label="{{ displayDiv.displayButton ? 'Ẩn' : 'Hiện' }} cài đặt nút"
+                                >
+                            </p-button>
+                        </div>
+                    </div>
+                    <div class="grid" *ngIf="displayDiv.displayButton">
+                        <div class="md:col-4 pr-0">
+                            <p-checkbox name="buttonPlay" [binary]="true" [(ngModel)]="luckySpinSetting.buttonPlay" inputId="buttonPlay"></p-checkbox>
+                            <label for="buttonPlay"> Nút chơi game </label>
+                        </div>
+                        <div class="md:col-5">
+                            <p-checkbox name="buttonHistory" [binary]="true" [(ngModel)]="luckySpinSetting.buttonHistory" inputId="buttonHistory"></p-checkbox>
+                            <label for="buttonHistory"> Nút lịch sử trúng quà </label>
+                        </div>
+                        <div class="md:col-3 pr-0">
+                            <p-checkbox name="buttonRank" [binary]="true" [(ngModel)]="luckySpinSetting.buttonRank" inputId="buttonRank"></p-checkbox>
+                            <label for="buttonRank"> Nút xếp hạng </label>
+                        </div>
+                        <div class="md:col-4 pr-0">
+                            <p-checkbox name="iconHome" [binary]="true" [(ngModel)]="luckySpinSetting.iconHome" inputId="iconHome"></p-checkbox>
+                            <label for="iconHome"> Nút Home </label>
+                        </div>
+                        <div class="md:col-5">
+                            <p-checkbox name="winText" [binary]="true" [(ngModel)]="luckySpinSetting.winText" inputId="winText"></p-checkbox>
+                            <label for="winText"> Thông báo trúng thưởng </label>
+                        </div>
+                        <div class="md:col-3">
+                            <p-checkbox name="banner" [binary]="true" [(ngModel)]="luckySpinSetting.showBanner" inputId="banner"></p-checkbox>
+                            <label for="banner"> Banner </label>
+                        </div>
+                        <div class="md:col-6">
+                            <p-checkbox name="iconIphoneColor" [binary]="true" [(ngModel)]="luckySpinSetting.iconTopColorWhite" inputId="iconIphoneColor"></p-checkbox>
+                            <label for="iconIphoneColor"> Màu trắng icon iphone </label>
+                        </div>
+                    </div>
+                </div>
+                <!-- CÀI ĐẶT ICON, MÀU SẮC CHO CÁC NÚT PLAY, HISTORY, RANK -->
+                <div class="icon-button mt-3">
+                    <div class="grid">
+                        <div class="col-6 flex align-item-center">
+                            <h6 class="mb-0"> Thay icon Button </h6>
+                        </div>
+                        <div class="col-6 flex align-item-end justify-content-end">
+                            <p-button 
+                                (click)="hiddenDiv('iconButton')"
+                                icon="{{ !displayDiv.iconButton ? 'pi pi-eye' : 'pi pi-eye-slash' }}" iconPos="right"
+                                styleClass="shadow-none p-button-sm e-button display-show-button"
+                                label="{{ displayDiv.iconButton ? 'Ẩn' : 'Hiện' }} cài đặt icon Button"
+                                >
+                            </p-button>
+                        </div>
+                    </div>
+                    <div class="grid mt-4" *ngIf="displayDiv.iconButton">
+                        <ng-container *ngFor="let icon of iconButton">
+                            <div class="md:col-4 col-4">
+                                <div
+                                    (mouseenter)="mouseHover(icon.keyIcon)" (mouseleave)="mouseLeave(icon.keyIcon)" 
+                                    class="wrapper-choose-image icon-button" (click)="chooseFile(icon.keyIcon)"
+                                    [style.background]="luckySpinSetting.buttonColor">
+                                    <div class="choose-image">
+                                        <i 
+                                            *ngIf="!luckySpinSetting[icon.keyIcon]" 
+                                            class="pi pi-plus">
+                                        </i>
+                                        <ng-container *ngIf="luckySpinSetting[icon.keyIcon]">
+                                            <ng-container
+                                                [ngTemplateOutlet]="imageTemplate"
+                                                [ngTemplateOutletContext]="{ propertyName: icon.keyIcon }"
+                                            >
+                                            </ng-container>
+                                        </ng-container >
+                                    </div>
+                                    <ng-container *ngIf="luckySpinSetting[icon.keyIcon]">
+                                        <i 
+                                            (click)="removeImage(icon.keyIcon); $event.stopPropagation()"
+                                            class="pi pi-times-circle remove-icon-image"
+                                        >
+                                        </i>
+                                    </ng-container >
+                                </div>
+                            
+                                <div class="button-description"> 
+                                    <span> {{ icon.dessciption }} </span>
+                                </div>
+                            </div>
+                        </ng-container>
+                    </div>
+                    <div class="color mt-3">
+                        <h6 class="mouse-pointer mb-0"> Cài đặt màu Button, Nội dung thông báo </h6>
+                        <div class="grid mt-2">
+                            <div class="col-4">
+                                <label> <i> Màu button: </i> </label>
+                                <ng-container
+                                    [ngTemplateOutlet]="inputColor"
+                                    [ngTemplateOutletContext]="{ 
+                                        propertyName: 'buttonColor', 
+                                        hoverKey: 'buttonColor'
+                                    }"
+                                >
+                                </ng-container>
+                            </div>
+                            <div class="md:col-4">
+                                <label> <i> Màu nền thông báo: </i> </label>
+                                <ng-container
+                                    [ngTemplateOutlet]="inputColor"
+                                    [ngTemplateOutletContext]="{ 
+                                        propertyName: 'winTextBackgroundColor', 
+                                        hoverKey: 'prizeContentBackground' 
+                                    }"
+                                >
+                                </ng-container>
+                            </div>
+                            <div class="md:col-4">
+                                <label> <i> Màu chữ thông báo: </i> </label>
+                                <ng-container
+                                    [ngTemplateOutlet]="inputColor"
+                                    [ngTemplateOutletContext]="{ 
+                                        propertyName: 'winTextColor', 
+                                        hoverKey: 'prizeContent'
+                                    }"
+                                >
+                                </ng-container>
+                            </div>
+                        </div>
+                        <!-- <div>
+                            <p-dropdown
+                                [options]="prizeValues"
+                                [autoDisplayFirst]="false"
+                                [style]="{width: '15rem'}"
+                                [(ngModel)]="prizeResult"
+                            >
+                            </p-dropdown>
+                        </div> -->
+                    </div>
+                </div>
+                <!-- CÀI ĐẶT BANNER, ẢNH VÒNG QUAY, ẢNH KIM QUAY, ẢNH NỀN BACKGROUND -->
+                <h6 class="mouse-pointer"> Cài đặt hình ảnh </h6>
+                <div class="banner-ferris-wheel-background-image">
+                    <div class="banner-ferris-wheel">
+                        <div class="grid m-0">
+                            <div class="col-12 md:col-12 pt-0 pl-0">
+                                <ng-container
+                                    [ngTemplateOutlet]="uploadImage"
+                                    [ngTemplateOutletContext]="{ propertyName: 'banner'}"
+                                >
+                                </ng-container>
+                                <div class="title-upload banner">
+                                    <h6> Banner </h6>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- CÀI ĐẶT IMAGE CHO VÒNG QUAY TRÚNG THƯỞNG -->
+                        <div class="ferris-wheel">
+                            <div class="grid m-0">
+                                <ng-container *ngFor="let item of uploadRotation; index as index">
+                                    <div class="md:col-{{ index === 0 ? '12' : '6'}} col-6 pb-0 pl-0 mb-2">
+                                        <ng-container
+                                            [ngTemplateOutlet]="uploadImage"
+                                            [ngTemplateOutletContext]="{ propertyName: item.propertyName}"
+                                        >
+                                        </ng-container>
+                                        <div class="title-upload {{ item.propertyName }}">
+                                            <h6> {{ item.description }} </h6>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- CÀI ĐẶT ẢNH BACKGROUND TOÀN MÀN HÌNH -->
+                    <div class="background">
+                        <div class="grid m-0">
+                            <div class="md:col-12 col-12 p-0">
+                                <ng-container
+                                    [ngTemplateOutlet]="uploadImage"
+                                    [ngTemplateOutletContext]="{ propertyName: 'background'}"
+                                >
+                                </ng-container>
+                                <div class="title-upload background">
+                                    <h6> Hình nền </h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-5">
+            <!-- GIAO DIỆN DEMO -->
+            <div class="text-center">
+                <p-button
+                    styleClass="p-button-sm e-button zoom-in" 
+                    icon="pi pi-minus" 
+                    [style.font-weight]="'bold'"
+                    (onClick)="zoomIn()"
+                >
+                </p-button>
+                <button pButton class="mr-1 ml-1 p-button-sm e-button zoom-content">
+                    Tăng giảm kích thước thiết bị &nbsp;
+                    <span style="color: red;"> ({{ zoomValue+'%' }}) </span>
+                </button>
+                <p-button
+                    [style]="{'font-weight': 'bold'}"   
+                    styleClass="p-button-sm e-button zoom-out"
+                    icon="pi pi-plus" 
+                    (onClick)="zoomOut()"
+                >
+                </p-button>
+            </div>
+            <div class="view" id="smart-phone-demo" [style.zoom.%]="zoomValue">
+                <div 
+                    class="background" 
+                    [ngStyle]="{'background': 'url(' + (genUrl | function :[luckySpinSetting.background, 'background-image']) || templateDefault?.background +')'}">
+                    <!-- ẢNH BORDER IPHONE -->
+                    <ng-container #backhroundIphone>
+                        <img 
+                            class="border-iphone"
+                            [src]="imageDefault.borderIphone" 
+                        />
+                    </ng-container>
+                    <!-- ẢNH BANNER -->
+                    <div class="wrapper-banner {{ !luckySpinSetting.showBanner ? 'opacity-0' : '' }}">
+                        <ng-contentainer
+                            [ngTemplateOutlet]="imageTemplate"
+                            [ngTemplateOutletContext]="{ propertyName: 'banner', class: 'banner'}"
+                        >
+                        </ng-contentainer>
+                    </div>
+                    <!-- ICON IPHONE -->
+                    <ng-container>
+                        <div class="icon-top {{ luckySpinSetting.iconTopColorWhite ? 'icon-blue': ''}}">
+                            <!-- ICON IPHONE GIỜ -->
+                            <div class="icon-top-left">
+                                <img
+                                    class="icon-home {{ !luckySpinSetting.iconHome ? 'opacity-0' : '' }}" 
+                                    [src]="imageDefault.iconHome"
+                                />
+                                <span class="hours"> 12:69 </span>
+                            </div>
+                            <!-- ICON IPHONE, VẠCH SÓNG, PIN -->
+                            <div class="icon-top-right">
+                                <img class="icon-signal" [src]="imageDefault.iconSignal"/>
+                                <img class="icon-battery" [src]="imageDefault.iconBattery"/>
+                            </div>
+                        </div>
+                    </ng-container>
+                    <!-- NỘI DUNG THÔNG BÁO TRÚNG THƯỞNG -->
+                    <div class="wrapper-title {{ !luckySpinSetting.winText ? 'opacity-0' : '' }}" >
+                        <div class="title-border-top-winner"></div>
+                        <div 
+                            class="title {{ hoverChanges.prizeContentBackground ? 'flicker-wrapper-prize-content' : ''}}"
+                            [style.color]="luckySpinSetting.winTextColor"
+                            [style.background]="luckySpinSetting.winTextBackgroundColor"
+                        > 
+                            <span [class]="hoverChanges.prizeContent ? 'flicker-prize-content' : ''"> Chúc mừng bạn đã trúng thưởng </span> 
+                        </div>
+                        <div class="title-border-bottom-winner"></div>
+                    </div>
+                    <!-- VÒNG QUAY MAY MĂN -->
+                    <div class="rotation-wrapper">
+                        <!-- BORDER VÒNG QUAY -->
+                        <ng-container #backgroundRotation>
+                            <!-- ẢNH NỀN KHI CHƯA QUAY ẢNH TĨNH -->
+                            <ng-container
+                                [ngTemplateOutlet]="imageTemplate"
+                                [ngTemplateOutletContext]="{ 
+                                    propertyName: 'rotationBackground', 
+                                    class: 'rotation-background'
+                                }"
+                            >
+                        </ng-container>
+                            
+                        </ng-container>
+                        <!-- ẢNH VÒNG QUAY -->
+                        <ng-container
+                            [ngTemplateOutlet]="imageTemplate"
+                            [ngTemplateOutletContext]="{ 
+                                propertyName: 'rotationImage', 
+                                class: 'rotation-image',
+                                style: rotateAnimation
+                            }"
+                        >
+                        </ng-container>
+                        <!-- ẢNH KIM QUAY -->
+                        <div (click)="playStart()">
+                            <ng-container
+                                [ngTemplateOutlet]="imageTemplate"
+                                [ngTemplateOutletContext]="{ 
+                                    propertyName: 'needleImage', 
+                                    class: 'rotation-start' 
+                                }"
+                            >
+                            </ng-container>
+                        </div>
+                    </div>
+                    <!-- NÚT CHƠI GAME, LỊCH SỬ CHƠI, XẾP HẠNG -->
+                    <div class="options">
+                        <ng-container *ngFor="let icon of iconButton">
+                            <div class="{{ !luckySpinSetting[icon.keyButton] ? 'opacity-0' : '' }} {{ hoverChanges.buttonColor ? 'flicker-buttonColor' : '' }}">
+                                <ng-container
+                                    [ngTemplateOutlet]="imageTemplate"
+                                    [ngTemplateOutletContext]="{ 
+                                        class: 'icon-button-child ' + (hoverChanges[icon.keyIcon] ? icon.keyIcon : ''),
+                                        propertyName: icon.keyIcon, 
+                                        backgroundName: 'buttonColor'
+                                    }"
+                                >
+                                </ng-container>
+                            </div>
+                        </ng-container>
+                    </div>
+                    <!-- THANH TRƯỢT IPHONE -->
+                    <div class="footer">
+                        <div class="touch"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- TEMPLATE INPUT COLOR -->
+<ng-template #inputColor let-propertyName="propertyName" let-id="id" let-hoverKey="hoverKey">
+    <div class="wrapper-picker-color">
+        <div class="input-value">
+            <input
+                class="button-color" pInputText 
+                (click)="changeStyleColor(hoverKey)"
+                (clickOutside)="hoverChanges[hoverKey]=false" 
+                [(ngModel)]="luckySpinSetting[propertyName]"
+            />
+        </div>
+        <div class="input-color">
+            <div 
+                class="instead-input-color" for="choose-color" 
+                [style.background]="luckySpinSetting[propertyName]"
+            >
+            </div>
+            <input
+                [id]="id"
+                class="choose-color"
+                [(colorPicker)]="luckySpinSetting[propertyName]"
+            />
+        </div>
+    </div>
+</ng-template>
+
+<!-- TEMPLATE UPLOAD -->
+<ng-template #uploadImage let-propertyName="propertyName">
+    <div class="wrapper-choose-image {{ propertyName }}" (click)="chooseFile(propertyName)">
+        <div class="choose-image">
+            <img 
+                class="{{ propertyName }}"
+                *ngIf="!luckySpinSetting[propertyName]" [src]="iconUpload[propertyName]" 
+            />
+            <ng-container *ngIf="luckySpinSetting[propertyName]">
+                <img
+                    [src]="genUrl | function :luckySpinSetting[propertyName]" 
+                />
+            </ng-container >
+        </div>
+        <ng-container *ngIf="luckySpinSetting[propertyName]">
+            <i 
+                (click)="removeImage(propertyName); $event.stopPropagation()"
+                class="pi pi-times-circle remove-image"
+            >
+            </i>
+        </ng-container>
+    </div>
+    
+</ng-template>
+<!-- TEMPLATE-IMAGE -->
+<ng-template 
+    #imageTemplate 
+    let-propertyName="propertyName" 
+    let-class="class" 
+    let-id="id"
+    let-backgroundName="backgroundName" 
+    let-style="style">
+    <img 
+        class="{{ class }} {{ propertyName === 'spin' && !luckySpinSetting[propertyName] ? 'spin-svg' : ''}}"
+        [id]="id"
+        [style]="style"
+        [style.background]="luckySpinSetting[backgroundName]" 
+        [src]="genUrl | function :(luckySpinSetting[propertyName] || templateDefault[propertyName])"
+    />
+</ng-template>

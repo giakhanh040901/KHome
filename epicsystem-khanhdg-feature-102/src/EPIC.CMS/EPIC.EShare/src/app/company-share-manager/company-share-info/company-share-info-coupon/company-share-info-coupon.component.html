@@ -1,0 +1,61 @@
+
+<app-loading-page *ngIf="isLoading"></app-loading-page>
+<div class="grid" *ngIf="!isLoading && isGranted([PermissionCompanyShareConst.CompanyShare_LTP_TTTT_DanhSach])">
+    <div class="col-12">
+        <div class="card pt-0">
+			<!-- <h5> Thông tin lợi tức </h5> -->
+            <p-table 
+                #companyShareInfoTable [value]="rows"
+                [loading]="isLoading" [rowHover]="true" [showCurrentPageReport]="true" [paginator]="false" 
+                responsiveLayout="scroll" dataKey="code"
+                [resizeableColumns]="false" [scrollable]="true" scrollHeight="{{(screenHeight*0.56) + 'px'}}" styleClass="p-datatable-gridlines">
+                <ng-template pTemplate="header" let-columns>
+					<tr>
+					    <th style="min-width: 5rem; max-width: 5rem;" pFrozenColumn alignFrozen="left" class="b-border-frozen-left"> #ID </th>
+                        <th style="min-width: 20rem;" > Kỳ nhận </th>
+                        <th style="max-width: 10rem; min-width: 10rem;" class="justify-content-center" > Lãi suất </th> <!-- class="justify-content-end" -->
+                        <th style="max-width: 12rem; min-width: 12rem;" class="justify-content-center"> Ngày chốt quyền </th>
+                        <th style="max-width: 12rem; min-width: 12rem;" class="justify-content-center"> Ngày trả </th>
+                        <th style="max-width: 10rem; min-width: 10rem;" > Số ngày </th> <!-- class="justify-content-end" -->
+                        <th style="max-width: 12rem; min-width: 12rem;" > Trái tức </th><!-- class="justify-content-end" -->
+                        <th style="max-width: 10rem; min-width: 8rem;"> Thuế TNCN</th>
+                        <th style="max-width: 12rem; min-width: 12rem;" > Số tiền thực nhận </th><!-- class="justify-content-end" -->
+                        <th style="max-width: 10rem; min-width: 10rem;" pFrozenColumn alignFrozen="right" [frozen]="true" class="b-border-frozen-right"> Trạng thái </th>
+
+					</tr>
+				</ng-template>
+                <ng-template pTemplate="body" let-row let-rowIndex="rowIndex">
+                    <tr>
+                        <td style="min-width: 5rem; max-width: 5rem;" pFrozenColumn alignFrozen="left"> {{ rowIndex + 1 }} </td>
+                        <td style="min-width: 20rem;"> 
+                            {{ (rowIndex !== (rows.length - 1)) ? 'Tạm ứng lợi tức trái phiếu kỳ 0' + (rowIndex+1) : 'Tất toán cuối kỳ' }}
+                        </td>
+                        <td style="max-width: 10rem; min-width: 10rem;" class="justify-content-center"> {{ utils.transformPercent(couponInfo.interestRate) + '%' }} </td>  <!-- class="justify-content-end" -->
+                        <td style="max-width: 12rem; min-width: 12rem;" class="justify-content-center"> {{ row.closePerDate | dateview }} </td>
+                        <td style="max-width: 12rem; min-width: 12rem;" class="justify-content-center"> {{ row.payDate | dateview }} </td>
+                        <td style="max-width: 10rem; min-width: 10rem;" > {{ row.numberOfDays }} </td> <!-- class="justify-content-end" -->
+                        <td style="max-width: 12rem; min-width: 12rem;" class="justify-content-end" > {{ utils.transformMoney(row.coupon) }} </td> <!-- class="justify-content-end" -->
+                        <td style="max-width: 10rem; min-width: 8rem;" class="justify-content-center"> 0  </td>
+                        <td style="max-width: 12rem; min-width: 12rem;" class="justify-content-end"> {{ utils.transformMoney(row.coupon) }}  </td> <!-- class="justify-content-end" -->
+                        <td style="max-width: 10rem; min-width: 10rem;" pFrozenColumn alignFrozen="right" [frozen]="true" class="b-border-frozen-right"> 
+                            Chưa đến hạn
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+					<tr>
+						<td colspan="7">Không có dữ liệu.</td>
+					</tr>
+				</ng-template>
+				<ng-template pTemplate="loadingbody">
+					<tr>
+						<td colspan="7"> Đang tải dữ liệu ... </td>
+					</tr>
+				</ng-template>
+            </p-table>
+        </div>
+		<!-- THEM & SUA-->
+    </div>
+</div>
+
+

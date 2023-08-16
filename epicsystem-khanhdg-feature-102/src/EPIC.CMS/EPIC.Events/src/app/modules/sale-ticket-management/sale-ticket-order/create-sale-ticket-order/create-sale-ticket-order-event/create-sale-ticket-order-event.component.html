@@ -1,0 +1,114 @@
+<div class="w-full" [style.paddingBottom.px]="58">
+  <div class="card">
+    <h5 class="title-info">Thông tin sự kiện</h5>
+    <div class="p-fluid p-formgrid grid">
+      <div class="flex w-full">
+        <div class="col-4">
+          <form-dropdown
+            [label]="'Lựa chọn sự kiện'"
+            [isRequired]="true"
+            [options]="listEvent"
+            [(ngModelValue)]="saleTicketOrderService.dtoEvent.event"
+            [isFilter]="true"
+            [placeholder]="'Lựa chọn sự kiện sắp tổ chức'"
+            (_onChange)="onChangeEvent($event)"
+          ></form-dropdown>
+        </div>
+        <div class="col-4">
+          <form-input
+            [label]="'Đơn vị tổ chức'"
+            [(ngModelValue)]="saleTicketOrderService.dtoEvent.organize"
+            [isDisabled]="true"
+          ></form-input>
+        </div>
+        <div class="col-4">
+          <form-input
+            [label]="'Loại hình sự kiện'"
+            [(ngModelValue)]="saleTicketOrderService.dtoEvent.eventType"
+            [isDisabled]="true"
+          ></form-input>
+        </div>
+      </div>
+      <div class="flex w-full">
+        <div class="col-4">
+          <form-input
+            [label]="'Địa điểm tổ chức'"
+            [(ngModelValue)]="saleTicketOrderService.dtoEvent.eventPlace"
+            [isDisabled]="true"
+          ></form-input>
+        </div>
+        <div class="col-4">
+          <form-input
+            [label]="'Tỉnh/ Thành phố'"
+            [(ngModelValue)]="saleTicketOrderService.dtoEvent.eventProvince"
+            [isDisabled]="true"
+          ></form-input>
+        </div>
+        <div class="col-4">
+          <form-input
+            [label]="'Địa chỉ'"
+            [(ngModelValue)]="saleTicketOrderService.dtoEvent.eventAddress"
+            [isDisabled]="true"
+          ></form-input>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <h5 class="title-info">Thông tin vé</h5>
+    <div class="p-fluid p-formgrid grid">
+      <div class="flex w-full">
+        <div class="col-4">
+          <form-dropdown
+            [label]="'Thời gian tổ chức'"
+            [isRequired]="true"
+            [options]="listTicketTime"
+            [(ngModelValue)]="saleTicketOrderService.dtoEvent.ticketTime"
+            [placeholder]="'Chọn thời gian tổ chức sự kiện'"
+            [isFilter]="true"
+            (_onChange)="onChangeTicketTime($event)"
+          ></form-dropdown>
+        </div>
+      </div>
+      <div class="w-full">
+        <sale-ticket-order-item
+          *ngFor="let item of saleTicketOrderService.dtoEvent.ticketItems; let i = index"
+          [dto]="item"
+          [isDisableOrderQuantity]="false"
+          (_onChangeOrderQuantity)="onChangeOrderQuantity($event, i)"
+        ></sale-ticket-order-item>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <h5 class="title-info">Cài đặt khác</h5>
+    <div>
+      <form-input-switch
+        [(ngModelValue)]="saleTicketOrderService.dtoEvent.isHardTicket"
+        [label]="'Nhận vé bản cứng'"
+        [classLabel]="'ml-4'"
+        [isDisabled]="disableIsHardTicket"
+      ></form-input-switch>
+    </div>
+    <div>
+      <form-input-switch
+        [(ngModelValue)]="saleTicketOrderService.dtoEvent.isRequestBill"
+        [label]="'Yêu cầu nhận hóa đơn'"
+        [classLabel]="'ml-4'"
+        [isDisabled]="disableIsRequestBill"
+      ></form-input-switch>
+    </div>
+  </div>
+  <div class="div-fixed-icon">
+    <div class="flex">
+      <form-button [icon]="'pi pi-chevron-left'" [label]="'Quay lại'" (_onClick)="back($event)"></form-button>
+      <form-button
+        class="ml-2"
+        [icon]="'pi pi-chevron-right'"
+        [iconPos]="'right'"
+        [label]="'Tiếp tục'"
+        (_onClick)="continue($event)"
+      ></form-button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,17 @@
+<div [ngClass]="'field' + classContainer">
+  <label [for]="inputId" [ngClass]="'title-info' + classLabel" *ngIf="showLabel">
+    {{ label }}
+    <span class="required-field" *ngIf="isRequired"> * </span></label
+  >
+  <p-checkbox
+    [ngClass]="classCheckbox"
+    [(ngModel)]="ngModelValue"
+    [value]="inputId"
+    [inputId]="'binary'"
+    [trueValue]="trueValue"
+    [falseValue]="falseValue"
+    (onChange)="onChange($event)"
+    [binary]="true"
+    [disabled]="isDisabled"
+  ></p-checkbox>
+</div>

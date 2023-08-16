@@ -1,0 +1,35 @@
+<!-- #region filter -->
+<ng-container *ngIf="floatLabel">
+  <span [ngClass]="'p-input-icon-left p-float-label b-custom p-inputtext-filter w-full' + classContainer">
+    <i class="pi pi-search" *ngIf="showIconSearch"></i>
+    <p-inputMask
+      [mask]="inputMask"
+      [placeholder]="placeholder"
+      [style.width]="widthInput"
+      [(ngModel)]="ngModelValue"
+      (ngModelChange)="handleInput($event)"
+    ></p-inputMask>
+    <label class="font-normal" *ngIf="showLabel">{{ label }}</label>
+  </span>
+</ng-container>
+<!-- #endregion -->
+
+<!-- #region form -->
+<ng-container *ngIf="!floatLabel">
+  <div [ngClass]="'field' + classContainer">
+    <label [ngClass]="'title-info' + classLabel" *ngIf="showLabel">
+      {{ label }}
+      <span *ngIf="showDescription" class="font-light text-sm text-500 font-italic">{{ description }}</span>
+      <span class="required-field" *ngIf="isRequired"> * </span></label
+    >
+    <p-inputMask
+      [mask]="inputMask"
+      [(ngModel)]="ngModelValue"
+      [placeholder]="placeholder"
+      [ngClass]="'custom-input b-disabled' + classInput"
+      [disabled]="isDisabled"
+      (ngModelChange)="handleInput($event)"
+    ></p-inputMask>
+  </div>
+</ng-container>
+<!-- #endregion -->

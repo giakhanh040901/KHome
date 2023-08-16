@@ -1,0 +1,22 @@
+<div>
+    <div class="grid p-fluid">
+        <div class="col-12 md:col-12 text-center">
+            <ng-container *ngFor="let iconInfo of Object.entries(IconConfirm)">
+                <div [ngClass]="{'hidden': !(confirm.icon === iconInfo[1])}" [style.height.px]="40">
+                    <p-image
+                        [src]="iconInfo[1]" 
+                        [imageStyle]="styleIcon" 
+                        >
+                    </p-image>  
+                </div>
+            </ng-container>
+        </div>
+        <div class="col-12 md:col-12 text-center mb-3">
+            <b> {{ confirm?.message }} </b>
+        </div>
+    </div>
+    <div class="p-dialog-footer e-custom-dialog-footer" >
+        <button pButton pRipple label="Hủy" icon="pi pi-times" class="p-button-text p-confirm-dialog-reject" (click)="cancel()"></button>
+        <button pButton pRipple label="Đồng ý" icon="pi pi-check" class="p-button-text p-confirm-dialog-approve" (click)="accept()"></button>
+    </div>
+</div>

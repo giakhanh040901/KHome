@@ -1,0 +1,38 @@
+::ng-deep .b-input-switch{
+    &.p-inputswitch {
+        width: 3.5rem;
+        &.p-inputswitch-checked {
+            .p-inputswitch-slider::before {
+                transform: translateX(1.75rem) !important;
+            }
+        }
+        &.p-focus {
+            .p-inputswitch-slider {
+                box-shadow: none;
+            }
+        }
+    }
+    .p-inputswitch-slider {
+        border-radius: 16px;
+    }
+}
+
+::ng-deep .b-radio-button {
+    .p-radiobutton-checked {
+        .p-radiobutton-box{
+            &.p-highlight {
+                .p-radiobutton-icon {
+                    transform: translateZ(0) scale(0.8, 0.8) !important;
+                }
+            }
+            &:not(.p-disabled).p-focus {
+                box-shadow: none;
+            }
+        }
+    }
+}
+
+::ng-deep .b-button-random-password {
+    padding: 0.25rem 0.75rem;
+    width: auto !important;
+}

@@ -1,0 +1,16 @@
+﻿using EPIC.RealEstateEntities.Dto.RstCart;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace EPIC.RealEstateEntities.Dto.RstProductItem
+{
+    /// <summary>
+    /// Thông tin căn hộ tương tự
+    /// </summary>
+    public class AppRstProductItemSimilarDetailDto : AppRstCartDto
+    {
+    }
+}

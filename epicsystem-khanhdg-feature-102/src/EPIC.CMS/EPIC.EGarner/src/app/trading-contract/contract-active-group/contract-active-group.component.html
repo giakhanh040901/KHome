@@ -1,0 +1,206 @@
+<!--  -->
+<p-toast></p-toast>
+<!--  -->
+<div class="card b-list">
+    <div class="p-fluid p-formgrid grid b-header">
+        <div class="col-12 md:col-7 b-title">
+            <h4 style="display:inline"> Hợp đồng theo chính sách</h4>
+        </div>
+    </div>
+   <!-- <p>Group customers by their representative.  order-group</p> -->
+    <p-table 
+        [value]="rows" [scrollable]="true"
+        [scrollHeight]="getTableHeight(60)" rowGroupMode="subheader"
+        [paginator]="false" [rowHover]="true" responsiveLayout="scroll"
+        styleClass="custom-table order-group" dataKey="id"
+        [loading]="isLoading" sortMode="multiple" (onSort)="onSort($event)" [customSort]="true">
+        <ng-template pTemplate="caption">
+            <div class="flex justify-content-between flex-column sm:flex-row mt-4">
+                <div class="flex justify-content-between flex-column sm:flex-row">
+                    <span class="block p-input-icon-left p-float-label b-custom mr-1 p-inputtext-filter">
+                        <i class="pi pi-search"></i>
+                        <input 
+                            pInputText type="text"
+                            placeholder="{{ OrderActiveGroupConst.getInfoFieldFilter(dataFilter.fieldFilter, 'placeholder') }}" 
+                            [(ngModel)]="keyword"
+                            (input)="changeKeyword($event)"
+                            [style]="{'min-width':'12rem'}" 
+                        />
+                        <label class="font-normal" for="">Tìm kiếm</label>
+                    </span>
+                    <span class="p-float-label b-custom ml-2 mr-1">
+                        <p-dropdown 
+                            id="fieldFilter" [style]="{'width':'12rem'}" [options]="OrderActiveGroupConst.fieldFilters"
+                            name="fieldFilter" optionLabel="name" optionValue="field"
+                            [(ngModel)]="dataFilter.fieldFilter" [autoDisplayFirst]="true" (onChange)="changeFieldFilter()">
+                        </p-dropdown>
+                        <label class="font-normal" for="fieldFilter">Tìm kiếm theo</label>
+                    </span>
+                    <span class="p-float-label b-custom ml-3">
+                        <p-dropdown 
+                            id="dropdownStatus" [style]="{'width':'12rem'}" 
+                            optionLabel="name" optionValue="code" placeholder="Tất cả" [showClear]="true"
+                            [(ngModel)]="dataFilter.productType"
+                            [options]="ProductConst.types"
+                            (onChange)="setPage($event.value)">
+                        </p-dropdown>   
+                        <label class="font-normal ml-1" for="dropdownStatus">Loại tích lũy</label>
+                    </span>
+                    <span class="p-float-label b-custom ml-3">
+                        <p-dropdown 
+                            id="dropdownStatus" [style]="{'width':'12rem'}" 
+                            optionLabel="garnerProduct.name" optionValue="id" placeholder="Tất cả" [showClear]="true"
+                            [(ngModel)]="dataFilter.distributionId"
+                            [options]="distributions"
+                            (onChange)="changeDistribution($event.value)">
+                        </p-dropdown>   
+                        <label class="font-normal ml-1" for="dropdownStatus">Gói tích lũy</label>
+                    </span>
+                    <span class="p-float-label b-custom ml-3">
+                        <p-dropdown 
+                            id="dropdownStatus" [style]="{'width':'12rem'}" 
+                            optionLabel="name" optionValue="id" placeholder="Tất cả" [showClear]="true"
+                            [(ngModel)]="dataFilter.policyId"
+                            [options]="policies"
+                            (onChange)="changePolicy($event.value)">
+                        </p-dropdown>   
+                        <label class="font-normal ml-1" for="dropdownStatus">Sản phẩm</label>
+                    </span>
+
+                    <span class="p-float-label b-custom ml-3">
+                        <p-dropdown 
+                            id="dropdownStatus" [style]="{'width':'12rem'}" 
+                            optionLabel="name" optionValue="code" placeholder="Tất cả" 
+                            [(ngModel)]="dataFilter.status"
+                            [options]="statuses"
+                            (onChange)="changePolicy($event.value)">
+                        </p-dropdown>   
+                        <label class="font-normal " for="dropdownStatus">Trạng thái</label>
+                    </span>
+                    
+                </div>
+            </div>
+            
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="max-width: 5rem; min-width: 5rem;"></th>
+                <th pSortableColumn="id" style="max-width:4.5rem; min-width: 4.5rem;">ID<p-sortIcon field="id"></p-sortIcon></th>
+                <th pSortableColumn="customerName" style="max-width:18rem; min-width:18rem">Khách hàng<p-sortIcon field="customerName"></p-sortIcon></th>
+                <th style="min-width:10rem; max-width:10rem;">Loại tích lũy</th>
+                <th pSortableColumn="policy.name" style="min-width:12rem; max-width:12rem;">Chính sách<p-sortIcon field="policy.name"></p-sortIcon></th>
+                <th pSortableColumn="initTotalValueGroup" style="min-width:12rem; max-width:12rem;">Tổng tích lũy<p-sortIcon field="initTotalValueGroup"></p-sortIcon></th>
+                <th pSortableColumn="totalValueGroup" style="min-width:12rem; max-width:12rem;">Còn lại<p-sortIcon field="totalValueGroup"></p-sortIcon></th>
+                <th style="min-width:12rem; max-width:12rem;">Lợi tức</th>
+                <th></th>
+                <th style="max-width: 3rem; min-width: 3rem; justify-content: center;" pFrozenColumn [frozen]="true" alignFrozen="right" class="b-table-actions">
+                    <i class="pi pi-cog" (click)="setColumn(cols, _selectedColumns)"></i>
+                </th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-order let-expanded="expanded" let-rowIndex="rowIndex">
+            <tr [ngClass]="{'expanded-hightlight': expanded }" class="row-expanded">
+                <td style="max-width: 5rem;">
+                    <button type="button" pButton pRipple [pRowToggler]="order" class="p-button-text p-button-rounded p-button-plain b-button-custom" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></button>
+                </td>
+                <td style="max-width:5rem; min-width: 5rem;">
+                    {{ order?.id }}
+                </td>
+                <td style="max-width:18rem; min-width:18rem;">
+                    {{ order?.investor?.investorIdentification?.fullname || order?.businessCustomer?.name }}
+                </td>    
+                <td style="min-width:10rem; max-width:10rem;">
+                    {{ProductConst.getTypeName(order?.product?.productType, 'name')}}
+                </td>   
+                <td style="min-width:12rem; max-width:12rem;">
+                    {{ order?.policy?.name }}
+                </td>   
+                <td style="min-width:12rem; max-width:12rem;">
+                    {{ utils.transformMoney(order?.initTotalValue) }}
+                </td>   
+                <td style="min-width:12rem; max-width:12rem;">
+                    {{ utils.transformMoney(order?.totalValue) }}
+                </td>   
+                <td style="min-width:12rem; max-width:12rem;">
+                    {{ utils.transformMoney(order?.profitNow) }}
+                </td> 
+                <td></td>       
+                <td style="max-width: 3rem; min-width: 3rem; justify-content: center;" pFrozenColumn alignFrozen="right" [frozen]="true" class="b-table-actions">
+                    <div class="flex">
+                        <i class="pi pi-ellipsis-h" (click)="menu.toggle($event)"></i>
+                        <p-menu #menu [popup]="true" class="button-actions" [model]="listActionGroup[rowIndex]" appendTo="body"></p-menu>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="rowexpansion" let-order>
+            <tr>
+                <td colspan="9" class="styleExpanded" style="background: white;">
+                    <div class="wrapper-table-expanded">
+                        <p-table [value]="order?.listOrder" dataKey="id" styleClass="custom-table">
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th style="max-width:7rem; min-width: 7rem;"></th>
+                                    <th style="max-width:8rem; min-width: 8rem;">ID</th>
+                                    <th style="min-width:18rem">Mã Hợp đồng</th>
+                                    <th style="min-width:12rem; max-width:12rem;">Số tiền tích lũy</th>
+                                    <th style="min-width:12rem;">Còn lại</th>
+                                    <th style="min-width:12rem;">Lợi tức</th>
+                                    <th style="min-width:12rem">Ngày tích lũy</th>
+                                    <th style="min-width:6rem">Số ngày</th>
+                                    <th style="max-width: 8.1rem; min-width: 8.1rem; justify-content: left;" pFrozenColumn alignFrozen="right" [frozen]="true"> Trạng thái </th>
+                                    <th style="min-width:3rem"></th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-orderDetail>
+                                <tr>
+                                    <td style="max-width:7rem; min-width: 7rem;">  </td>
+                                    <td style="max-width:8rem; min-width: 8rem;"> {{ orderDetail?.id }} </td>
+                                    <td style="min-width:18rem"> {{ orderDetail?.contractCode }} </td>
+                                    <td style="min-width:12rem;"> {{ utils.transformMoney(orderDetail?.initTotalValue) }} </td>
+                                    <td style="min-width:12rem;"> {{ utils.transformMoney(orderDetail?.totalValue) }} </td>
+                                    <td style="min-width:12rem;"> {{ utils.transformMoney(orderDetail?.profitNow) }} </td>
+                                    <td style="min-width:12rem"> {{ formatDate(orderDetail?.buyDate) }} </td>
+                                    <td style="min-width:6rem"> {{ orderDetail?.investmentDayNow }} </td>
+                                    <td style="max-width: 8.1rem; min-width: 8.1rem; justify-content: left;" pFrozenColumn alignFrozen="right" [frozen]="true">
+                                        <p-tag styleClass="p-tag-{{ OrderConst.getSeverityStatus(orderDetail?.status) }}" severity="{{ OrderConst.getSeverityStatus(orderDetail?.status) }}" value="{{ OrderConst.getNameStatus(orderDetail?.status) }}"></p-tag> 
+                                    </td>
+                                    <td style="min-width:3rem"> 
+                                        <i class="pi pi-ellipsis-h" (click)="menu.toggle($event)"></i>
+                                        <p-menu #menu [popup]="true" class="button-actions" [model]="listAction[orderDetail.id]" appendTo="body"></p-menu>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="emptymessage">
+                                <tr>
+                                    <td colspan="7">Không có dữ liệu.</td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                    <div class="p-3"></div>
+                </td>
+            </tr>
+        </ng-template>
+    
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="7">Không có dữ liệu.</td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="loadingbody">
+            <tr>
+                <td colspan="7"> Đang tải dữ liệu ... </td>
+            </tr>
+        </ng-template>
+    </p-table>
+    
+    <p-paginator 
+        [rows]="page.pageSize" 
+        [totalRecords]="page.totalItems" 
+        [rowsPerPageOptions]="page.perPageOptions" 
+        currentPageReportTemplate="Tất cả {{ page.totalItems }} dòng" 
+        showCurrentPageReport="true"
+        (onPageChange)="setPage($event)">
+    </p-paginator>
+</div>

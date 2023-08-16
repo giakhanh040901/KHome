@@ -1,0 +1,16 @@
+<div class="container">
+  <div>
+    <img [src]="srcImg" alt="" class="w-full" [style.borderRadius]="'8px'" height="200"/>
+  </div>
+  <div class="item" [style.lineHeight]="'55px'">
+    <span class="font-bold text-xl" [style.color]="'#212633'">{{ title }}</span>
+  </div>
+  <ng-container *ngFor="let projectInfor of listProjectInfor">
+    <div class="item flex justify-content-between align-items-center">
+      <span [style.color]="'#6B7280'" class="font-medium">{{
+        projectInfor.label
+      }}</span>
+      <span class="item-infor">{{ projectInfor.infor }}</span>
+    </div>
+  </ng-container>
+</div>

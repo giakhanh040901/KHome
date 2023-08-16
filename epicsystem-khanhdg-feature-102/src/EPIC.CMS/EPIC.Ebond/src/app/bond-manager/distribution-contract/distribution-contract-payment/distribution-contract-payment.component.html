@@ -1,0 +1,238 @@
+<div *ngIf="isGranted([PermissionBondConst.Bond_HDPP_TTTT_DanhSach])" class="grid ml-0 mr-0 mt-0">
+    <div class="col-12 pb-0">
+        <div class="card p-fluid p-0">
+            <div class="p-fluid p-formgrid grid mt-3 mb-2 ">
+                <div class="col b-count-price"  >
+                    <div class="b-count-icon"></div>
+                  <div style="margin-left: 16px;">
+                      <p class="p-count-price" >{{ utils.transformMoney(paymentCurrencyInfo.total) }}</p>
+                      <p > Tổng tiền thanh toán</p>
+                  </div>  
+              </div>
+              <div class="col b-count-price"  >
+                <div class="b-count-icon"></div>
+                <div style="margin-left: 16px;" >
+                      <p class="p-count-price" >{{ utils.transformMoney(paymentCurrencyInfo.paid)}}</p>
+                      <p > Số tiền đã thanh toán </p>
+                  </div>  
+              </div>
+              <div class="col b-count-price"  >
+                <div class="b-count-icon"></div>
+                <div style="margin-left: 16px;">
+                      <p class="p-count-price" >{{ utils.transformMoney(paymentCurrencyInfo.remain) }}</p>
+                      <p > Số tiền chênh lệch </p>
+                  </div>  
+              </div>
+          </div>
+        </div>
+    </div>
+    <p-toast></p-toast>
+    <p-confirmDialog [style]="{width: 'auto'}" [baseZIndex]="10000"></p-confirmDialog>
+    <div class="col-12 pt-0">
+        <div class="card p-0">
+            <p-table 
+                #distributionContractPaymentTable [value]="rows" 
+                [loading]="isLoading" [rowHover]="true" 
+                (onPageChange)="setPage($event)" responsiveLayout="scroll" dataKey="code"
+                [scrollable]="true" styleClass="mt-3 custom-table">
+                <ng-template pTemplate="caption">
+					<div class="flex justify-content-between flex-column sm:flex-row">
+                        <div class="">
+						</div>
+                        <div class="block mt-2 md:mt-0 ml-3 p-input-icon-left mb-2">
+                            <button *ngIf="!disableButtonPayment && isGranted([PermissionBondConst.Bond_HDPP_TTTT_ThemMoi])" pButton pRipple label="Thêm thanh toán" icon="pi pi-plus" class="p-button-success" (click)="create()"></button>
+                        </div>
+					</div>
+                </ng-template>
+                <ng-template pTemplate="header">
+					<tr>
+						<th style="min-width: 10rem;"> Mã giao dịch </th>
+                        <th style="min-width: 8rem;"> Thu/Chi </th>
+                        <th style="min-width: 8rem;"> Loại </th>
+                        <th style="min-width: 10rem;"> Ngày GD </th>
+                        <th style="min-width: 10rem;"> Số tiền </th>
+                        <th style="min-width: 25rem;"> Mô tả </th>
+                        <th style="min-width: 10rem;" pFrozenColumn alignFrozen="right">Trạng thái </th>
+                        <th style="width: 5rem;; justify-content: center;" pFrozenColumn alignFrozen="right"></th>
+					</tr>
+				</ng-template>
+                <ng-template pTemplate="body" let-row let-rowIndex="rowIndex" let-columns="columns">
+                    <tr>
+                        <td style="min-width: 10rem;"> {{ row.paymentId }} </td>
+                        <td style="min-width: 8rem;"> {{ DistributionContractConst.getNameTransactionType(row.transactionType) }} </td>
+                        <td style="min-width: 8rem;"> {{ DistributionContractConst.getNamePaymentType(row.paymentType) }} </td>
+                        <td style="min-width: 10rem;"> {{ formatDate(row.tradingDate) }} </td>
+                        <td style="min-width: 10rem;"> {{ utils.transformMoney(row.totalValue) }} </td>
+                        <td style="min-width: 25rem;"> {{ row.description }} </td>
+                        <td style="min-width: 10rem;" pFrozenColumn alignFrozen="right"> 
+                            <p-tag styleClass="p-tag-{{ DistributionContractConst.getSeverityPaymentStatus(row.status) }}" severity="{{ DistributionContractConst.getSeverityPaymentStatus(row.status) }}" value="{{ DistributionContractConst.getNamePaymentStatus(row.status) }}"></p-tag> 
+                        </td>
+                        <td style="width: 5rem; justify-content: center;" pFrozenColumn alignFrozen="right">
+                            <div class="flex">
+                                <!-- <p-splitButton class="button-actions" (onDropdownClick)="clickDropdown(row)" [model]="actionsDisplay" appendTo="body">
+                                </p-splitButton> -->
+                                <i class="pi pi-ellipsis-h" style="cursor:pointer;" (click)="menu.toggle($event)"></i>
+                                <p-menu 
+                                    #menu [popup]="true"class="button-actions"
+                                    [model]="listAction[rowIndex]" appendTo="body"
+                                    >
+                                </p-menu>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+					<tr>
+						<td colspan="7">Không có dữ liệu.</td>
+					</tr>
+				</ng-template>
+				<ng-template pTemplate="loadingbody">
+					<tr>
+						<td colspan="7"> Đang tải dữ liệu ... </td>
+					</tr>
+				</ng-template>
+            </p-table>
+            <!-- <p-paginator styleClass="at-paginator-sm" [totalRecords]="page.totalItems" [rows]="page.pageSize" (onPageChange)="setPage($event)"></p-paginator> -->
+        </div>
+		<!-- THEM & SUA-->
+        <p-dialog [(visible)]="modalDialog" [style]="{width: '1000px'}" [header]="header()" [modal]="true" class="p-fluid" [maximizable]="true">
+            <ng-template pTemplate="content">
+                <div class="card pt-0">
+                    <div class="grid formgrid">
+                        <!-- Lô trái phiếu -->
+                        <ng-container>
+                            <div class="col-12 md:col-12 title-group-input">
+                                <h6> Thông tin thanh toán </h6>
+                            </div>
+                            <div class="col-12 md:col-3">
+                                <div class="field">
+                                    <label htmlFor="productBondId"> Số giao dịch </label>
+                                    <input [disabled]="true" pInputText [value]="distributionContractPayment.codeId"/>
+                                </div>
+                            </div>
+
+                            <div class="col-12 md:col-3">
+                                <div class="field">
+                                    <label htmlFor="productBondId"> Ngày giao dịch </label>
+                                    <p-calendar
+                                            inputId="tradingDate" dateFormat="dd/mm/yy" locale="vi" appendTo="body" utc="true" placeholder="dd/mm/yyyy"
+                                            [(ngModel)]="distributionContractPayment.tradingDate" 
+                                            [ngClass]="{'ng-invalid ng-dirty' : fieldErrors?.tradingDate} + 'custom-input-disabled'" 
+                                            (click)="resetValid('tradingDate')"
+                                            [showIcon]="true" [disabled]="isDetail">
+                                        </p-calendar>
+                                </div>
+                            </div>
+
+                            <div class="col-12 md:col-3">
+                                <div class="field">
+                                    <label htmlFor="transactionType"> Kiểu GD </label>
+                                    <p-dropdown
+                                        optionValue="code" name="name" optionLabel="name" appendTo="body"
+                                        [options]="DistributionContractConst.transactionTypes" [autoDisplayFirst]="true" [disabled]="true"
+                                        [(ngModel)]="distributionContractPayment.transactionType" 
+                                        [ngClass]="{'ng-invalid ng-dirty' : (submitted && !distributionContractPayment.transactionType) || fieldErrors?.transactionType } + 'custom-input-disabled'"
+                                        (click)="resetValid('transactionType')">
+                                    </p-dropdown>
+                                </div>
+                            </div>
+
+                            <div class="col-12 md:col-3">
+                                <div class="field">
+                                    <label htmlFor="tradingType"> Loại giao dịch </label>
+                                    <p-dropdown
+                                        optionValue="code" name="name" optionLabel="name" appendTo="body"
+                                        [options]="[{name: 'Thanh toán hợp đồng', code: 1}]" [autoDisplayFirst]="true" [disabled]="true"
+                                        [(ngModel)]="distributionContractPayment.tradingType" 
+                                        [ngClass]="{'ng-invalid ng-dirty' : (submitted && !distributionContractPayment.tradingType) || fieldErrors?.tradingType } + 'custom-input-disabled'"
+                                        (click)="resetValid('tradingType')">
+                                    </p-dropdown>
+                                </div>
+                            </div>
+                            <!--  -->
+                            <div class="col-12 md:col-3">
+                                <div class="field">
+                                    <label htmlFor="paymentType"> Loại thanh toán <span class="required-field"> * </span> </label>
+                                    <p-dropdown
+                                        optionValue="code" name="name" optionLabel="name" appendTo="body"
+                                        [options]="DistributionContractConst.paymentTypes" [autoDisplayFirst]="false"
+                                        [(ngModel)]="distributionContractPayment.paymentType" 
+                                        [ngClass]="{'ng-invalid ng-dirty' : (submitted && !distributionContractPayment.paymentType) || fieldErrors?.paymentType } + 'custom-input-disabled'"
+                                        (click)="resetValid('paymentType')" [disabled]="isDetail">
+                                    </p-dropdown>
+                                </div>
+                            </div>
+                            <div class="col-12 md:col-6">
+                                <div class="field" pTooltip="{{distributionContractDetail?.bondPrimary?.businessCustomerBank?.bankName}} - {{distributionContractDetail?.bondPrimary?.businessCustomerBank?.bankAccNo}} - {{distributionContractDetail?.bondPrimary?.businessCustomerBank?.bankAccName}}">
+                                    <label htmlFor="orderId"> Tài khoản thụ hưởng </label> 
+                                    <input 
+                                        pInputText type="text"
+                                        [disabled]="true"
+                                        value="{{distributionContractDetail?.bondPrimary?.businessCustomerBank?.bankName}} - {{distributionContractDetail?.bondPrimary?.businessCustomerBank?.bankAccNo}} - {{distributionContractDetail?.bondPrimary?.businessCustomerBank?.bankAccName}}"   
+                                        class="custom-input-disabled p-component" 
+                                        title="{{distributionContractDetail?.bondPrimary?.businessCustomerBank?.bankName}} - {{distributionContractDetail?.bondPrimary?.businessCustomerBank?.bankAccNo}} - {{distributionContractDetail?.bondPrimary?.businessCustomerBank?.bankAccName}}" 
+                                    />
+                                </div>
+                            </div>
+                            <div class="col-12 md:col-3">
+                                <div class="field">
+                                    <label htmlFor="totalValue"> Số tiền <span class="required-field"> * </span> </label>
+                                    <p-inputNumber 
+                                        name="totalValue" 
+                                        [(ngModel)]="distributionContractPayment.totalValue" mode="decimal" 
+                                        [disabled]="isDetail"
+                                        locale="de-DE">
+                                    </p-inputNumber>
+                                </div>
+                            </div>
+                            <!--  -->
+                            <div class="col-12 md:col-12">
+                                <div class="field">
+                                    <label htmlFor="description"> Mô tả </label>
+                                    <textarea maxlength="500" pInputTextarea [(ngModel)]="distributionContractPayment.description" [disabled]="isDetail"></textarea>
+                                </div>
+                            </div>
+
+                        </ng-container>
+                        <!-- Thông tin phát hành sơ cấp -->
+                        <ng-container>
+                            <div class="col-12 md:col-12 title-group-input">
+                                <h6> Người dùng </h6>
+                            </div>
+                            <div class="col-12 md:col-4">
+                                <div class="field">
+                                    <label htmlFor="code"> Người tạo </label>
+                                    <input pInputText [(ngModel)]="distributionContractPayment.createdBy" [disabled]="true" class="custom-input-disabled"/>
+                                </div>
+                            </div>
+                            <div class="col-12 md:col-2">
+                                <div class="field">
+                                    <label htmlFor="name"> Ngày tạo </label>
+                                    <input pInputText [value]="formatDate(distributionContractPayment.createdDate)" [disabled]="true" class="custom-input-disabled"/>
+                                </div>
+                            </div>
+                            <div class="col-12 md:col-4">
+                                <div class="field">
+                                    <label htmlFor="name"> Người duyệt </label>
+                                    <input pInputText [disabled]="true" [(ngModel)]="distributionContractPayment.approveBy" class="custom-input-disabled"/>
+                                </div>
+                            </div>
+                            <div class="col-12 md:col-2">
+                                <div class="field">
+                                    <label htmlFor="name"> Ngày duyệt </label>
+                                    <input pInputText [value]="formatDate(distributionContractPayment.approveDate)" [disabled]="true" class="custom-input-disabled"/>
+                                </div>
+                            </div>
+                        </ng-container>
+                    </div>
+                </div>
+            </ng-template>
+                <ng-template pTemplate="footer">
+                    <ng-container *ngIf="!isDetail">
+                        <button pButton pRipple label="Hủy" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+                        <button pButton pRipple label="Lưu" icon="pi pi-check" class="p-button-text" [disabled]="!validForm() || submitted" (click)="save()"></button>
+                    </ng-container>
+                </ng-template>
+        </p-dialog>
+    </div>
+</div>

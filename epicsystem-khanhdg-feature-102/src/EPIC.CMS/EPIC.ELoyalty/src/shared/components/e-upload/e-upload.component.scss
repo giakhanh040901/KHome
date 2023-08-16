@@ -1,0 +1,55 @@
+::ng-deep .e-file-upload {
+    &.fix-height {
+        .p-fileupload-content {
+            height: 40vh;
+        }
+    }
+    
+    .p-fileupload-content {
+        overflow-y: scroll;
+        display: flex;
+        flex-wrap: wrap;
+        .gallery {
+            margin: 5px;
+            border: 1px solid #ccc;
+
+            width: 31%;
+            border-radius: 3px;
+            // 
+            &:hover {
+                border: 1px solid #777;
+            }
+
+            .gallery-image {
+                height: 110px;
+                width: 100%;
+                background-size: cover !important;
+                background-color: #eee;
+                cursor: pointer;
+                .overlay-preview {
+                    display: flex;
+                    opacity: 1;
+                    align-items: center;
+                    justify-content: center;
+                    background-color: #80808094;
+                    width: 100%;
+                    height: 100%;
+                    .pi-eye {
+                        font-size: 1.5rem;
+                        color: white;
+                    }
+                }
+            }
+
+            .icon-trash {
+                padding: 5px;
+                text-align: center;
+                cursor: pointer; 
+                &:hover {
+                    color: red;
+                }
+            }
+        }
+        
+    }
+}

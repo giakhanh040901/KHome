@@ -1,0 +1,8 @@
+{
+  "remoteServiceBaseUrl": "https://api-dev.epicpartner.vn",
+  "nodeBaseUrl": "http://localhost:3000",
+  "appBaseUrl": "http://localhost:4208",
+  "baseUrlHome": "http://localhost:4200",
+  "clientId": "client1",
+  "clientSecret": "secret1"
+}

@@ -1,0 +1,8 @@
+{
+	"remoteServiceBaseUrl": "https://api-staging.epicpartner.vn",
+	"nodeBaseUrl": "https://api-staging.epicpartner.vn", 
+	"appBaseUrl": "https://ecore-staging.epicpartner.vn",
+	"baseUrlHome": "https://home-staging.epicpartner.vn",
+	"clientId": "client1",
+	"clientSecret": "secret1"
+}

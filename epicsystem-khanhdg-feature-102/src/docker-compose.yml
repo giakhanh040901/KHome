@@ -1,0 +1,27 @@
+version: '3.4'
+
+services:
+  epic.apigateway:
+    environment:
+        - ASPNETCORE_ENVIRONMENT=Development
+        - OCELOT_ENVIRONMENT=Development
+        - ASPNETCORE_URLS=http://+:5003
+    image: ${DOCKER_REGISTRY-}epicapigateway
+    build:
+      context: .
+      dockerfile: EPIC.APIGateway/EPIC.APIGateway/Dockerfile
+    ports:
+        - 8089:5003
+
+  epic.identityserver:
+    environment:
+        - ASPNETCORE_ENVIRONMENT=Development
+        - ASPNETCORE_URLS=http://+:5001
+    image: ${DOCKER_REGISTRY-}epicidentityserver
+    volumes:
+      - /opt/epic/App_Data:/app/App_Data
+    build:
+      context: .
+      dockerfile: EPIC.IdentityServer/EPIC.IdentityServer/Dockerfile
+    ports:
+        - 5001:5001

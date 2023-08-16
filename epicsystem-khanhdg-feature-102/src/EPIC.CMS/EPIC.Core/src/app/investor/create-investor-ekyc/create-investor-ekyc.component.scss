@@ -1,0 +1,31 @@
+::ng-deep .dialog-ekyc {
+    .p-dialog-content {
+        overflow-y: unset;
+        .indentification-info {
+            overflow-y: scroll;
+            padding-right: 10px;
+            .field {
+                margin-bottom: 0;
+            }
+        }
+        hr {
+            margin-bottom: 0;
+        }
+
+        .button-indetification-image-display {
+            position: absolute;
+            top: -9px;
+            right: 8px;
+            box-shadow: none;
+        }
+    }
+}
+
+
+.image-left-custom{
+    margin-left: 5rem;
+}
+
+.content-padding{
+    padding-bottom: 3rem ;
+}

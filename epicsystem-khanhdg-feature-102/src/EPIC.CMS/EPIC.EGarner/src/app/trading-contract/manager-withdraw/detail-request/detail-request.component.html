@@ -1,0 +1,26 @@
+<div class="card b-page-detail">
+    <div class="grid detail">
+        <div class="col-12">
+            <div class="card pt-0 pb-0 mb-0">
+                <div class="p-fluid p-formgrid grid">
+                    <div class="field col-12 md:col-6">
+                        <label class="title-info"> Số tài khoản <span class="required-field"> * </span> </label>
+                        <input pInputText [value]="request?.bankInfo?.bankAccount" [disabled]="true" class="b-disabled" />
+                    </div>
+                    <div class="field col-12 md:col-6">
+                        <label class="title-info"> Mã bin <span class="required-field"> * </span> </label>
+                        <input pInputText [value]="request?.bankInfo?.bin" [disabled]="true" class="b-disabled" />
+                    </div>
+                    <div class="field col-12 md:col-12">
+                        <label class="title-info"> Tên tài khoản <span class="required-field"> * </span> </label>
+                        <input pInputText [value]="request?.bankInfo?.ownerAccount" [disabled]="true" class="b-disabled" />
+                    </div>
+                    <div class="field col-12 md:col-12">
+                        <label class="title-info"> Ngân hàng <span class="required-field"> * </span> </label>
+                        <input pInputText [value]="request?.bankInfo?.bankName" [disabled]="true" class="b-disabled" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,198 @@
+<div class="grid ml-0 mr-0 mt-0">
+    <div class="col-12">
+        <div class="card b-list mt-0 pt-0">
+            <div class="p-fluid p-formgrid grid b-header">
+                <div class="col-12 md:col-12 b-title">
+                    <div class="flex justify-content-between flex-wrap card-container purple-container">
+                        <h4 style="display:inline"> Danh sách lệnh đến hạn chi trả </h4>
+                            <div class="flex flex-row flex-wrap">
+                                <p-button
+                                *ngIf="dataFilter.typeInterest == InterestPaymentConst.STATUS_DUEDATE && isGranted([PermissionBondConst.BondHDPP_HDDH_LapDSChiTra])"
+                                (onClick)="createList()" 
+                                label="Lập danh sách" icon="pi pi-book" iconPos="right" 
+                                [disabled]="selectedContracts?.length == 0 ? true : false">
+                            </p-button>
+                            <p-button
+                                *ngIf="dataFilter.typeInterest == InterestPaymentConst.STATUS_CREATED_LIST && isGranted([PermissionBondConst.BondHDPP_HDDH_DuyetKhongChi])"
+                                (onClick)="payInterest()"
+                                label="Duyệt không chi tiền" icon="pi pi-book" iconPos="right" 
+                                [disabled]="selectedContracts?.length == 0 ? true : false">
+                            </p-button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p-toast></p-toast>
+            <p-confirmDialog [style]="{width: 'auto'}" [baseZIndex]="10000"></p-confirmDialog>
+
+            <div class="mb-5" style="padding: 0px 15% 20px 15%; pointer-events: none;">
+                <div style="padding: 10px 50px 10px 30px;">
+                    <div class="b-step-check">
+                        <span class="b-handle-check-step {{ loadingStep == 0 ? 'step-one' : 'step-one-check' }}"></span>
+                        <span class="b-handle-check-step {{ loadingStep == 0 ? 'step-two' : 'step-two-check' }}" *ngIf="loadingStep !== 50"> {{ loadingStep == 0 ? '2' : null }} </span>
+                        <span class="b-handle-check-step step-two" style="opacity: 0;" *ngIf="loadingStep == 50"> 2 </span>
+                        <span class="b-handle-check-step {{ loadingStep !== 100 ? 'step-three' : '' }}" *ngIf="loadingStep !== 100"> {{ loadingStep !== 100 ? '3' : null }} </span>
+                    </div>
+                    <p-slider [(ngModel)]="loadingStep" [min]="0" [max]="100" [disabled]="selectedContracts?.length == 0 ? true : false" styleClass="b-silder"></p-slider>
+                </div>
+                <div class="flex justify-content-between flex-wrap card-container purple-container b-step-handle">
+                    <span> Danh sách </span>
+                    <span> Đã lập chưa chi trả </span>
+                    <span> Đã lập đã chi trả </span>
+                </div>
+            </div>
+
+            <p-table 
+                #productBondInfoTable
+                [(selection)]="selectedContracts" dataKey="orderId"
+                [value]="rows" [columns]="_selectedColumns" styleClass="custom-table"
+                [loading]="isLoading" [rowHover]="true" responsiveLayout="scroll"
+                [showCurrentPageReport]="true" [paginator]="false" (onPageChange)="setPage($event)" [scrollable]="true"
+                scrollHeight="{{(screenHeight*0.56) + 'px'}}">
+                <ng-template pTemplate="caption">
+                    <div class="flex justify-content-between flex-column sm:flex-row">
+                        <div class="flex justify-content-between flex-column sm:flex-row">
+                            <span class="block mt-2 md:mt-0 p-input-icon-left">
+                                <i class="pi pi-search"></i>
+                                <input pInputText type="text"
+                                    placeholder="{{ OrderConst.getInfoFieldFilter(dataFilter.fieldFilter, 'placeholder') }}"
+                                    [(ngModel)]="keyword" style="min-width: 20rem"
+                                    (input)="changeKeywordSearch($event)" />
+                            </span>
+                            <span class="p-float-label b-custom ml-3">
+                                <p-dropdown id="fieldFilter" [style]="{'width':'12rem'}"
+                                    [options]="OrderConst.fieldFilters" name="fieldFilter" optionLabel="name"
+                                    optionValue="field" [(ngModel)]="dataFilter.fieldFilter" [autoDisplayFirst]="true"
+                                    (onChange)="changeFieldFilter($event)">
+                                </p-dropdown>
+                                <label class="font-normal" for="fieldFilter">Tìm kiếm theo</label>
+                            </span>
+                            <span class="p-float-label b-custom">
+                                <p-multiSelect class="ml-2" [filter]="false" [filterMatchMode]="false"
+                                    emptyMessage="Không có dữ liệu" [style]="{'min-width':'12rem'}"
+                                    [options]="bondPolicies" placeholder="Chọn sản phẩm"
+                                    [(ngModel)]="dataFilter.bondPolicyId" optionLabel="name" optionValue="bondPolicyId"
+                                    (onChange)="changeBondPolicy($event.value)">
+                                </p-multiSelect>
+                                <label class="font-normal" for="dropdownStatus">Sản phẩm</label>
+                            </span>
+                            <span class="p-float-label b-custom ml-2">
+                                <p-dropdown
+                                    class="ml-2"
+                                    emptyMessage="Không có dữ liệu" [style]="{'width':'12rem'}"
+                                    [options]="typeInterests" 
+                                    optionLabel="name" optionValue="code"
+                                    (onChange)="changeTypeInterest($event.value)"
+                                    [(ngModel)]="dataFilter.typeInterest"
+                                    [autoDisplayFirst]="true">
+                                </p-dropdown>
+                                <label class="font-normal" > <b> Loại chi trả </b> </label>
+                            </span>
+                            <span class="p-float-label b-custom ml-3">
+                                <p-calendar inputId="dueDate" [style]="{'width':'12rem'}" [(ngModel)]="dataFilter.ngayChiTra" appendTo="body" dateFormat="dd/mm/yy" (onSelect)="setPage($event)"></p-calendar>
+                                <label class="font-normal" for="dropdownStatus">Ngày chi trả</label>
+                            </span>
+                        </div>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header" let-columns>
+                    <tr>
+                        <th style="max-width: 3rem; min-width: 3rem;" pFrozenColumn alignFrozen="left">
+                            <p-tableHeaderCheckbox [disabled]="dataFilter.typeInterest == InterestPaymentConst.STATUS_DONE" class="custom-input-disabled"></p-tableHeaderCheckbox>
+                        </th>
+                        <th style="max-width: 5rem; min-width: 5rem;" pFrozenColumn alignFrozen="left"> #ID </th>
+                        <th *ngFor="let col of columns"
+                            [ngStyle]="{'max-width': !col.isPin ? col.width : '', 'min-width': col.width}"
+                            [ngClass]=" col.class ">
+                            {{ col.header }}
+                        </th>
+                        <th style="min-width: 3rem; max-width: 3rem; justify-content: center;" pFrozenColumn
+                            [frozen]="true" alignFrozen="right" class="b-table-actions">
+                            <i class="pi pi-cog" (click)="setColumn(cols, _selectedColumns)"></i>
+                        </th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-row let-rowIndex="rowIndex" let-columns="columns">
+                    <tr>
+                        <td style="max-width: 3rem; min-width: 3rem;" pFrozenColumn alignFrozen="left">
+                            <p-tableCheckbox [value]="row" [disabled]="dataFilter.typeInterest == InterestPaymentConst.STATUS_DONE" class="custom-input-disabled"></p-tableCheckbox>
+                        </td>
+                        <td style="max-width: 5rem; min-width: 5rem;" pFrozenColumn alignFrozen="left"> 
+                            {{ row?.orderId }} 
+                        </td>
+                        <td *ngFor="let col of columns"
+                            [ngStyle]="{'max-width': !col.isPin ? col.width : '', 'min-width': col.width}"
+                            [ngClass]=" col.class ">
+                            <div [ngClass]="col.cutText" [title]="row[col.field]">
+                                {{ row[col.field] }}
+                            </div>
+                        </td>
+                        <td style="min-width: 3rem; max-width: 3rem;" pFrozenColumn alignFrozen="right" [frozen]="true"
+                            class="b-table-actions">
+                            <div class="flex">
+                                <i class="pi pi-ellipsis-h" (click)="menu.toggle($event)"></i>
+                                <p-menu #menu [popup]="true" class="button-actions" [model]="listAction[rowIndex]"
+                                    appendTo="body">
+                                </p-menu>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td colspan="7">Không có dữ liệu.</td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="loadingbody">
+                    <tr>
+                        <td colspan="7"> Đang tải dữ liệu ... </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+            <p-paginator 
+                [rows]="page.pageSize" [totalRecords]="page.totalItems"
+                [rowsPerPageOptions]="[25, 50, 100, 200]" currentPageReportTemplate="Tất cả {{ page.totalItems }} dòng"
+                showCurrentPageReport="true" (onPageChange)="setPage($event)">
+            </p-paginator>
+        </div>
+    </div>
+</div>
+
+<!-- Phong toả -->
+<p-dialog [(visible)]="blockageDialog" [style]="{width: '50%'}" header="Phong toả" [modal]="true" class="p-fluid">
+    <ng-template pTemplate="content">
+        <h6 class="mb-2">Thông tin</h6>
+        <hr class="mt-0">
+        <div class="grid formgrid">
+            <div class="field col-4">
+                <label for="code">Loại phong toả</label>
+                <p-dropdown id="blockageType" name="blockageType" [options]="BlockageLiberationConst.blockageTypes"
+                    optionLabel="name" [(ngModel)]="blockageLiberation.type" optionValue="code" appendTo="body">
+                </p-dropdown>
+            </div>
+            <div class="field col-4">
+                <label> Ngày yêu cầu </label>
+                <p-calendar showButtonBar="true" dateFormat="dd/mm/yy" locale="vi" appendTo="body"
+                    readonlyInput="true" [(ngModel)]="blockageLiberation.blockadeDate" [placeholder]="'dd/mm/yyyy'"
+                    showIcon="true">
+                </p-calendar>
+            </div>
+            <div class="col-4">
+                <div class="field">
+                    <label> Số tiền </label>
+                    <input type="text" [disabled]="true" [value]="blockageLiberation.totalValue" pInputText
+                        class="custom-input-disabled">
+                </div>
+            </div>
+            <div class="field col-12">
+                <label> Ghi chú </label>
+                <textarea [(ngModel)]="blockageLiberation.blockadeDescription" pInputTextarea></textarea>
+            </div>
+            
+        </div>
+    </ng-template>
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Hủy" icon="pi pi-times" (click)="hideDialog()" class="p-button-text"></button>
+        <button pButton pRipple label="Lưu" icon="pi pi-check" (click)="saveBlockade()" class="p-button-text"></button>
+    </ng-template>
+</p-dialog>

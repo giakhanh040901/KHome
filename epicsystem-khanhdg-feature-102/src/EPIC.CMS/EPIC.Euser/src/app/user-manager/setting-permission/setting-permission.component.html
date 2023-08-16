@@ -1,0 +1,144 @@
+<app-loading-page *ngIf="isLoadingPage"></app-loading-page>
+
+<div class="card b-page-detail {{ isLoadingPage ? 'b-loading' : '' }}">
+    <div class="p-fluid p-formgrid grid b-header align-items-end">
+        <div class="col-12 md:col-8 flex align-items-center">
+            <h5 class="mb-0"> Thông tin doanh nghiệp </h5>
+        </div>
+        <div class="col-12 md:col-4 b-actions ">
+            <div class="text-right">
+                <p-button styleClass="p-button-sm custom-button b-button-back" routerLink="/user/list"
+                    label="Quay lại" icon="pi pi-chevron-left">
+                </p-button>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="grid detail partner">
+        <div class="col-12">
+            <div class="card pt-0 pb-0 mb-0">
+                <div class="p-fluid p-formgrid grid">
+                    <div class="field col-12 md:col-2">
+                        <label class="title-info"> Mã doanh nghiệp</label>
+                        <input 
+                            [disabled]="true" maxlength="10" type="text" id="code" name="code" pInputText class="custom-input-disabled"
+                            value="{{ partnerDetail?.code || tradingProviderDetail?.code }}"
+                        />
+                    </div>
+                    <div class="field col-12 md:col-2">
+                        <label class="title-info "> Mã số thuế </label>
+                        <input 
+                            [disabled]="!isEdit" type="text" id="taxCode" name="taxCode" maxlength="50" pInputText class="custom-input-disabled"
+                            value="{{ partnerDetail?.taxCode || tradingProviderDetail?.taxCode }}"
+                        />
+                    </div>
+                    <div class="field col-12 md:col-6">
+                        <label class="title-info "> Tên doanh nghiệp
+                        </label>
+                        <input 
+                            [disabled]="true" type="text" id="name" name="name" pInputText class="custom-input-disabled"
+                            value="{{ partnerDetail?.name || tradingProviderDetail?.name }}"    
+                        />
+                    </div>
+                    <div class="field col-12 md:col-2">
+                        <label class="title-info"> Tên viết tắt </label>
+                        <input 
+                            [disabled]="true" type="text" id="shortName" name="shortName" pInputText class="custom-input-disabled"
+                            value="{{ partnerDetail?.shortName || tradingProviderDetail?.shortName }}"
+                        />
+                    </div>
+                    <div class="field col-12 md:col-4">
+                        <label class="title-info"> Thư điện tử </label>
+                        <input 
+                            [disabled]="true" type="text" id="email" name="email" pInputText class="custom-input-disabled"
+                            value="{{ partnerDetail?.email || tradingProviderDetail?.email }}"
+                        />
+                    </div>
+                    <div class="field col-12 md:col-2">
+                        <label class="title-info"> Điện thoại </label>
+                        <input 
+                            [disabled]="true" type="text" id="phone" name="phone" pInputText class="custom-input-disabled"
+                            value="{{ partnerDetail?.phone || tradingProviderDetail?.phone }}"    
+                        />
+                    </div>
+                    <div class="field col-12 md:col-4">
+                        <label class="title-info"> Tên người đại diện
+                        </label>
+                        <input 
+                            [disabled]="true" type="text" id="repName" name="repName" pInputText class="custom-input-disabled"
+                            value="{{ partnerDetail?.repName || tradingProviderDetail?.repName}}"    
+                        />
+                    </div>
+                    <div class="field col-12 md:col-2">
+                        <label class="title-info"> Chức vụ </label>
+                        <input 
+                            [disabled]="true" type="text" id="repPosition" name="repPosition" pInputText class="custom-input-disabled"
+                            value="{{ partnerDetail?.repPosition || tradingProviderDetail?.repPosition }}"    
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card b-list p-0 mt-3">
+        <div class="p-fluid p-formgrid grid b-header">
+            <div class="col-12 md:col-7 b-title">
+                <h5 style="display:inline"> Danh sách website</h5>
+            </div>
+            <div class="col-12 md:col-5 b-action">
+                <button *ngIf="isGranted([PermissionUserConst.UserQL_TaiKhoan_PhanQuyenWebsite])"
+                    (click)="create()" pButton pRipple label="Phân quyền website" icon="pi pi-pencil" class="p-button-success mr-2">
+                </button>
+            </div>
+        </div>
+        <p-table #webTable [value]="permissionWebs" [loading]="isLoading" [rowHover]="true" responsiveLayout="scroll"
+            dataKey="code" [scrollable]="false" scrollHeight="{{ (screenHeight*0.65) + 'px' }}"
+            styleClass="custom-table">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="width: 12rem;"> Tên website </th>
+                    <th style="width: 20rem;"> Đường dẫn </th>
+                    <th style="width: 20rem;"> Mô tả </th>
+                    <th style="width: 12rem; max-width: 12rem; justify-content: end;" pFrozenColumn alignFrozen="right" [frozen]="true"></th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-row let-rowIndex="rowIndex">
+                <tr>
+                    <td style="width: 12rem;"> {{ row.name }} </td>
+                    <td style="width: 20rem;"> {{ row.url }} </td>
+                    <td style="width: 20rem;"> {{ row.description }} </td>
+                    <td style="width: 12rem; max-width: 12rem; padding-right: 0;" pFrozenColumn alignFrozen="right" [frozen]="true" class="b-table-actions">
+                        <div class="flex justify-content-end">
+                            <!-- <i class="pi pi-ellipsis-h"  (click)="menu.toggle($event)"></i>
+                            <p-menu 
+                                #menu [popup]="true"class="button-actions"
+                                [model]="listAction[rowIndex]" appendTo="body">
+                            </p-menu> -->
+                            <button *ngIf="isGranted([PermissionUserConst.UserQL_TaiKhoan_PhanQuyenChiTietWebsite])"
+                                (click)="createPermissionWebDetail(row)" [label]="'Phân quyền chi tiết'" icon="pi pi-pencil" class="p-button-secondary p-button-raised mr-2 b-button-secondary" pButton pRipple>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="7">Không có dữ liệu.</td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="loadingbody">
+                <tr>
+                    <td colspan="7"> Đang tải dữ liệu ... </td>
+                </tr>
+            </ng-template>
+        </p-table>
+        <!-- CÀI ĐẶT PHÂN QUYỀN THEO DANH SÁCH WEBSITE -->
+        <app-websites *ngIf="modalDialog" 
+            [webKey]="webKey" (onCloseDialog)="hideModal($event)" [modalDialog]="modalDialog" [params]="paramCreatePermissionWebsite">
+        </app-websites>
+        <!-- CÀI ĐẶT PHÂN QUYỀN CHO CHI TIẾT WEBSITE -->
+        <app-website-detail *ngIf="modalDialogPermissionDetail" 
+            (onCloseDialog)="hideModal($event)" [modalDialogPermissionDetail]="modalDialogPermissionDetail" [params]="paramCreatePermissionWebsite">
+        </app-website-detail>
+    </div>
+</div>

@@ -1,0 +1,176 @@
+<div class="row">
+    <div class="col-12 grid-margin">
+      <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12 px-0">
+                    <span class="mb-0 h3 pr-1" style="color: #172b4d;"> {{ titlePage }} </span>
+                </div>
+            </div>
+            <div class="row mt-2 mb-3">
+                <div class="col-md-6 pl-0 d-flex align-items-end">
+                    <button class="btn btn-sm btn-primary" (click)="create()"><i class="mdi mdi-plus-circle mr-1"></i> Thêm tài khoản </button>
+                </div>
+                <div class="col-md-6 d-flex justify-content-end pr-0">
+                    <div class="input-group input-search">
+                        <input type="text" class="form-control form-control-sm border-radius-default" name="keyword"
+                            [placeholder]="'Tìm kiếm...'" [(ngModel)]="keyword" (keyup)="changeKeyword()"
+                            (keyup.enter)="setPage({ offset: offset })"/>
+                        <div class="input-group-append">
+                        <button class="btn btn-sm btn-primary" type="button" (click)="setPage({ offset: offset })">
+                            <i class="icon-magnifier"></i>
+                        </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 px-0">
+                    <ngx-datatable class="ngx-datatable-custom border-left-none"
+                    #userTable
+                    [rows]="rows"
+                    [columnMode]="ColumnMode.force"
+                    [footerHeight]="42" [rowHeight]="60"
+                    [headerHeight]="50" [footerHeight]="42"
+                    [scrollbarV]="true" [scrollbarH]="true" [virtualization]="false"
+                    [externalPaging]="true" [count]="page.totalItems" [offset]="page.pageNumber" [limit]="page.pageSize"
+                    [messages]="datatableMessage" [columns]="columns"
+                    (page)="setPage($event)" [busy]="isLoading">
+                      <!-- <ngx-datatable-row-detail [rowHeight]="350" #myDetailRow (toggle)="onDetailToggle($event)">
+                        <ng-template let-row="row" let-expanded="expanded" ngx-datatable-row-detail-template>
+                            <div class="card wrapper-detail" style="overflow-y: scroll;">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label> Mã TCPH </label>
+                                            <p> {{ row.code ?? '-' }} </p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label> Loại TCPH </label>
+                                            <p> {{ IssuerConst.getNameType(row.type) ?? '-' }} </p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label> Tên TCPH </label>
+                                            <p> {{ row.name ?? '-' }} </p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label> Tên tiếng anh </label>
+                                            <p> {{ row.nameEn ?? '-' }} </p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label> Tên viết tắt </label>
+                                            <p> {{ row.shortName ?? '-' }} </p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label> Số điện thoại </label>
+                                            <p> {{ row.phone ?? '-' }} </p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label> Email </label>
+                                            <p> {{ row.email ?? '-' }} </p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label> Mobile </label>
+                                            <p> {{ row.mobile ?? '-' }} </p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label> Mã số thuế </label>
+                                            <p> {{ row.taxCode ?? '-' }} </p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label> Fax </label>
+                                            <p> {{ row.fax ?? '-' }} </p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label> Địa chỉ </label>
+                                            <p> {{ row.address ?? '-' }} </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-template>
+                      </ngx-datatable-row-detail>
+                      <ngx-datatable-column [width]="50" [resizeable]="false" [sortable]="false" [draggable]="false" [canAutoResize]="false">
+                        <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+                          <a style="font-size: 25px;"
+                            href="javascript:void(0)"
+                            [class.datatable-icon-right]="!expanded"
+                            [class.datatable-icon-down]="expanded"
+                            title="Expand/Collapse Row"
+                            (click)="toggleExpandRow(row, expanded)"
+                          >
+                          </a>
+                        </ng-template>
+                      </ngx-datatable-column> -->
+
+                        <ngx-datatable-column name="displayName" [width]="200" [sortable]="false">
+                            <ng-template let-column="column" ngx-datatable-header-template> Tên hiển thị </ng-template>
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                <div>
+                                    {{ value }}
+                                </div>
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="userName" [width]="200" [sortable]="false">
+                            <ng-template let-column="column" ngx-datatable-header-template> Tên đăng nhập </ng-template>
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                <div>
+                                {{ value }}
+                                </div>
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="userType" [width]="200" [sortable]="false">
+                            <ng-template let-column="column" ngx-datatable-header-template> Loại tài khoản </ng-template>
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                <div>
+                                {{ value }}
+                                </div>
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="email" [width]="100" [sortable]="false">
+                            <ng-template let-column="column" ngx-datatable-header-template> Email </ng-template>
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                <div>
+                                    {{ value }}
+                                </div>
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="status" [width]="100" [sortable]="false">
+                            <ng-template let-column="column" ngx-datatable-header-template> Trạng thái </ng-template>
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                <div>
+                                    {{ IssuerConst.getStatusName(value) }}
+                                </div>
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column [width]="100" [sortable]="false">
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                <div class="dropdown" dropdown #dropdown="bs-dropdown" [autoClose]="true">
+                                    <button dropdownToggle class="btn btn-action-table dropdown-toggle" type="button" id="dropdownMenu"
+                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Thao tác
+                                    </button>
+                                    <div class="dropdown-menu table-dropdown-menu" *dropdownMenu aria-labelledby="dropdownMenu">
+                                        <span>
+                                            <a class="dropdown-item dropdown-item-wrapper" (click)="edit(row.userId)">
+                                                <i class="fas fa-pencil-alt"></i> Sửa
+                                            </a>
+                                            <a class="dropdown-item dropdown-item-wrapper" (click)="delete(row)">
+                                                <i class="fas fa-trash"></i>&nbsp; Xoá
+                                            </a>
+                                        </span>
+                                    </div>
+                                </div>
+                            </ng-template>
+                        </ngx-datatable-column>
+                    </ngx-datatable>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+
+
+

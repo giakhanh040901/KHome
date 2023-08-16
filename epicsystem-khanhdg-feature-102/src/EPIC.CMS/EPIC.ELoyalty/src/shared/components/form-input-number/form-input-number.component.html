@@ -1,0 +1,14 @@
+<div [ngClass]="'field' + classContainer">
+  <label [ngClass]="'title-info' + classLabel" *ngIf="showLabel">
+    {{ label }}
+    <span class="required-field" *ngIf="isRequired"> * </span></label
+  >
+  <p-inputNumber
+    [(ngModel)]="ngModelValue"
+    [placeholder]="placeholder"
+    [ngClass]="'custom-input b-disabled' + classInput"
+    [disabled]="isDisabled"
+    (onInput)="handleInput($event)"
+  >
+  </p-inputNumber>
+</div>

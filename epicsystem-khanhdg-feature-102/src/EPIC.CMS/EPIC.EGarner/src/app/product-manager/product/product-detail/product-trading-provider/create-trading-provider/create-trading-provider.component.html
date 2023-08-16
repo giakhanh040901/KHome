@@ -1,0 +1,162 @@
+<app-loading-page *ngIf="isLoadingPage"></app-loading-page>
+<ng-container>
+    <div class="mb-5 {{ isLoadingPage ? 'b-loading' : '' }}">
+        <div class="grid">
+            <div class="col-6 flex align-content-center flex-wrap">
+                <h6 class="mb-0 e-title-group"> 
+                    Đại lý phân phối 
+                    <ng-container *ngIf="!tradingProvider?.id">
+                        <i class="pi pi-check-circle b-icon-check-green ml-2" *ngIf="customerInfo"></i>
+                        <span class="required-field" *ngIf="!customerInfo"> * </span>
+                    </ng-container>
+                </h6>
+            </div>
+            <div class="col-6" *ngIf="!tradingProvider?.id">
+                <div class="flex flex-row flex-wrap card-container blue-container wrapper-order-search z-1 justify-content-end" >
+                    <p-dropdown 
+                        [style]="{'width':'350px'}"
+                        class="custom-input-disabled" emptyMessage="Không có dữ liệu" appendTo="body" placeholder="Chọn đại lý"
+                        [autoDisplayFirst]="false"
+                        [options]="tradingProviders" optionLabel="name" optionValue="tradingProviderId" 
+                        [(ngModel)]="tradingProvider.tradingProviderId"
+                        (onChange)="changeTradingProvider($event.value)">
+                    </p-dropdown>
+                </div>
+            </div>
+        </div>
+        <!--  -->
+        <p-table 
+        #businessCustomerTable 
+        [value]="rows" [loading]="isLoading" [rowHover]="true"
+        [paginator]="false" responsiveLayout="scroll" dataKey="code"
+        [scrollable]="true" styleClass="b-garner-search-customer"
+        >
+            <ng-template pTemplate="header">
+                <tr>
+                    <th [ngStyle]="{'min-width': '8rem', 'max-width': '8rem'}" class="pl-0"> Mã số thuế </th>
+                    <th [ngStyle]="{'min-width': '25rem'}"> Tên doanh nghiệp </th>
+                    <th [ngStyle]="{'min-width': '10rem'}"> Tên viết tắt </th>
+                    <th [ngStyle]="{'min-width': '12rem'}"> Người đại diện </th>
+                    <th [ngStyle]="{'min-width': '5rem', 'max-width': '5rem'}">  </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-row>
+                <tr>
+                    <td [ngStyle]="{'min-width': '8rem', 'max-width': '8rem'}"> 
+                        <div>
+                            <div class="b-wrapper-info b-cut-text" [title]="row?.taxCode"> {{ row?.taxCode ?? 'None' }} </div>
+                        </div> 
+                    </td>
+                    <td [ngStyle]="{'min-width': '25rem'}"> 
+                        <div>
+                            <div class="b-wrapper-info"> {{ row?.name ?? 'None' }} </div>
+                        </div> 
+                    </td>
+                    <td [ngStyle]="{'min-width': '10rem'}"> 
+                        <div>
+                            <div class="b-wrapper-info"> {{ row?.shortName ?? 'None' }} </div>
+                        </div>
+                    </td>
+                    <td [ngStyle]="{'min-width': '12rem'}">
+                        <div>
+                            <div class="b-wrapper-info"> {{ row?.repName ?? 'None' }} </div>
+                        </div> 
+                    </td>
+                    <td [ngStyle]="{'min-width': '5rem', 'max-width': '5rem'}"> 
+                        <div> </div> 
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="7">
+                        <div>
+                            <div class="b-wrapper-info b-empty-data"> Không có dữ liệu </div>
+                        </div>
+                        
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="loadingbody">
+                <tr>
+                    <td colspan="7"> Đang tải dữ liệu ... </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+    <ng-container>
+        <h5 class="title-info mb-2 mt-0">Thông tin phân phối </h5>
+        <hr class="mt-0" style="border-width: 2px 0 0">
+        <!-- Dòng 1 -->
+        <div class="p-fluid p-formgrid grid mb-3">
+            <div class="field mb-0 col-12 md:col-2" *ngIf="activeIndex == 0">
+                <label class="title-info"> Cài đặt hạn mức </label>
+                <p-dropdown 
+                    class="custom-input-disabled" emptyMessage="Không có dữ liệu" appendTo="body"
+                    [options]="YesNoList" optionLabel="name" optionValue="code"
+                    [disabled]="isDetail"
+                    [(ngModel)]="tradingProvider.hasTotalInvestmentSub"
+                    (onChange)="changeHasTotalInvestmentSub($event.value)">
+                </p-dropdown>
+            </div>
+            <div class="field mb-0 col-12 md:col-2">
+                <label class="title-info">Số tiền <span *ngIf="tradingProvider?.hasTotalInvestmentSub == 'Y'">(<span class="required-field"> * </span>)</span></label>
+                <p-inputNumber 
+                    class="custom-input-disabled"
+                    placeholder="Nhập tổng số tiền" type="text" id="quantity" name="quantity"
+                    [disabled]="(tradingProvider?.hasTotalInvestmentSub == 'N') || isDetail==true" 
+                    (onInput)="changeTotalInvestmentSub($event.value)"
+                    [(ngModel)]="tradingProvider.totalInvestmentSub"
+                    locale="de-DE">
+                </p-inputNumber>
+            </div>
+            <div class="field mb-0 col-12 md:col-2">
+                <label class="title-info">Số lượng <span *ngIf="tradingProvider.hasTotalInvestmentSub == 'Y'">(<span class="required-field"> * </span>)</span></label>
+                <p-inputNumber 
+                    class="custom-input-disabled"
+                    placeholder="Nhập số lượng" type="text" id="quantity" name="quantity"
+                    [disabled]="(tradingProvider?.hasTotalInvestmentSub == 'N') || isDetail==true" 
+                    (onInput)="changeQuantity($event.value)"
+                    [(ngModel)]="tradingProvider.quantity"
+                    locale="de-DE">
+                </p-inputNumber>
+            </div>
+            <div class="field mb-0 col-12 md:col-2">
+                <label class="title-info">Đơn giá</label>
+                <p-inputNumber
+                    mode="decimal" locale="de-DE" name="unitPrice"
+                    class="custom-input-disabled" [disabled]="true"
+                    [(ngModel)]="tradingProvider.unitPrice">
+                </p-inputNumber>
+            </div>
+            <div class="field mb-0 col-12 md:col-2">
+                <label class="title-info">Chi trả lợi nhuận</label>
+                <p-dropdown 
+                    class="custom-input-disabled" emptyMessage="Không có dữ liệu" appendTo="body"
+                    [options]="YesNoList" optionLabel="name" optionValue="code"
+                    [disabled]="isDetail"
+                    [(ngModel)]="tradingProvider.isProfitFromPartner">
+                </p-dropdown>
+            </div>
+            <div class="field mb-0 col-12 md:col-2">
+                <label class="title-info">Ngày phân phối (<span class="required-field"> * </span>)</label>
+                <p-calendar  
+                    class="custom-input-disabled" 
+                    inputId="distributionDate" dateFormat="dd/mm/yy" locale="vi" appendTo="body"
+                    utc="true" placeholder="dd/mm/yyyy" [(ngModel)]="tradingProvider.distributionDate"
+                    [showIcon]="false" [disabled]="isDetail==true">
+                </p-calendar>
+                <!-- <input [disabled]="customers.hasTotalInvestmentSub == 'N'" pInputText [(ngModel)]="customers.name" class="custom-input-disabled" /> -->
+            </div>
+        </div>
+    </ng-container>
+</ng-container>
+<div class="p-dialog-footer" style="width: 100%; position: fixed; left: 0; bottom: 0;" *ngIf="!isDetail">
+    <button pButton pRipple label="Hủy" icon="pi pi-times" class="p-button-text p-confirm-dialog-reject" (click)="close()"></button>
+    <button pButton pRipple label="Lưu" icon="pi pi-check" class="p-button-text p-confirm-dialog-approve"  (click)="save()"></button>
+    <!-- [disabled]="!validForm() || submitted" -->
+</div>
+
+         
+
+

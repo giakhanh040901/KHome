@@ -1,0 +1,409 @@
+.ngx-datatable-custom {
+    .table-dropdown-menu {
+        top: 35px !important;
+        left: -66px !important;
+    }
+
+    overflow: visible !important;
+    .datatable-header {
+        border-top: 1px solid $border-color;
+        border-bottom: 1px solid $border-color;
+        // padding-left: 8px;
+        padding-right: 8px;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        display: flex !important;
+        align-items: center;
+        font-size: $ngx-tb-fs-title;
+        .datatable-header-cell-label, .datatable-header-cell-template-wrap {
+            font-weight: 500;
+            color: $ngx-tb-title-color;
+            .ml-8px{
+                margin-left: 8px;
+            }
+            .ml-10px{
+                margin-left: 10px;
+            }
+            .mr-20px{
+                margin-right: 20px !important;
+            }
+            .mr-10px{
+                margin-right: 10px !important;
+            }
+
+        }
+
+        .datatable-header-inner {
+            .datatable-row-left {
+                z-index: 2;
+                background: $ngx-tb-cell-bg-color;
+            }
+            .datatable-row-center {
+                z-index: 1;
+            }
+            .datatable-row-right {
+                z-index: 2;
+                background: $ngx-tb-cell-bg-color;
+            }
+        }
+    }
+
+    .empty-row {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 40px;
+        font-size: 12px;
+    }
+
+    .datatable-body {
+        height: calc(100vh - 250px);
+        padding-bottom: 30px !important;
+        .datatable-scroll {
+            width: 100% !important;
+        }
+
+        .datatable-row-wrapper {
+            .datatable-group-header {
+                color: $ngx-tb-group-header-color;
+                background-color: $ngx-tb-group-header-bg-color;
+                width: 100% !important;
+                padding-top: 8px !important;
+                padding-bottom: 8px !important;
+                border-bottom: 1px solid $ngx-tb-border-color !important;
+                border-top: 1px solid $ngx-tb-border-color !important;
+                border-left: 1px solid $ngx-tb-border-color !important;
+                border-right: 1px solid $ngx-tb-border-color !important;
+            }
+
+            .datatable-body-row {
+                // .datatable-row-group {
+                //     border-bottom: 1px solid $ngx-tb-border-color;
+                // }
+
+                .datatable-row-group.datatable-row-left {
+                     border-right: 1px solid $ngx-tb-border-color;
+                }
+
+                .datatable-row-group.datatable-row-center {
+                    //  border-left: 1px solid $ngx-tb-border-color;
+                }
+
+                // .datatable-row-group.datatable-row-right {
+                //     border-left: 1px solid $ngx-tb-border-color;
+                // }
+                .datatable-row-group{
+                    .dropdown{
+                        .table-dropdown-menu{
+                            padding: 0px;
+                        }
+                    }
+                    .ml-8px{
+                        margin-left: 8px;
+                    }
+                    .ml-10px{
+                        margin-left: 10px;
+                    }
+                    .mr-20px{
+                        margin-right: 20px !important;
+                    }
+                    .mr-10px{
+                        margin-right: 10px !important;
+                    }
+                }
+                &:hover {
+                    .datatable-body-cell {
+                        background-color: $ngx-tb-hover-row-color;
+                    }
+                }
+
+                .editable {
+                    border-bottom: 1.2px dotted $ngx-tb-border-editable-color;
+                    min-width: 30px;
+                    min-height: 22px;
+                    cursor: pointer;
+                }
+
+            }
+
+            .datatable-row-detail{
+                overflow-y: scroll;
+            }
+
+            .datatable-body-cell {
+                background-color: $ngx-tb-cell-bg-color;
+                overflow: visible !important;
+                font-size: $ngx-tb-fs-cell;
+                display: flex;
+                align-items: center;
+                border-bottom: 1px solid $ngx-tb-border-color;
+            }
+        }
+        .datatable-row-wrapper:last-child{
+            .datatable-body-row:last-child{
+                .table-dropdown-menu {
+                    // top: 30px !important;
+                }
+            }
+            .datatable-body-row:nth-last-child(2){
+                .table-dropdown-menu {
+                    // top: -90px !important;
+                }
+            }
+        }
+    }
+    &.border-left-none{
+        .datatable-body-row {
+            .datatable-row-group.datatable-row-left {
+                border-right: none !important;
+            }
+        }
+    }
+    .datatable-footer {
+        overflow: hidden !important;
+        padding-left: 8px;
+        padding-right: 8px;
+        font-size: $ngx-tb-fs-cell;
+        border-top: 1px solid $ngx-tb-border-color;
+        .datatable-pager {
+            .pager {
+                margin-right: 10px !important;
+                border-radius: 4px;
+                li {
+                    font-size: 16px !important;
+                    border-top: 1px solid $ngx-tb-border-color;
+                    border-bottom: 1px solid $ngx-tb-border-color;
+
+                    &:not(:last-child) {
+                        border-right: 1px solid $ngx-tb-border-color;
+                    }
+
+                    &:first-child {
+                        border-left: 1px solid $ngx-tb-border-color;
+                        border-top-left-radius: 4px;
+                        border-bottom-left-radius: 4px;
+                    }
+
+                    &:last-child {
+                        border-right: 1px solid $ngx-tb-border-color;
+                        border-top-right-radius: 4px;
+                        border-bottom-right-radius: 4px;
+                    }
+
+                    a {
+                        text-decoration: none;
+                        position: relative;
+                        top: 3px;
+                        padding-top: 3px !important;
+                        padding-bottom: 3px !important;
+                        padding-left: 7px !important;
+                        padding-right: 7px !important;
+                    }
+
+                    &.pages{
+                        a {
+                            top: 0px;
+                            padding-left: 12px !important;
+                            padding-right: 12px !important;
+                        }
+
+                        &.active {
+                            background-color: #20569C;
+                            border-top: 1px solid #20569C;
+                            border-bottom: 1px solid #20569C;
+                            a {
+                                color: white;
+                            }
+                        }
+                    }
+
+                    &:hover {
+                        background-color: #20569C;
+                        border-top: 1px solid #20569C;
+                        border-bottom: 1px solid #20569C;
+                        a {
+                            color: white;
+                        }
+                        i::before {
+                            color: white;
+                        }
+                    }
+
+                    &.disabled {
+                        &:hover {
+                            background-color: unset;
+                            border-top: 1px solid $ngx-tb-border-color;
+                            border-bottom: 1px solid $ngx-tb-border-color;
+                            a {
+                                color: unset;
+                            }
+                            i::before {
+                                color: unset;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    &.fixed-row {
+        .datatable-scroll {
+            .datatable-body-row {
+                .datatable-body-cell {
+                    white-space: normal !important;
+                }
+                // .datatable-body-group-cell {
+                //     white-space: normal;
+                // }
+            }
+        }
+    }
+
+    &.of-col-2 {
+        .datatable-row-wrapper {
+            .datatable-body-row {
+                .datatable-row-group {
+                    &:first-child {
+                        .datatable-body-cell {
+                            &:nth-child(2) {
+                                overflow-x: hidden !important;
+                                > div {
+                                    max-width: 100%;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    &.center-col-action {
+        .datatable-row-wrapper {
+            .datatable-body-row {
+                .datatable-row-center.datatable-row-group {
+                    .datatable-body-cell {
+                        &:nth-last-child(1) {
+                            justify-content: center;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    //column ghi chú ẩn overflow
+    &.of-col-last-2 {
+        .datatable-row-wrapper {
+            .datatable-body-row {
+                .datatable-row-center.datatable-row-group {
+                    .datatable-body-cell {
+                        &:nth-last-child(2) {
+                            overflow: hidden !important;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // fix dropdown button edit table không có group
+    &.table-no-group-fix{
+        .datatable-body{
+            padding-bottom: 30px !important;
+            .datatable-row-wrapper:last-child{
+                .datatable-body-row:last-child{
+                    .table-dropdown-menu {
+                        top: 35px !important;
+                    }
+                }
+            }
+        }
+    }
+
+    &.footer-hide{
+        .datatable-footer{
+            display: none;
+        }
+    }
+
+    // fix dropdown button-edit trường hợp có 1 group 1 phần tử
+    &.table-one-item{
+        .datatable-body {
+            .datatable-row-wrapper:last-child {
+                margin-bottom: 30px !important;
+                .datatable-body-row:last-child {
+                    .table-dropdown-menu {
+                        top: 35px !important;
+                    }
+                }
+            }
+        }
+    }
+
+    // fix dropdown button-edit trường hợp có 1 group 2 phần tử
+    &.table-two-item{
+        .datatable-body {
+            .datatable-row-wrapper:last-child {
+                .datatable-body-row:nth-last-child(2) {
+                    .table-dropdown-menu {
+                        top: 25px !important;
+                    }
+                }
+            }
+        }
+    }
+
+    &.action-center{
+        .datatable-body {
+            .datatable-row-wrapper {
+                .datatable-body-row {
+                   .datatable-row-center{
+                       .datatable-body-cell:last-child{
+                           justify-content: center;
+                       }
+                   }
+                }
+            }
+        }
+    }
+    &.action-right{
+        .datatable-body {
+            .datatable-row-wrapper {
+                .datatable-body-row {
+                   .datatable-row-right{
+                       .datatable-body-cell:last-child{
+                           justify-content: end;
+                       }
+                   }
+                }
+            }
+        }
+    }
+    &.frozen-right{
+        .datatable-body{
+            padding-bottom: 100px !important;
+            .datatable-row-wrapper:last-child{
+                .datatable-body-row:last-child{
+                    .table-dropdown-menu {
+                        // top: 35px !important;
+                    }
+                }
+                .datatable-body-row:nth-last-child(2){
+                    .table-dropdown-menu {
+                        // top: 30px !important;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.ngx-datatable-custom-border-x {
+    .datatable-body-row {
+        border-left: 1px solid $ngx-tb-border-color;
+        border-right: 1px solid $ngx-tb-border-color;
+    }
+}

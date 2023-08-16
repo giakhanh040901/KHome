@@ -1,0 +1,48 @@
+<div class="col-12" style="padding-bottom: 70px">
+  <div class="card p-0 mb-0">
+    <div class="p-fluid p-formgrid grid">
+      <div class="flex w-full">
+        <div class="col-12">
+          <form-input
+            [label]="labelName"
+            [isRequired]="true"
+            [(ngModelValue)]="dto.name"
+            [placeholder]="'Nhập tên mẫu'"
+            [isDisabled]="isDisable"
+          ></form-input>
+        </div>
+      </div>
+      <div class="flex w-full">
+        <div class="p-2">
+          <form-upload-file
+            [type]="'.docx'"
+            [label]="'Chọn tệp tin'"
+            (_onChange)="upload($event)"
+            [isDisabled]="isDisable"
+          ></form-upload-file>
+        </div>
+      </div>
+      <div class="flex w-full">
+        <div class="col-12">
+          <form-input [label]="'Đường dẫn liên kết'" [(ngModelValue)]="dto.link" [isDisabled]="true"></form-input>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="!isDisable" class="p-dialog-footer" style="width: 100%; position: fixed; left: 0; bottom: 0">
+      <form-button
+        [isTypeRipple]="true"
+        [classButton]="'p-button-text p-confirm-dialog-reject'"
+        [label]="'Hủy'"
+        [icon]="'pi pi-times'"
+        (_onClick)="close($event)"
+      ></form-button>
+      <form-button
+        [isTypeRipple]="true"
+        [classButton]="'p-button-text p-confirm-dialog-approve'"
+        [label]="'Lưu'"
+        [icon]="'pi pi-check'"
+        (_onClick)="save($event)"
+      ></form-button>
+    </div>
+  </div>
+</div>

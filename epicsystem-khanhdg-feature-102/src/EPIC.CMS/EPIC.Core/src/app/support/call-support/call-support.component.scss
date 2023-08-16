@@ -1,0 +1,150 @@
+.call-container {
+    position: relative
+}
+
+.triangle-arrow {
+    position: absolute;
+    top: -0.7rem;
+    left: 25%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 10px solid #f2f1f1;
+}
+
+.inner-popup-call{
+    width: 27rem;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.upper-popup-call{
+    background-color: white;
+    padding: 1.5rem 0 1.5rem 1.5rem;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.time-call{
+    background-color: red;
+    color: white;
+    padding: 0.5rem 2rem 0.5rem 1rem;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;}
+
+.status-call{
+    border-bottom: 2px solid red;
+    margin-bottom: 2px;
+    height: 25px;
+    color: #C7C7C9;
+    font-size: 15px;
+}
+
+.user-call{
+    border-bottom: 1px dotted gray;
+    margin-bottom: 1px;
+    font-weight: 700;
+    font-size: 17px;
+    height: 1.7rem; 
+    width: fit-content;
+}
+
+.number-user-call{
+    background: linear-gradient(red, blue);
+    -webkit-background-clip: text;
+            background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 16px
+}
+
+.lower-popup-call{
+    background: linear-gradient(to right, #5E45D9 39%, #CE2EFF 100%);
+    padding: 1.5rem;
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+}
+
+.videoPopup{
+    position: absolute;
+    right: 10rem;
+    top: 0;
+    padding: 2rem;
+    background-color: #f2f1f1;
+    border-radius: 2rem;
+    z-index: 10;
+    // display: none
+}
+
+.avatar-user-call{
+    border-radius: 50%;
+    width: 6rem;
+    height: 6rem;
+    border: 2px solid white;
+    margin-top: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.btn-init-call{
+    background-color: red;
+    color: white;
+    padding: 1.5rem;
+    border-radius: 50%;
+    border: none;
+}
+
+.rotate-icon {
+    transform: rotate(140deg);
+  }
+
+.btn-accept-call{
+    background-color: green;
+    color: white;
+    padding: 1.5rem;
+    border-radius: 50%;
+    border: none;
+}
+
+.local-video video {
+    display: none;
+}
+
+@keyframes shake {
+    0% {
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(-5px);
+    }
+    50% {
+        transform: translateX(5px);
+    }
+    75% {
+        transform: translateX(-5px);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
+
+.shake {
+    animation: shake 0.4s;
+    animation-iteration-count: 4;
+}
+
+.call-icon{
+    width: 70px;
+
+}
+
+.custom-class {
+    display: block;
+}
+
+.none {
+    display: none;
+}
+
+

@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\EPIC.BondService\EPIC.DataAccess\EPIC.DataAccess.csproj" />
+    <ProjectReference Include="..\..\EPIC.BondService\EPIC.Entities\EPIC.Entities.csproj" />
+    <ProjectReference Include="..\..\EPIC.BondService\EPIC.Services\EPIC.BondDomain.csproj" />
+    <ProjectReference Include="..\..\EPIC.EventService\EPIC.EventDomain\EPIC.EventDomain.csproj" />
+    <ProjectReference Include="..\..\EPIC.GarnerService\EPIC.GarnerDomain\EPIC.GarnerDomain.csproj" />
+    <ProjectReference Include="..\..\EPIC.InvestService\EPIC.InvestDomain\EPIC.InvestDomain.csproj" />
+    <ProjectReference Include="..\..\EPIC.InvestService\EPIC.InvestEntities\EPIC.InvestEntities.csproj" />
+    <ProjectReference Include="..\..\EPIC.InvestService\EPIC.InvestRepositories\EPIC.InvestRepositories.csproj" />
+    <ProjectReference Include="..\..\EPIC.RealEstateService\EPIC.RealEstateRepositories\EPIC.RealEstateRepositories.csproj" />
+    <ProjectReference Include="..\EPIC.CoreEntities\EPIC.CoreEntities.csproj" />
+    <ProjectReference Include="..\EPIC.CoreRepositories\EPIC.CoreRepositories.csproj" />
+    <ProjectReference Include="..\EPIC.CoreShareServices\EPIC.CoreSharedServices.csproj" />
+  </ItemGroup>
+
+</Project>

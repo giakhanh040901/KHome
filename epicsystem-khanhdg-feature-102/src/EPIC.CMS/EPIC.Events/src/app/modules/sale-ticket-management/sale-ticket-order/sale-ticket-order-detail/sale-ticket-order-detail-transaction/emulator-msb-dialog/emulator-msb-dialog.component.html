@@ -1,0 +1,53 @@
+<div class="col-12">
+  <div class="card p-0 mb-0">
+    <div class="p-fluid p-formgrid grid">
+      <div class="flex w-full">
+        <div class="col-12">
+          <form-dropdown
+            [label]="'Chọn ngân hàng'"
+            [options]="listBankAccount"
+            [isRequired]="true"
+            [(ngModelValue)]="bankAccountId"
+            [isFilter]="true"
+            (_onChange)="onChangeBankAccountId($event)"
+          ></form-dropdown>
+        </div>
+      </div>
+      <div class="flex w-full">
+        <div class="col-6">
+          <form-input-calendar
+            [label]="'tranDate'"
+            [isRequired]="true"
+            [(ngModelValue)]="tranDate"
+            [placeholder]="'dd/mm/yy hh:mm'"
+            [showTime]="true"
+          ></form-input-calendar>
+        </div>
+        <div class="col-6">
+          <form-input-number [label]="'tranAmount'" [(ngModelValue)]="tranAmount"></form-input-number>
+        </div>
+      </div>
+      <div class="flex w-full">
+        <div class="px-2">
+          <form-button [label]="'Gọi thông báo'" (_onClick)="noti($event)"></form-button>
+        </div>
+      </div>
+    </div>
+    <div class="p-dialog-footer" style="width: 100%; position: fixed; left: 0; bottom: 0">
+      <form-button
+        [isTypeRipple]="true"
+        [classButton]="'p-button-text p-confirm-dialog-reject'"
+        [label]="'Đóng'"
+        [icon]="'pi pi-times'"
+        (_onClick)="close($event)"
+      ></form-button>
+      <!-- <form-button
+        [isTypeRipple]="true"
+        [classButton]="'p-button-text p-confirm-dialog-approve'"
+        [label]="'Hoàn thành'"
+        [icon]="'pi pi-check'"
+        (_onClick)="save($event)"
+      ></form-button> -->
+    </div>
+  </div>
+</div>

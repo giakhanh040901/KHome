@@ -1,0 +1,23 @@
+.status {
+	padding: 0.5rem 1rem;
+	border-radius: $btn-border-radius;
+	text-align: center;
+	text-transform: uppercase;
+	font-weight: bold;
+}
+
+.status-table {
+	@extend .status;
+	padding: 0.4rem 0.8rem;
+	font-size: 0.7rem;
+}
+
+.status-active {
+	color: $blue;
+	background-color: lighten($blue, $amount: 50%);
+}
+
+.status-inactive {
+	color: $gray;
+	background-color: lighten($gray, $amount: 50%);
+}

@@ -1,0 +1,17 @@
+.label-icon {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #ef4770;
+}
+
+.label-text {
+  color: #191919;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 15px;
+}
+
+div.height-chart {
+    height: calc((100% - 40px - 0.5rem - 212px - 1.5rem - 2rem) / 2);
+}

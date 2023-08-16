@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+	<NoWarn>1701;1702;1591</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+	<NoWarn>1701;1702;1591</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.0.123" />
+    <PackageReference Include="Dapper.Oracle.NetCore" Version="1.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.1" />
+    <PackageReference Include="MySql.Data" Version="8.0.28" />
+    <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="3.21.70" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
+    <PackageReference Include="System.ServiceModel.Primitives" Version="4.9.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\EPIC.CoreService\EPIC.CoreEntities\EPIC.CoreEntities.csproj" />
+    <ProjectReference Include="..\..\EPIC.EventService\EPIC.EventEntites\EPIC.EventEntites.csproj" />
+    <ProjectReference Include="..\..\EPIC.GarnerService\EPIC.GarnerEntities\EPIC.GarnerEntities.csproj" />
+    <ProjectReference Include="..\..\EPIC.IdentityServer\EPIC.IdentityEntities\EPIC.IdentityEntities.csproj" />
+    <ProjectReference Include="..\..\EPIC.InvestService\EPIC.InvestEntities\EPIC.InvestEntities.csproj" />
+    <ProjectReference Include="..\..\EPIC.LoyaltyService\EPIC.LoyaltyEntities\EPIC.LoyaltyEntities\EPIC.LoyaltyEntities.csproj" />
+    <ProjectReference Include="..\..\EPIC.PaymentService\EPIC.PaymentEntities\EPIC.PaymentEntities.csproj" />
+    <ProjectReference Include="..\..\EPIC.RealEstateService\EPIC.RealEstateEntities\EPIC.RealEstateEntities.csproj" />
+    <ProjectReference Include="..\EPIC.BondEntities\EPIC.BondEntities.csproj" />
+    <ProjectReference Include="..\EPIC.Utils\EPIC.Utils.csproj" />
+  </ItemGroup>
+
+</Project>

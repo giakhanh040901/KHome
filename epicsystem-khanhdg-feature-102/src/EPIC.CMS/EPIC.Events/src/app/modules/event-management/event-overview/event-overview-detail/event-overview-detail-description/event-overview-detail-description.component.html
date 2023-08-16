@@ -1,0 +1,23 @@
+<div class="w-full">
+  <div class="card relative">
+    <div class="text-right button-description-content" *ngIf="isGranted(this.PermissionEventConst.TongQuanSuKien_ChiTiet_ThongTinMoTa_CapNhat)">
+      <form-button
+        *ngIf="!isEdit"
+        [icon]="'pi pi-pencil'"
+        [label]="'Chỉnh sửa'"
+        (_onClick)="edit($event)"
+      ></form-button>
+      <form-button *ngIf="isEdit" [icon]="'pi pi-save'" [label]="'Lưu lại'" (_onClick)="save($event)"></form-button>
+    </div>
+    <form-description-content
+      [title]="'Nội dung mô tả'"
+      [contentType]="dto.contentType"
+      [content]="dto.content"
+      [isDisabled]="isDisable"
+      [classMarkdown]="'content-markdown'"
+      [rowsTextarea]="25"
+      [heightEditor]="'30rem'"
+      (_onChangeData)="onChangeDescriptionContent($event)"
+    ></form-description-content>
+  </div>
+</div>

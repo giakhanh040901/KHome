@@ -1,0 +1,36 @@
+﻿<form method="post" action="/api/users/view/post-login">
+    <p>Username:</p>
+    <input type="text" name="Username" maxlength="30"/>
+    <p>Password:</p>
+    <input type="password" name="Password" maxlength="50" />
+    <p></p>
+    @if (ViewBag.Message != null)
+    {
+        <p>@ViewBag.Message</p>
+    }
+    <input type="submit" name="Login" />
+</form>
+
+@{
+    bool isAuthenticated = Context.Request.Cookies.Any(c => c.Key == EPIC.Utils.ConstantVariables.Identity.CookiesKeys.SysToken);
+}
+
+@if (isAuthenticated)
+{
+    <h2>Tools</h2>
+    <p>
+        <a href="/hangfire">Hangfire</a><br/>
+    </p>
+
+    <h2>Mini profile</h2>
+    <p>
+        <a href="/api/invest/profiler/results-index">Mini profile invest</a><br/>
+        <a href="/api/garner/profiler/results-index">Mini profile garner</a><br/>
+        <a href="/api/real-estate/profiler/results-index">Mini profile real estate</a><br/>
+    </p>
+
+    <h2>NodeJS</h2>
+    <p>
+        <a href="/api/media/admin/queues/queue/notification-queue?status=completed">Bull Dashboard</a>
+    </p>
+}

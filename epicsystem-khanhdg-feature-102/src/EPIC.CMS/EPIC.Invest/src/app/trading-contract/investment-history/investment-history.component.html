@@ -1,0 +1,134 @@
+<div class="e-page">
+    <p-toast></p-toast> 
+    <p-confirmDialog [style]="{width: 'auto'}" [baseZIndex]="10000"></p-confirmDialog>
+    <!-- GIỮ CẤU TRÚC PAGE VÀ CÁC CLASS, ID -->
+        <!-- PAGE HEADER CONTENT -->
+        <!-- TABLE -->
+    <!--  -->    
+    <div class="wrapper-page-header" id="page-header">
+        <div class="b-header">
+            <div class="grid no-actions">
+                <div class="col-12 md:col-5 b-title">
+                    <h4 style="display:inline"> Lịch sử đầu tư </h4>
+                </div>
+                <div class="col-12 md:col-7 b-actions"></div>
+            </div>
+        </div>
+        <!--  -->
+        <div id="filter-table">
+            <ng-container *ngIf="dataTableEmit.isShowFilter">
+                <!--  -->
+                <div class="flex wrapper-line-filter">
+                    <div class="b-wr-18 wrapper-filter">
+                        <input-search
+                            [class]="'input-filter'"
+                            [placeholder]="OrderConst.getInfoFieldFilter(dataFilter.searchField, 'placeholder')"
+                            [(keyword)]="dataFilter.keyword"
+                            (_onChange)="setPage()">
+                        </input-search>
+                    </div>
+                    <div class="b-wr-15 wrapper-filter">
+                        <span class="p-float-label">
+                            <p-dropdown
+                                styleClass="input-filter" emptyMessage="Không có dữ liệu"
+                                [options]="OrderConst.fieldFilters" name="searchField" optionLabel="name" optionValue="field"
+                                [(ngModel)]="dataFilter.searchField" 
+                                (onChange)="dataFilter.keyword?.trim() && setPage()">
+                            </p-dropdown>
+                            <label class="font-normal" for="searchField">Tìm kiếm theo</label>
+                        </span>
+                    </div>
+                    <div class="b-wr-15 wrapper-filter">
+                        <span class="p-float-label">
+                            <p-dropdown
+                                styleClass="input-filter" [autoDisplayFirst]="false" 
+                                placeholder="Tất cả" [showClear]="true"
+                                [options]="OrderConst.investHistoryStatus" optionLabel="name" optionValue="code"
+                                [(ngModel)]="dataFilter.investHistoryStatus" 
+                                (onChange)="setPage()">
+                            </p-dropdown>   
+                            <label class="font-normal" for="status"> Trạng thái </label>
+                        </span>
+                    </div>
+                    <div class="b-wr-12 wrapper-filter">
+                        <span class="p-float-label">
+                            <p-dropdown
+                                styleClass="input-filter" [showClear]="true"
+                                [showClear]="true" placeholder="Tất cả"
+                                [options]="OrderConst.sources" optionLabel="name" optionValue="code" 
+                                [(ngModel)]="dataFilter.source" 
+                                (onChange)="setPage()">
+                                </p-dropdown>   
+                            <label class="font-normal" for="methodInterest"> Loại hình </label>
+                        </span>
+                    </div>
+                    <div class="b-wr-12 wrapper-filter">
+                        <span class="p-float-label">
+                            <p-dropdown
+                                styleClass="input-filter" [showClear]="true"    
+                                [showClear]="true" placeholder="Tất cả"
+                                [options]="OrderConst.orderSources" optionLabel="name" optionValue="code" 
+                                [(ngModel)]="dataFilter.orderer" 
+                                (onChange)="setPage()">
+                                </p-dropdown>   
+                            <label class="font-normal" for="methodInterest"> Nguồn đặt lệnh </label>
+                        </span>
+                    </div>
+                </div>
+                <!--  -->
+                <div class="flex wrapper-line-filter">
+                    <div class="b-wr-18 wrapper-filter">
+                        <span class="p-float-label">
+                            <p-dropdown
+                                placeholder="Tất cả"
+                                styleClass="input-filter" emptyMessage="Không có dữ liệu"
+                                [autoDisplayFirst]="false"
+                                [options]="distributions" name="distributionId" optionLabel="invName" optionValue="id"
+                                [(ngModel)]="dataFilter.distributionId" 
+                                (onChange)="changeDistribution($event.value)">
+                            </p-dropdown>
+                            <label class="font-normal" for="searchField"> Gói dự án </label>
+                        </span>
+                    </div>
+                    <div class="b-wr-15 wrapper-filter">
+                        <span class="p-float-label">
+                            <p-dropdown
+                                placeholder="Tất cả"
+                                styleClass="input-filter" emptyMessage="Không có dữ liệu"
+                                [autoDisplayFirst]="false"
+                                [options]="policies" optionLabel="name" optionValue="id"
+                                [(ngModel)]="dataFilter.policyId" 
+                                (onChange)="changePolicy($event.value)">
+                            </p-dropdown>
+                            <label class="font-normal" for="searchField"> Sản phẩm </label>
+                        </span>
+                    </div>
+                    <div class="b-wr-15 wrapper-filter">
+                        <span class="p-float-label">
+                            <p-dropdown
+                                placeholder="Tất cả"
+                                styleClass="input-filter" emptyMessage="Không có dữ liệu"
+                                [autoDisplayFirst]="false"
+                                [options]="policyDetails" optionLabel="name" optionValue="id"
+                                [(ngModel)]="dataFilter.policyDetailId" 
+                                (onChange)="setPage()">
+                            </p-dropdown>
+                            <label class="font-normal" for="searchField"> Kỳ hạn </label>
+                        </span>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+    <e-table
+        [rows]="rows"
+        [(page)]="page"
+        [columns]="columns"
+        [isLoading]="isLoading"
+        [listAction]="listAction"
+        [columnCacheName]="constructor.name"
+        [(isShowFilter)]="dataTableEmit.isShowFilter"
+        (_onPageChange)="setPage($event)"
+        (_onSort)="dataFilter.sortFields=$event; setPage()">
+    </e-table>
+</div>

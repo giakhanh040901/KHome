@@ -1,0 +1,16 @@
+module.exports.authService = require('./auth.service');
+module.exports.emailService = require('./email.service');
+module.exports.smsService = require('./sms.service');
+module.exports.tokenService = require('./token.service');
+module.exports.userService = require('./user.service');
+module.exports.newsService = require('./news.service');
+module.exports.mediaService = require('./media.service');
+module.exports.knowledgeService = require('./knowledge.service');
+module.exports.notificationService = require('./notification.service');
+module.exports.notificationTemplateService = require('./notification-template.service');
+module.exports.productImageService = require('./product-image.service');
+module.exports.notificationConfig = require('./notification-config.service');
+module.exports.feedbackService = require('./feedback.service');
+module.exports.garnerDescriptionService = require('./garner-description.service');
+module.exports.facebookService = require('./facebook.service');
+module.exports.callService = require('./call.service');

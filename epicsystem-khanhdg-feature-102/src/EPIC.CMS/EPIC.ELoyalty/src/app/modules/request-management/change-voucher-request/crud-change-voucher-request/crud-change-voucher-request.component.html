@@ -1,0 +1,157 @@
+<div class="col-12" style="padding-bottom: 70px">
+  <div class="card p-0 m-0">
+    <h5 class="title-info">Thông tin khách hàng</h5>
+    <div class="p-fluid p-formgrid grid">
+      <div class="flex w-full">
+        <div class="p-2 w-full">
+          <form-search-customer
+            [showHeader]="!isDisable"
+            [typeModal]="type"
+            [initCusomter]="initCusomter"
+            [headerIndividual]="headerCustomer"
+            [minusPoint]="minusPoint"
+            (_onChange)="onChangeSearchCustomer($event)"
+            (_onChangeCurrentPoint)="onChangeCurrentPoint($event)"
+          ></form-search-customer>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card p-0 m-0">
+    <h5 class="title-info">Thông tin yêu cầu</h5>
+    <div class="p-fluid p-formgrid grid">
+      <div class="flex w-full">
+        <div class="col-3">
+          <form-dropdown
+            [label]="'Loại hình yêu cầu'"
+            [isRequired]="true"
+            [autoDisplayFirst]="true"
+            [options]="listRequestType"
+            [(ngModelValue)]="crudDTO.requestType"
+            [isDisabled]="isDisable"
+          ></form-dropdown>
+        </div>
+        <div class="col-3">
+          <form-dropdown
+            [label]="'Loại cấp phát '"
+            [options]="listApplyType"
+            [(ngModelValue)]="crudDTO.applyType"
+            [isDisabled]="isDisable"
+          ></form-dropdown>
+        </div>
+        <div class="col-3">
+          <form-input-calendar
+            [label]="'Ngày yêu cầu'"
+            [isRequired]="true"
+            [(ngModelValue)]="crudDTO.requestDate"
+            [isDisabled]="isDisable"
+            [placeholder]="'dd/mm/yy'"
+            [showIcon]="!isDisable"
+          ></form-input-calendar>
+        </div>
+        <div class="col-3" *ngIf="showMinusPoint">
+          <div class="flex align-items-end h-full pb-2">
+            <form-radio-button
+              [label]="'Không trừ điểm KH'"
+              [(ngModelValue)]="crudDTO.isMinusPoint"
+              [value]="false"
+              [isDisabled]="isDisable"
+              [inputId]="'isNotMinus'"
+            ></form-radio-button>
+            <form-radio-button
+              class="ml-2"
+              [label]="'Trừ điểm KH'"
+              [(ngModelValue)]="crudDTO.isMinusPoint"
+              [value]="true"
+              [isDisabled]="isDisable"
+              [inputId]="'isMinus'"
+            ></form-radio-button>
+          </div>
+        </div>
+      </div>
+      <ng-container *ngIf="crudDTO.changeVoucherRequestItem.length">
+        <div class="w-full" *ngFor="let item of crudDTO.changeVoucherRequestItem; let i = index">
+          <form-change-voucher-request-item
+            [(dataSource)]="crudDTO.changeVoucherRequestItem[i]"
+            [listVoucher]="listVoucher"
+            [isMinusPoint]="crudDTO.isMinusPoint"
+            [isDisabled]="isDisable"
+            (_deleteItem)="deleteItem($event, i)"
+            (dataSourceChange)="dataSourceChange($event)"
+          ></form-change-voucher-request-item>
+        </div>
+      </ng-container>
+      <div class="flex w-full" *ngIf="!isDisable">
+        <div class="p-2">
+          <form-button [icon]="'pi pi-plus'" [label]="'Thêm giá trị'" (_onClick)="add($event)"></form-button>
+        </div>
+      </div>
+      <div class="flex w-full">
+        <div class="col-12">
+          <form-textarea
+            [label]="'Mô tả'"
+            [rows]="2"
+            [(ngModelValue)]="crudDTO.description"
+            [placeholder]="!isDisable ? 'Nhập nội dung mô tả' : ''"
+            [isDisabled]="isDisable"
+          ></form-textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card p-0 m-0" *ngIf="showDetailProcess">
+    <h5 class="title-info">Chi tiết tiến trình</h5>
+    <div class="p-fluid p-formgrid grid">
+      <div class="flex w-full">
+        <div class="col-12">
+          <form-table
+            [columns]="headerColumns"
+            [dataSource]="crudDTO.detailProcess"
+            [scrollHeight]="'200px'"
+            [showPaginator]="false"
+          >
+          </form-table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="p-dialog-footer" style="width: 100%; position: fixed; left: 0; bottom: 0">
+  <ng-container *ngIf="!isDisable">
+    <form-button
+      [isTypeRipple]="true"
+      [classButton]="'p-button-text p-confirm-dialog-reject'"
+      [label]="'Hủy'"
+      [icon]="'pi pi-times'"
+      (_onClick)="close($event)"
+    ></form-button>
+    <form-button
+      [isTypeRipple]="true"
+      [classButton]="'p-button-text p-confirm-dialog-approve'"
+      [label]="'Lưu'"
+      [icon]="'pi pi-check'"
+      (_onClick)="save($event)"
+    ></form-button>
+  </ng-container>
+  <ng-container *ngIf="isDisable">
+    <form-button
+      *ngIf="showBtnCancel"
+      [isTypeRipple]="true"
+      [classButton]="'p-button-text p-confirm-dialog-reject'"
+      [label]="'Hủy yêu cầu'"
+      [icon]="'pi pi-times'"
+      (_onClick)="cancel($event)"
+    ></form-button>
+    <form-button
+      *ngIf="showBtnReceive"
+      [isTypeRipple]="true"
+      [classButton]="'p-button-text p-confirm-dialog-approve'"
+      [label]="'Tiếp nhận'"
+      [icon]="'pi pi-check'"
+      (_onClick)="receive($event)"
+    ></form-button>
+  </ng-container>
+</div>

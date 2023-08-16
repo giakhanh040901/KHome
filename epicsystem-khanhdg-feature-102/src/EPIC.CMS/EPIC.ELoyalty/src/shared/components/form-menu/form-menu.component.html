@@ -1,0 +1,4 @@
+<div [ngClass]="classContainer">
+  <i class="pi pi-ellipsis-h cursor-pointer" (click)="menu.toggle($event)"></i>
+  <p-menu #menu [popup]="true" [ngClass]="'button-actions ' + classMenu" [model]="actions" appendTo="body"></p-menu>
+</div>

@@ -1,0 +1,33 @@
+::ng-deep .custom-table.order-group {
+    table {
+
+        thead{}
+
+        tbody {
+            tr {
+                &.ng-star-inserted {
+                    background: white;
+                }
+                //
+                &.p-rowgroup-header {
+                    background: #F7F9FF;
+                }
+
+                td {
+                    span.b-withdraw-show-detail {
+                        &:hover {
+                            text-decoration: underline;
+                        }
+                    }
+                }
+            }
+
+        }
+    }
+}
+
+.b-bank {
+    background: white;
+    color: black;
+    //
+}

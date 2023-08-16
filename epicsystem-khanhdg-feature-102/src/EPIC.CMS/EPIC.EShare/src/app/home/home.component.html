@@ -1,0 +1,228 @@
+<div class="grid layout-dashboard ml-0 mr-0" *ngIf="refreshTemplate">
+    <div class="col-9 xl:col-9 md:col-9" style="padding-left: 1rem">
+        <!-- Tổng quan -->
+        <div class="overall">
+            <div class="flex card-container blue-container">
+                <div class="flex-none flex align-items-center justify-content-center"><h4>Tổng quan</h4></div>
+                <div class="flex-grow-1 flex align-items-center justify-content-end ">
+                    <span class=" ml-2 p-float-label b-custom">
+                        <p-calendar class="ml-2 pcalendarHome" placeholder="dd/mm/yyyy đến dd/mm/yyyy" appendTo="body" dateFormat="dd/mm/yy" 
+                            [(ngModel)]="rangeDates" selectionMode="range" [readonlyInput]="true" inputId="tradingDate" 
+                            [showIcon]="true" [style]="{'width':'18rem', 'border':'none'}" 
+                            locale="vi" (onSelect)="SelectDays()">
+                        </p-calendar>
+                    </span>
+                </div>
+                <div class="flex-none flex align-items-center justify-content-center">
+                    <span class="ml-4 p-float-label b-custom">
+                        <p-dropdown id="dropdownStatus" [style]="{'width':'12rem', 'background':'rgba(0, 0, 0, 0.02)'}"
+                            [options]="companyShareSecondarys" optionLabel="companyShareName" optionValue="companyShareSecondaryId"
+                            [autoDisplayFirst]="false" placeholder="Chọn sản phẩm"
+                            [(ngModel)]="dataFilter.companyShareSecondaryId" (onClick)="getSecondary()" (onChange)="changeCompanyShareSecondary($event.value)">
+                        </p-dropdown>   
+                    </span>
+                </div>
+            </div>
+        </div>
+        <!-- 3 thẻ hiển thị tiền -->
+        <div class="flex widget-board mt-6" style="padding-left: 0;">
+            <div class="flex-1 flex align-items-center justify-content-center col-12 xl:col-4 md:col-4">
+                <div class="grid grid-nogutter widget-overview-box overview-box-1" style="padding: 2.5rem">
+                    <div class="col-3 overview-box-icon">
+                        <img src="assets/layout/images/dashboard/icon-messages.svg" alt="mirage-layout" />
+                    </div>
+                    <div class="col-9 overview-box-text">
+                        <h5>TIỀN VÀO</h5>
+                        <span>Doanh thu ngày</span>
+                    </div>
+                    <div class="col-12 overview-box-text mt-2">
+                        <p class="overview-box-price">{{cashInInfo?.tienVao?.tienVao ? utils.transformMoney(cashInInfo?.tienVao?.tienVao) : 0}}</p>
+                    </div>
+                    <div class="col-6 overview-box-text mt-2">
+                        <p class="overview-box-accumulated-title">Lũy kế</p>
+                    </div>
+                    <div class="col-6 overview-box-text mt-2" style="text-align: right">
+                        <p class="overview-box-accumulated-price">{{ cashInInfo?.tienVao?.luyKe ? utils.transformMoney(cashInInfo?.tienVao?.luyKe) : 0 }}</p>
+                    </div>
+                </div>
+                
+            </div>
+            <div class="flex-1 flex align-items-center justify-content-center col-12 xl:col-4 md:col-4">
+                <div class="grid grid-nogutter widget-overview-box overview-box-2" style="padding: 2.5rem">
+                    <div class="col-3 overview-box-icon">
+                        <img src="assets/layout/images/dashboard/icon-messages.svg" alt="mirage-layout" />
+                    </div>
+                    <div class="col-9 overview-box-text">
+                        <h5>TIỀN RA</h5>
+                        <span>Doanh thu ngày</span>
+                    </div>
+                    <div class="col-12 overview-box-text mt-2">
+                        <p class="overview-box-price">0</p>
+                    </div>
+                    <div class="col-6 overview-box-text mt-2">
+                        <p class="overview-box-accumulated-title">Lũy kế</p>
+                    </div>
+                    <div class="col-6 overview-box-text mt-2" style="text-align: right">
+                        <p class="overview-box-accumulated-price">0</p>
+                    </div>
+                </div>
+                
+            </div>
+            <div class="flex-1 flex align-items-center justify-content-center col-12 xl:col-4 md:col-4">
+                <div class="grid grid-nogutter widget-overview-box overview-box-3" style="padding: 2.5rem">
+                    <div class="col-3 overview-box-icon">
+                        <img src="assets/layout/images/dashboard/icon-messages.svg" alt="mirage-layout" />
+                    </div>
+                    <div class="col-9 overview-box-text">
+                        <br>
+                        <span>Doanh thu ngày</span>
+                    </div>
+                    <div class="col-12 overview-box-text mt-2">
+                        <p class="overview-box-price">0</p>
+                    </div>
+                    <div class="col-6 overview-box-text mt-2">
+                        <p class="overview-box-accumulated-title">Tỉ lệ</p>
+                    </div>
+                    <div class="col-6 overview-box-text mt-2" style="text-align: right">
+                        <p class="overview-box-accumulated-price">0%</p>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        <!-- Chart dòng tiền theo ngày -->
+        <div class="col-12 xl:col-12 md:col-12 mt-4" style="padding-right: 1.5rem">
+            <h3>Dòng tiền theo ngày</h3>
+            <p-chart style="margin-top: 1rem;" type="bar" [data]="cashFlowByDay" [options]="cashFlowByDayOptions" height="300"></p-chart>
+        </div>
+        <!-- Chart DS theo kỳ hạn sản phẩm -->
+        <div class="grid mt-4 col-12 xl:col-12 md:col-12">
+            <div class=" xl:col-9 md:col-9" style="padding-left: 0.5rem; padding-right: 3rem;">
+                <h3> DS theo kỳ hạn sản phẩm </h3> 
+                <p-chart type="bar" [data]="policy" [options]="policyOptions" height="300"></p-chart>
+            </div>
+            <div class=" xl:col-3 md:col-3 flex align-content-end">
+                <img class="" src="\assets\layout\images\dashboard\rocket-dashboard.png" alt="" style="width:100%">
+            </div>
+        </div>
+    </div>
+    <div class="col-3 xl:col-3 md:col-3 b-nav-right">
+        <div class="widget-dashboard-human">
+            <img src="\assets\layout\images\dashboard\dashboard-human.png" alt="">
+        </div>
+        <div class="widget-dashboard-calender">
+            <p-calendar [inline]="true" [showWeek]="true" styleClass="b-calendar-home"></p-calendar>
+        </div>
+        <div class="widget-dashboard-kpi">
+            <div class="kpi-title" style="margin-left: 1rem">
+                <p style="margin-top: 1.5rem">Thiếu chỉ tiêu KPI</p>
+                <div class="flex justify-content-between flex-wrap">
+                    <div class="flex align-items-center justify-content-center"><p style="font-weight: 600; font-size: 20px; line-height: 24px;">20<span style="color: #EB5757;">*</span></p></div>
+                    <div class="flex align-items-center justify-content-center"><p style="font-weight: 600; font-size: 14px; line-height: 18px; color: #6C63F0; padding-right: 1rem">Xem tất cả</p></div>
+                </div>
+            </div>
+            <div class="card widget-team mt-3">
+                <ul>
+                    <li>
+                        <div class="grid member">
+                            <div class="col-10 team-box">
+                                <div class="profile-image">
+                                    <img src="assets/layout/images/dashboard/avatar-carmelita.png" alt="mirage-layout" />
+                                </div>
+                                <div style="margin-top: auto;">
+                                    <h6 class="team-member">Carmelita Marsham</h6>
+                                    <span class="team-member-deadline">Hạn KPI: 23/02/2022</span>
+                                </div>
+                            </div>
+                            <div class="col-2 icons">
+                                <i class="pi pi-chevron-right"></i>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="grid member">
+                            <div class="col-10 team-box">
+                                <div class="profile-image">
+                                    <img src="assets/layout/images/dashboard/avatar-govzden.png" alt="mirage-layout" />
+                                </div>
+                                <div>
+                                    <h6 class="team-member">Gvozden Boskovsky</h6>
+                                    <span class="team-member-deadline">Marketing</span>
+                                </div>
+                            </div>
+                            <div class="col-2 icons">
+                                <i class="pi pi-chevron-right"></i>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="grid member">
+                            <div class="col-10 team-box">
+                                <div class="profile-image">
+                                    <img src="assets/layout/images/dashboard/avatar-athar.png" alt="mirage-layout" />
+                                </div>
+                                <div>
+                                    <h6 class="team-member">Athar Makakooti</h6>
+                                    <span class="team-member-deadline">Marketing</span>
+                                </div>
+                            </div>
+                            <div class="col-2 icons">
+                                <i class="pi pi-chevron-right"></i>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="grid member">
+                            <div class="col-10 team-box">
+                                <div class="profile-image">
+                                    <img src="assets/layout/images/dashboard/avatar-tokunaga.png" alt="mirage-layout" />
+                                </div>
+                                <div>
+                                    <h6 class="team-member">Tokunaga Yae</h6>
+                                    <span class="team-member-deadline">Unknown</span>
+                                </div>
+                            </div>
+                            <div class="col-2 icons">
+                                <i class="pi pi-chevron-right"></i>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="grid member">
+                            <div class="col-10 team-box">
+                                <div class="profile-image">
+                                    <img src="assets/layout/images/dashboard/avatar-olisha.png" alt="mirage-layout" />
+                                </div>
+                                <div>
+                                    <h6 class="team-member">Olisha Farmer</h6>
+                                    <span class="team-member-deadline">Design</span>
+                                </div>
+                            </div>
+                            <div class="col-2 icons">
+                                <i class="pi pi-chevron-right"></i>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- Báo cáo doanh số và số lượng bán theo từng đại lý -->
+    <div #reportTradingProviderChart class="col-12 xl:col-12 md:col-12 mt-6" style="padding-left: 1.5rem; padding-right: 3rem;">
+        <h3> Báo cáo doanh số và số lượng bán theo từng đại lý </h3> 
+        <p-chart 
+            id="tradingOrDepartment" type="bar" [plugins]="reportTradingProviderPlugins" [data]="reportTradingProvider" 
+            [options]="reportTradingProviderOptions" height="300">
+            <canvas id="myChart"></canvas>
+        </p-chart>
+    </div>
+    <!-- Báo cáo dự chi -->
+    <div class="col-12 xl:col-9 md:col-9 mt-6 mb-6" style="padding-left: 1.5rem; padding-right: 3rem">
+        <h3> Báo cáo dự chi </h3> 
+        <p-chart type="bar" [data]="report" [options]="cashFlowByDayOptions" height="300"></p-chart>
+    </div>
+    <div class="col-12 xl:col-3 md:col-3 mt-6 mb-6 flex align-content-end " style="padding-right: 3rem">
+        <img src="\assets\layout\images\dashboard\house-dashboard.png" alt="" style="width: 100%;">
+    </div>
+    
+</div>

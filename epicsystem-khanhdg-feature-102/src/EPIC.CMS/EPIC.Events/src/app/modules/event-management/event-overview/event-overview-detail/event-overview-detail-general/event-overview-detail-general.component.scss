@@ -1,0 +1,31 @@
+.button-delete {
+    margin-top: 1.5rem;
+}
+
+.custom-toast .ui-toast {
+    position: fixed;
+    top: 20%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50%;
+  }
+
+.upload-file-form {
+  padding-top: 0.5rem;
+}
+
+.header-left {
+  margin: 0px -5px 0px -5px !important;
+}
+
+.b-icon-trash {
+  color: red; 
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.b-icon-slash {
+  color: rgb(0, 81, 255);
+  font-weight: 600;
+  cursor: pointer;
+}

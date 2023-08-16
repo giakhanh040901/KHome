@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="GemBox.Document" Version="35.0.1105" />
+    <PackageReference Include="Open-XML-SDK" Version="2.9.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+	<Content Include="TemplateExcel\**">
+	   <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</Content>
+	<Content Include="TemplateWord\**">
+	   <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\EPIC.BondService\EPIC.Utils\EPIC.Utils.csproj" />
+    <ProjectReference Include="..\..\EPIC.Libraries\EPIC.OpenXml\EPIC.OpenXmlLibrary\EPIC.OpenXmlLibrary.csproj" />
+  </ItemGroup>
+
+</Project>

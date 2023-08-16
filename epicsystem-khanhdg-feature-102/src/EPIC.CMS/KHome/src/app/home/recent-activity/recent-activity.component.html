@@ -1,0 +1,27 @@
+<div class="container flex py-3">
+  <div [style.lineHeight]="'18px'">
+    <img
+      src="assets/layout/images/topbar/anonymous-avatar.jpg"
+      alt="mirage-layout"
+      width="35"
+      height="35"
+      [style.borderRadius]="'12px'"
+      class="mr-4"
+    />
+  </div>
+  <div class="b-w-100" [style.lineHeight]="'18px'">
+    <div class="flex justify-content-between">
+      <span [style.color]="'#200E32'" class="font-semibold">{{ name }}</span>
+      <span
+        ><i
+          class="pi pi-chevron-right cursor-pointer"
+          (click)="handleClick($event)"
+        ></i
+      ></span>
+    </div>
+    <div class="flex justify-content-between" [style.color]="'#99A2BC'">
+      <span>{{ infor }}</span>
+      <span>{{ time }}</span>
+    </div>
+  </div>
+</div>

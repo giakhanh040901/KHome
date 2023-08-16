@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+     <PackageReference Include="AutoMapper" Version="11.0.1" />
+     <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="5.0.17" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.17" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.17" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\EPIC.BondService\EPIC.Entities\EPIC.Entities.csproj" />
+    <ProjectReference Include="..\..\EPIC.BondService\EPIC.Utils\EPIC.Utils.csproj" />
+    <ProjectReference Include="..\..\EPIC.ConnectThirdPart\EPIC.MSB\EPIC.MSB.csproj" />
+    <ProjectReference Include="..\..\EPIC.GarnerService\EPIC.GarnerSharedEntities\EPIC.GarnerSharedEntities.csproj" />
+  </ItemGroup>
+</Project>

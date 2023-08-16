@@ -1,0 +1,16 @@
+<div [ngClass]="classContainer">
+  <p-radioButton
+    [inputId]="inputId"
+    [name]="name"
+    [value]="value"
+    [disabled]="isDisabled"
+    [(ngModel)]="ngModelValue"
+    (onClick)="handleClick($event)"
+  ></p-radioButton>
+  <ng-container *ngIf="isShowLabel">
+    <label [for]="inputId" [ngClass]="'ml-2 ' + classLabel">{{ label }}</label>
+  </ng-container>
+  <ng-container *ngIf="!isShowLabel">
+    <ng-content select="[content]"></ng-content>
+  </ng-container>
+</div>

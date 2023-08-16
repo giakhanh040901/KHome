@@ -1,0 +1,64 @@
+::ng-deep {
+    .p-custom-select-button {
+        .p-selectbutton {
+            .p-button {
+                &.p-highlight {
+                    background: white;
+                    border: 1px solid #5346E0 !important;
+                    color: #5346E0;
+                    font-weight: 500;
+                }
+
+                &:focus {
+                    box-shadow: none;
+                }
+
+                & {
+                    background: white;
+                    border: 1px solid #ced4da;
+                    color: black;
+                    transition: background-color 0.15s, border-color 0.15s, box-shadow 0.15s;
+                }
+
+                &:not(.p-disabled):not(.p-highlight):hover {
+                    border: 1px solid #5346E0;
+                    background: white;
+                    color: black;
+                    font-weight: bold;
+                    opacity: 0.7;
+                }
+            }
+        }
+    }
+
+    .editButton button {
+        background: #F6F6FE;
+        padding: 8px 4px;
+        width: 118px;
+        border: 1px solid #E6E6E6;
+        border-radius: 8px;
+        height: 40px;
+        margin: 1rem 0;
+    }
+    .editButton button:hover {
+        background: #F6F6FE !important;
+        color: #ffffff;
+        border-color: #ccc !important;
+    }
+    .editButton button:active {
+        background: #F6F6FE !important;
+        color: #ffffff;
+        border-color: #ccc !important;
+    }
+    .editButton>button>.p-button-label {
+        color: #212633;
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 24px;
+    }
+
+    .editButton>button>.p-button-icon-left {
+        color: #212633;
+
+    }
+}

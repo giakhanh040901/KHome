@@ -1,0 +1,112 @@
+<div class="grid ml-0 mr-0 mt-0">
+    <div class="col-12">
+        <div class="card p-0">
+            <p-toast></p-toast>
+            <p-confirmDialog [style]="{width: 'auto'}" [baseZIndex]="10000"></p-confirmDialog>
+            <p-table  
+                #userTable 
+                selectionMode="multiple" responsiveLayout="scroll" dataKey="id" [scrollHeight]="getTableHeight()"
+                styleClass="custom-table" [value]="rows" [rowHover]="true" [paginator]="false" [scrollable]="true">
+                <ng-template pTemplate="caption">
+                    <div class="flex justify-content-between flex-column sm:flex-row">
+                        <div class="flex justify-content-between flex-column sm:flex-row">
+                            <span class="p-float-label b-custom">
+                                <p-dropdown 
+                                    [style]="{'width':'200px'}" placeholder="Tất cả"
+                                    [options]="policies" optionLabel="labelName" optionValue="id" 
+                                    [(ngModel)]="fieldFilters.policyId"
+                                    (onChange)="changePolicy($event.value)" 
+                                    [showClear]="true" [autoDisplayFirst]="false">
+                                </p-dropdown>
+                                <label class="font-normal" for="dropdownStatus">Chính sách</label>
+                            </span>
+                            <span class="p-float-label b-custom ml-2">
+                                <p-dropdown 
+                                    [style]="{'width':'200px'}" placeholder="Tất cả"
+                                    [options]="SampleContractConst.contractSource" optionLabel="name" optionValue="code" 
+                                    [(ngModel)]="fieldFilters.contractSource"
+                                    (onChange)="changeContractSource($event.value)" 
+                                    [showClear]="true" [autoDisplayFirst]="false">
+                                </p-dropdown>
+                                <label class="font-normal" for="dropdownStatus">Kiểu hợp đồng</label>
+                            </span>
+                            <span class="p-float-label b-custom ml-2">
+                                <p-dropdown 
+                                    [style]="{'width':'150px'}" placeholder="Tất cả"
+                                    [options]="ActiveDeactiveConst.list" optionLabel="name" optionValue="code" 
+                                    [(ngModel)]="fieldFilters.status"
+                                    (onChange)="changeStatusFilter($event.value)" 
+                                    [showClear]="true" [autoDisplayFirst]="false">
+                                </p-dropdown>
+                                <label class="font-normal" for="dropdownStatus">Trạng thái</label>
+                            </span>
+                        </div>
+                        <div class="">
+                            <button *ngIf="isGranted([PermissionGarnerConst.GarnerPPSP_MauHopDong_ThemMoi])"  pButton pRipple label="Thêm mới" icon="pi pi-plus-circle"
+                                class="p-button-success mr-2" (click)="create()"></button>
+                        </div>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="min-width:5rem; max-width:5rem;" pFrozenColumn alignFrozen="left"> #ID </th>
+                        <th style="min-width:14rem; max-width:14rem"> Tên hợp đồng </th>
+                        <th style="min-width:30rem;"> Cấu trúc mã sử dụng </th>
+                        <th style="min-width:12rem; max-width:12rem;"> Chính sách </th>
+                        <th style="min-width:6rem; max-width:6rem;"> Kiểu HĐ </th>
+                        <!-- <th style="min-width:12rem;"> Loại khách </th> -->
+                        <th style="min-width:12rem;"> Hiển thị </th>
+                        <th style="min-width:7rem; max-width:7rem" pFrozenColumn alignFrozen="right" [frozen]="true" class="b-border-frozen-right"> Trạng thái </th>
+                        <th style="min-width: 3rem; max-width:3rem; justify-content: center;" pFrozenColumn alignFrozen="right" [frozen]="true"></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-row let-rowIndex="rowIndex">
+                    <tr>
+                        <td style="min-width:5rem; max-width:5rem;" pFrozenColumn alignFrozen="left" > {{ row.id }} </td>
+                        <td style="min-width:14rem; max-width:14rem" > {{ row.contractTemplateTemp?.name }} </td>
+                        <td style="min-width:30rem;"> {{ genContractCodeStructure(row?.configContractCode?.configContractCodeDetails) }} </td>
+                        <td style="min-width:12rem; max-width:12rem;"> {{ row?.policy?.name }} </td>
+                        <td style="min-width:6rem; max-width:6rem;"> {{ SampleContractConst.getContractSource(row.contractSource, 'name') }} </td>
+                        <!-- <td style="min-width:12rem;"> {{ ContractFormConst.getCustomerInfo(row?.configContractCode?.customerType) }} </td> -->
+                        <td style="min-width:12rem;"> {{ DistributionContractTemplateConst.getDisplayType(row?.displayType) }} </td>
+                        <td style="min-width:7rem; max-width:7rem" pFrozenColumn alignFrozen="right" [frozen]="true" class="b-border-frozen-right"> 
+                             <p-tag 
+                                styleClass="p-tag-{{ ContractFormConst.getStatusInfo(row.status, 'severity') }}"
+                                severity="{{ ContractFormConst.getStatusInfo(row.status, 'severity') }}"
+                                value="{{ ContractFormConst.getStatusInfo(row.status, 'name') }}">
+                            </p-tag>
+                        </td>
+                        <td style="min-width: 3rem; max-width:3rem; justify-content: center;" pFrozenColumn alignFrozen="right" [frozen]="true">
+                            <div class="flex" *ngIf="actions[rowIndex]?.length">
+                                <i class="pi pi-ellipsis-h" (click)="menu.toggle($event)"></i>
+                                <p-menu 
+                                    #menu [popup]="true" class="button-actions" [model]="actions[rowIndex]"
+                                    appendTo="body">
+                                </p-menu>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td colspan="7">Không có dữ liệu.</td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="loadingbody">
+                    <tr>
+                        <td colspan="7"> Đang tải dữ liệu ... </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+            <p-paginator 
+                [rows]="page.pageSize" 
+                [totalRecords]="page.totalItems" 
+                [rowsPerPageOptions]="page.perPageOptions" 
+                currentPageReportTemplate="Tất cả {{ page.totalItems }} dòng" 
+                showCurrentPageReport="true"
+                (onPageChange)="setPage($event)">
+            </p-paginator>
+        </div>
+    </div>
+</div>

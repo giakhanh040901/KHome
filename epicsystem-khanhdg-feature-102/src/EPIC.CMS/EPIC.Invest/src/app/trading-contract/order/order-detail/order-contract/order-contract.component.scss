@@ -1,0 +1,17 @@
+.b-order-contract.b-actions > * {
+    margin-left: 1rem;
+}
+
+::ng-deep .ng2-pdf-viewer-container{
+    // overflow-x: unset !important;
+}
+
+::ng-deep .b-view-pdf {
+    .p-dialog-header {
+        padding: 0.5rem;
+    }
+
+    .p-dialog-content {
+        padding: 0px;
+    }
+}

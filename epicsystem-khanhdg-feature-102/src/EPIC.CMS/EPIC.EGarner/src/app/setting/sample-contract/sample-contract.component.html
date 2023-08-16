@@ -1,0 +1,115 @@
+<p-toast [baseZIndex]="10000"></p-toast>
+<p-confirmDialog [style]="{width: 'auto'}" [baseZIndex]="10000"></p-confirmDialog>
+<div class="grid ml-0 mr-0 mt-0">
+    <div class="col-12">
+        <div class="card b-list">
+            <div class="p-fluid p-formgrid grid b-header">
+                <div class="col-12 md:col-7 b-title">
+                    <h4 style="display:inline"> Mẫu hợp đồng </h4>
+                </div>
+                <div class="col-12 md:col-5 b-action">
+                    <button *ngIf="isGranted([PermissionGarnerConst.GarnerMauHD_ThemMoi])" pButton pRipple label="Thêm mới" icon="pi pi-plus" class="p-button-success mr-2" (click)="create()"></button>
+                </div>
+            </div>
+            <p-table  
+                #productBondPolicyTemplateTable 
+                [value]="rows"
+                [columns]="_selectedColumns"
+                [loading]="isLoading" [rowHover]="true" [showCurrentPageReport]="true" [paginator]="false" 
+                responsiveLayout="scroll" dataKey="bondPolicyTempId" 
+                [scrollable]="true" [scrollHeight]="getTableHeight(60)" styleClass="custom-table"
+            >
+                <ng-template pTemplate="caption">
+                    <div class="flex justify-content-between flex-column sm:flex-row">
+                        <div class="flex justify-content-between flex-column sm:flex-row">
+                            <span class="block p-input-icon-left p-float-label b-custom mr-1 p-inputtext-filter">
+                                <i class="pi pi-search"></i>
+                                <input pInputText type="text" placeholder="Tìm kiếm..." [(ngModel)]="keyword"
+                                    (input)="changeKeyword($event)" />
+                                <label class="font-normal" for="">Tìm kiếm</label>
+                            </span>
+                            <span class="p-float-label b-custom ml-3">
+                                <p-dropdown 
+                                    id="dropdownStatus" [style]="{'width':'12rem'}" 
+                                    optionValue="code" optionLabel="name"
+                                    placeholder="Tất cả" [showClear]="true"
+                                    [options]="ContractFormConst.statusConst" 
+                                    [(ngModel)]="fieldFilters.status"
+                                    (onChange)="changeStatusFilter($event.value)">
+                                </p-dropdown>   
+                                <label class="font-normal ml-2" for="dropdownStatus">Trạng thái</label>
+                            </span>
+                            <span class="p-float-label b-custom ml-3">
+                                <p-dropdown 
+                                    id="dropdownStatus" [style]="{'width':'12rem'}" 
+                                    optionLabel="name" optionValue="code" placeholder="Tất cả" [showClear]="true"
+                                    [(ngModel)]="fieldFilters.contractSource"
+                                    [options]="SampleContractConst.contractSourceDistribution"
+                                    (onChange)="changeStatusFilter($event.value)">
+                                </p-dropdown>   
+                                <label class="font-normal ml-2" for="dropdownStatus">Kiểu hợp đồng</label>
+                            </span>
+                            <span class="p-float-label b-custom ml-3">
+                                <p-dropdown 
+                                    id="dropdownStatus" [style]="{'width':'12rem'}" 
+                                    optionLabel="name" optionValue="code" placeholder="Tất cả" [showClear]="true"
+                                    [(ngModel)]="fieldFilters.contractType"
+                                    [options]="SampleContractConst.contractType"
+                                    (onChange)="changeStatusFilter($event.value)">
+                                </p-dropdown>   
+                                <label class="font-normal ml-2" for="dropdownStatus">Loại hợp đồng</label>
+                            </span>
+                            </div>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header" let-columns>
+                    <tr>
+                        <th style="max-width: 5rem; min-width: 5rem;" pFrozenColumn alignFrozen="left" class="b-border-frozen-left">#ID </th>
+                        <th *ngFor="let col of columns" [ngStyle]="{'max-width': col.width, 'min-width': col.width }" [ngClass]="col.class" [pTooltip]="col.pTooltip" [tooltipPosition]="col.tooltipPosition">
+                            {{ col.header }} &nbsp; <i [ngClass]=" col.iClass"></i>
+                        </th> 
+                        <th style="min-width: 7rem; max-width: 7rem; justify-content: left;" pFrozenColumn alignFrozen="right" [frozen]="true" class="b-border-frozen-right"> Trạng thái </th>
+                        <th style="max-width: 3rem; min-width: 3rem;justify-content: center;" pFrozenColumn alignFrozen="right" [frozen]="true" class=" b-table-actions">
+                            <i class="pi pi-cog" (click)="setColumn(cols, _selectedColumns)"></i>
+                        </th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-row let-expanded="expanded" let-index="rowIndex"
+                    let-rowIndex="rowIndex" let-columns="columns">
+                    <tr>
+                        <td style="max-width: 5rem; min-width: 5rem;" pFrozenColumn alignFrozen="left" class="b-border-frozen-left"> {{ row.id }} </td>
+                        <td *ngFor="let col of columns" [ngStyle]="{'max-width': col.width, 'min-width': col.width}" [ngClass]="col.class" [pTooltip]="col.pTooltip" [tooltipPosition]="col.tooltipPosition">
+                            {{ row[col.field] }}
+                            <!-- {{ row[col.field] ?? row.businessCustomer[col.field] }} -->
+                        </td>
+                        <td style="min-width: 7rem; max-width: 7rem; justify-content: left;" pFrozenColumn alignFrozen="right" [frozen]="true" class="b-border-frozen-right">
+                            <p-tag 
+                                styleClass="p-tag-{{ ContractFormConst.getStatusInfo(row.status, 'severity') }}"
+                                severity="{{ ContractFormConst.getStatusInfo(row.status, 'severity') }}"
+                                value="{{ ContractFormConst.getStatusInfo(row.status, 'name') }}">
+                            </p-tag>
+                        </td>
+                        <td style="max-width: 3rem; min-width: 3rem; justify-content: center;" pFrozenColumn alignFrozen="right" class="b-table-actions" [frozen]="true">
+                            <div class="flex">
+                                <i class="pi pi-ellipsis-h" (click)="menu.toggle($event)"></i>
+                                <p-menu 
+                                    #menu [popup]="true" class="button-actions" [model]="listAction[rowIndex]"
+                                    appendTo="body">
+                                </p-menu>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+            <p-paginator 
+                [rows]="page.pageSize" 
+                [totalRecords]="page.totalItems" 
+                [rowsPerPageOptions]="page.perPageOptions" 
+                currentPageReportTemplate="Tất cả {{ page.totalItems }} dòng" 
+                showCurrentPageReport="true"
+                (onPageChange)="setPage($event)">
+            </p-paginator>
+        </div>
+    </div>
+</div>
+

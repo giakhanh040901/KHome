@@ -1,0 +1,143 @@
+<!-- <e-loading *ngIf="isLoading"></e-loading> -->
+<p-toast></p-toast>
+<p-card>
+    <ng-template pTemplate="title">
+            <div class="flex flex-row flex-wrap card-container blue-container wrapper-title-search" style="position: relative">
+                <div class="flex align-items-center justify-content-center">
+                    <h4 class="title-info mb-0 "> Tìm kiếm khách hàng </h4>
+                </div>
+                <div class="flex flex-row flex-wrap card-container blue-container wrapper-order-search z-1">
+                    <div class="custom-input-search mr-3">
+                        <input-search
+                            [placeholder]="'Tìm kiếm...'"
+                            [width]="300"
+                            [(keyword)]="page.keyword"
+                            (_onChange)="changeKeyword()">
+                        </input-search>
+                    </div>
+                    <p-button label="Tìm kiếm" styleClass="p-button" (click)="getInfoCustomer()"></p-button>
+                </div>
+            </div>
+    </ng-template>
+    <ng-template pTemplate="content">
+        <p-tabView styleClass="custom-tabview-order" [(activeIndex)]="activeIndex" (onChange)="changeTabview($event.index)">
+            <p-tabPanel>
+                <ng-template pTemplate = "header">
+                    <span> Khách hàng cá nhân </span>
+                </ng-template>
+                <ng-container 
+                    [ngTemplateOutlet]="tableCustomer"
+                    [ngTemplateOutletContext]="{rows: customerInvestors, columns: columnInvestorCustomers}">
+                </ng-container>
+            </p-tabPanel>
+            <p-tabPanel>
+                <ng-template pTemplate = "header">
+                    <span> Khách hàng doanh nghiệp </span>
+                </ng-template>
+                <ng-container 
+                    [ngTemplateOutlet]="tableCustomer"
+                    [ngTemplateOutletContext]="{rows: businiessCustomers, columns: columnBusinessCustomers}">
+                </ng-container>
+            </p-tabPanel>
+        </p-tabView>
+        <ng-template #tableCustomer let-rows="rows" let-columns="columns">
+            <div [style.min-height.px]="129">
+                <e-table
+                    [rows]="rows"
+                    [columns]="columns"
+                    [class]="'create-order'"
+                    [isLoading]="isLoading"
+                    [isShowIconFilter]="false"
+                    [isShowPaginator]="false"
+                    [isHeightAuto]="true"
+                    >
+                </e-table> 
+            </div>
+        </ng-template>
+        <ng-container>
+            <h5 class="title-info mb-2 mt-0">Thông tin khách hàng {{ activeIndex == 0 ? 'cá nhân' : 'doanh nghiệp' }} </h5>
+            <hr class="mt-0" style="border-width: 2px 0 0">
+            <div class="p-fluid p-formgrid grid">
+                <div class="field mb-0 col-12 md:col-4">
+                    <label class="title-info">Tên khách hàng</label>
+                    <input [disabled]="true" pInputText [value]="(customerInformation?.customerInfo?.name || customerInformation?.customerInfo?.defaultIdentification?.fullname) ?? null" class="custom-input-disabled"/>
+                </div>
+                <div class="field mb-0 col-12 md:col-2">
+                    <label class="title-info">Số điện thoại</label>
+                    <input [disabled]="true" pInputText [value]="customerInformation?.customerInfo?.phone ?? null" class="custom-input-disabled"/>
+                </div>
+                <div class="field mb-0 col-12 md:col-6">
+                    <label class="title-info">Email</label>
+                    <input [disabled]="true" pInputText [value]="customerInformation?.customerInfo?.email ?? null" class="custom-input-disabled"/>
+                </div>
+                <div class="field mb-0 col-12 md:col-6" *ngIf="activeIndex == 0">
+                    <label class="title-info">Địa chỉ liên hệ</label>
+                    <p-dropdown 
+                        class="custom-input-disabled" emptyMessage="Không có dữ liệu"
+                        [options]="customerInformation.customerInfo.listAddress" optionLabel="fullAddress" optionValue="contactAddressId"
+                        [autoDisplayFirst]="false"
+                        [(ngModel)]="customerInformation.customerInfo.contractAddressId">
+                    </p-dropdown>
+                    
+                </div>
+                <div class="field mb-0 col-12 md:col-6" *ngIf="activeIndex == 1">
+                    <label class="title-info">Địa chỉ liên hệ</label>
+                    <textarea [disabled]="true" pInputText [value]="customerInformation?.customerInfo?.address ?? null" class="custom-input-disabled" [rows]="2"></textarea>
+                </div>
+                <div class="field col-12 md:col-6">
+                    <label class="title-info">Tài khoản thụ hưởng</label>
+                    <p-dropdown 
+                        class="custom-input-disabled" emptyMessage="Không có dữ liệu"
+                        [options]="customerInformation.customerInfo.listBank" optionLabel="labelName" optionValue="investorBankAccId"
+                        [autoDisplayFirst]="true"
+                        (onChange)="changeBankAcc($event.value)"
+                        [(ngModel)]="customerInformation.customerInfo.investorBankAccId">
+                    </p-dropdown>
+                </div>
+            </div>
+            <!--  -->
+            <h5 class="title-info mb-2 mt-2">Mã giới thiệu</h5>
+            <hr class="mt-0" style="border-width: 2px 0 0">
+            <div class="p-fluid p-formgrid grid">
+                <div class="field col-12 mb-0 md:col-2">
+                    <label class="title-info">Mã giới thiệu<span *ngIf="sale?.referralCode">
+                        ( <i class="pi pi-trash b-icon-trash" (click)="removeReferralCode(i)" title="Xóa giá trị"></i> )
+                    </span></label>
+                    <div class="p-inputgroup">
+                        <input readonly class="custom-input-disabled" value="{{ sale?.referralCode }}" type="text" pInputText placeholder="Bấm đề tìm kiếm" style="pointer-events: none;">   
+                        <button class="title-info" (click)="showSale()" type="button" pButton pRipple icon="pi pi-search" styleClass="p-button-warn"></button>      
+                    </div>
+                </div>
+                <div class="pb-0 field col-12 mb-0 md:col-4">
+                    <label class="title-info">Tên người giới thiệu / Tên doanh nghiệp </label>
+                    <input 
+                        pInputText [disabled]="true" class="custom-input-disabled"
+                        value="{{ sale?.investor?.investorIdentification.fullname ?? sale?.businessCustomer?.name }}" 
+                        title="{{ sale?.investor?.investorIdentification.fullname ?? sale?.businessCustomer?.name }}" 
+                    />
+                </div> 
+                <div class="pb-0 field col-12 mb-0 md:col-3">
+                    <label class="title-info">Số điện thoại</label>
+                    <input pInputText [disabled]="true" value="{{ sale?.investor?.phone ?? sale?.businessCustomer?.phone }}" class="custom-input-disabled"/>
+                </div>
+                <div class="pb-0 field col-12 mb-0 md:col-3">
+                    <label class="title-info">Email</label>
+                    <input pInputText [disabled]="true" value="{{ investorSale?.email ?? sale?.businessCustomer?.phone }}" class="custom-input-disabled"/>
+                </div>
+                <div class="pb-0 field col-12 mb-0 md:col-6">
+                    <label class="title-info">Phòng GD quản lý </label>
+                    <input pInputText [disabled]="true" value="{{ sale?.departmentName }}" class="custom-input-disabled"/>
+                </div>
+                <div class="pb-0 field col-12 mb-0 md:col-6">
+                    <label class="title-info">Phòng GD QL hợp đồng</label>
+                    <input pInputText [disabled]="true" value="{{ sale?.departmentName }}" class="custom-input-disabled"/>
+                </div>
+            </div>
+        </ng-container>
+    </ng-template>
+    <ng-template pTemplate="footer">
+        <div class="grid grid-nogutter justify-content-end">
+            <p-button label="Tiếp theo" (onClick)="nextPage()" icon="pi pi-angle-right" iconPos="right"></p-button>
+        </div>
+    </ng-template>
+</p-card>

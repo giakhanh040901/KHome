@@ -1,0 +1,170 @@
+<app-loading-page *ngIf="isLoadingPage"></app-loading-page>
+<p-toast></p-toast>
+<div class="card b-page-detail {{ isLoadingPage ? 'b-loading' : '' }}" *ngIf="!isLoadingPage">
+    <div class="p-fluid p-formgrid grid b-header">
+        <div class="card col-12 md:col-12 b-actions">
+            <div class="flex justify-content-between flex-wrap card-container purple-container">
+                <h5 class="title-info mb-0 ml-0"> Chi tiết phân phối </h5>
+                <div>
+                    <p-button
+                            *ngIf="isGranted([PermissionGarnerConst.GarnerPPSP_EpicXacMinh]) && (distributionDetail.status == DistributionConst.HOAT_DONG) && distributionDetail.isCheck != YesNoConst.YES"
+                            styleClass="p-button-sm custom-button" label="EPIC duyệt" icon="pi pi-arrow-up"
+                            (click)="approveEpic(distributionDetail.id)">
+                    </p-button>
+                    <p-button
+                            *ngIf="isGranted([PermissionGarnerConst.GarnerPPSP_TrinhDuyet]) && (distributionDetail.status == DistributionConst.KHOI_TAO)"
+                            styleClass="p-button-sm custom-button" label="Trình duyệt" icon="pi pi-arrow-up"
+                            (click)="request(distributionDetail.id)">
+                    </p-button>
+                    <p-button 
+                            *ngIf="isGranted([PermissionGarnerConst.GarnerPDPPSP_PheDuyetOrHuy]) && (distributionDetail.status == DistributionConst.CHO_DUYET)"
+                            styleClass="p-button-sm custom-button" 
+                            label="Xử lý yêu cầu" icon="pi pi-check"
+                            (click)="approveSharing(distributionDetail)">
+					</p-button>
+                    <ng-container *ngIf="isGranted([PermissionGarnerConst.GarnerPPSP_CapNhat]) && activeIndex == 0">
+                        <p-button 
+                            styleClass="p-button-sm custom-button" label="{{ labelButtonEdit() }}"
+                            icon="pi {{ isEdit ? 'pi-save' : 'pi-pencil' }}" (click)="changeEdit()">
+                        </p-button>
+                    </ng-container>
+                    <p-button 
+                        styleClass="p-button-sm custom-button   border-600 b-button-back"
+                        [routerLink]="'/product-manager/distribution/list'" label="Quay lại"
+                        icon="pi pi-chevron-left" class="b-0">
+                    </p-button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <p-tabView styleClass="custom-tabview" [(activeIndex)]="activeIndex" (onChange)="changeTab($event)">
+        <!-- [(activeIndex)]="activeIndex" (onChange)="changeTab($event)" -->
+        <p-tabPanel >
+            <ng-template pTemplate="header">
+                <span> Thông tin chung </span>
+            </ng-template>
+            <!-- THÔNG TIN SẢN PHẨM CỔ PHẦN -->
+            <app-share-detail 
+                *ngIf="productDetail?.productType == ProductConst.SHARE" 
+                [productDetail]="productDetail">
+            </app-share-detail>
+
+            <!-- THÔNG TIN SẢN PHẨM BĐS INVEST -->
+            <app-invest-detail 
+                *ngIf="productDetail?.productType == ProductConst.INVEST" 
+                [productDetail]="productDetail">
+            </app-invest-detail> 
+
+            <!-- THÔNG TIN CHUNG -->
+            <div class="p-fluid p-formgrid grid" style="padding: 0px 20px;">
+                <div class="col-12">
+                    <h6 class="mb-0 e-title-group">Thông tin phân phối đầu tư </h6>
+                </div>
+                <div class="field b-field col-12 md:col-2">
+                    <label class="title-info">Hạn mức phân phối</label>
+                    <p-inputNumber 
+                        [(ngModel)]="productDetail.cpsParValue * productDetail.cpsQuantity" locale="de-DE" [disabled]="true" class="custom-input-disabled"> 
+                    </p-inputNumber>
+
+                </div>
+                <div class="field b-field col-12 md:col-2">
+                    <label class="title-info">Số lượng phân phối</label>
+                    <p-inputNumber [disabled]="true" [(ngModel)]="productDetail.cpsQuantity" locale="de-DE" class="custom-input-disabled"></p-inputNumber>
+                </div>
+                <div class="field b-field col-12 md:col-2">
+                    <label class="title-info">Hạn mức còn lại </label>
+                    <p-inputNumber [disabled]="true" [(ngModel)]="distributionDetail.remainAmount" locale="de-DE" class="custom-input-disabled"></p-inputNumber>
+                </div>
+                <!--  -->
+                <div class="field b-field col-12 md:col-2">
+                    <label class="b-title-info {{ isEdit ? 'b-hightline-title' : '' }}" htmlFor="code">
+                        Ngày bắt đầu
+                    </label>
+                    <p-calendar class="custom-input-disabled" inputId="closeCellDate" dateFormat="dd/mm/yy"
+                        locale="vi" appendTo="body" utc="true"
+                        [(ngModel)]="distributionDetail.openCellDate"
+                        [ngClass]="{ 'ng-invalid ng-dirty': fieldErrors?.closeCellDate }" [showIcon]="true"
+                        [readonlyInput]="true" [minDate]="minDate" [maxDate]="maxDate"
+                        [disabled]="!isEdit">
+                    </p-calendar>
+                </div>
+                <div class="field b-field col-12 md:col-2">
+                    <label class="b-title-info {{ isEdit ? 'b-hightline-title' : '' }}" htmlFor="code">
+                        Ngày kết thúc bán
+                    </label>
+                    <p-calendar class="custom-input-disabled" inputId="closeCellDate" dateFormat="dd/mm/yy"
+                        locale="vi" appendTo="body" utc="true"
+                        [(ngModel)]="distributionDetail.closeCellDate"
+                        [ngClass]="{ 'ng-invalid ng-dirty': fieldErrors?.closeCellDate }" [showIcon]="true"
+                        [readonlyInput]="true" [minDate]="distributionDetail.openCellDate"
+                        [maxDate]="maxDate" [disabled]="!isEdit">
+                    </p-calendar>
+                </div>
+                <div class="field b-field col-12 md:col-6">
+                    <label htmlFor="quantity">
+                        Tài khoản nhận tiền <span class="required-field"> * </span>
+                    </label>
+                    <p-multiSelect 
+                        name="tradingBankAccountCollects" class="b-disabled"
+                        [options]="listBanks" [disabled]="!isEdit"
+                        optionLabel="labelName" optionValue="businessCustomerBankAccId" placeholder="" 
+                        [(ngModel)]="distributionDetail.tradingBankAccountCollects" appendTo="body">
+                    </p-multiSelect>
+                </div>
+                <div class="field b-field col-12 md:col-6">
+                    <label htmlFor="quantity">
+                        Tài khoản chi tiền <span class="required-field"> * </span>
+                    </label>
+                    <p-multiSelect 
+                        name="tradingBankAccountPays" class="b-disabled"
+                        [options]="listBanks" [disabled]="!isEdit"
+                        optionLabel="labelName" optionValue="businessCustomerBankAccId" placeholder="" 
+                        [(ngModel)]="distributionDetail.tradingBankAccountPays" appendTo="body">
+                    </p-multiSelect>
+                </div>
+            </div>
+        </p-tabPanel>
+        <p-tabPanel [header]="'tongQuan'" *ngIf="isGranted([PermissionGarnerConst.GarnerPPDT_TongQuan])" >
+            <ng-template pTemplate="header">
+                <span> Tổng quan </span>
+            </ng-template>
+            <app-distribution-overview *ngIf="tabViewActive.tongQuan"></app-distribution-overview>
+        </p-tabPanel>
+        <p-tabPanel [header]="'bangGia'" *ngIf="isGranted([PermissionGarnerConst.Garner_TTCT_BangGia])">
+            <ng-template pTemplate="header">
+                <span> Bảng giá </span>
+            </ng-template>
+            <app-distribution-price-list *ngIf="tabViewActive.bangGia" [distributionId]="distributionId"></app-distribution-price-list>
+        </p-tabPanel>
+        <p-tabPanel [header]="'chinhSach'" >
+            <ng-template pTemplate="header">
+                <span> Chính sách </span>
+            </ng-template>
+            <app-distribution-policy *ngIf="tabViewActive.chinhSach" [distributionId]="distributionId"></app-distribution-policy>
+        </p-tabPanel>
+        <p-tabPanel [header]="'fileChinhSach'" *ngIf="isGranted([PermissionGarnerConst.GarnerPPSP_FileChinhSach])">
+            <ng-template pTemplate="header">
+                <span> File chính sách </span>
+            </ng-template>
+            <app-distribution-policy-file *ngIf="tabViewActive.fileChinhSach" [distributionId]="distributionId"></app-distribution-policy-file>
+        </p-tabPanel>
+        <p-tabPanel [header]="'mauHopDong'" *ngIf="isGranted([PermissionGarnerConst.GarnerPPSP_MauHopDong])">
+            <ng-template pTemplate="header">
+                <span> Mẫu hợp đồng </span>
+            </ng-template>
+            <app-distribution-contract-template *ngIf="tabViewActive.mauHopDong" [distributionId]="distributionId"></app-distribution-contract-template>
+        </p-tabPanel>
+        <p-tabPanel [header]="'mauGiaoNhanHD'" *ngIf="isGranted([PermissionGarnerConst.GarnerPPSP_MauGiaoNhanHD])">
+            <ng-template pTemplate="header">
+                <span> Hợp đồng giao nhận </span>
+            </ng-template> 
+            <app-receive-contract-template [distributionId]="distributionId" *ngIf="tabViewActive.mauGiaoNhanHD"></app-receive-contract-template>
+        </p-tabPanel>
+        <p-tabPanel [header]="'lichSu'" >
+            <ng-template pTemplate="header">
+                <span> Lịch sử </span>
+            </ng-template>
+            <app-distribution-history [distributionId]="distributionId" *ngIf="tabViewActive.lichSu"></app-distribution-history>
+        </p-tabPanel>
+    </p-tabView>
+</div>

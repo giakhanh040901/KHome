@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+	 <PackageReference Include="AutoMapper" Version="11.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+	 <ProjectReference Include="..\..\EPIC.BondService\EPIC.Utils\EPIC.Utils.csproj" />
+	 <ProjectReference Include="..\..\EPIC.CoreService\EPIC.CoreEntities\EPIC.CoreEntities.csproj" />
+	 <ProjectReference Include="..\..\EPIC.CoreService\EPIC.CoreRepositories\EPIC.CoreRepositories.csproj" />
+	 <ProjectReference Include="..\..\EPIC.EventService\EPIC.EventRepositories\EPIC.EventRepositories.csproj" />
+	 <ProjectReference Include="..\..\EPIC.GarnerService\EPIC.GarnerRepositories\EPIC.GarnerRepositories.csproj" />
+	 <ProjectReference Include="..\..\EPIC.GarnerService\EPIC.GarnerSharedDomain\EPIC.GarnerSharedDomain.csproj" />
+	 <ProjectReference Include="..\..\EPIC.InvestService\EPIC.InvestRepositories\EPIC.InvestRepositories.csproj" />
+	 <ProjectReference Include="..\..\EPIC.InvestService\EPIC.InvestSharedDomain\EPIC.InvestSharedDomain.csproj" />
+	 <ProjectReference Include="..\..\EPIC.LoyaltyService\EPIC.LoyaltyRepositories\EPIC.LoyaltyRepositories\EPIC.LoyaltyRepositories.csproj" />
+	 <ProjectReference Include="..\..\EPIC.RealEstateService\EPIC.RealEstateRepositories\EPIC.RealEstateRepositories.csproj" />
+	 <ProjectReference Include="..\..\EPIC.RealEstateService\EPIC.RealEstateSharedDomain\EPIC.RealEstateSharedDomain.csproj" />
+	 <ProjectReference Include="..\..\EPIC.RocketchatService\EPIC.RocketchatEntities\EPIC.RocketchatEntities.csproj" />
+	 <ProjectReference Include="..\EPIC.SharedEntities\EPIC.SharedEntities.csproj" />
+  </ItemGroup>
+</Project>

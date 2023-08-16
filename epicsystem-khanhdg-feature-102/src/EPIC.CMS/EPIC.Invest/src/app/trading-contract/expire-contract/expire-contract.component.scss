@@ -1,0 +1,95 @@
+::ng-deep .b-silder {
+    &.p-slider-horizontal {
+        .p-slider-handle {
+            margin-top: -13px;
+            margin-left: -20px;
+        }
+    }
+
+    .p-slider-range {
+        background: #006644;
+    }
+
+    .p-slider-handle {
+        height: 22px;
+        width: 22px;
+        background: #F4FCF9;
+        border: 2px solid #F4FCF9;
+        border-radius: 100px;
+        &::before {
+            content: "\2714";
+            display: inline-block;
+            color: #006644;
+            position: absolute;
+            right: 3px;
+            bottom: -1px;
+            font-weight: bold;
+            font-size: 13px;
+        }
+    }
+}
+
+.b-step-check {
+    .b-handle-check-step{
+        height: 22px;
+        width: 22px;
+        background: #F4FCF9;
+        border: 2px solid #F4FCF9;
+        border-radius: 100px;
+        position: relative;
+        top: 13px;
+        margin-left: -20px;
+        z-index: 1;
+        display: inline-block;
+        &::before {
+            content: "\2714";
+            display: inline-block;
+            color: #006644;
+            position: relative;
+            font-weight: bold;
+            font-size: 13px;
+            left: 4px;
+        }
+        //
+        &.step-one {
+            opacity: 0;
+        }
+
+        &.step-one-check {
+            &::before {
+                content: "\2714";
+            }
+        }
+        //
+        &.step-two {
+            left: 50% !important;
+            &::before {
+                content: "";
+            }
+        }
+
+        &.step-two-check {
+            left: 49.85% !important;
+            top: 13px;
+            &::before {
+                content: "\2714";
+                // left: 1px;
+                // top: 3px;
+            }
+        }
+        //
+        &.step-three {
+            left: 100% !important;
+            &::before {
+                content: "" !important;
+            }
+        }
+    }
+}
+
+.b-guide {
+    padding: 5px 10px;
+    width: 470px;
+    background: #ffd45c;
+    border-radius: 5px;
+}

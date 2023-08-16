@@ -1,0 +1,38 @@
+::ng-deep .custom-table.order-group {
+    table {
+
+        thead{}
+
+        tbody {
+            tr {
+                &.ng-star-inserted {
+                    background: white;
+                }
+                //
+                &.p-rowgroup-header {
+                    background: #F7F9FF;
+                }
+
+                &.expanded-hightlight {
+                    background: #dcdcdc8c !important;
+                }
+            }
+
+        }
+    }
+
+    
+}
+
+.wrapper-table-expanded {
+    padding-bottom: 15px;
+    border-bottom: 2px solid #8080804d;
+}
+
+.styleExpanded {
+    padding: 0 !important;
+}
+
+.b-button-custom.p-button:focus {
+    box-shadow: none;
+}

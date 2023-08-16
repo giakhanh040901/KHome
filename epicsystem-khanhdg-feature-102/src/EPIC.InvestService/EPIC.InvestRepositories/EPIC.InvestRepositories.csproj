@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\EPIC.BondService\EPIC.BondRepositories\EPIC.BondRepositories.csproj" />
+    <ProjectReference Include="..\..\EPIC.BondService\EPIC.DataAccess\EPIC.DataAccess.csproj" />
+    <ProjectReference Include="..\..\EPIC.CoreService\EPIC.CoreRepositoryExtensions\EPIC.CoreRepositoryExtensions.csproj" />
+    <ProjectReference Include="..\EPIC.InvestEntities\EPIC.InvestEntities.csproj" />
+  </ItemGroup>
+
+</Project>

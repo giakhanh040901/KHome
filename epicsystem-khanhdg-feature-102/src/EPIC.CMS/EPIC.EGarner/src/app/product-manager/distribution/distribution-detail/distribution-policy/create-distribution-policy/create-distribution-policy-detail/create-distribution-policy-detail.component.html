@@ -1,0 +1,149 @@
+
+
+<p-toast key="policyDetail"></p-toast>
+<div class="grid p-fluid">
+    <ng-container>
+        <ng-container>
+            <div class="col-12 md:col-6" *ngIf="!policyDetail.id">
+                <div class="field mb-0">
+                    <label htmlFor="code"> <b> <i> Chọn chính sách mẫu </i> </b>  </label>
+                    <p-dropdown 
+                        appendTo="body" emptyMessage="Không có dữ liệu"
+                        optionLabel="name"
+                        [options]="policyTemp" 
+                        [autoDisplayFirst]="false"
+                        (onChange)="changePolicyTemp($event.value)">
+                    </p-dropdown>
+                </div>
+            </div>
+            <div class="col-12 md:col-6" *ngIf="!policyDetail.id">
+                <div class="field mb-0">
+                    <label htmlFor="code"> <b> <i> Chọn kỳ hạn mẫu </i> </b>  </label>
+                    <p-dropdown 
+                        [options]="policyDetails" 
+                        appendTo="body" emptyMessage="Không có dữ liệu"
+                        optionLabel="name"
+                        (onChange)="changePolicyDetailTemp($event.value)">
+                    </p-dropdown>
+                </div>
+            </div>
+        </ng-container>
+        <div class="col-12 md:col-3">
+            <div class="field mb-0">
+                <label htmlFor="sortOrder">Số thứ tự <span class="required-field"> * </span></label>
+                <p-inputNumber 
+                    id="sortOrder" [(ngModel)]="policyDetail.sortOrder">
+                </p-inputNumber>
+            </div>
+        </div>
+        <div class="col-12 md:col-3">
+            <div class="field mb-0">
+                <label htmlFor="periodQuantity"> Số kỳ đầu tư <span class="required-field"> * </span></label>
+                <p-inputNumber 
+                    id="periodQuantity" [(ngModel)]="policyDetail.periodQuantity">
+                </p-inputNumber>
+            </div>
+        </div>
+        <div class="col-12 md:col-3">
+            <div class="field mb-0">
+                <label htmlFor="periodType"> Đơn vị <span class="required-field"> * </span></label>
+                <p-dropdown 
+                    optionLabel="name" optionValue="code" [autoDisplayFirst]="false"
+                    appendTo="body" [options]="PolicyDetailTemplateConst.interestPeriodType"
+                    [(ngModel)]="policyDetail.periodType">
+                </p-dropdown>
+            </div>
+        </div>
+        <div class="col-12 md:col-3">
+            <div class="field mb-0">
+                <label htmlFor="shortName">Tên viết tắt <span class="required-field"> * </span>
+                </label>
+                <input 
+                    type="text" id="shortName" name="shortName" pInputText
+                    [(ngModel)]="policyDetail.shortName"
+                />
+            </div>
+        </div>
+        <div class="col-12 md:col-6">
+            <div class="field mb-0">
+                <label htmlFor="de-name"> Tên kỳ hạn <span class="required-field"> * </span></label>
+                <input 
+                    type="text" id="de-name" code="name" pInputText
+                    [(ngModel)]="policyDetail.name" maxlength="256"
+                />
+            </div>
+        </div>
+        <div class="col-12 md:col-3">
+            <div class="field mb-0">
+                <label htmlFor="profit">Lợi nhuận (%/Năm) <span class="required-field"> * </span></label>
+                <input 
+                    pInputText id="profit" type="number" [pKeyFilter]="blockText"
+                    [(ngModel)]="policyDetail.profit"
+                />
+            </div>
+        </div>
+        <div class="col-12 md:col-3">
+            <div class="field mb-0">
+                <label htmlFor="interestDays"> Số ngày </label>
+                <p-inputNumber 
+                    id="interestDays" [(ngModel)]="policyDetail.interestDays">
+                </p-inputNumber>
+            </div>
+        </div>
+        <!--  -->
+        <div class="col-12 md:col-3">
+            <div class="field">
+                <label htmlFor="interestType"> Kiểu trả lợi tức <span class="required-field"> * </span> </label>
+                <p-dropdown 
+                    optionLabel="name" optionValue="code" [autoDisplayFirst]="true"
+                    appendTo="body" [options]="PolicyTempConst.interestType"
+                    [(ngModel)]="policyDetail.interestType"
+                    (onChange)="changeInterestType($event.value)">
+                </p-dropdown>
+            </div>
+        </div>
+        <div class="col-12 md:col-3">
+            <div class="field">
+                <label htmlFor="interestPeriodQuantity">Số kỳ lợi tức <span class="required-field" *ngIf="policyDetail.interestType == PolicyTempConst.INTEREST_TYPE_DINH_KY"> * </span> </label>
+                <p-inputNumber 
+                    id="interestPeriodQuantity" class="custom-input-disabled"
+                    [disabled]="policyDetail.interestType != PolicyTempConst.INTEREST_TYPE_DINH_KY"
+                    [(ngModel)]="policyDetail.interestPeriodQuantity">
+                </p-inputNumber>
+            </div>
+        </div>
+        <div class="col-12 md:col-3">
+            <div class="field">
+                <label htmlFor="interestPeriodType">Đơn vị <span class="required-field" *ngIf="policyDetail.interestType == PolicyTempConst.INTEREST_TYPE_DINH_KY"> * </span> </label>
+                <p-dropdown 
+                    optionLabel="name" optionValue="code" appendTo="body"
+                    class="custom-input-disabled" [autoDisplayFirst]="false"
+                    [disabled]="policyDetail.interestType != PolicyTempConst.INTEREST_TYPE_DINH_KY"
+                    [options]="PolicyDetailTemplateConst.interestPeriodType"
+                    [autoDisplayFirst]="false"
+                    [(ngModel)]="policyDetail.interestPeriodType">
+                </p-dropdown>
+            </div>
+        </div>
+        <div class="col-12 md:col-3">
+            <div class="field mb-0">
+                <label htmlFor="repeatFixedDate"> Ngày trả cố định </label>
+                <p-dropdown 
+                    class="b-disabled"
+                    appendTo="body" [options]="listRepeatFixedDate"
+                    optionValue="code" name="repeatFixedDate" optionLabel="name"
+                    [disabled]="policyDetail.interestType != PolicyTempConst.INTEREST_TYPE_NGAY_CO_DINH"
+                    [autoDisplayFirst]="false"
+                    [(ngModel)]="policyDetail.repeatFixedDate">
+                </p-dropdown>
+
+            </div>
+        </div>
+    </ng-container>
+</div>
+<div class="p-dialog-footer" style="width: 100%; position: fixed; left: 0; bottom: 0;">
+    <button pButton pRipple label="Hủy" icon="pi pi-times" class="p-button-text p-confirm-dialog-reject" (click)="close()"></button>
+    <button pButton pRipple label="Lưu" icon="pi pi-check" class="p-button-text p-confirm-dialog-approve" [disabled]="!validForm() || submitted" (click)="save()"></button>
+</div>
+
+         

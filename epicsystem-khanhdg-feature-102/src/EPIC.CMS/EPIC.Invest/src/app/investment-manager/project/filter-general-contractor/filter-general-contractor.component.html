@@ -1,0 +1,23 @@
+<div>
+    <div class="pb-3">
+        <input-search
+            [placeholder]="'Tìm kiếm...'"
+            [(keyword)]="page.keyword"
+            [width]="400"
+            (_onChange)="setPage()">
+        </input-search>
+    </div>
+    <e-table
+        [rows]="rows"
+        [(page)]="page"
+        [columns]="columns"
+        [isLoading]="isLoading"
+        [scrollHeightConst]="350"
+        [columnCacheName]="constructor.name"
+        [isShowIconFilter]="false"
+        [isShowPaginator]="false"
+        (_onPageChange)="setPage($event)">
+    </e-table>
+</div>
+
+

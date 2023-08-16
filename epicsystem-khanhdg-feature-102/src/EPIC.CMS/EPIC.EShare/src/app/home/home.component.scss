@@ -1,0 +1,44 @@
+::ng-deep .b-calendar-home {
+    width: 100%;
+    .p-datepicker {
+        width: 100% !important;
+        border: none;
+        .p-datepicker-header {
+            border-bottom: none;
+        }
+        .p-datepicker-calendar-container {
+            table {
+                thead {
+                    th {
+                        tr {
+                            th {
+                                padding: 0;
+                            }
+                        }
+                    }
+                }
+                tbody {
+                    tr {
+                        td {
+                            padding: 0;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.b-nav-right {
+    border-left: 1px solid #F6F6F6;
+    border-bottom: 1px solid #F6F6F6;
+    border-radius: 8px;
+}
+
+::ng-deep .pcalendarHome {
+    span{
+        input{
+            background: rgba(0, 0, 0, 0.02);
+        }
+    }
+}

@@ -1,0 +1,890 @@
+{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/api/users/{urlPath}",
+      "UpstreamPathTemplate": "/api/users/{urlPath}",
+      "UpstreamHttpMethod": [
+        "Get",
+        "Post",
+        "Put",
+        "Delete"
+      ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      },
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5001
+        }
+      ],
+      "Key": "IdentityServer",
+      "SwaggerKey": "IdentityServer"
+    },
+    {
+      "DownstreamPathTemplate": "/connect/{urlPath}",
+      "UpstreamPathTemplate": "/connect/{urlPath}",
+      "UpstreamHttpMethod": [
+        "Get",
+        "Post"
+      ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      },
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5001
+        }
+      ],
+      "Key": "IdentityServer.Token"
+    },
+    {
+      "DownstreamPathTemplate": "/health",
+      "UpstreamPathTemplate": "/identity/health",
+      "UpstreamHttpMethod": [
+        "Get",
+        "Post",
+        "Put",
+        "Delete"
+      ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      },
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5001
+        }
+      ],
+      "Key": "IdentityHealth"
+    },
+    {
+      "DownstreamPathTemplate": "/api/bond/{urlPath}",
+      "UpstreamPathTemplate": "/api/bond/{urlPath}",
+      "UpstreamHttpMethod": [
+        "Get",
+        "Post",
+        "Put",
+        "Delete"
+      ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      },
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5002
+        }
+      ],
+      "Key": "BondAPI",
+      "SwaggerKey": "BondAPI"
+    },
+    {
+      "DownstreamPathTemplate": "/api/asset-manager/{urlPath}",
+      "UpstreamPathTemplate": "/api/asset-manager/{urlPath}",
+      "UpstreamHttpMethod": [
+        "Get",
+        "Post",
+        "Put",
+        "Delete"
+      ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      },
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5002
+        }
+      ],
+      "Key": "AssetManagerAPI",
+      "SwaggerKey": "AssetManagerAPI"
+    },
+    {
+      "DownstreamPathTemplate": "/health",
+      "UpstreamPathTemplate": "/bond/health",
+      "UpstreamHttpMethod": [
+        "Get",
+        "Post",
+        "Put",
+        "Delete"
+      ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      },
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5002
+        }
+      ],
+      "Key": "BondHealth"
+    },
+    {
+      "DownstreamPathTemplate": "/api/payment/{urlPath}",
+      "UpstreamPathTemplate": "/api/payment/{urlPath}",
+      "UpstreamHttpMethod": [
+        "Get",
+        "Post",
+        "Put",
+        "Delete"
+      ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      },
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5004
+        }
+      ],
+      "Key": "PaymentAPI",
+      "SwaggerKey": "PaymentAPI"
+    },
+    {
+      "DownstreamPathTemplate": "/callback/pvcb/{urlPath}",
+      "UpstreamPathTemplate": "/callback/pvcb/{urlPath}",
+      "UpstreamHttpMethod": [
+        "Get",
+        "Post",
+        "Put",
+        "Delete"
+      ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      },
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5004
+        }
+      ],
+      "Key": "PaymentAPIPvcombank"
+    },
+    {
+      "DownstreamPathTemplate": "/health",
+      "UpstreamPathTemplate": "/payment/health",
+      "UpstreamHttpMethod": [
+        "Get"
+      ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      },
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5004
+        }
+      ],
+      "Key": "PaymentHealth"
+    },
+    {
+      "DownstreamPathTemplate": "/api/tools-windows/{urlPath}",
+      "UpstreamPathTemplate": "/api/tools-windows/{urlPath}",
+      "UpstreamHttpMethod": [
+        "Get",
+        "Post",
+        "Put",
+        "Delete"
+      ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      },
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5005
+        }
+      ],
+      "Key": "ToolsWindowsAPI"
+    },
+    {
+      "DownstreamPathTemplate": "/health",
+      "UpstreamPathTemplate": "/tools-windows/health",
+      "UpstreamHttpMethod": [
+        "Get"
+      ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      },
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5005
+        }
+      ],
+      "Key": "ToolsWindowsHealth"
+    },
+    {
+      "DownstreamPathTemplate": "/api/file/{urlPath}",
+      "UpstreamPathTemplate": "/api/file/{urlPath}",
+      "UpstreamHttpMethod": [
+        "Get",
+        "Post",
+        "Put",
+        "Delete"
+      ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      },
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5006
+        }
+      ],
+      "Key": "FileAPI",
+      "SwaggerKey": "FileAPI"
+    },
+    {
+      "DownstreamPathTemplate": "/health",
+      "UpstreamPathTemplate": "/file/health",
+      "UpstreamHttpMethod": [
+        "Get"
+      ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      },
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5006
+        }
+      ],
+      "Key": "ImageHealth"
+    },
+    {
+      "DownstreamPathTemplate": "/api/core/{urlPath}",
+      "UpstreamPathTemplate": "/api/core/{urlPath}",
+      "UpstreamHttpMethod": [
+        "Get",
+        "Post",
+        "Put",
+        "Delete"
+      ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      },
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5007
+        }
+      ],
+      "Key": "CoreAPI",
+      "SwaggerKey": "CoreAPI"
+    },
+    {
+      "DownstreamPathTemplate": "/health",
+      "UpstreamPathTemplate": "/core/health",
+      "UpstreamHttpMethod": [
+        "Get"
+      ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      },
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5007
+        }
+      ],
+      "Key": "CoreHealth"
+    },
+    {
+      "DownstreamPathTemplate": "/api/invest/{urlPath}",
+      "UpstreamPathTemplate": "/api/invest/{urlPath}",
+      "UpstreamHttpMethod": [
+        "Get",
+        "Post",
+        "Put",
+        "Delete"
+      ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      },
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5008
+        }
+      ],
+      "Key": "InvestAPI",
+      "SwaggerKey": "InvestAPI"
+    },
+    {
+      "DownstreamPathTemplate": "/health",
+      "UpstreamPathTemplate": "/invest/health",
+      "UpstreamHttpMethod": [
+        "Get"
+      ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      },
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5008
+        }
+      ],
+      "Key": "InvestHealth"
+    },
+    {
+      "DownstreamPathTemplate": "/api/rocketchat/{urlPath}",
+      "UpstreamPathTemplate": "/api/rocketchat/{urlPath}",
+      "UpstreamHttpMethod": [
+        "Get",
+        "Post",
+        "Put",
+        "Delete"
+      ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      },
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5009
+        }
+      ],
+      "Key": "RocketchatAPI"
+    },
+    {
+      "DownstreamPathTemplate": "/health",
+      "UpstreamPathTemplate": "/rocketchat/health",
+      "UpstreamHttpMethod": [
+        "Get"
+      ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      },
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5009
+        }
+      ],
+      "Key": "RocketchatHealth"
+    },
+    {
+      "DownstreamPathTemplate": "/v1/{urlPath}",
+      "UpstreamPathTemplate": "/api/media/{urlPath}",
+      "UpstreamHttpMethod": [
+        "Get",
+        "Post",
+        "Put",
+        "Delete",
+        "Patch"
+      ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      },
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 3000
+        }
+      ],
+      "Key": "Media"
+    },
+    {
+      "DownstreamPathTemplate": "/api/real-estate/{urlPath}",
+      "UpstreamPathTemplate": "/api/real-estate/{urlPath}",
+      "UpstreamHttpMethod": [
+        "Get",
+        "Post",
+        "Put",
+        "Delete"
+      ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      },
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5010
+        }
+      ],
+      "Key": "RealEstateAPI",
+      "SwaggerKey": "RealEstateAPI"
+    },
+    {
+      "DownstreamPathTemplate": "/health",
+      "UpstreamPathTemplate": "/real-estate/health",
+      "UpstreamHttpMethod": [
+        "Get"
+      ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      },
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5010
+        }
+      ],
+      "Key": "RealEstateHealth"
+    },
+    {
+      "DownstreamPathTemplate": "/hub/real-estate/{urlPath}",
+      "UpstreamPathTemplate": "/hub/real-estate/{urlPath}",
+      "UpstreamHttpMethod": [
+        "Get",
+        "Post",
+        "Put",
+        "Delete",
+        "OPTIONS"
+      ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      },
+      "DownstreamScheme": "ws",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5010
+        }
+      ],
+      "Key": "RealEstateSignalR"
+    },
+    {
+      "DownstreamPathTemplate": "/api/shared/{urlPath}",
+      "UpstreamPathTemplate": "/api/shared/{urlPath}",
+      "UpstreamHttpMethod": [
+        "Get",
+        "Post",
+        "Put",
+        "Delete"
+      ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      },
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5011
+        }
+      ],
+      "Key": "SharedAPI",
+      "SwaggerKey": "SharedAPI"
+    },
+    {
+      "DownstreamPathTemplate": "/health",
+      "UpstreamPathTemplate": "/shared/health",
+      "UpstreamHttpMethod": [
+        "Get"
+      ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      },
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5011
+        }
+      ],
+      "Key": "SharedHealth"
+    },
+    {
+      "DownstreamPathTemplate": "/hangfire",
+      "UpstreamPathTemplate": "/hangfire",
+      "UpstreamHttpMethod": [
+        "Get",
+        "Post",
+        "Put",
+        "Delete"
+      ],
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5011
+        }
+      ],
+      "Key": "Hangfire-Dashboard"
+    },
+    {
+      "DownstreamPathTemplate": "/hangfire/{urlPath}",
+      "UpstreamPathTemplate": "/hangfire/{urlPath}",
+      "UpstreamHttpMethod": [
+        "Get",
+        "Post",
+        "Put",
+        "Delete"
+      ],
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5011
+        }
+      ],
+      "Key": "Hangfire"
+    },
+    {
+      "DownstreamPathTemplate": "/api/company-shares/{urlPath}",
+      "UpstreamPathTemplate": "/api/company-shares/{urlPath}",
+      "UpstreamHttpMethod": [
+        "Get",
+        "Post",
+        "Put",
+        "Delete"
+      ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      },
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5012
+        }
+      ],
+      "Key": "CompanySharesAPI",
+      "SwaggerKey": "CompanySharesAPI"
+    },
+    {
+      "DownstreamPathTemplate": "/health",
+      "UpstreamPathTemplate": "/company-shares/health",
+      "UpstreamHttpMethod": [
+        "Get"
+      ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      },
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5012
+        }
+      ],
+      "Key": "CompanySharesHealth"
+    },
+    {
+      "DownstreamPathTemplate": "/api/garner/{urlPath}",
+      "UpstreamPathTemplate": "/api/garner/{urlPath}",
+      "UpstreamHttpMethod": [
+        "Get",
+        "Post",
+        "Put",
+        "Delete"
+      ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      },
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5013
+        }
+      ],
+      "Key": "GarnerAPI",
+      "SwaggerKey": "GarnerAPI"
+    },
+    {
+      "DownstreamPathTemplate": "/health",
+      "UpstreamPathTemplate": "/garner/health",
+      "UpstreamHttpMethod": [
+        "Get"
+      ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      },
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5013
+        }
+      ],
+      "Key": "GarnerHealth"
+    },
+    {
+      "DownstreamPathTemplate": "/api/loyalty/{urlPath}",
+      "UpstreamPathTemplate": "/api/loyalty/{urlPath}",
+      "UpstreamHttpMethod": [
+        "Get",
+        "Post",
+        "Put",
+        "Delete"
+      ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      },
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5014
+        }
+      ],
+      "Key": "LoyaltyAPI",
+      "SwaggerKey": "LoyaltyAPI"
+    },
+    {
+      "DownstreamPathTemplate": "/health",
+      "UpstreamPathTemplate": "/loyalty/health",
+      "UpstreamHttpMethod": [
+        "Get"
+      ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      },
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5014
+        }
+      ],
+      "Key": "LoyaltyHealth"
+    },
+    {
+      "DownstreamPathTemplate": "/api/event/{urlPath}",
+      "UpstreamPathTemplate": "/api/event/{urlPath}",
+      "UpstreamHttpMethod": [
+        "Get",
+        "Post",
+        "Put",
+        "Delete"
+      ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      },
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5015
+        }
+      ],
+      "Key": "EventAPI",
+      "SwaggerKey": "EventAPI"
+    },
+    {
+      "DownstreamPathTemplate": "/health",
+      "UpstreamPathTemplate": "/event/health",
+      "UpstreamHttpMethod": [
+        "Get"
+      ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      },
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5015
+        }
+      ],
+      "Key": "EventHealth"
+    },
+    {
+      "DownstreamPathTemplate": "/hub/event",
+      "UpstreamPathTemplate": "/hub/event",
+      "UpstreamHttpMethod": [
+        "Get",
+        "Post",
+        "Put",
+        "Delete",
+        "OPTIONS"
+      ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      },
+      "DownstreamScheme": "ws",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5015
+        }
+      ],
+      "Key": "EventSignalR"
+    }
+  ],
+  "SwaggerEndPoints": [
+    {
+      "Key": "IdentityServer",
+      "TransformByOcelotConfig": false,
+      "Config": [
+        {
+          "Name": "IdentityServer",
+          "Version": "v1",
+          "Url": "http://localhost:5001/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "BondAPI",
+      "TransformByOcelotConfig": false,
+      "Config": [
+        {
+          "Name": "BondAPI",
+          "Version": "v1",
+          "Url": "http://localhost:5002/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "AssetManagerAPI",
+      "TransformByOcelotConfig": false,
+      "Config": [
+        {
+          "Name": "AssetManagerAPI",
+          "Version": "v1",
+          "Url": "http://localhost:5002/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "PaymentAPI",
+      "TransformByOcelotConfig": false,
+      "Config": [
+        {
+          "Name": "PaymentAPI",
+          "Version": "v1",
+          "Url": "http://localhost:5004/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "FileAPI",
+      "TransformByOcelotConfig": false,
+      "Config": [
+        {
+          "Name": "FileAPI",
+          "Version": "v1",
+          "Url": "http://localhost:5006/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "CoreAPI",
+      "TransformByOcelotConfig": false,
+      "Config": [
+        {
+          "Name": "CoreAPI",
+          "Version": "v1",
+          "Url": "http://localhost:5007/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "InvestAPI",
+      "TransformByOcelotConfig": false,
+      "Config": [
+        {
+          "Name": "InvestAPI",
+          "Version": "v1",
+          "Url": "http://localhost:5008/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "RocketChatAPI",
+      "TransformByOcelotConfig": false,
+      "Config": [
+        {
+          "Name": "RocketChatAPI",
+          "Version": "v1",
+          "Url": "http://localhost:5009/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "RealEstateAPI",
+      "TransformByOcelotConfig": false,
+      "Config": [
+        {
+          "Name": "RealEstateAPI",
+          "Version": "v1",
+          "Url": "http://localhost:5010/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "SharedAPI",
+      "TransformByOcelotConfig": false,
+      "Config": [
+        {
+          "Name": "SharedAPI",
+          "Version": "v1",
+          "Url": "http://localhost:5011/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "CompanySharesAPI",
+      "TransformByOcelotConfig": false,
+      "Config": [
+        {
+          "Name": "CompanySharesAPI",
+          "Version": "v1",
+          "Url": "http://localhost:5012/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "GarnerAPI",
+      "TransformByOcelotConfig": false,
+      "Config": [
+        {
+          "Name": "Garner",
+          "Version": "v1",
+          "Url": "http://localhost:5013/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "LoyaltyAPI",
+      "TransformByOcelotConfig": false,
+      "Config": [
+        {
+          "Name": "Loyal",
+          "Version": "v1",
+          "Url": "http://localhost:5014/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "EventAPI",
+      "TransformByOcelotConfig": false,
+      "Config": [
+        {
+          "Name": "Event",
+          "Version": "v1",
+          "Url": "http://localhost:5015/swagger/v1/swagger.json"
+        }
+      ]
+    }
+  ],
+  "Aggregates": [
+  ]
+}

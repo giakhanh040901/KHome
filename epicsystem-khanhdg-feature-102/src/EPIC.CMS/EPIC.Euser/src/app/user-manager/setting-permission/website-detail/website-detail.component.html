@@ -1,0 +1,19 @@
+<p-dialog [(visible)]="modalDialogPermissionDetail" (onHide)="hideDialog()" [header]="'Phân quyền ' + params?.permissionWeb?.name" [style]="{width: '450px', 'max-height': '100%', height: '100%'}" selectable="false" [modal]="true" class="p-fluid" styleClass="b-permission-dialog" position="right" [draggable]="false" [resizable]="false">
+	<ng-template pTemplate="content">
+		<div class="card">
+            <app-loading-page *ngIf="isLoading"></app-loading-page>
+			<p-tree 
+				*ngIf="!isLoading || (isLoading && submitted)"
+				styleClass="permission-tree pt-0 {{ isLoading ? 'b-loading' : ''}}"
+				[value]="permissionsTree" selectionMode="checkbox" 
+				[(selection)]="selecteds" 
+				(onNodeSelect)="selectedNote($event.node)"
+				(onNodeUnselect)="unSelectedNote($event.node)">
+			</p-tree>
+		</div>
+	</ng-template>
+	<ng-template pTemplate="footer">
+        <button pButton pRipple label="Hủy" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+        <button pButton pRipple label="Lưu" icon="pi pi-check" class="p-button-text" [disabled]="submitted" (click)="save()"></button>
+    </ng-template>
+</p-dialog>

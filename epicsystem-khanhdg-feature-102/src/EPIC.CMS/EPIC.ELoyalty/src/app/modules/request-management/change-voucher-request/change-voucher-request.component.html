@@ -1,0 +1,58 @@
+<div *ngIf="isGranted([this.PermissionLoyaltyConst.Loyalty_YeuCauDoiVoucher_DanhSach])" class="grid ml-0 mr-0 mt-0 h-full">
+  <div class="col-12 h-full px-4">
+    <div #divHeader class="flex b-header justify-content-between">
+      <div class="b-title">
+        <h4>Quản lý yêu cầu đổi voucher</h4>
+      </div>
+      <div class="flex b-action">
+        <form-button 
+          *ngIf="isGranted([this.PermissionLoyaltyConst.Loyalty_YeuCauDoiVoucher_ThemMoi])" 
+          [icon]="'pi pi-plus'" [label]="'Thêm mới'" (_onClick)="create($event)">
+        </form-button>
+      </div>
+    </div>
+    <form-table
+      [style.height]="'calc(100% - ' + divHeader.getBoundingClientRect().height + 'px)'"
+      class="block auto-height-form-table"
+      [columns]="selectedColumns"
+      [dataSource]="dataSource"
+      [isLoading]="isLoading"
+      [scrollHeight]="'calc(100% - 2rem - ' + divFilter.getBoundingClientRect().height + 'px)'"
+      [listAction]="listAction"
+      [page]="page"
+      (_changePage)="setPage($event)"
+      (_setColumn)="setColumn($event)"
+    >
+      <ng-container filter>
+        <div #divFilter class="flex flex-column sm:flex-row w-full">
+          <form-input
+            class="col-2 pl-0"
+            [floatLabel]="true"
+            [placeholder]="'Nhập SĐT/ Tên KH'"
+            [label]="'Tìm kiếm'"
+            [(ngModelValue)]="filter.keyword"
+            (_onChange)="changeFilter($event)"
+          ></form-input>
+          <form-dropdown
+            class="col-2"
+            [floatLabel]="true"
+            [options]="listStatus"
+            [(ngModelValue)]="filter.status"
+            [label]="'Trạng thái'"
+            (_onChange)="changeFilter($event)"
+          ></form-dropdown>
+          <form-input-calendar
+            class="col-2"
+            [floatLabel]="true"
+            [showButtonBar]="true"
+            [(ngModelValue)]="filter.date"
+            [readonlyInput]="true"
+            [placeholder]="'dd/mm/yyyy'"
+            [label]="'Chọn ngày'"
+            (_onChange)="changeFilter($event)"
+          ></form-input-calendar>
+        </div>
+      </ng-container>
+    </form-table>
+  </div>
+</div>

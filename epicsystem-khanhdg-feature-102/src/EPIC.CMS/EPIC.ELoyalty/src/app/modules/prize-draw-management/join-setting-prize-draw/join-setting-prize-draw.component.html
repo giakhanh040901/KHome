@@ -1,0 +1,57 @@
+<e-loading *ngIf="isLoading"></e-loading>
+<div #divHeader class="card">
+    <h5 class="mb-0"> Cài đặt tham gia </h5>
+    <p-tabView styleClass="custom-tabview" [(activeIndex)]="activeIndex" (onChange)="changeTab($event)">
+        <p-tabPanel [header]="'danhSachThamGia'">
+            <ng-template pTemplate="header">
+                <span> Danh sách tham gia </span>
+            </ng-template>
+            <ng-container>
+                <form-table
+                [style.height]="'100%'"
+                class="block auto-height-form-table"
+                [columns]="selectedColumns"
+                [dataSource]="rows"
+                [isLoading]="isLoading"
+                [scrollHeight]="(screenHeight*0.50)+'px'"
+                [(selectedItems)]="selectedItems"
+                [listAction]="listAction"
+                [page]="page"
+                (_changePage)="setPage($event)"
+              >
+                <ng-container filter>
+                    <div #divFilter class="flex flex-column sm:flex-row w-full justify-content-between">
+                        <div class="flex flex-column sm:flex-row w-full">
+                            <form-input
+                                class="col-4 pl-0"
+                                [floatLabel]="true"
+                                [placeholder]="'Nhập tên voucher/SĐT'"
+                                [label]="'Tìm kiếm'"
+                                [(ngModelValue)]="filter.keyword"
+                                (_onChange)="setPage()"
+                            ></form-input>
+                            <form-dropdown
+                                class="col-3"
+                                [floatLabel]="true"
+                                [options]="PrizeDrawManagement.listJoinStatus"
+                                [(ngModelValue)]="filter.isJoin"
+                                [label]="'Trạng thái'"
+                                (_onChange)="setPage()"
+                            ></form-dropdown>
+                        </div>
+
+                        <div class="col-3 flex b-action justify-content-end">
+                            <p-button 
+                                *ngIf="selectedItems?.length" 
+                                label="Xóa" icon="pi pi-trash" styleClass="p-button-danger mr-3" 
+                                (click)="deleteInvestor(selectedItems)">
+                            </p-button>
+                            <form-button [icon]="'pi pi-plus'" [label]="'Thêm mới'" (_onClick)="create()"></form-button>
+                        </div>
+                    </div>
+                </ng-container>
+              </form-table>
+            </ng-container>
+        </p-tabPanel>
+    </p-tabView>
+</div>

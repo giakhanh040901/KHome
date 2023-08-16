@@ -1,0 +1,99 @@
+<div>
+    <p-toast></p-toast>
+    <p-confirmDialog [style]="{width: 'auto'}" [baseZIndex]="10000"></p-confirmDialog>
+    <div class="wrapper-page-header" [id]="idHeader" #pageHeader>
+        <div class="b-header"> 
+            <div class="grid">
+                <div class="col-12">
+                    <div class="flex justify-content-end flex-column sm:flex-row pb-3 b-actions">
+                        <p-button
+                            *ngIf="!isPartner && orderDetail.source == OrderConst.SOURCE_OFFLINE && isGranted([PermissionInvestConst.InvestHDPP_SoLenh_TTCT_HSKHDangKy_ChuyenOnline])"
+                            styleClass="p-button-sm custom-button"
+                            label="Chuyển online" 
+                            (click)="activeOnline()">
+                        </p-button> 
+                        <p-button
+                            *ngIf="!isPartner && isGranted([PermissionInvestConst.InvestHDPP_SoLenh_TTCT_HSKHDangKy_CapNhatHS])"
+                            styleClass="p-button-sm custom-button"
+                            label="Cập nhật hồ sơ" 
+                            (click)="updateOrderContract()">
+                        </p-button> 
+                        <p-button
+                            *ngIf="!isPartner && !isSign && orderDetail.source == OrderConst.SOURCE_ONLINE && ([OrderConst.DANG_DAU_TU, OrderConst.CHO_DUYET_HOP_DONG].includes(orderDetail.status)) && isGranted([PermissionInvestConst.InvestHDPP_SoLenh_TTCT_HSKHDangKy_KyDienTu])"
+                            styleClass="p-button-sm custom-button"
+                            label="Ký điện tử" 
+                            (click)="signOrderContract()">
+                        </p-button>
+                        <p-button
+                            *ngIf="!isPartner && (orderDetail.status == OrderConst.DANG_DAU_TU) && isGranted([PermissionInvestConst.InvestHDPP_SoLenh_TTCT_HSKHDangKy_GuiThongBao])" 
+                            label="Gửi thông báo" 
+                            styleClass="p-button-sm custom-button" 
+                            (click)="resentNotify()">
+                        </p-button> 
+                        <p-button
+                            *ngIf="!isPartner && (orderDetail.status == OrderConst.DANG_DAU_TU) && isGranted([PermissionInvestConst.InvestHDPP_SoLenh_TTCT_HSKHDangKy_DuyetHoSoOrHuy])"
+                            styleClass="p-button-sm custom-button"
+                            label="Hủy duyệt" 
+                            (click)="cancel()">
+                        </p-button>
+                        <p-button
+                            *ngIf="!isPartner && (orderDetail.status == OrderConst.CHO_DUYET_HOP_DONG) && isGranted([PermissionInvestConst.InvestHDPP_SoLenh_TTCT_HSKHDangKy_DuyetHoSoOrHuy])"
+                            styleClass="p-button-sm custom-button"
+                            label="Duyệt hồ sơ" 
+                            (click)="approve()">
+                        </p-button> 
+                        <p-button
+                            *ngIf="!isPartner && isSign && isGranted([PermissionInvestConst.InvestHDPP_SoLenh_TTCT_HSKHDangKy_HuyKyDienTu])"
+                            styleClass="p-button-sm custom-button"
+                            label="Hủy ký điện tử" 
+                            (click)="cancelSign()">
+                        </p-button> 
+                        <p-button
+                            *ngIf="!isPartner && (orderDetail.status == OrderConst.DANG_DAU_TU) && isGranted([PermissionInvestConst.InvestHDPP_SoLenh_TTCT_HSKHDangKy_NhanHDCung])"
+                            styleClass="p-button-sm custom-button"
+                            label="Nhận hợp đồng bản cứng" 
+                            (click)="takeHardContract()">
+                        </p-button> 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <e-table
+        [rows]="rows"
+        [(page)]="page"
+        [columns]="columns"
+        [isLoading]="isLoading"
+        [tabContentHeight]="contentHeight"
+        [idHeader]="idHeader"
+        [columnCacheName]="constructor.name"
+        (_onPageChange)="setPage($event)">
+    </e-table>
+    <p-dialog [(visible)]="modalDialog" [style]="{width: '40%'}" header="Lưu trữ hợp đồng" [modal]="true" class="p-fluid">
+        <ng-template pTemplate="content">
+            <div class="grid formgrid">
+                <div class="field col-12">
+                    <p-fileUpload 
+                        name="demo[]" accept=".pdf" [customUpload]="true" class="custom-file-upload"
+                        chooseIcon="pi pi-cloud-upload" 
+                        (uploadHandler)="myUploader($event)"
+                        [auto]="true" 
+                        chooseLabel="Chọn file upload">
+                    </p-fileUpload>
+                </div>
+                <div class="field col-12">
+                        <input placeholder="Đường dẫn file" type="text" id="fileScanUrl" name="fileScanUrl" disabled pInputText [value]="orderContractFile.fileScanUrl || ''" required autofocus/>
+                        <!-- <label for="fileScanUrl">Đường dẫn file</label> -->
+                </div>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="footer">
+            <button pButton pRipple label="Hủy" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+            <button pButton pRipple label="Lưu" icon="pi pi-check" class="p-button-text" [disabled]="!validForm() || submitted" (click)="saveOrderContractFile()"></button>
+        </ng-template>
+    </p-dialog>
+    <!-- Xem hồ sơ tải lên -->
+    <app-form-view-pdf-file (onClose)="hideDialog()" [modalDialogPDF]="modalDialogPDF" [urlfilePDF]="urlfilePDF"></app-form-view-pdf-file>
+</div>
+
+

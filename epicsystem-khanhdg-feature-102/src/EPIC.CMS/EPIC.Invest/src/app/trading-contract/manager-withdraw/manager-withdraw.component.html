@@ -1,0 +1,140 @@
+<div class="e-page">
+    <p-confirmDialog [style]="{width: 'auto', 'min-width': '20vw'}" [baseZIndex]="10000"></p-confirmDialog>
+    <p-toast></p-toast>
+    <!-- GIỮ CẤU TRÚC PAGE VÀ CÁC CLASS, ID -->
+        <!-- PAGE HEADER CONTENT -->
+        <!-- TABLE -->
+    <!--  -->
+    <div class="wrapper-page-header" #pageHeader id="wrapper-page-header" id="page-header">
+        <div class="b-header">
+            <div class="grid">
+                <div class="col-12 md:col-5 b-title">
+                    <h4 style="display:inline"> Danh sách yêu cầu rút tiền </h4>
+                </div>
+                <div class="col-12 md:col-7 b-actions">
+                    <p-button
+                        *ngIf="!StatusPaymentBankConst.END.includes(dataFilter.status)"
+                        (onClick)="cancelApprove()"
+                        label="Hủy yêu cầu" icon="pi pi-book" iconPos="right" 
+                        [disabled]="(!dataTableEmit.selectedItems?.length || (dataTableEmit.selectedItems?.length && submitted))">
+                    </p-button>
+                    <!--  -->
+                    <p-button
+                        *ngIf="!StatusPaymentBankConst.END.includes(dataFilter.status) && isGranted([PermissionInvestConst.InvestHDPP_XLRT_DuyetChiThuCong])"
+                        (onClick)="approveOffline()"
+                        label="Chi tiền thủ công" icon="pi pi-book" iconPos="right" 
+                        [disabled]="(!dataTableEmit.selectedItems?.length || (dataTableEmit.selectedItems?.length && submitted))">
+                    </p-button>
+                    <p-button
+                        *ngIf="dataFilter.methodInterest == DistributionConst.CO_CHI_TIEN && !StatusPaymentBankConst.END.includes(dataFilter.status) && isGranted([PermissionInvestConst.InvestHDPP_XLRT_DuyetChiTuDong])"
+                        (onClick)="createList()" 
+                        label="Chi tiền tự động" icon="pi pi-book" iconPos="right" 
+                        [disabled]="(!dataTableEmit.selectedItems?.length || (dataTableEmit.selectedItems?.length && submitted))">
+                    </p-button>
+                </div>
+            </div>
+        </div>
+        <!--  -->
+        <div id="filter-table">
+            <ng-container *ngIf="dataTableEmit?.isShowFilter">
+                <div class="flex wrapper-line-filter">
+                    <div class="b-wr-20 wrapper-filter">
+                        <input-search
+                            [class]="'input-filter'"
+                            [placeholder]="OrderConst.getInfoFieldFilter(dataFilter.searchField, 'placeholder')"
+                            [(keyword)]="dataFilter.keyword"
+                            (_onChange)="setPage()">
+                        </input-search>
+                    </div>
+                    <div class="b-wr-15 wrapper-filter">
+                        <span class="p-float-label">
+                            <p-dropdown
+                                styleClass="input-filter" 
+                                [autoDisplayFirst]="true" 
+                                [options]="OrderConst.fieldFilters" name="searchField" optionLabel="name" optionValue="field"
+                                [(ngModel)]="dataFilter.searchField" 
+                                (onChange)="!!dataFilter.keyword?.trim() && setPage()">
+                            </p-dropdown>
+                            <label class="font-normal" for="searchField">Tìm kiếm theo</label>
+                        </span>
+                    </div>
+                    <div class="b-wr-14 wrapper-filter">
+                        <span class="p-float-label">
+                            <p-dropdown
+                                styleClass="input-filter"
+                                [showClear]="true" placeholder="Tất cả" 
+                                [options]="StatusPaymentBankConst.list" optionLabel="name" optionValue="code"
+                                [(ngModel)]="dataFilter.status"    
+                                (onChange)="changeStatus($event.value)">
+                                </p-dropdown>   
+                            <label class="font-normal">Trạng thái</label>
+                        </span>
+                    </div>
+                    <div class="b-wr-12 wrapper-filter">
+                        <span class="p-float-label">
+                            <p-dropdown
+                                styleClass="input-filter"
+                                [showClear]="true" placeholder="Tất cả" 
+                                [options]="DistributionConst.methodInterests" optionLabel="name" optionValue="code"
+                                [(ngModel)]="dataFilter.methodInterest"
+                                (onChange)="setPage()">
+                                </p-dropdown>   
+                            <label class="font-normal">Loại chi trả</label>
+                        </span>
+                    </div>
+                    <div class="b-wr-12 wrapper-filter">
+                        <span class="p-float-label">
+                            <p-calendar
+                                styleClass="input-filter"
+                                placeholder="dd/mm/yyyy" appendTo="body" dateFormat="dd/mm/yy" 
+                                [showButtonBar]="true" [showIcon]="true" [readonlyInput]="true" 
+                                [(ngModel)]="dataFilter.requestDate"
+                                (onSelect)="!!$event && setPage()" 
+                                (onClearClick)="setPage()">
+                            </p-calendar>   
+                            <label class="font-normal" for="dropdownStatus"> Ngày yêu cầu </label>
+                        </span>
+                    </div>
+                    <div class="b-wr-12 wrapper-filter">
+                        <span class="p-float-label">
+                            <p-calendar
+                                styleClass="input-filter"
+                                placeholder="dd/mm/yyyy" appendTo="body" dateFormat="dd/mm/yy" 
+                                [showButtonBar]="true" [showIcon]="true" [readonlyInput]="true" 
+                                [(ngModel)]="dataFilter.approveDate"
+                                (onSelect)="!!$event && setPage()" 
+                                (onClearClick)="setPage()">
+                            </p-calendar>   
+                            <label class="font-normal" for="dropdownStatus"> Ngày duyệt </label>
+                        </span>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+    <ng-container>
+        <e-table
+            [rows]="rows"
+            [(page)]="page"
+            [columns]="columns"
+            [dataKey]="'index'"
+            [isLoading]="isLoading"
+            [listAction]="listAction"
+            [columnCacheName]="constructor.name"
+            [(isShowFilter)]="dataTableEmit.isShowFilter"
+            [(selectedItems)]="dataTableEmit.selectedItems"
+            (_onChangeCheckbox)="onRowSelect()"
+            (_onPageChange)="setPage($event)"
+            (_onSort)="dataFilter.sortFields=$event; setPage()">
+        </e-table>
+    </ng-container>
+</div>
+
+
+
+
+
+
+
+
+

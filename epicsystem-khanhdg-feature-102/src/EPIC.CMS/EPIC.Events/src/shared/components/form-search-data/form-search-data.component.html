@@ -1,0 +1,39 @@
+<div [ngClass]="classContainer">
+  <div *ngIf="showTitle">
+    <h5 [ngClass]="'title-info ' + classTitle">{{ title }}</h5>
+  </div>
+  <div>
+    <div class="flex b-w-100" *ngIf="showHeader">
+      <form-tab-view [(activeIndex)]="activeIndex" [listTabPanel]="listTabPanel" (_onChange)="onChangeTabView($event)"> </form-tab-view>
+      <div class="custom-input-search mx-3">
+        <span class="block mt-2 md:mt-0 p-input-icon-left">
+          <i class="pi pi-search"></i>
+          <input
+            pInputText
+            type="text"
+            placeholder="Tìm kiếm..."
+            [(ngModel)]="keyword"
+            (input)="changeKeyword()"
+            (keyup)="onKeyUp($event)"
+            [disabled]="isDisabled"
+          />
+        </span>
+      </div>
+      <form-button
+        [icon]="'pi pi-search'"
+        [label]="'Tìm kiếm'"
+        (_onClick)="onClickSearch($event)"
+        [isDisabled]="isDisabled"
+      ></form-button>
+    </div>
+    <form-table
+      class="b-w-100"
+      [columns]="selectedColumns"
+      [dataSource]="dataSource"
+      [isLoading]="isLoading"
+      [scrollHeight]="'100px'"
+      [actionButtons]="listButtonTable"
+      [showPaginator]="false"
+    ></form-table>
+  </div>
+</div>

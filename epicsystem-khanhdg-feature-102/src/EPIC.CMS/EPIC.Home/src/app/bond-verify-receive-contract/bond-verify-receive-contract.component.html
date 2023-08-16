@@ -1,0 +1,98 @@
+<div class="login-content">
+    <p-toast></p-toast>
+    
+    <!-- MÀN HÌNH NHẬP SỐ ĐIỆN THOẠI -->
+    <div class="login-content-left open md:col-6 xs:col-12" *ngIf="!activeCode && !isVerify">
+        <div class="login-content-left-main">
+            <div class="login-title">
+                <div class="logo">
+                    <img src="../../assets/layout/images/logo.png" alt="">
+                </div>
+                <h4 class="mb-2">Xác nhận giao nhận hợp đồng</h4>
+                <p class="login-title-sub mb-4">
+                    Quý khách hàng vui lòng nhập số điện thoại : <span style="color:#000">{{verify?.phone}}</span>
+                </p>
+            </div>
+            <div class="login-form">
+                <div class="otp-code">
+                    <input pInputText id="phone" [(ngModel)]="phoneNumber" placeholder="Nhập số điện thoại..." inputmode="tel" type="tel" autocomplete="tel"/>
+                </div>
+                <div class="buttons">
+                    <button class="login-button mb-2" (click)="getPhoneNumber()"><span class="button-text">Tiếp tục</span></button>
+                    <div class="wrapper-support-info">
+                        <i class="pi pi-question-circle question-icon mr-2"></i>
+                        <span class="help-text">Cần hỗ trợ? Hotline 18006085</span>
+                    </div>
+                </div>
+            </div>
+            <div class="no-copy-right-center">
+                <p class="no-copy-right">
+                    Bản quyền thuộc EPIC @2022
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- MÀN HÌNH NHẬP OTP -->
+    <div class="login-content-left md:col-6 xs:col-12" *ngIf="activeCode && !isVerify">
+        <div class="login-content-left-main">           
+            <div class="login-title">
+                <div class="logo">
+                    <img src="../../assets/layout/images/logo.png" alt="">
+                </div>
+                <h4 class="mb-2">Xác nhận giao nhận hợp đồng</h4>
+                <p class="login-title-sub mb-4">
+                   Nhập mã otp đã gửi về số điện thoại : <span style="color:#000">{{verify?.phone}}</span>
+                </p>
+            </div>
+            <div class="login-form">
+                <input pInputText [(ngModel)]="otp" style="width: 100%; padding: 10px;" inputmode="tel" type="tel" autocomplete="tel" placeholder="Nhập mã OTP..."/>
+                <div class="login-handle">
+                    <div class="remember-and-forgetPass">
+                    <p class="remember_pass">Không nhận được mã OTP?<span style="text-decoration:underline;margin-left: 8px;cursor: pointer;color: #000;"  (click)="back()"> Gửi lại </span></p>
+                    </div>
+                </div>
+                <div class="buttons">
+                    <button class="login-button mb-2" (click)="getPhoneDeliveryCode()"><span class="button-text">Tiếp tục</span></button>
+                    <div class="wrapper-support-info">
+                        <i class="pi pi-question-circle question-icon mr-2"></i>
+                        <span class="help-text">Cần hỗ trợ? Hotline 18006085</span>
+                    </div>
+                </div>
+            </div>
+            <div class="no-copy-right-center">
+                <p class="no-copy-right">
+                    Bản quyền thuộc EPIC @2022
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- MÀN HÌNH SAU KHI NHẬP OTP THÀNH CÔNG -->
+    <div class="login-content-left open md:col-6 xs:col-12" *ngIf="isVerify">
+        <div class="login-content-left-main">
+            <div class="login-title">
+                <div class="logo text-center">
+                    <img src="../../assets/layout/images/logo.png" alt="">
+                </div>
+                <h4 class="mb-3 text-center">Hợp đồng giao nhận thành công!</h4>
+            </div>
+            <div class="login-form">
+                <div class="buttons">
+                    <div class="wrapper-support-info">
+                        <i class="pi pi-question-circle question-icon mr-2"></i>
+                        <span class="help-text">Cần hỗ trợ? Hotline 18006085</span>
+                    </div>
+                </div>
+            </div>
+            <div class="no-copy-right-center">
+                <p class="no-copy-right">
+                    Bản quyền thuộc EPIC @2022
+                </p>
+            </div>
+        </div>
+    </div>
+
+ </div>
+
+

@@ -1,0 +1,30 @@
+<div class="flex w-full relative">
+  <div class="col-6">
+    <form-dropdown
+      [label]="'Giá trị ' + (index + 1)"
+      [options]="listValueContractCode"
+      [isRequired]="true"
+      [(ngModelValue)]="dataSource.value"
+      [placeholder]="'Chọn giá trị'"
+      [isDisabled]="isDisabled"
+      (_onChange)="onChange($event)"
+    ></form-dropdown>
+  </div>
+  <div class="col-6">
+    <form-input
+      *ngIf="dataSource.value == SettingContractCode.KY_TU"
+      [label]="'Nhập ký tự'"
+      [isRequired]="true"
+      [(ngModelValue)]="dataSource.character"
+      [placeholder]="'Nhập ký tự'"
+      [isDisabled]="isDisabled"
+      (ngModelValueChange)="onChange($event)"
+    ></form-input>
+  </div>
+  <form-button
+    class="btn-remove"
+    [icon]="'pi pi-trash'"
+    [styleClassButton]="'p-button-danger p-button-text'"
+    (_onClick)="remove($event)"
+  ></form-button>
+</div>

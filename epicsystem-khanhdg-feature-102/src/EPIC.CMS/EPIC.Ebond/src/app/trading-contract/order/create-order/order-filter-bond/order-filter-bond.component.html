@@ -1,0 +1,183 @@
+
+<app-loading-page *ngIf="isLoadingPage"></app-loading-page>
+<p-card>
+    <ng-template pTemplate="content">
+            <ng-container>
+                <div class="{{ isLoadingPage ? 'b-loading' : '' }}">
+                    <h5 class="title-info mb-2">Thông tin trái phiếu</h5>
+                    <hr class="mt-0" style="border-width: 2px 0 0">
+                    <div class="p-fluid p-formgrid grid">
+                        <div class="pb-0 field col-12 md:col-6">
+                            <label class="title-info">Trái phiếu <span class="required-field"> * </span> </label>
+                            <p-dropdown 
+                                [options]="bondSecondarys" optionLabel="bondName" optionValue="bondSecondaryId"
+                                [autoDisplayFirst]="false" 
+                                [(ngModel)]="bondSecondaryInformation.bondSecondaryId" 
+                                (onChange)="changeBondSecondary($event.value)">
+                            </p-dropdown>
+                        </div>
+                        <div class="pb-0 field col-12 md:col-3">
+                            <label class="title-info">Tên trái phiếu</label>
+                            <input [disabled]="true" pInputText [value]="bondSecondaryInformation?.productBondInfo?.bondCode ?? null" class="custom-input-disabled"/>
+                        </div>
+                        <div class="pb-0 field col-12 md:col-3">
+                            <label class="title-info">Mã trái phiếu</label>
+                            <input [disabled]="true" pInputText [value]="bondSecondaryInformation?.productBondInfo?.bondName ?? null" class="custom-input-disabled"/>
+                        </div>
+                        <div class="pb-0 field col-12 md:col-3">
+                            <label class="title-info">Ngày phát hành</label>
+                            <input [disabled]="true" pInputText [value]="formatDate(bondSecondaryInformation?.openCellDate)" class="custom-input-disabled"/>
+                        </div>
+                        <div class="pb-0 field col-12 md:col-3">
+                            <label class="title-info">Số lượng nắm giữ</label>
+                            <input [disabled]="true" pInputText value="{{ utils.transformMoney(bondSecondaryInformation?.soLuongTraiPhieuNamGiu) }}" class="custom-input-disabled"/>
+                        </div>
+                        <div class="pb-0 field col-12 md:col-3">
+                            <label class="title-info">Số lượng còn lại</label>
+                            <input [disabled]="true" pInputText value="{{ utils.transformMoney(bondSecondaryInformation?.soLuongConLai) }}" class="custom-input-disabled"/>
+                        </div>
+                        <div class="pb-0 field col-12 md:col-3">
+                            <label class="title-info">Tổng giá trị</label>
+                            <input [disabled]="true" pInputText [value]=" utils.transformMoney(bondSecondaryInformation?.soLuongTraiPhieuNamGiu * bondSecondaryInformation?.productBondInfo?.parValue) ?? null" class="custom-input-disabled"/>
+                        </div>
+                    </div>
+                    <!--  -->
+                    <h5 class="title-info mb-2 mt-0">Chính sách lãi</h5>
+                    <hr class="mt-0" style="border-width: 2px 0 0">
+                    <div class="p-fluid p-formgrid grid">
+                        <div class="pb-0 field col-12 md:col-4">
+                            <label class="title-info">Chọn chính sách <span class="required-field"> * </span></label>
+                            <p-dropdown
+                                class="custom-input-disabled"
+                                optionLabel="name" optionValue="bondPolicyId" emptyMessage="Không có dữ liệu"
+                                [options]="policies" 
+                                [autoDisplayFirst]="false" [disabled]="!bondSecondaryInformation.bondSecondaryId"
+                                [(ngModel)]="bondSecondaryInformation.bondPolicyId" 
+                                (onChange)="changePolicy($event.value)">
+                            </p-dropdown>
+                        </div>
+                        <div class="pb-0 field col-12 md:col-2">
+                            <label class="title-info">Mã chính sách</label>
+                            <input pInputText value="{{ bondSecondaryInformation?.policyInfo?.code }}" [disabled]="true" class="custom-input-disabled"/>
+                        </div>
+                        <div class="pb-0 field col-12 md:col-2">
+                            <label class="title-info">Loại</label>
+                            <input pInputText value="{{ ProductPolicyConst.getTypeName(bondSecondaryInformation?.policyInfo?.type) }}" [disabled]="true" class="custom-input-disabled"/>
+                        </div>
+                        <div class="pb-0 field col-12 md:col-2">
+                            <label class="title-info">Số ngày được bán lại</label>
+                            <input pInputText value="{{ bondSecondaryInformation?.policyInfo?.soNgayDuocBanLai }}" [disabled]="true" class="custom-input-disabled"/>
+                        </div>
+                        <div class="pb-0 field col-12 md:col-2">
+                            <label class="title-info">Kỳ hạn (Ngày)</label>
+                            <input pInputText value="{{ bondSecondaryInformation?.policyInfo?.kyHan }}" [disabled]="true" class="custom-input-disabled"/>
+                        </div>
+                    </div>
+                    <!--  -->
+                    <h5 class="title-info mb-2 mt-0"> Kỳ hạn <span class="required-field"> * </span> </h5>
+                    <div class="p-fluid p-formgrid grid">
+                        <div class="pb-0 field col-12 md:col-4">
+                            <p-dropdown
+                                class="custom-input-disabled"
+                                optionLabel="name" optionValue="bondPolicyDetailId" emptyMessage="Không có dữ liệu"
+                                [options]="policyDetails" 
+                                [autoDisplayFirst]="false" [disabled]="!bondSecondaryInformation.bondPolicyId"
+                                (onChange)="setDueDate($event.value)"
+                                [(ngModel)]="bondSecondaryInformation.bondPolicyDetailId">
+                            </p-dropdown>
+                        </div>
+                      
+                    </div>
+                    <!--  -->
+                    <h5 class="title-info mb-2 mt-0"> Thông tin cần nhập </h5>
+                    <hr class="mt-0" style="border-width: 2px 0 0">
+                    <div class="p-fluid p-formgrid grid">
+                        <div class="pb-0 field col-12 md:col-2">
+                            <label class="title-info">Tổng số tiền <span class="required-field"> * </span> </label>
+                            <p-inputNumber 
+                                mode="decimal" (onInput)="countQuantity($event.value)"
+                                [(ngModel)]="bondSecondaryInformation.totalValue"
+                                locale="de-DE">
+                            </p-inputNumber>
+                        </div>
+                        <div class="pb-0 field col-12 md:col-2">
+                            <label class="title-info">Ngày đặt lệnh </label>
+                            <p-calendar
+                                inputId="buyDate" dateFormat="dd/mm/yy" locale="vi" appendTo="body" utc="true" placeholder="dd/mm/yy" class="custom-input-disabled"
+                                [(ngModel)]="bondSecondaryInformation.buyDate"
+                                [ngClass]="{'ng-invalid ng-dirty' : fieldErrors?.buyDate}" 
+                                (click)="resetValid('buyDate')"
+                                [showIcon]="true">
+                            </p-calendar>
+                        </div>
+                        <div class="pb-0 field col-12 md:col-2">
+                            <label class="title-info">Chi trả trái tức <span class="required-field"> * </span></label>
+                            <p-selectButton
+                                class="p-custom-select-button"
+                                optionLabel="name" optionValue="code" 
+                                [options]="OrderConst.interestTypes" 
+                                [(ngModel)]="bondSecondaryInformation.isInterest" >
+                            </p-selectButton>
+                        </div>
+                        <div class="pb-0 field col-12 md:col-6">
+                            
+                        </div>
+                        <div class="pb-0 field col-12 md:col-2">
+                            <label class="title-info"> Số lượng </label>
+                            <p-inputNumber 
+                                [disabled]="true" class="custom-input-disabled" mode="decimal" locale="de-DE" 
+                                [(ngModel)]="bondSecondaryInformation.orderQuantity">
+                            </p-inputNumber>
+                        </div>
+                        <div class="pb-0 field col-12 md:col-2">
+                            <label class="title-info">Đơn giá </label>
+                            <p-inputNumber
+                                [disabled]="true" class="custom-input-disabled" mode="decimal" locale="de-DE"
+                                [(ngModel)]="bondSecondaryInformation.orderPrice" [minFractionDigits]="3">
+                            </p-inputNumber>
+                        </div>
+                        
+                        <div class="pb-0 field col-12 md:col-2">
+                            <label class="title-info">Ngày đầu tư </label>
+                            <p-calendar
+                                class="custom-input-disabled"
+                                inputId="buyDate" dateFormat="dd/mm/yy" locale="vi" appendTo="body" utc="true" placeholder="dd/mm/yy"
+                                [(ngModel)]="bondSecondaryInformation.investDate" [disabled]="true"
+                                [ngClass]="{'ng-invalid ng-dirty' : fieldErrors?.buyDate}" 
+                                (click)="resetValid('buyDate')"
+                                [showIcon]="false">
+                            </p-calendar>
+                        </div>
+                        <!-- <div class="pb-0 field col-12 md:col-2">
+                            <label class="title-info">Ngày ký HĐ </label>
+                            <p-calendar
+                                class="custom-input-disabled"
+                                inputId="buyDate" dateFormat="dd/mm/yy" locale="vi" appendTo="body" utc="true" placeholder="dd/mm/yy"
+                                [(ngModel)]="bondSecondaryInformation.signContractDate" [disabled]="true"
+                                [ngClass]="{'ng-invalid ng-dirty' : fieldErrors?.buyDate}" 
+                                (click)="resetValid('buyDate')"
+                                [showIcon]="false">
+                            </p-calendar>
+                        </div> -->
+                        <div class="pb-0 field col-12 md:col-2">
+                            <label class="title-info">Ngày đáo hạn </label>
+                            <p-calendar
+                                class="custom-input-disabled"
+                                inputId="buyDate" dateFormat="dd/mm/yy" locale="vi" appendTo="body" utc="true" placeholder="dd/mm/yy" class="custom-input-disabled"
+                                [(ngModel)]="bondSecondaryInformation.dueDate" [disabled]="true"
+                                [ngClass]="{'ng-invalid ng-dirty' : fieldErrors?.buyDate}" 
+                                (click)="resetValid('buyDate')"
+                                [showIcon]="false">
+                            </p-calendar>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+    </ng-template>
+    <ng-template pTemplate="footer">
+        <div class="grid grid-nogutter justify-content-between">
+            <p-button label="Quay lại" (onClick)="prevPage()" icon="pi pi-angle-left"></p-button>
+            <p-button label="Tiếp theo" (onClick)="nextPage()" icon="pi pi-angle-right" iconPos="right"></p-button>
+        </div>
+    </ng-template>
+</p-card>

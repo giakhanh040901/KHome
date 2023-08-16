@@ -1,0 +1,58 @@
+<div *ngIf="isGranted([this.PermissionLoyaltyConst.LoyaltyMenu_TichDiem_DanhSach])" class="grid ml-0 mr-0 mt-0 h-full">
+  <div class="col-12 h-full px-4">
+    <div #divHeader class="flex b-header justify-content-between">
+      <div class="b-title">
+        <h4>Quản lý tích điểm</h4>
+      </div>
+      <div class="flex b-action">
+        <form-upload-file
+          *ngIf="isGranted([this.PermissionLoyaltyConst.LoyaltyMenu_TichDiem_UploadDSDiem])"
+          [type]="TYPE_UPLOAD.EXCEL"
+          [label]="'Tải lên danh sách điểm'"
+          (_onChange)="import($event)"
+        ></form-upload-file>
+        <form-download-template
+          *ngIf="isGranted([this.PermissionLoyaltyConst.LoyaltyMenu_TichDiem_DownloadMau])"
+          class="mr-2"
+          [href]="'../../../../assets/file_template/TemplateImportPoint.xlsx'"
+          [download]="'TemplateImportPoint.xlsx'"
+          [label]="'Tải mẫu import'"
+        ></form-download-template>
+        <form-button *ngIf="isGranted([this.PermissionLoyaltyConst.LoyaltyMenu_TichDiem_ThemMoi])" class="mr-2" [icon]="'pi pi-plus'" [label]="'Thêm mới'" (_onClick)="create($event)"></form-button>
+      </div>
+    </div>
+    <form-table
+      [style.height]="'calc(100% - ' + divHeader.getBoundingClientRect().height + 'px)'"
+      class="block auto-height-form-table"
+      [columns]="selectedColumns"
+      [dataSource]="dataSource"
+      [isLoading]="isLoading"
+      [scrollHeight]="'calc(100% - 2rem - ' + divFilter.getBoundingClientRect().height + 'px)'"
+      [listAction]="listAction"
+      [page]="page"
+      (_changePage)="setPage($event)"
+      (_setColumn)="setColumn($event)"
+    >
+      <ng-container filter>
+        <div #divFilter class="flex flex-column sm:flex-row w-full">
+          <form-input
+            class="col-2 pl-0"
+            [floatLabel]="true"
+            [placeholder]="'Nhập SĐT/ Mã KH/ Tên KH'"
+            [label]="'Tìm kiếm'"
+            [(ngModelValue)]="filter.keyword"
+            (_onChange)="changeFilter($event)"
+          ></form-input>
+          <form-dropdown
+            class="col-2"
+            [floatLabel]="true"
+            [options]="listType"
+            [(ngModelValue)]="filter.type"
+            [label]="'Loại hình'"
+            (_onChange)="changeFilter($event)"
+          ></form-dropdown>
+        </div>
+      </ng-container>
+    </form-table>
+  </div>
+</div>

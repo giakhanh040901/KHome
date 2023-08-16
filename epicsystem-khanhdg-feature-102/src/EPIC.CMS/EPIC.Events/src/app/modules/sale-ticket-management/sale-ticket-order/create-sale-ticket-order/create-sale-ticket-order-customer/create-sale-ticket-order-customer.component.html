@@ -1,0 +1,112 @@
+<div class="w-full" [style.paddingBottom.px]="58">
+  <div class="card">
+    <div class="p-fluid p-formgrid grid">
+      <div class="flex w-full">
+        <div class="col-12">
+          <form-search-data
+            #formSearchDataCustomer
+            [title]="'Tìm kiếm khách hàng'"
+            [listTabPanel]="listTabPanelCustomer"
+            [headerColumns]="headerColumnsCustomer"
+            [listButtonTable]="listButtonTableCustomer"
+            [apiGetData]="apiGetDataCustomer"
+            [apiGetResponse]="apiGetResponseCustomer"
+            [apiGetMapData]="apiGetMapDataCustomer"
+            (_onChangeTabView)="onChangeTabView($event)"
+          ></form-search-data>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <h5 class="title-info">Thông tin khách hàng cá nhân</h5>
+    <div class="p-fluid p-formgrid grid">
+      <div class="flex w-full">
+        <div class="col-3">
+          <form-input
+            [label]="'Tên khách hàng'"
+            [(ngModelValue)]="saleTicketOrderService.dtoCustomer.name"
+            [isDisabled]="true"
+          ></form-input>
+        </div>
+        <div class="col-3">
+          <ng-container *ngIf="tabCustomer === CUSTOMER">
+            <form-input
+              [label]="'Số điện thoại'"
+              [(ngModelValue)]="saleTicketOrderService.dtoCustomer.phone"
+              [isDisabled]="true"
+            ></form-input>
+          </ng-container>
+          <ng-container *ngIf="tabCustomer === BUSINESS">
+            <form-input
+              [label]="'Tên viết tắt'"
+              [(ngModelValue)]="saleTicketOrderService.dtoCustomer.abbreviation"
+              [isDisabled]="true"
+            ></form-input>
+          </ng-container>
+        </div>
+        <div class="col-3">
+          <form-input
+            [label]="'Email'"
+            [(ngModelValue)]="saleTicketOrderService.dtoCustomer.email"
+            [isDisabled]="true"
+          ></form-input>
+        </div>
+        <div class="col-3">
+          <ng-container *ngIf="tabCustomer === CUSTOMER">
+            <form-input
+              [label]="'Số giấy tờ'"
+              [(ngModelValue)]="saleTicketOrderService.dtoCustomer.idNo"
+              [isDisabled]="true"
+            ></form-input>
+          </ng-container>
+          <ng-container *ngIf="tabCustomer === BUSINESS">
+            <form-input
+              [label]="'Mã số thuế'"
+              [(ngModelValue)]="saleTicketOrderService.dtoCustomer.taxCode"
+              [isDisabled]="true"
+            ></form-input>
+          </ng-container>
+        </div>
+      </div>
+      <div class="flex w-full">
+        <div class="col-12">
+          <form-dropdown
+            [label]="'Địa chỉ'"
+            [options]="listAddress"
+            [(ngModelValue)]="saleTicketOrderService.dtoCustomer.addressId"
+            (_onChange)="onChangeAddress($event)"
+          ></form-dropdown>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="p-fluid p-formgrid grid">
+      <div class="flex w-full">
+        <div class="col-12">
+          <form-search-data
+            #formSearchDataIntroduce
+            [title]="'Tìm kiếm mã giới thiệu'"
+            [listTabPanel]="listTabPanelIntroduce"
+            [headerColumns]="headerColumnsIntroduce"
+            [listButtonTable]="listButtonTableIntroduce"
+            [apiGetData]="apiGetDataIntroduce"
+            [apiGetResponse]="apiGetResponseIntroduce"
+            [apiGetMapData]="apiGetMapDataIntroduce"
+          ></form-search-data>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="div-fixed-icon">
+    <div>
+      <form-button
+        [icon]="'pi pi-chevron-right'"
+        [iconPos]="'right'"
+        [label]="'Tiếp tục'"
+        (_onClick)="continue($event)"
+      ></form-button>
+    </div>
+  </div>
+</div>

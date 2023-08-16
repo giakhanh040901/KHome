@@ -1,0 +1,89 @@
+<div class="e-page">
+    <p-toast></p-toast> 
+    <p-confirmDialog [style]="{width: 'auto'}" [baseZIndex]="10000"></p-confirmDialog>
+    <!-- GIỮ CẤU TRÚC PAGE VÀ CÁC CLASS, ID -->
+        <!-- PAGE HEADER CONTENT -->
+        <!-- TABLE -->
+    <!--  -->
+    <div class="wrapper-page-header" id="page-header">
+        <div class="b-header"> 
+            <div class="grid no-actions">
+                <div class="col-12 md:col-7 b-title">
+                    <h4 style="display:inline"> Thông tin phê duyệt </h4>
+                </div>
+            </div>
+        </div>
+        <div id="filter-table">
+            <ng-container *ngIf="dataTableEmit?.isShowFilter">
+                <div class="flex wrapper-line-filter">
+                    <div class="b-wr-20 wrapper-filter">
+                        <input-search
+                            [placeholder]="'Tìm kiếm...'"
+                            [(keyword)]="dataFilter.keyword"
+                            (_onChange)="setPage()">
+                        </input-search>
+                    </div>
+                    <div class="b-wr-12 wrapper-filter">
+                        <span class="p-float-label">
+                            <p-dropdown
+                                styleClass="input-filter" emptyMessage="Không có dữ liệu"
+                                [showClear]="true" placeholder="Tất cả"
+                                [options]="ApproveConst.status" optionLabel="name" optionValue="code"
+                                [(ngModel)]="dataFilter.status"
+                                (onChange)="setPage()">
+                            </p-dropdown>   
+                            <label class="font-normal" for="dropdownStatus"> Trạng thái duyệt </label>
+                        </span>
+                    </div>
+                    <div class="b-wr-12 wrapper-filter">
+                        <span class="p-float-label">
+                            <p-dropdown
+                                styleClass="input-filter" emptyMessage="Không có dữ liệu"
+                                [showClear]="true" placeholder="Tất cả"
+                                [options]="ApproveConst.actionType" optionLabel="name" optionValue="code"
+                                [(ngModel)]="dataFilter.actionType"
+                                (onChange)="setPage()">
+                            </p-dropdown>   
+                            <label class="font-normal" for="dropdownStatus"> Hành động </label>
+                        </span>
+                    </div>
+                    <div class="b-wr-12 wrapper-filter">
+                        <span class="p-float-label">
+                            <p-calendar
+                                styleClass="input-filter" placeholder="dd/mm/yyyy" dateFormat="dd/mm/yy" appendTo="body" 
+                                [showIcon]="true" [showButtonBar]="true" 
+                                [(ngModel)]="dataFilter.requestDate"  
+                                (onSelect)="setPage()" 
+                                (onClearClick)="setPage()">
+                            </p-calendar>
+                            <label class="font-normal"> Ngày yêu cầu </label>
+                        </span>
+                    </div>
+                    <div class="b-wr-12 wrapper-filter">
+                        <span class="p-float-label">
+                            <p-calendar
+                                styleClass="input-filter" placeholder="dd/mm/yyyy" dateFormat="dd/mm/yy" appendTo="body" 
+                                [showIcon]="true" [showButtonBar]="true" 
+                                [(ngModel)]="dataFilter.approveDate"  
+                                (onSelect)="setPage()" 
+                                (onClearClick)="setPage()">
+                            </p-calendar>
+                            <label class="font-normal"> Ngày duyệt </label>
+                        </span>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+    <e-table
+        [rows]="rows"
+        [(page)]="page"
+        [columns]="columns"
+        [isLoading]="isLoading"
+        [listAction]="listAction"
+        [columnCacheName]="constructor.name"
+        [(isShowFilter)]="dataTableEmit.isShowFilter"
+        (_onPageChange)="setPage($event)"
+        (_onSort)="onSort($event)">
+    </e-table>
+</div>

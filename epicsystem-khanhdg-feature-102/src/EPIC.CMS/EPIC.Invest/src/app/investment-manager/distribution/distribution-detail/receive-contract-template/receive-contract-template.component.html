@@ -1,0 +1,68 @@
+<div>
+    <div #pageEl>
+        <p-toast></p-toast> 
+        <div [id]="idHeader"> 
+            <div class="grid tabview-table-header">
+                <div class="col-12 md:col-6">
+                    <div class="flex">
+                        <span class="p-float-label b-custom filter">
+                            <!--  -->
+                        </span>
+                    </div>
+                </div>
+                <div class="col-12 md:col-6 flex justify-content-end flex-column sm:flex-row">
+                    <button 
+                        *ngIf="isGranted([PermissionInvestConst.InvestPPDT_MauGiaoNhanHD_ThemMoi])" 
+                        pButton pRipple label="Thêm mẫu giao nhận HĐ" icon="pi pi-plus" class="p-button-success" 
+                        (click)="create()">
+                    </button>
+                </div>
+            </div>
+        </div>
+        <e-table
+            [rows]="rows"
+            [(page)]="page"
+            [columns]="columns"
+            [isLoading]="isLoading"
+            [listAction]="listAction"
+            [tabContentHeight]="contentHeight"
+            [idHeader]="idHeader"
+            [columnCacheName]="constructor.name"
+            [isShowIconFilter]="false"
+            (_onPageChange)="setPage($event)">
+        </e-table>
+    </div>
+
+	<!-- THEM & SUA-->
+    <p-dialog [(visible)]="modalDialog" [style]="{width: '40%'}" [header]="header()"  [modal]="true" class="p-fluid">
+        <ng-template pTemplate="content">
+            <div class="grid formgrid">
+                <div class="field col-6">
+                    <label for="code">Mã mẫu giao nhận</label>
+                    <input type="text" id="code" name="code" maxlength="50" pInputText [(ngModel)]="contractTemplate.code" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !contractTemplate.code}"/>
+                </div>
+                <div class="field col-6">
+                    <label for="name">Tên mẫu giao nhận</label>
+                    <input type="text" id="name" name="name" maxlength="256" pInputText [(ngModel)]="contractTemplate.name" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !contractTemplate.name}" [disabled]="contractTemplate.userId >=0"/>
+                </div>
+                <div class="field col-4">
+                    <p-fileUpload 
+                        name="demo[]" accept=".docx" [customUpload]="true" class="custom-file-upload"
+                        chooseIcon="pi pi-cloud-upload" 
+                        (uploadHandler)="myUploader($event)"
+                        [auto]="true"
+                        chooseLabel="Chọn file upload">
+                    </p-fileUpload>
+                </div>
+                <div class="field col-12">
+                    <!-- <label for="contractTempUrl">Đường dẫn file mẫu</label> -->
+                    <input placeholder="Đường dẫn file mẫu" type="text" id="contractTempUrl" name="contractTempUrl" disabled pInputText [value]="contractTemplate.fileUrl || ''" required autofocus/>
+                </div>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="footer">
+            <button pButton pRipple label="Hủy" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+            <button pButton pRipple label="Lưu" icon="pi pi-check" class="p-button-text" [disabled]="!validForm() || submitted" (click)="save()"></button>
+        </ng-template>
+    </p-dialog>
+</div>

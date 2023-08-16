@@ -1,0 +1,18 @@
+<div class="card b-page-detail">
+  <div class="p-fluid p-formgrid grid b-header">
+    <div class="w-full flex b-header justify-content-between px-2">
+      <div class="b-title">
+        <h5>Tổng quan sự kiện</h5>
+      </div>
+      <div class="flex b-action">
+        <form-button [icon]="'pi pi-chevron-left'" [label]="'Quay lại'" (_onClick)="back($event)"></form-button>
+        <form-button 
+          *ngIf="isGranted([PermissionEventConst.TongQuanSuKien_MoBanVe]) && showBtnOpenSell" 
+          class="ml-2" [icon]="'pi pi-check-circle'" [label]="'Mở bán'" 
+          (_onClick)="openSell($event)">
+        </form-button>
+      </div>
+    </div>
+  </div>
+  <form-tab-view [(activeIndex)]="activeIndex" [listTabPanel]="listTabPanel"></form-tab-view>
+</div>

@@ -1,0 +1,51 @@
+<div class="w-full" style="padding-bottom: 70px">
+  <div class="card p-0 mb-0">
+    <h6 class="title-info">Chọn thông tin nhân bản</h6>
+    <div class="p-fluid p-formgrid grid">
+      <div class="flex w-full">
+        <div class="col-6">
+          <form-dropdown
+            [label]="'Chọn thời gian tổ chức'"
+            [options]="listSelectTime"
+            [(ngModelValue)]="replicateDTO.selectTime"
+            (_onChange)="onChangeSelectTime($event)"
+          ></form-dropdown>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card p-0 mb-0">
+    <h6 class="title-info">Danh sách loại vé</h6>
+    <div class="p-fluid p-formgrid grid">
+      <div class="flex w-full">
+        <div class="col-12">
+          <form-table
+            [columns]="headerColumns"
+            [(selectedData)]="selectedData"
+            [dataSource]="replicateDTO.listTicket"
+            [scrollHeight]="'300px'"
+            [showPaginator]="false"
+          >
+          </form-table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="p-dialog-footer" style="width: 100%; position: fixed; left: 0; bottom: 0">
+  <form-button
+    [isTypeRipple]="true"
+    [classButton]="'p-button-text p-confirm-dialog-reject'"
+    [label]="'Hủy'"
+    [icon]="'pi pi-times'"
+    (_onClick)="close($event)"
+  ></form-button>
+  <form-button
+    [isTypeRipple]="true"
+    [classButton]="'p-button-text p-confirm-dialog-approve'"
+    [label]="'Lưu'"
+    [icon]="'pi pi-check'"
+    (_onClick)="save($event)"
+  ></form-button>
+</div>

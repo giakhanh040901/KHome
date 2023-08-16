@@ -1,0 +1,63 @@
+<div class="grid ml-0 mr-0 mt-0" >
+    <div class="col-12">
+        <div class="card e-page mt-0 pt-0">
+            <div class="p-fluid p-formgrid grid b-header">
+                <div class="col-12 md:col-5 b-title">
+                    <h4 style="display:inline"> Báo cáo thống kê </h4>
+                </div>
+            </div>
+            <div class="wrapper-export">
+                <div class="grid p-fluid">
+                    <div class="col-12 md:col-6 col-offset-3"> 
+                        <div class="field">
+                            <label for="startDate"> Loại hình báo cáo (<span class="required-field"> * </span>)</label>
+                            <p-dropdown 
+                                id="dropdownStatus" [options]="reports"
+                                optionLabel="name" optionValue="type" placeholder="Chọn loại hình báo cáo"
+                                [(ngModel)]="type">
+                            </p-dropdown>
+                        </div>
+                    </div>
+                </div> 
+                <div class="grid p-fluid">
+                    <div class="col-12 md:col-3 col-offset-3">
+                        <div class="field">
+                            <form-input-calendar
+                                [label]="'Thời gian bắt đầu'"
+                                [isRequired]="true"
+                                [(ngModelValue)]="startDate"
+                                [showIcon]="true"
+                            ></form-input-calendar>
+                        </div>
+                    </div>
+                    <div class="col-12 md:col-3">
+                        <div class="field">
+                            <!-- <label for="endDate"> Thời gian kết thúc (<span class="required-field"> * </span>)</label>
+                            <e-calendar
+                                [(value)]="endDate"
+                                [inputId]="'endDate'"
+                                [showButtonBar]="true"
+                                [isParam]="true">
+                            </e-calendar> -->
+                            <form-input-calendar
+                                [label]="'Thời gian kết thúc'"
+                                [isRequired]="true"
+                                [(ngModelValue)]="endDate"
+                                [showIcon]="true"
+                            ></form-input-calendar>
+                        </div>
+                    </div>
+                </div> 
+                <div class="grid p-fluid">
+                    <div class="col-12 md:col-6 col-offset-3">
+                        <button
+                            [disabled]="!validForm() || isDownload"  pButton pRipple label="Xuất file Excel" icon="pi pi-file-o" class="p-button-success mr-2" 
+                            (click)="onAccept()">
+                        </button>
+                        <p-progressBar *ngIf="isDownload" mode="indeterminate" [style]="{'height': '6px'}"></p-progressBar>
+                    </div>
+                </div> 
+            </div>
+        </div>
+    </div>
+</div>

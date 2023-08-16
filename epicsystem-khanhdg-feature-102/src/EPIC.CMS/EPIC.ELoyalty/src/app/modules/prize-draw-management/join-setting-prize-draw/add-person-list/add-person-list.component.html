@@ -1,0 +1,108 @@
+<div class="col-12" style="padding-bottom: 70px">
+    <div class="card p-0">
+        <p-table 
+            [value]="rows" [loading]="isLoading" [rowHover]="true" [showCurrentPageReport]="true" [(selection)]="selectedItems"
+            [paginator]="false" responsiveLayout="scroll" dataKey="investorId" [resizableColumns]="false" [scrollable]="true"
+            [scrollHeight]="'390px'" styleClass="custom-table">
+            <ng-template pTemplate="caption">
+                <div class="flex justify-content-between flex-column sm:flex-row">
+                    <div class="flex justify-content-between flex-column sm:flex-row">
+                        <div class="b-wr-15 wrapper-filter">
+                            <input-search
+                                [(keyword)]="filter.keyword"
+                                (_onChange)="setPage()">
+                            </input-search>
+                        </div>
+                        <span class="p-float-label b-custom ml-3">
+                            <p-dropdown [style]="{ width: '12rem' }" [showClear]="true" placeholder="Tất cả"
+                                [options]="PrizeDrawManagement.customerTypes" optionLabel="label" optionValue="value"
+                                [(ngModel)]="filter.customerType" (onChange)="setPage()">
+                            </p-dropdown>
+                            <label class="font-normal">Đối tượng tham gia</label>
+                        </span>
+                        <span class="p-float-label b-custom ml-3">
+                            <p-dropdown 
+                                [style]="{ width: '12rem' }" [showClear]="true" placeholder="Tất cả"
+                                [options]="ranks" optionLabel="label" optionValue="value"
+                                [(ngModel)]="filter.rankId" (onChange)="setPage()">
+                            </p-dropdown>
+                            <label class="font-normal">Hạng thành viên</label>
+                        </span>
+                        <span class="p-float-label b-custom ml-3">
+                            <p-dropdown 
+                                [style]="{ width: '12rem' }" [showClear]="true" placeholder="Tất cả"
+                                [options]="GenderCost.genders" optionLabel="label" optionValue="value"
+                                [(ngModel)]="filter.sex" (onChange)="setPage()">
+                            </p-dropdown>
+                            <label class="font-normal">Giới tính</label>
+                        </span>
+
+                    </div>
+                </div>
+            </ng-template>
+            <ng-template pTemplate="header" let-columns>
+                <tr>
+                    <th
+                        style="max-width: 3rem; min-width: 3rem"
+                        pFrozenColumn
+                        alignFrozen="left"
+                        class="b-border-frozen-left"
+                    >
+                        <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                    </th>
+                    <th pFrozenColumn alignFrozen="left">Họ tên </th>
+                    <th style="min-width: 9rem; max-width: 9rem">SĐT</th>
+                    <th>Email</th>
+                    <th style="min-width: 6rem; max-width: 6rem">Giới tính</th>
+                    <th style="min-width: 10rem; max-width: 10rem">Hạng thành viên</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-row let-rowIndex="rowIndex" let-columns="columns">
+                <tr>
+					<td
+                        style="max-width: 3rem; min-width: 3rem"
+                        pFrozenColumn
+                        alignFrozen="left"
+                        class="b-border-frozen-left"
+                    >
+                        <p-tableCheckbox
+                            [value]="row"
+                        ></p-tableCheckbox>
+                    </td>
+                    <td pFrozenColumn alignFrozen="left" [frozen]="true">
+                        {{ row.fullname ?? row.username }}
+                    </td>
+                    <td style="min-width: 9rem; max-width: 9rem">{{ row.phone }}</td>
+                    <td>{{ row.email }}</td>
+                    <td style="min-width: 6rem; max-width: 6rem">{{ getGenderName | function: row.sex }}</td>
+                    <td style="min-width: 10rem; max-width: 10rem">{{ row.rankName }}</td>
+
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="7">Không có dữ liệu.</td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="loadingbody">
+                <tr>
+                    <td colspan="7">Đang tải dữ liệu ...</td>
+                </tr>
+            </ng-template>
+        </p-table>
+        <p-paginator 
+            [rows]="page.pageSize" 
+            [totalRecords]="page.totalItems" 
+            [rowsPerPageOptions]="page.perPageOptions" 
+            currentPageReportTemplate="Tất cả {{ page.totalItems }} dòng" 
+            showCurrentPageReport="true"
+            (onPageChange)="setPage($event)">
+        </p-paginator>
+    </div>
+</div>
+<div class="p-dialog-footer e-custom-dialog-footer">
+    <button pButton pRipple label="Hủy" icon="pi pi-times" class="p-button-text p-confirm-dialog-reject"
+        (click)="close($event)"></button>
+    <button pButton pRipple label="Lưu" icon="pi pi-check" class="p-button-text p-confirm-dialog-approve"
+        (click)="save($event)"></button>
+</div>

@@ -1,0 +1,51 @@
+<div class="col-12" style="padding-bottom: 70px">
+  <div class="card p-0 mb-0">
+    <h5 class="title-info">Thông tin ưu đãi</h5>
+    <div class="p-fluid p-formgrid grid">
+      <div class="flex b-w-100">
+        <div class="col-6">
+          <form-input [label]="'Khách hàng'" [(ngModelValue)]="dto.name" [isDisabled]="true"></form-input>
+        </div>
+        <div class="col-6">
+          <form-input [label]="'Điện thoại'" [(ngModelValue)]="dto.phone" [isDisabled]="true"></form-input>
+        </div>
+      </div>
+      <div class="flex b-w-100">
+        <div class="col-6">
+          <form-input [label]="'Điểm hiện tại'" [(ngModelValue)]="dto.currentPoint" [isDisabled]="true"></form-input>
+        </div>
+        <div class="col-6">
+          <form-input [label]="'Điểm đổi Voucher'" [(ngModelValue)]="dto.changePoint" [isDisabled]="true"></form-input>
+        </div>
+      </div>
+      <div class="flex b-w-100">
+        <div class="col-12">
+          <form-input [label]="'Ưu đãi đổi điểm'" [(ngModelValue)]="dto.voucher" [isDisabled]="true"></form-input>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card p-0 mb-0">
+    <h5 class="title-info mb-0">Chi tiết tiến trình</h5>
+    <div class="p-fluid p-formgrid grid">
+      <div class="col-12">
+        <form-table
+          class="b-w-100"
+          [columns]="headerColumns"
+          [dataSource]="dto.progressDetail"
+          [scrollHeight]="'250px'"
+          [showPaginator]="false"
+        ></form-table>
+      </div>
+    </div>
+  </div>
+  <div class="p-dialog-footer" style="width: 100%; position: fixed; left: 0; bottom: 0">
+    <form-button
+      [isTypeRipple]="true"
+      [classButton]="'p-button-text p-confirm-dialog-approve'"
+      [label]="'Đóng'"
+      [icon]="'pi pi-times'"
+      (_onClick)="close($event)"
+    ></form-button>
+  </div>
+</div>

@@ -1,0 +1,133 @@
+<div class="grid ml-0 mr-0 mt-0">
+    <div class="col-12">
+        <div class="card b-list">
+            <div class="p-fluid p-formgrid grid b-header">
+                <div class="col-12 md:col-7 b-title">
+                    <h4 style="display:inline"> Tài khoản </h4>
+                </div>
+                <div class="col-12 md:col-5 b-action">
+                    <button pButton pRipple label="Thêm mới" icon="pi pi-plus" class="p-button-success mr-2" (click)="create()"></button>
+                </div>
+            </div>
+            <p-toast></p-toast>
+            <p-table 
+                #userTable 
+                responsiveLayout="scroll" scrollHeight="{{ (screenHeight*0.56) + 'px' }}" styleClass="mt-3 custom-table"
+                [value]="rows" [rowHover]="true" [paginator]="false" [scrollable]="true" [loading]="isLoading">
+                <ng-template pTemplate="caption">
+					<div class="flex justify-content-between flex-column sm:flex-row">
+						<!-- <div class="">
+							<button pButton pRipple label="Thêm mới" icon="pi pi-plus" class="p-button-success mr-2" (click)="create()"></button>
+							<button pButton pRipple label="Delete" icon="pi pi-trash" class="p-button-danger" (click)="deleteSelectedUsers()" [disabled]="!selectedUsers || !selectedUsers.length"></button>
+						</div> -->
+						<span class="block mt-2 md:mt-0 p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" placeholder="Tìm kiếm..."
+								[(ngModel)]="keyword" (keyup)="changeKeyword()" style="width: 300px;"
+								(input)="setPage($event)"/>
+                        </span>
+					</div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="min-width:10rem;">Tên đăng nhập </th>
+                        <th style="min-width:15rem;"> Tên hiển thị </th>
+                        <th style="min-width:15rem;">Email </th>
+                        <th style="min-width:10rem;">Loại tài khoản </th>
+                        <th style="min-width:10rem;">Trạng thái</th>
+                        <th style="width:5rem; justify-content: center;"> Thao tác</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-row let-rowIndex="rowIndex">
+                    <tr>
+                        <!-- <td>
+                            <p-tableCheckbox [value]="user"></p-tableCheckbox>
+                        </td> -->
+                        <td style="min-width:10rem; font-weight: 500;"> {{ row.userName }} </td>
+                        <td style="min-width:15rem; font-weight: 500;"> {{ row.displayName }} </td>
+                        <td style="min-width:15rem;"> 
+                            {{ row.email }} 
+                        </td>
+                        <td style="width:10rem"> {{ row.userType }} </td>
+                        <td style="width:10rem"> {{ row.status }} </td>
+                        <td style="width:5rem;" class="b-table-actions">
+                         
+                            <div class="flex">
+                                <!-- <button type="button" pButton icon="pi pi-ellipsis-h" (click)="menu.toggle($event)"></button> -->
+                                <i class="pi pi-ellipsis-h"  (click)="menu.toggle($event)"></i>
+                                <p-menu 
+                                    #menu [popup]="true"class="button-actions"
+                                    [model]="listAction[rowIndex]" appendTo="body"
+                                    >
+                                </p-menu>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+            <p-paginator styleClass="at-paginator-sm" [totalRecords]="page.totalItems" [rows]="page.pageSize" (onPageChange)="setPage($event)"></p-paginator>
+
+            
+        </div>
+		<!-- THEM & SUA-->
+            <p-dialog [(visible)]="modalDialog" [style]="{width: '450px'}" header="Tạo tài khoản" [modal]="true" class="p-fluid">
+                <ng-template pTemplate="content">
+                    <div class="grid formgrid">
+                        <div class="field col-12 md:col-6">
+                            <span class="p-float-label">
+                                <input type="text" id="displayName" name="displayName" pInputText [(ngModel)]="user.displayName" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !user.displayName}"/>
+                                <label for="displayName">Tên hiển thị</label>
+                            </span>
+                            <!-- <small class="ng-dirty ng-invalid" *ngIf="submitted && !user.displayName"> => Nhập tên hiển thị!</small> -->
+                        </div>
+                        <div class="field col-12 md:col-6">
+                            <span class="p-float-label">
+                                <input type="text" id="userName" name="userName" pInputText [(ngModel)]="user.userName" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !user.userName}" [disabled]="user.userId >=0"/>
+                                <label for="userName">Tên đăng nhập</label>
+                            </span>
+                            <!-- <small class="ng-dirty ng-invalid" *ngIf="submitted && !user.userName"> => Nhập tên hiển thị!</small> -->
+                        </div>
+                        <ng-container *ngIf="!(user.userId >= 0)">
+                            <div class="field col-12 md:col-6">
+                                <span class="p-float-label">
+                                    <input type="password" id="password" name="password" pPassword [(ngModel)]="user.password" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !user.password}" autocomplete="new-password"/>
+                                    <label for="password"> Mật khẩu</label>
+                                </span>
+                                <!-- <small class="ng-dirty ng-invalid" *ngIf="submitted && !user.password"> => Nhập tên hiển thị!</small> -->
+                            </div>
+                            <div class="field col-12 md:col-6">
+                                <span class="p-float-label">
+                                    <input type="password" [class]="'ng-invalid ng-dirty'" id="confirm-password" name="confirmPassword" pPassword [(ngModel)]="user.confirmPassword" autofocus autocomplete="off"/>
+                                    <label for="confirm-password">Nhập lại mật khẩu</label>
+                                </span>
+                                <small class="ng-dirty ng-invalid p-error" *ngIf="validatePassword()"> Mật khẩu không khớp!</small>
+                            </div>
+                        </ng-container>
+                        <div class="field col-12 md:col-12">
+                            <span class="p-float-label">
+                                <input type="text" id="email" name="email" pInputText [(ngModel)]="user.email" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !user.email}"/>
+                                <label for="email">Email</label>
+                            </span>
+                            <!-- <small class="ng-dirty ng-invalid" *ngIf="submitted && !user.email"> => Nhập tên hiển thị!</small> -->
+                        </div>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="footer">
+                    <button pButton pRipple label="Hủy" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+                    <button pButton pRipple label="Lưu" icon="pi pi-check" class="p-button-text" [disabled]="!validForm() || submitted" (click)="save()"></button>
+                </ng-template>
+            </p-dialog>
+
+		<!-- XOA -->
+        <p-dialog [(visible)]="deleteItemDialog" header="Xóa tài khoản" [modal]="true" [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                <span *ngIf="user">Bạn có chắc chắn xóa tài khoản {{ user.displayName }} ?</span>
+            </div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No" (click)="deleteItemDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes" (click)="confirmDelete()"></button>
+            </ng-template>
+        </p-dialog>
+    </div>
+</div>

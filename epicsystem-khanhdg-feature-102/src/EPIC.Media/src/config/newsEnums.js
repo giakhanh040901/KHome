@@ -1,0 +1,116 @@
+const newsStatus = {
+  ACTIVE : 'ACTIVE',
+  PENDING: 'PENDING',
+  DELETED: 'DELETED',
+  DRAFT: 'DRAFT',
+  INACTIVE: 'INACTIVE'
+};
+
+const sentStatus = {
+  DRAFT : 'DRAFT',
+  SENT: 'SENT',
+
+};
+
+const notificationStatus = {
+  ACTIVE : 'ACTIVE',
+  PENDING: 'PENDING',
+  DELETED: 'DELETED',
+  DRAFT: 'DRAFT'
+};
+
+const newsType = {
+  PURE_NEWS : 'PURE_NEWS', //Tin tức thuần
+  SHARING: 'SHARING', //Chia sẻ từ KOL
+  PROMOTION: 'PROMOTION',
+  KNOWLEDGE: 'KNOWLEDGE'//Ưu đãi
+}
+const notificationType = {
+  HE_THONG : 'HE_THONG',
+  UU_DAI: 'UU_DAI',
+  GIAO_DICH: 'GIAO_DICH',
+  CHINH_SACH: 'CHINH_SACH'
+}
+const contentType = {
+  MARKDOWN : 'MARKDOWN',
+  HTML: 'HTML'
+}
+
+const imageType = {
+  LINK : 'LINK',
+  IMAGE: 'IMAGE'
+}
+
+const notificationActionType = {
+  PUSH_NOTIFICATION : 'PUSH_NOTIFICATION',
+  SEND_SMS: 'SEND_SMS',
+  SEND_EMAIL: 'SEND_EMAIL'
+}
+
+const systemNotificationTemplateKey = {
+  ///////////// HỆ THỐNG TÀI KHOẢN ////////////////////////////
+  TK_THONGBAO_OTP : 'TAI_KHOAN_THONGBAO_OTP',
+  TK_DANGKY_TK_OK: 'TK_DANGKY_TK_OK',
+  TK_THIETBI_TRUYCAP_TK: 'TK_THIETBI_TRUYCAP_TK',
+  TK_KHOI_TAO_THANH_CONG: 'TK_KHOI_TAO_THANH_CONG',
+  TK_GIAY_TO_THAY_DOI_OK: 'TK_GIAY_TO_THAY_DOI_OK',
+  TK_GIAY_TO_CA_NHAN_PHE_DUYET_OK: 'TK_GIAY_TO_CA_NHAN_PHE_DUYET_OK',
+  TK_THAY_DOI_TK_THU_HUONG: 'TK_THAY_DOI_TK_THU_HUONG',
+  TK_EMAIL_XACMINH_OK: 'TK_EMAIL_XACMINH_OK',
+  TK_THONG_BAO_OTP_EMAIL: 'TK_THONG_BAO_OTP_EMAIL',
+  TK_XAC_MINH_EMAIL: 'TK_XAC_MINH_EMAIL',
+  TK_THAYDOI_DIACHI_GIAO_DICH_MACDINH: 'TK_THAYDOI_DIACHI_GIAO_DICH_MACDINH',
+  TK_NGUOI_NHAP_MA_GIOI_THIEU: 'TK_NGUOI_NHAP_MA_GIOI_THIEU',
+  TK_CAP_LAI_MK_THANH_CONG: 'TK_CAP_LAI_MK_THANH_CONG',
+  TK_CAP_LAI_MA_PIN: 'TK_CAP_LAI_MA_PIN',
+  TK_THONGBAO_OTP: 'TK_THONGBAO_OTP',
+  TK_XOA_TAI_KHOAN_THANH_CONG: 'TK_XOA_TAI_KHOAN_THANH_CONG',
+  ///////////// ĐẦU TƯ ////////////////////////////
+  DAU_TU_CHUYEN_TIEN_THANH_CONG: 'DAU_TU_CHUYEN_TIEN_THANH_CONG',
+  DAU_TU_CHI_TRA_LOI_TUC: 'DAU_TU_CHI_TRA_LOI_TUC',
+  DAU_TU_RUT_VON_THANH_CONG: 'DAU_TU_RUT_VON_THANH_CONG',
+  DAU_TU_TAT_TOAN_TRUOC_HAN: 'DAU_TU_TAT_TOAN_TRUOC_HAN',
+  DAU_TU_TK_DAU_TU_SAP_HET_HAN: 'DAU_TU_TK_DAU_TU_SAP_HET_HAN',
+  DAU_TU_TAI_TUC_DAU_TU: 'DAU_TU_TAI_TUC_DAU_TU',
+  DAU_TU_DAU_TU_THANH_CONG: 'DAU_TU_DAU_TU_THANH_CONG',
+  DAU_TU_NHAN_TIEN_THANH_CONG: 'DAU_TU_NHAN_TIEN_THANH_CONG',
+
+}
+
+const navigationTypes = {
+  IN_APP : 'IN_APP',
+  LIEN_KET_KHAC: 'LIEN_KET_KHAC',
+  NULL: null,
+  EPT: '',
+}
+
+const levelOneNavigationOptions = {
+  DAU_TU_TAI_CHINH : 'DAU_TU_TAI_CHINH',
+  DAU_TU_TICH_LUY: 'DAU_TU_TICH_LUY',
+  GIAO_DICH_BDS: 'GIAO_DICH_BDS',
+  DANG_KY_TU_VAN_VIEN: 'DANG_KY_TU_VAN_VIEN',
+  CHIA_SE_MA_QR: 'CHIA_SE_MA_QR',
+  VOUCHER: 'VOUCHER',
+  EVENT: 'EVENT',
+  NULL: null
+}
+
+const mediaPosition = {
+  SLIDER : 'PURE_NEWS', //Tin tức thuần
+  FEATURED: 'SHARING', //Chia sẻ từ KOL
+  PROMOTION: 'PROMOTION' //Ưu đãi
+}
+
+module.exports = {
+  newsStatus,
+  newsType,
+  notificationType,
+  notificationActionType,
+  contentType,
+  notificationStatus,
+  systemNotificationTemplateKey,
+  navigationTypes,
+  levelOneNavigationOptions,
+  sentStatus,
+  imageType,
+};

@@ -1,0 +1,63 @@
+<div *ngIf="isGranted([PermissionGarnerConst.GarnerHDPP_SoLenh_TTCT_TraiTuc_DanhSach])" class="grid ml-0 mr-0 mt-0">
+
+    <div class="col-12">
+        <div class="card pt-0">
+            <p-table #productBondInfoTable [value]="rows" [loading]="isLoading" [rowHover]="true" [paginator]="false"
+                responsiveLayout="scroll" dataKey="code" [scrollable]="true"
+                scrollHeight="{{(screenHeight*0.56) + 'px'}}" styleClass="">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="min-width: 5rem;max-width: 5rem;" pFrozenColumn alignFrozen="left"> STT </th>
+                        <th style="min-width: 12rem;max-width: 15rem;" pFrozenColumn alignFrozen="left"
+                            class="b-border-frozen-left"> Kỳ nhận </th>
+                        <th style="min-width: 9rem; max-width: 9rem;"> Cổ tức </th>
+                        <th style="max-width: 10rem;"> Ngày chốt quyền </th>
+                        <th style="max-width: 8rem;"> Ngày trả </th>
+                        <th style="min-width: 12rem; max-width: 12rem;"> Lợi nhuận </th>
+                        <th style="min-width: 12rem; max-width: 12rem;"> Thuế TN </th>
+                        <th style="min-width: 12rem; max-width: 12rem;"> Tiền thực nhận </th>
+                        <th style="min-width: 10rem;" pFrozenColumn alignFrozen="right" [frozen]="true"
+                            class="b-border-frozen-right"> Trạng thái </th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-row let-index="rowIndex">
+                    <tr>
+                        <td style="min-width: 5rem;max-width: 5rem;" pFrozenColumn alignFrozen="left"> {{ index + 1 }}
+                        </td>
+                        <td style="min-width: 12rem;max-width: 15rem;" pFrozenColumn alignFrozen="left"
+                            class="b-border-frozen-left">
+                            {{ (index !== (rows.length - 1)) ? 'Lợi nhuận kỳ ' + (index+1) : 'Lợi nhuận cuối kỳ' }}
+                        </td>
+                        <td style="min-width: 9rem; max-width: 9rem;">
+                             {{ utils.transformPercent(row.profitRate*100) + '%'}}/
+                             </td>
+                        <td style="max-width: 10rem;"> {{ row.payDate | dateview }} </td>
+                        <td style="max-width: 8rem;"> {{ row.payDate | dateview }} </td>
+                        <td style="min-width: 12rem; max-width: 12rem;"> {{ utils.transformMoney(row.profit) }} </td>
+                        <td style="min-width: 12rem; max-width: 12rem;"> {{ utils.transformMoney(row.tax) }} </td>
+                        <td style="min-width: 12rem; max-width: 12rem;"> {{ utils.transformMoney(row.actuallyProfit) }}
+                        </td>
+                        <td style="min-width: 10rem;" pFrozenColumn alignFrozen="right" [frozen]="true"
+                            class="b-border-frozen-right">
+                            {{ StatusCoupon.getName(row.status) }}
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td colspan="7">Không có dữ liệu.</td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="loadingbody">
+                    <tr>
+                        <td colspan="7"> Đang tải dữ liệu ... </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+        <!-- THEM & SUA-->
+    </div>
+
+
+
+</div>

@@ -1,0 +1,72 @@
+<app-loading-page *ngIf="isLoading"></app-loading-page>
+<p-toast></p-toast>
+<div class="card b-page-detail {{ isLoading ? 'b-loading' : '' }}" *ngIf="!isLoading">
+    <div class="p-fluid p-formgrid grid b-header">
+        <div class="card col-12 md:col-12 b-actions">
+            <div class="flex justify-content-between flex-wrap card-container purple-container">
+                <h5 class="title-info mb-0 ml-0"> Chi tiết sản phẩm </h5>
+                <div>
+                    <ng-container *ngIf="isGranted([PermissionGarnerConst.GarnerSPTL_ThongTinChung]) && tabViewActive.thongTinChung">
+                        <p-button 
+                            *ngIf="isGranted([PermissionGarnerConst.GarnerPDSPTL_PheDuyetOrHuy]) && (productDetail.status == StatusApprove.TRINH_DUYET)"
+                            styleClass="p-button-sm custom-button" 
+                            label="Xử lý yêu cầu" icon="pi pi-check"
+                            (click)="approveSharing(productDetail)">
+                        </p-button>
+                        <p-button 
+                            *ngIf="isGranted([PermissionGarnerConst.GarnerSPTL_TrinhDuyet]) && (productDetail.status == StatusApprove.KHOI_TAO || productDetail.status == StatusApprove.HUY_DUYET)"
+                            styleClass="p-button-sm custom-button" label="Trình duyệt"
+                            icon="pi pi-arrow-up" (click)="request(productDetail)">
+                        </p-button>
+                        <p-button 
+                        *ngIf="isGranted([PermissionGarnerConst.GarnerSPTL_CapNhat])"
+                            styleClass="p-button-sm custom-button" label="{{ isEdit ? 'Lưu' : 'Chỉnh sửa'}}"
+                            icon="pi {{ isEdit ? 'pi-save' : 'pi-pencil' }}" (click)="changeEdit()">
+                        </p-button>
+                    </ng-container>
+                    <p-button 
+                        styleClass="p-button-sm custom-button border-600 b-button-back"
+                        [routerLink]="'/product-manager/list'" label="Quay lại"
+                        icon="pi pi-chevron-left" class="b-0">
+                    </p-button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <p-tabView styleClass="custom-tabview product-garner" [(activeIndex)]="activeIndex" (onChange)="changeTab($event)">
+        <!-- [(activeIndex)]="activeIndex" (onChange)="changeTab($event)" -->
+        <p-tabPanel >
+            <ng-template pTemplate="header">
+                <span> Thông tin chung </span>
+            </ng-template>
+            <div *ngIf="!isLoading">
+                <app-share-detail [productDetail]="productDetail" [isEdit]="isEdit" *ngIf="productDetail.productType == ProductConst.SHARE"></app-share-detail>
+                <app-invest-detail [productDetail]="productDetail" [isEdit]="isEdit" *ngIf="productDetail.productType == ProductConst.INVEST"></app-invest-detail>
+            </div>
+        </p-tabPanel>
+        <p-tabPanel [header]="'daiLyPhanPhoi'" *ngIf="isGranted([PermissionGarnerConst.GarnerSPTL_DLPP])">
+            <ng-template pTemplate="header">
+                <span> Đại lý phân phối </span>
+            </ng-template>
+            <app-product-trading-provider *ngIf="tabViewActive.daiLyPhanPhoi"></app-product-trading-provider>
+        </p-tabPanel>
+        <p-tabPanel [header]="'taiSanDamBao'" *ngIf="isGranted([PermissionGarnerConst.GarnerSPDT_TSDB])">
+            <ng-template pTemplate="header">
+                <span> Tài sản đảm bảo </span>
+            </ng-template>
+            <app-product-collateral *ngIf="tabViewActive.taiSanDamBao"></app-product-collateral>
+        </p-tabPanel>
+        <p-tabPanel [header]="'hoSoPhapLy'" *ngIf="isGranted([PermissionGarnerConst.GarnerSPDT_HSPL])">
+            <ng-template pTemplate="header">
+                <span> Hồ sơ pháp lý </span>
+            </ng-template>
+            <app-product-legal-records *ngIf="tabViewActive.hoSoPhapLy"></app-product-legal-records>
+        </p-tabPanel>
+        <p-tabPanel [header]="'lichSu'" >
+            <ng-template pTemplate="header">
+                <span> Lịch sử </span>
+            </ng-template>
+            <app-product-history *ngIf="tabViewActive.lichSu"></app-product-history>
+        </p-tabPanel>
+    </p-tabView>
+</div>

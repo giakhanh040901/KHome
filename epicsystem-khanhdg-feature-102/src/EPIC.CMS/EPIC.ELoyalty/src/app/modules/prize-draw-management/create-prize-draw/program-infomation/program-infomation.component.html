@@ -1,0 +1,105 @@
+<e-loading *ngIf="isLoading"></e-loading>
+<!-- Thêm mới -->
+<ng-container *ngIf="!prizeDrawProgramInfo?.id">
+    <p-card>
+        <ng-container [ngTemplateOutlet]="infomationContent"></ng-container>
+        <div class="grid grid-nogutter justify-content-end">
+        <p-button label="Tiếp theo" (onClick)="nextPage()" icon="pi pi-angle-right" iconPos="right"></p-button>
+    </div>
+    </p-card>
+</ng-container>
+
+<!-- Chi tiết -->
+<ng-container *ngIf="prizeDrawProgramInfo?.id">
+    <ng-container [ngTemplateOutlet]="infomationContent"></ng-container>
+</ng-container>
+<!-- Template content -->
+<ng-template #infomationContent let-prizeDrawId="prizeDrawId">
+    <ng-container>
+        <div class="card pl-3 mb-0">
+            <div *ngIf="prizeDrawProgramInfo?.id" class="text-right p-2 mb-2">
+                <p-button 
+                    *ngIf="isGranted([this.PermissionLoyaltyConst.LoyaltyCT_TrungThuong_ThongTinChuongTrinh_ChinhSua])"
+                    [label]="isEdit ? 'Lưu chỉnh sửa' : 'Chỉnh sửa'" [icon]="isEdit ? 'pi pi-save' : 'pi pi-pencil'" 
+                    styleClass="p-button-sm"
+                    (onClick)="changeEdit()"
+                >
+                </p-button>
+            </div>
+            <!--  -->
+            <div class="p-fluid p-formgrid grid">
+                <div class="flex b-w-100">
+                    <div class="col-9">
+                        <form-input
+                            [isDisabled]="!isEdit && prizeDrawProgramInfo?.id"
+                            [label]="'Tên chương trình'"
+                            [isRequired]="true"
+                            [(ngModelValue)]="prizeDrawProgramInfo.name"
+                            [placeholder]="'Nhập tên chương trình'"
+                        >
+                        </form-input>
+                        <form-input
+                            [isDisabled]="!isEdit && prizeDrawProgramInfo?.id"
+                            [label]="'Mã chương trình'"
+                            [isRequired]="true"
+                            [(ngModelValue)]="prizeDrawProgramInfo.code"
+                            [placeholder]="'Nhập mã chương trình'"
+                        >
+                        </form-input>
+                        <div class="grid m-0">
+                            <div class="col-4 pl-0">
+                                <div class="field mb-0">
+                                    <label htmlFor="startDate">Thời gian bắt đầu <span class="required-field"> * </span> </label>
+                                    <e-calendar
+                                        [disabled]="!isEdit && prizeDrawProgramInfo?.id"
+                                        inputId="startDate"
+                                        [(value)]="prizeDrawProgramInfo.startDate"
+                                    >
+                                    </e-calendar>
+                                </div>
+                            </div>
+                            <div class="col-4 pr-0">
+                                <div class="field mb-0">
+                                    <label htmlFor="endDate">Thời gian kết thúc <span class="required-field"> * </span> </label>
+                                    <e-calendar
+                                        [disabled]="!isEdit && prizeDrawProgramInfo?.id"
+                                        inputId="endDate"
+                                        [(value)]="prizeDrawProgramInfo.endDate"
+                                    >
+                                    </e-calendar>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-3 pl-3 text-center">
+                        <div class="mb-2">Ảnh đại diện chương trình</div>
+                        <div (click)="insertImage($event)">
+                            <p-image
+                                [src]="viewAvatarLink || bannerBackground"
+                                [width]="'100%'"
+                                [height]="DEFAULT_IMAGE_BANNER.height"
+                                [imageStyle]="{ 'border-radius': '5px' }"
+                                [ngClass]="(isEdit || !prizeDrawProgramInfo?.id) ? 'cursor-pointer' : ''">
+                            </p-image>
+                        </div>
+                    </div>
+                </div>
+                <!--  -->
+            </div>
+            <!--  -->
+            <h5 class="title-info mb-0">Nội dung mô tả</h5>
+            <div class="p-fluid p-formgrid grid">
+                <div class="flex b-w-100">
+                <div class="col">
+                    <e-markdown-html
+                        [disabled]="!isEdit && prizeDrawProgramInfo?.id"
+                        [(contentType)]="prizeDrawProgramInfo.descriptionContentType"
+                        [(content)]="prizeDrawProgramInfo.descriptionContent"
+                        [folderUploadImage]="'prize-draw/program-information'">
+                    </e-markdown-html>
+                </div>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+</ng-template>

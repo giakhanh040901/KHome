@@ -1,0 +1,136 @@
+<div class="grid ml-0 mr-0 mt-0">
+    <div class="col-12">
+        <div class="card">
+            <h5 class="mb-0">Danh mục trái phiếu</h5>
+            <p-toast></p-toast>
+            <p-table 
+                #productCategoryTable [value]="rows"
+                [loading]="isLoading" [rowHover]="true" [expandedRowKeys]="expandedRows"  [paginator]="false" responsiveLayout="scroll" dataKey="code"
+                [scrollable]="true" scrollHeight="{{(screenHeight*0.56) + 'px'}}" styleClass="p-datatable-gridlines mt-3 custom-table">
+                <ng-template pTemplate="caption">
+                    <div class="flex justify-content-between flex-column sm:flex-row">
+                        <div class="">
+                            <button pButton pRipple label="Thêm mới" icon="pi pi-plus" class="p-button-success mr-2" (click)="create()"></button>
+                        </div>
+
+						<span class="block mt-2 md:mt-0 p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" placeholder="Tìm kiếm..."
+								[(ngModel)]="keyword" (input)="changeKeyword($event)"/>
+                        </span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="width: 8rem;" pFrozenColumn alignFrozen="left"></th>
+						<th style="min-width: 8rem;" pFrozenColumn alignFrozen="left"> Mã danh mục </th>
+                        <th style="min-width: 12rem;" pFrozenColumn alignFrozen="left"> Tên danh mục </th>
+                        <th style="min-width: 8rem;"> Icon </th>
+                        <th style="min-width: 10rem;"> Mô tả </th>
+                        <th style="min-width: 12rem;"> Nội dung mô tả </th>
+                        <th style="min-width: 8rem;"> Router điều hướng trên App </th>
+                        <th style="width: 8rem;; justify-content: center;" pFrozenColumn alignFrozen="right"> Thao tác</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-row let-expanded="expanded">
+                    <tr>
+                        <td style="width: 8rem;" pFrozenColumn alignFrozen="left">
+							<button type="button" pButton pRipple [pRowToggler]="row" class="p-button-text p-button-rounded p-button-plain" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></button>
+						</td>
+                        <td style="min-width: 8rem;" pFrozenColumn alignFrozen="left"> {{ row.code }} </td>
+                        <td style="min-width: 12rem;" pFrozenColumn alignFrozen="left"> {{ row.name }} </td>
+                        <td style="min-width: 8rem;"> {{ row.icon}} </td>
+                        <td style="min-width: 10rem;"> {{ row.description}} </td>
+                        <td style="min-width: 12rem;"> {{ row.content}} </td>
+                        <td style="min-width: 8rem;"> {{ row.appRouter}} </td>
+                        <td style="width: 8rem; justify-content: center;" pFrozenColumn alignFrozen="right">
+                            <div class="flex">
+                                <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="edit(row)"></button>
+                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="delete(row)"></button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+					<tr>
+						<td colspan="7">Không có dữ liệu.</td>
+					</tr>
+				</ng-template>
+				<ng-template pTemplate="loadingbody">
+					<tr>
+						<td colspan="7"> Đang tải dữ liệu ... </td>
+					</tr>
+				</ng-template>
+            </p-table>
+            <p-paginator styleClass="at-paginator-sm" [totalRecords]="page.totalItems" [rows]="page.pageSize" (onPageChange)="setPage($event)"></p-paginator>
+        </div>
+        <!-- THEM & SUA-->
+        <p-dialog [(visible)]="modalDialog" [style]="{width: '400px'}" [header]="header()" [modal]="true" class="p-fluid">
+            <ng-template pTemplate="content">
+                <div class="card">
+                    <div class="grid formgrid">
+                        <div class="col-12 md:col-12">
+                            <div class="field">
+                                <label htmlFor="code">Mã danh mục <span class="required-field"> * </span></label>
+                                <input type="text" id="code" name="code" pInputText [(ngModel)]="productCategory.code" required autofocus maxlength="50" [ngClass]="{'ng-invalid ng-dirty' : (submitted && !productCategory.code) || fieldErrors?.code}" (click)="resetValid('code')" />
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-12">
+                            <div class="field">
+                                <label htmlFor="name">Tên danh mục <span class="required-field"> * </span></label>
+                                <input type="text" id="name" name="name" pInputText [(ngModel)]="productCategory.name" required autofocus maxlength="256" [ngClass]="{'ng-invalid ng-dirty' : (submitted && !productCategory.name) || fieldErrors?.name}" (click)="resetValid('name')" />
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-12">
+                            <div class="field">
+                                <label htmlFor="description">Mô tả</label>
+                                <textarea rows="1" maxlength="1024" cols="30" name="description"
+                                    [(ngModel)]="productCategory.description" pInputTextarea
+                                    [ngClass]="{'ng-invalid ng-dirty' : fieldErrors?.description}" (click)="resetValid('description')"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-12">
+                            <div class="field">
+                                <label htmlFor="content">Nội dung mô tả</label>
+                                <textarea rows="2" maxlength="4000" cols="30" name="content"
+                                    [(ngModel)]="productCategory.content" pInputTextarea
+                                    [ngClass]="{'ng-invalid ng-dirty' : fieldErrors?.content}" (click)="resetValid('content')"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="col-12 md:col-12">
+                            <div class="field">
+                                <label htmlFor="icon">Icon</label>
+                                <input type="text" id="icon" name="icon" pInputText [(ngModel)]="productCategory.icon" autofocus maxlength="1024" [ngClass]="{'ng-invalid ng-dirty' : fieldErrors?.icon}" />
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-12">
+                            <div class="field">
+                                <label htmlFor="appRouter">Router điều hướng trên App </label>
+                                <input type="text" id="appRouter" name="appRouter" pInputText
+                                    [(ngModel)]="productCategory.appRouter" maxlength="512" autofocus
+                                    [ngClass]="{'ng-invalid ng-dirty' : fieldErrors?.appRouter}" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Hủy" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+                <button pButton pRipple label="Lưu" icon="pi pi-check" class="p-button-text" [disabled]="!validForm() || submitted" (click)="save()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <!-- XOA -->
+        <p-dialog [(visible)]="deleteItemDialog" header="Xóa danh mục" [modal]="true" [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                <span *ngIf="productCategory">Bạn có chắc chắn xóa danh mục {{ productCategory.name }} ?</span>
+            </div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="Huỷ" (click)="deleteItemDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Chắc chắn" (click)="confirmDelete()"></button>
+            </ng-template>
+        </p-dialog>
+    </div>
+</div>

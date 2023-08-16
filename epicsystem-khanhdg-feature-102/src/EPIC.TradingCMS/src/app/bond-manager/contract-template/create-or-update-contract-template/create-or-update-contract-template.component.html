@@ -1,0 +1,81 @@
+<form class="form-horizontal" autocomplete="off" #createModal="ngForm" [busy]="isLoading">
+    <abp-modal-header [title]="title" (onCloseClick)="bsModalRef.hide()"></abp-modal-header>
+    <div class="grid-margin stretch-card mb-0">
+        <div class="card">
+          <div class="card-body" #wrapperForm>
+            <div class="media-body">
+                <div class="row">
+                    <div class="form-group required col-md-12">
+                        <label for="code">Mã hợp đồng (<span class="field-required"> * </span>) </label>
+                        <input type="text" class="form-control form-control-sm" name="code" id="code" #code
+                            maxlength="10" placeholder="Mã hợp đồng" [(ngModel)]="contractTemplate.code" #codeModel="ngModel" #codeEl />
+                        <abp-validation-summary [control]="codeModel" [controlEl]="codeEl"></abp-validation-summary>
+                    </div>
+
+                    <div class="form-group required col-md-12">
+                        <label for="name" #nameValidation>Tên hợp đồng (<span class="field-required"> * </span>)</label>
+                        <input type="text" class="form-control form-control-sm" name="name" id="name" #name required
+                            maxlength="200" placeholder="Tên hợp đồng" [(ngModel)]="contractTemplate.name" #nameModel="ngModel" #nameEl />
+                        <abp-validation-summary [control]="nameModel" [controlEl]="nameEl"></abp-validation-summary>
+                    </div>
+
+                    <div class="form-group required col-md-6">
+                        <label for="contractTypeId"> Loại hợp đồng ( <span class="field-required">*</span> ) </label>
+                        <ng-select type="text" name="contractTypeId" id="contractTypeId" placeholder="Loại hợp đồng"
+                            #contractTypeId
+                            [notFoundText]="'Không có dữ liệu'"
+                            (click)="disableWarningSelect('contractTypeId')"
+                            [(ngModel)]="contractTemplate.contractTypeId"
+                            [multiple]="false" [clearable]="false" #contractTypeIdModel="ngModel" #contractTypeIdEl>
+                            <ng-option *ngFor="let item of contractTypes" [value]="item.id" [title]="item.name">{{ item.name }}</ng-option>
+                        </ng-select>
+                        <abp-validation-summary [control]="contractTypeIdModel" [controlEl]="contractTypeIdEl"></abp-validation-summary>
+                    </div>
+
+                    <div class="form-group required col-lg-6">
+                        <label for="contractTempType"> Loại mẫu hợp đồng </label>
+                            <ng-select type="text" name="contractTempType" id="contractTempType" [notFoundText]="'Không có dữ liệu'"
+                                #contractTempType placeholder="Loại mẫu hợp đồng"
+                                [(ngModel)]="contractTemplate.contractTempType"
+                                [multiple]="false"
+                                [clearable]="false"
+                                (click)="disableWarningSelect('contractTempType')"
+                                #contractTempTypeModel="ngModel" #contractTempTypeEl requried>
+                                <ng-option *ngFor="let item of contractTempTypeConst" [value]="item.code">{{ item.name }}</ng-option>
+                            </ng-select>
+                        <abp-validation-summary [control]="contractTempTypeModel" [controlEl]="contractTempTypeEl"></abp-validation-summary>
+                    </div>
+
+                    <div class="form-group required col-md-12 wrapper-upload-file">
+                        <angular-file-uploader [config]="afuConfig" class="afuc" #fileUpload
+                        (change)="changeFileUpload()"
+                        (fileSelected)="fileChange($event)"
+                        (ApiResponse)="responseUpload($event)">
+                        </angular-file-uploader>
+                    </div>
+
+                    <div class="form-group required col-md-12">
+                        <label for="contractTempUrl" #contractTempUrlValidation>Đường dẫn file mẫu repx </label>
+                        <input type="text" class="form-control form-control-sm" name="contractTempUrl" id="contractTempUrl" #contractTempUrl [title]="contractTemplate.contractTempUrl"
+                            maxlength="200" placeholder="Đường dẫn file" [(ngModel)]="contractTemplate.contractTempUrl" #contractTempUrlModel="ngModel" #contractTempUrlEl />
+                        <abp-validation-summary [control]="contractTempUrlModel" [controlEl]="contractTempUrlEl"></abp-validation-summary>
+                    </div>
+
+                    <div class="form-group required col-md-12">
+                        <label for="contractTempContent" #contractTempContentValidation> Nội dung HTML </label>
+                        <textarea type="text" class="form-control form-control-sm" name="contractTempContent" id="contractTempContent" #contractTempContent [rows]="3"
+                            maxlength="200" placeholder="Nội dung HTML ..." [(ngModel)]="contractTemplate.contractTempContent" #contractTempContentModel="ngModel" #contractTempContentEl>
+                        </textarea>
+                        <abp-validation-summary [control]="contractTempContentModel" [controlEl]="contractTempContentEl"></abp-validation-summary>
+                    </div>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-sm btn-default" (click)="bsModalRef.hide()"> Huỷ </button>
+        <button type="submit" class="btn btn-sm btn-primary" (click)="save()" [disabled]="!createModal.form.valid || saving"> Lưu </button>
+    </div>
+</form>
+

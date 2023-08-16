@@ -1,0 +1,121 @@
+<div class="grid ml-0 mr-0 mt-0 call-container" >
+    <div class="col-12">
+        <div class="card b-list">
+            <div class="p-fluid p-formgrid grid b-header">
+                <div class="col-12 md:col-7 b-title">
+                    <h4 style="display:inline"> Danh sách cuộc gọi </h4>
+                </div> 
+            </div>
+            <p-toast></p-toast>
+            <p-confirmDialog></p-confirmDialog>
+            <p-table 
+                #investorListTable 
+                [value]="rows"
+                [columns]="_selectedColumns"
+                [loading]="isLoading" [rowHover]="true" [showCurrentPageReport]="true" [paginator]="false"
+                (onPageChange)="setPage($event)" responsiveLayout="scroll" dataKey="code" 
+                [resizableColumns]="false" [scrollable]="true" scrollHeight="{{ (screenHeight*0.65) + 'px' }}" styleClass="custom-table">
+                <ng-template pTemplate="caption">
+                    <div class="flex">
+                      
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header" let-columns>
+                    <tr>
+                        <th style="max-width: 5rem; min-width: 5rem;" pFrozenColumn alignFrozen="left" class="b-border-frozen-left"> STT </th>
+                        <th *ngFor="let col of columns" [ngStyle]="{'max-width': !col?.isPin ? col?.width : '', 'min-width': col?.width}" [ngClass]=" col?.class ">
+                            {{ col?.header }}
+                        </th> 
+                        <th style="max-width:7rem; min-width:7rem;" pFrozenColumn alignFrozen="right" [frozen]="true" class="b-border-frozen-right">Trạng thái</th>
+                        <th style="max-width:3rem; min-width:3rem; justify-content: center;" pFrozenColumn alignFrozen="right"  [frozen]="true">
+                            <i class="pi pi-cog" (click)="setColumn(cols, _selectedColumns)"></i>
+                        </th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-row let-rowIndex="rowIndex" let-columns="columns">
+                    <tr>
+                        <td style="max-width: 5rem; min-width: 5rem;" [pTooltip]="row.id" pFrozenColumn alignFrozen="left" class="b-border-frozen-left"> {{ row.id.length > 3 ? row.id.substr(0, 3) + '...' : row.id }} </td>
+                        <td *ngFor="let col of columns" [ngStyle]="{'max-width': !col?.isPin ? col?.width : '', 'min-width': col?.width}" [ngClass]=" col?.class">
+                          
+                            <div *ngIf="col?.field !== 'urlAudio'" [ngClass]="col?.cutText" [title]="row[col?.field]">
+                                {{ row[col?.field]}}
+                            </div>
+                            <div *ngIf="col?.field === 'urlAudio'" [ngClass]="col?.cutText" [title]="row[col?.field]">
+                                <audio controls #rowAudioPlayer *ngIf="row?.urlAudio ">
+                                    <source [src]="AppConsts.remoteServiceBaseUrl + '/' + row?.urlAudio" type="audio/wav">
+                                </audio>
+                            </div>
+                        </td>
+                  
+                        <td style="max-width:7rem; min-width: 7rem;" pFrozenColumn alignFrozen="right" [frozen]="true" class="b-border-frozen-right"> 
+                            <p-tag 
+                                styleClass="p-tag-{{ CallSupportConst.getStatus(row.status,'severity') }}" 
+                                severity="{{ CallSupportConst.getStatus(row.status,'severity') }}"
+                                value="{{ CallSupportConst.getStatus(row.status) }}">
+                            </p-tag>
+                        </td>
+                        <td style="max-width:3rem; min-width:3rem;" pFrozenColumn alignFrozen="right"  [frozen]="true" class="b-table-actions">
+                           
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+            <p-paginator 
+                [rows]="page.pageSize" 
+                [totalRecords]="page.totalItems" 
+                [rowsPerPageOptions]="[25, 50, 100, 200]" 
+                currentPageReportTemplate="Tất cả {{ page.totalItems }} dòng" 
+                showCurrentPageReport="true"
+                (onPageChange)="setPage($event)">
+            </p-paginator>
+            <div class="none">
+                <video [ngClass]="{'none': !facetime || statusCall?.endedCall, 'custom-class': facetime}"  #localVideo width="300" [autoplay]="true" [muted]="true" controls id="mySide"></video>
+                <video [ngClass]="{'none': statusCall?.endedCall || !((facetime && otherUserVideo) || otherUserRequest)  , 'custom-class': ((facetime && otherUserVideo) || otherUserRequest)}" #remoteVideo width="300" [autoplay]="true" controls id="otherSide"></video>
+            </div>
+            <audio #audioPlayer controls [ngStyle]="{'display': 'none'}">
+                <source src="assets/audio/song.mp3" type="audio/mpeg">
+               
+            </audio>
+            <div class="videoPopup" *ngIf="otherId">
+                <span class="triangle-arrow"></span>
+        
+                <div class="inner-popup-call">
+                    <div class="upper-popup-call">
+                        <div class="flex justify-content-between">
+                            <div class="status-call">
+                                <p>Cuộc gọi tới</p>
+                            </div>
+                            <div class="time-call" *ngIf="statusCall?.progressingCall">
+                                <p> {{ currentTime }}</p>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="user-call">{{caller.name}}</p>
+                        </div>
+                        <div style="margin-top: 10px; margin-bottom: 20px">
+                            <p>Từ <span class="number-user-call">{{caller.phone}}</span></p>
+                        </div>
+                    </div>
+                    <div class="lower-popup-call">
+                        <div class="flex justify-content-center">
+                            <img [src]="AppConsts.remoteServiceBaseUrl + '/' + caller?.avatarImageUrl" class="avatar-user-call">
+                        </div>
+                        <div *ngIf="statusCall?.incomingCall">
+                            <p style="color: white; text-align: center;">Khách hàng đang đợi: {{ currentTime }}</p>
+                        </div>
+                        <div>
+                            <p style="color: white; text-align: center; margin-bottom: 15px;">Hỗ trợ khách hàng</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex" [ngClass]="{' justify-content-between': statusCall?.incomingCall, ' justify-content-center flex-wrap': !statusCall?.incomingCall}"  style="margin-top: 15px;">
+                    <button *ngIf="statusCall?.incomingCall" class="btn btn-primary m-3 btn-init-call" (click)="endCall('rejectCall')" ><i class="pi pi-phone rotate-icon"></i></button>
+                    <button *ngIf="statusCall?.progressingCall" class="btn btn-primary m-3 btn-init-call" (click)="endCall('endCall')" ><i class="pi pi-phone rotate-icon"></i></button>
+                    <button *ngIf="statusCall?.incomingCall" class="btn btn-primary m-3 btn-accept-call" (click)="acceptCall()"><i class="pi pi-phone"></i></button>
+                    <!-- <button  class="btn btn-primary m-3 btn-accept-call" (click)="toggleLocalCamera()"><i class="pi pi-camera"></i></button> -->
+                </div>
+           
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,298 @@
+<app-loading-page *ngIf="isLoading"></app-loading-page>
+
+<div class="card b-page-detail" *ngIf="!isLoading">
+	<div class="p-fluid p-formgrid grid b-header">
+		<div class="col-12 md:col-7">
+			<h5 class="title-info mb-0"> Phát hành sơ cấp </h5>
+		</div>
+		<p-toast></p-toast>
+		<p-confirmDialog [style]="{width: 'auto'}" [baseZIndex]="10000"></p-confirmDialog>
+		<div class="col-12 md:col-5 b-actions">
+			<div class="text-right">
+				<p-button *ngIf="bondPrimaryDetail.status == 'T' && isGranted([PermissionBondConst.BondMenuQLTP_PHSC_TrinhDuyet])" styleClass="p-button-sm custom-button"
+									label="Trình duyệt" icon="pi pi-arrow-up"
+									(click)="request()">
+			    </p-button>
+				<p-button *ngIf="bondPrimaryDetail.status == 'P' && isGranted([PermissionBondConst.BondMenuQLTP_PHSC_PheDuyetOrHuy])" styleClass="p-button-sm custom-button"
+									label="Xử lý yêu cầu" icon="pi pi-check"
+									(click)="approveBond(bondPrimaryDetail)">
+				</p-button>
+				<ng-container *ngIf="activeIndex == 0">
+					<!-- <button *ngIf="actionsDisplay?.length && bondPrimaryDetail?.isCheck == null"
+						class="p-button-sm custom-button" type="button" pButton icon="pi pi-ellipsis-h"
+						(click)="menu.toggle($event)"></button>
+					<p-menu #menu [popup]="true" [model]="actionsDisplay" [appendTo]="body"></p-menu> -->
+					<p-button *ngIf="isGranted([PermissionBondConst.Bond_PHSC_TTC_ChinhSua])" styleClass="p-button-sm custom-button" label="{{ labelButtonEdit }}"
+						icon="pi {{ isEdit ? 'pi-save' : 'pi-pencil' }}" (click)="changeEdit()">
+					</p-button>
+				</ng-container>
+				<p-button styleClass="p-button-sm custom-button  b-button-back"
+					[routerLink]="'/bond-manager/product-bond-primary'" label="Quay lại" icon="pi pi-chevron-left">
+				</p-button>
+			</div>
+		</div>
+	</div>
+
+	<p-tabView styleClass="custom-tabview" [(activeIndex)]="activeIndex">
+		<p-tabPanel *ngIf="isGranted([PermissionBondConst.Bond_PHSC_TTC])">
+			<ng-template pTemplate="header">
+				<span> Thông tin chung </span>
+			</ng-template>
+			<div *ngIf="isGranted([PermissionBondConst.Bond_PHSC_TTC_ChiTiet])" class="grid detail distribution-contract">
+				<div class="col-12">
+					<div class="card pt-0 mb-0">
+						<h5>Sản phẩm trái phiếu</h5>
+						<div class="p-fluid p-formgrid grid">
+							<div class="field col-12 md:col-12">
+								<label class="title-info">Mã trái phiếu</label>
+								<input [disabled]="true" pInputText
+									[value]="bondPrimaryDetail?.productBondInfo?.bondCode + ' - ' + bondPrimaryDetail?.productBondInfo?.bondName"
+									class="custom-input-disabled" />
+							</div>
+							<div class="field col-12 md:col-4">
+								<label class="title-info">Tổ chức phát hành</label>
+								<input [disabled]="true" pInputText
+									value="{{ bondPrimaryDetail?.productBondInfo?.issuer?.businessCustomer?.name }}"
+									class="custom-input-disabled" />
+							</div>
+							<div class="field col-12 md:col-2">
+								<label class="title-info">Tên Alias</label>
+								<input [disabled]="true" pInputText
+									value="{{ bondPrimaryDetail?.aliasName }}"
+									class="custom-input-disabled" />
+							</div>
+							<div class="field col-12 md:col-6">
+								<label class="title-info {{ isEdit ? 'hightline-title' : '' }}">Tài khoản thụ
+									hưởng</label>
+								<p-dropdown optionValue="businessCustomerBankId" name="businessCustomerBankAccId"
+									optionLabel="labelName" appendTo="body" [autoDisplayFirst]="false"
+									[disabled]="!isEdit"
+									[options]="bondPrimaryDetail?.productBondInfo?.issuer?.businessCustomer?.businessCustomerBanks"
+									[(ngModel)]="bondPrimaryDetail.businessCustomerBankAccId"
+									[ngClass]="{'ng-invalid ng-dirty' : (submitted && !bondPrimaryDetail.businessCustomerBankAccId) || fieldErrors?.businessCustomerBankAccId } + ' custom-input-disabled'"
+									(click)="resetValid('businessCustomerBankAccId')">
+								</p-dropdown>
+							</div>
+							<!-- <div class="field col-12">
+								<label class="title-info">Mô tả</label>
+								<div [disabled]="true" pInputText [innerHTML]="bondPrimaryDetail?.productBondInfo?.description ? bondPrimaryDetail?.productBondInfo?.description : null" class="custom-input-disabled"></div>
+							</div> -->
+						</div>
+						<!--  -->
+						<div class="p-fluid p-formgrid grid pt-2">
+							<div class="field col-12 md:col-2">
+								<label class="title-info">Ngày phát hành</label>
+								<input [disabled]="true" pInputText
+									[value]="formatDate(bondPrimaryDetail?.productBondInfo?.issueDate)"
+									class="custom-input-disabled" />
+							</div>
+							<div class="field col-12 md:col-2">
+								<label class="title-info">Ngày đáo hạn</label>
+								<input [disabled]="true" pInputText
+									[value]="formatDate(bondPrimaryDetail?.productBondInfo?.dueDate)"
+									class="custom-input-disabled" />
+							</div>
+							<div class="field col-12 md:col-2">
+								<label class="title-info">Kỳ hạn</label>
+								<input [disabled]="true" pInputText
+									[value]="bondPrimaryDetail?.productBondInfo?.bondPeriod + ' ' + ProductBondInfoConst.getPeriodUnits(bondPrimaryDetail?.productBondInfo?.bondPeriodUnit)"
+									class="custom-input-disabled" />
+							</div>
+							<div class="field col-12 md:col-2">
+								<label class="title-info">Kỳ trả lãi</label>
+								<input [disabled]="true" pInputText
+									[value]="bondPrimaryDetail?.productBondInfo?.interestPeriod + ' ' + ProductBondInfoConst.getPeriodUnits(bondPrimaryDetail?.productBondInfo?.interestPeriodUnit)"
+									class="custom-input-disabled" />
+							</div>
+							<div class="field col-12 md:col-2">
+								<label class="title-info">Lãi suất (%)</label>
+								<input [disabled]="true" pInputText
+									[value]="bondPrimaryDetail?.productBondInfo?.interestRate"
+									class="custom-input-disabled" />
+							</div>
+							<div class="field col-12 md:col-2">
+								<label class="title-info">Hình thức trả</label>
+								<input [disabled]="true" pInputText
+									[value]="ProductBondInfoConst.getInterestRateTypes(bondPrimaryDetail?.productBondInfo?.interestRateType)"
+									class="custom-input-disabled" />
+							</div>
+							<div class="field col-12 md:col-2">
+								<label class="title-info">SL KH còn lại</label>
+								<input [disabled]="true" pInputText
+									[value]="bondPrimaryDetail?.productBondInfo?.soLuongKhConLai ?? null"
+									class="custom-input-disabled" />
+							</div>
+
+							<div class="field col-12 md:col-2">
+								<label class="title-info">Mệnh giá</label>
+								<input [disabled]="true" pInputText
+									[value]="utils.transformMoney(bondPrimaryDetail?.productBondInfo?.parValue)"
+									class="custom-input-disabled" />
+							</div>
+							<div class="field col-12 md:col-2">
+								<label class="title-info">SL phát hành</label>
+								<input [disabled]="true" pInputText
+									[value]="utils.transformMoney(bondPrimaryDetail?.productBondInfo?.quantity)"
+									class="custom-input-disabled" />
+							</div>
+
+							<div class="field col-12 md:col-2">
+								<label class="title-info">SL còn lại</label>
+								<input 
+									[disabled]="true" pInputText
+									value="{{ bondPrimaryDetail?.productBondInfo?.soLuongConLai ? utils.transformMoney(bondPrimaryDetail?.productBondInfo?.soLuongConLai) : null }}"
+									class="custom-input-disabled" 
+								/>
+							</div>
+							<div class="field col-12 md:col-2">
+								<label class="title-info">Tổng giá trị phát hành</label>
+								<input [disabled]="true" pInputText
+									[value]="utils.transformMoney(bondPrimaryDetail?.productBondInfo?.parValue * bondPrimaryDetail?.productBondInfo?.quantity)"
+									class="custom-input-disabled" />
+							</div>
+
+						</div>
+					</div>
+					<div class="card pt-0 mb-0">
+						<h5 class="mt-3"> Đại lý sơ cấp </h5>
+						<div class="p-fluid p-formgrid grid">
+							<div class="field col-12 md:col-6">
+								<label class="title-info">Tên ĐLSC</label>
+								<input [disabled]="true" pInputText
+									value="{{ bondPrimaryDetail?.tradingProvider?.businessCustomer?.name }}"
+									class="custom-input-disabled" />
+							</div>
+							<div class="field col-12 md:col-2">
+								<label class="title-info">Mã số thuế</label>
+								<input [disabled]="true" pInputText
+									value="{{ bondPrimaryDetail?.tradingProvider?.businessCustomer?.taxCode }}"
+									class="custom-input-disabled" />
+							</div>
+							<div class="field col-12 md:col-4">
+								<label class="title-info">Email</label>
+								<input [disabled]="true" pInputText
+									value="{{ bondPrimaryDetail?.tradingProvider?.businessCustomer?.email }}"
+									class="custom-input-disabled" />
+							</div>
+						</div>
+					</div>
+					<div class="card pt-0 mb-0">
+						<h5 class="mt-3"> Thông tin sản phẩm </h5>
+						<div class="p-fluid p-formgrid grid">
+							<div class="field col-12 md:col-4">
+								<label class="title-info {{ isEdit ? 'hightline-title' : '' }}"> Mã hợp đồng </label>
+								<input [disabled]="!isEdit" type="text" id="contractCode" name="contractCode" pInputText
+									[(ngModel)]="bondPrimaryDetail.contractCode"
+									[ngClass]="{'ng-invalid ng-dirty' : fieldErrors?.contractCode} + ' custom-input-disabled'"
+									(click)="resetValid('contractCode')" />
+							</div>
+							<div class="field col-12 md:col-2">
+								<label class="title-info {{ isEdit ? 'hightline-title' : '' }}">Ngày mở</label>
+								<p-calendar inputId="holdDate" dateFormat="dd/mm/yy" locale="vi" appendTo="body"
+									utc="true" placeholder="dd/mm/yyyy" [disabled]="!isEdit"
+									[(ngModel)]="bondPrimaryDetail.openCellDate"
+									[ngClass]="{'ng-invalid ng-dirty' : fieldErrors?.openCellDate} + ' custom-input-disabled'"
+									(click)="resetValid('openCellDate')" (onSelect)="changeOpenCellDate($event)"
+									[showIcon]="true">
+								</p-calendar>
+							</div>
+							<div class="field col-12 md:col-2">
+								<label class="title-info {{ isEdit ? 'hightline-title' : '' }}">Ngày đóng</label>
+								<p-calendar inputId="closeCellDate" dateFormat="dd/mm/yy" locale="vi" appendTo="body"
+									utc="true" placeholder="dd/mm/yyyy" [autoDisplayFirst]="true" [disabled]="!isEdit"
+									[(ngModel)]="bondPrimaryDetail.closeCellDate"
+									[ngClass]="{'ng-invalid ng-dirty' : fieldErrors?.closeCellDate} + ' custom-input-disabled'"
+									(click)="resetValid('closeCellDate')" [showIcon]="true">
+								</p-calendar>
+							</div>
+							<div class="field col-12 md:col-2">
+								<label class="title-info"> Số KH tham gia</label>
+								<input [disabled]="true" pInputText
+									[value]="bondPrimaryDetail?.soKhachHangThamGia ?? null"
+									class="custom-input-disabled" />
+							</div>
+							<div class="field col-12 md:col-2">
+								<label class="title-info">Số KH còn lại</label>
+								<input [disabled]="true" pInputText
+									[value]="bondPrimaryDetail?.soKhachHangConLai ?? null"
+									class="custom-input-disabled" />
+							</div>
+							<!--  -->
+							<div class="field col-12 md:col-2">
+								<label class="title-info {{ isEdit ? 'hightline-title' : '' }}">Kiểu tính giá</label>
+								<p-dropdown optionValue="code" name="priceType" optionLabel="name"
+									[autoDisplayFirst]="true" [disabled]="!isEdit"
+									[options]="ProductBondPrimaryConst.priceTypes"
+									[(ngModel)]="bondPrimaryDetail.priceType"
+									[ngClass]="{'ng-invalid ng-dirty' : (submitted && !productBondPrimary.priceType) || fieldErrors?.priceType } + ' custom-input-disabled'"
+									(click)="resetValid('priceType')">
+								</p-dropdown>
+							</div>
+							<div class="field col-12 md:col-2">
+								<label class="title-info">Mệnh giá</label>
+								<input [disabled]="true" pInputText
+									[value]="utils.transformMoney(bondPrimaryDetail?.productBondInfo?.parValue)"
+									class="custom-input-disabled" />
+							</div>
+							<div class="field col-12 md:col-2">
+								<label class="title-info {{ isEdit ? 'hightline-title' : '' }}">Tổng số lượng</label>
+								<p-inputNumber type="text" id="quantity" name="quantity" [disabled]="!isEdit"
+									[(ngModel)]="bondPrimaryDetail.quantity"
+									[ngClass]="{'ng-invalid ng-dirty' :  fieldErrors?.quantity} + ' custom-input-disabled'"
+									(click)="resetValid('quantity')">
+								</p-inputNumber>
+							</div>
+							<div class="field col-12 md:col-2">
+								<label>SL nắm giữ</label>
+								<input 
+									pInputText
+									[disabled]="true"
+									value="{{ utils.transformMoney(bondPrimaryDetail?.soLuongTraiPhieuNamGiu) }}"
+									class="custom-input-disabled"
+								/>
+							</div>
+							<div class="field col-12 md:col-2">
+								<label>SL còn lại</label>
+								<input 
+									pInputText
+									[disabled]="true"
+									value="{{ utils.transformMoney(bondPrimaryDetail?.soLuongTraiPhieuConLai) }}"
+									class="custom-input-disabled"
+								/>
+							</div>
+							<div class="field col-12 md:col-2">
+								<label class="title-info"> Tổng giá trị </label>
+								<input [disabled]="true" class="custom-input-disabled" pInputText
+									[value]="utils.transformMoney(bondPrimaryDetail?.productBondInfo?.parValue * bondPrimaryDetail.quantity)" />
+							</div>
+							<div class="field col-12 md:col-2">
+								<label class="title-info {{ isEdit ? 'hightline-title' : '' }}">Số ĐT tối
+									thiểu/NĐT</label>
+								<p-inputNumber type="text" id="minMoney" name="minMoney" mode="decimal" locale="de-DE"
+									[disabled]="!isEdit" [(ngModel)]="bondPrimaryDetail.minMoney"
+									[ngClass]="{'ng-invalid ng-dirty' : fieldErrors?.minMoney} + ' custom-input-disabled'">
+								</p-inputNumber>
+							</div>
+							<div class="field col-12 md:col-2">
+								<label class="title-info">Trạng thái</label>
+								<input [disabled]="true" pInputText
+									[value]="ProductBondPrimaryConst.getNameStatus(bondPrimaryDetail?.status)"
+									class="custom-input-disabled" />
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</p-tabPanel>
+		<p-tabPanel header="Header III">
+			<ng-template pTemplate="header">
+				<!-- <i class="pi pi-star mr-2"></i> -->
+				<span> Chính sách lãi</span>
+			</ng-template>
+			<app-product-bond-primary-interest-policy *ngIf="activeIndex == 1">
+			</app-product-bond-primary-interest-policy>
+		</p-tabPanel>
+		
+
+	</p-tabView>
+</div>

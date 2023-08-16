@@ -1,0 +1,221 @@
+<e-loading *ngIf="isLoading"></e-loading>
+<wrapper-page-detail (_contentHeights)="contentHeights=$event">
+    <div class="e-page page-detail">
+        <div class="wrapper-page-header" id="page-header">
+            <div class="b-header"> 
+                <div class="grid">
+                    <div class="col-12 md:col-7">
+                        <h4 class="mb-0"> {{ contractorDetail?.name || 'None'}} </h4>
+                    </div>
+                    <div class="col-12 md:col-5 b-actions">
+                        <p-button 
+                            styleClass="p-button-sm custom-button  b-button-back" 
+                            [routerLink]="'/setting/general-contractor'" 
+                            label="Quay lại" icon="pi pi-chevron-left">
+                        </p-button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <p-tabView styleClass="custom-tabview" [(activeIndex)]="activeIndex">
+            <p-tabPanel [ngClass]="'tab-scroll'">
+                <ng-template pTemplate = "header">
+                    <span> Thông tin chung </span>
+                </ng-template>
+                <div 
+                    *ngIf="!isLoading" class="grid form-detail" 
+                    [style.height.px]="contentHeights[activeIndex]" [style.overflow-y]="'auto'">
+                    <div class="col-12 pb-0 pt-0">
+                        <div class="card pt-0 pb-0 mb-0">
+                            <h5 class="mb-2"> Thông tin tổng thầu </h5>
+                            <div class="p-fluid p-formgrid grid">
+                                <div class="col-12 md:col-2">
+                                    <div class="field">
+                                        <label htmlFor="code">Mã doanh nghiệp </label>
+                                        <input pInputText [disabled]="true" value="{{ contractorDetail?.businessCustomer?.code }}" class="custom-input-disabled"/>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-2">
+                                    <div class="field">
+                                        <label htmlFor="taxCode"> Mã số thuế </label>
+                                        <input pInputText [disabled]="true" value="{{ contractorDetail?.businessCustomer?.taxCode }}" class="custom-input-disabled"/>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-6">
+                                    <div class="field">
+                                        <label htmlFor="licenseIssuer">Nơi cấp</label>
+                                        <input [disabled]="true" pInputText value="{{ contractorDetail?.businessCustomer?.licenseIssuer }}" class="custom-input-disabled"/>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-2">
+                                    <div class="field">
+                                        <label for="licenseDate">Ngày cấp phép ĐKKD</label>
+                                        <input pInputText value="{{ formatDate(contractorDetail?.businessCustomer?.licenseDate) }}" [disabled]="true" class="custom-input-disabled"/>
+                                    </div>                    
+                                </div>
+                                
+                                <div class="col-12 md:col-2">
+                                    <div class="field">
+                                        <label htmlFor="numberModified">Số lần thay đổi </label>
+                                        <input [disabled]="true" pInputText value="{{ contractorDetail?.businessCustomer?.numberModified }}" class="custom-input-disabled"/>
+                                    </div>
+                                </div>
+    
+                                <div class="col-12 md:col-2">
+                                    <div class="field">
+                                        <label for="dateModified">Ngày thay đổi</label>
+                                        <input [disabled]="true" value="{{ formatDate(contractorDetail?.businessCustomer?.dateModified) }}" pInputText class="custom-input-disabled"/>
+                                    </div>
+                                </div>
+                                
+                                
+                                <!--  -->
+                                <div class="col-12 md:col-6">
+                                    <div class="field">
+                                        <label htmlFor="name">Tên Doanh nghiệp </label>
+                                        <input pInputText [disabled]="true" value="{{ contractorDetail?.businessCustomer?.name }}" class="custom-input-disabled"/>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-2">
+                                    <div class="field">
+                                        <label htmlFor="shortName">Tên viết tắt</label>
+                                        <input [disabled]="true" pInputText value="{{ contractorDetail?.businessCustomer?.shortName }}" class="custom-input-disabled"/>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-12 md:col-2">
+                                    <div class="field">
+                                        <label htmlFor="phone">Điện thoại </label>
+                                        <input [disabled]="true" value="{{ contractorDetail?.businessCustomer?.phone }}" pInputText class="custom-input-disabled"/>
+                                    </div>
+                                </div>
+    
+                                <div class="col-12 md:col-2">
+                                    <div class="field">
+                                        <label htmlFor="mobile">Điện thoại khác</label>
+                                        <input [disabled]="true" pInputText value="{{ contractorDetail?.businessCustomer?.mobile }}" class="custom-input-disabled"/>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-5">
+                                    <div class="field">
+                                        <label htmlFor="email">Thư điện tử</label>
+                                        <input [disabled]="true" pInputText  value="{{ contractorDetail?.businessCustomer?.email }}" class="custom-input-disabled"/>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-3">
+                                    <div class="field">
+                                        <label htmlFor="capital">Vốn điều lệ</label>
+                                        <input pInputText [disabled]="true" value="{{ utils.transformMoney(contractorDetail?.businessCustomer?.capital) }}" class="custom-input-disabled"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--  -->
+                        <div class="card pt-0 pb-0 mb-0">
+                            <h5 class="mb-2 mt-2"> Địa chỉ </h5>
+                            <div class="p-fluid p-formgrid grid">
+                                <div class="col-12 md:col-9">
+                                    <div class="field">
+                                        <label htmlFor="address">Địa chỉ đăng ký</label>
+                                        <textarea [disabled]="true" rows="1" value="{{ contractorDetail?.businessCustomer?.address }}" pInputTextarea class="custom-input-disabled"></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-3">
+                                    <div class="field">
+                                        <label htmlFor="nation">Quốc gia</label>
+                                        <p-dropdown 
+                                        [disabled]="true"
+                                        optionValue="code" name="name" optionLabel="name" appendTo="body"
+                                        [options]="NationalityConst.List" [autoDisplayFirst]="false"
+                                        [(ngModel)]="contractorDetail.businessCustomer.nation" 
+                                        class="custom-input-disabled">
+                                        </p-dropdown>                                
+                                    </div>
+                                </div>
+    
+                                <div class="col-12 md:col-12">
+                                    <div class="field">
+                                        <label htmlFor="tradingAddress">Địa chỉ giao dịch </label>
+                                        <textarea 
+                                            [disabled]="true" rows="2"
+                                            value="{{ contractorDetail?.businessCustomer?.tradingAddress }}" pInputTextarea
+                                            class="custom-input-disabled">
+                                        </textarea>
+                                    </div>
+                                </div>
+                                <div class=" field col-12 md:col-12">
+                                    <label class="title-info {{ isEdit ? 'hightline-title' : '' }}"> Website </label>
+                                    <input 
+                                        [disabled]="!isEdit" class="custom-input-disabled"
+                                        type="text" id="website" name="website" pInputText 
+                                        [(ngModel)]="contractorDetail?.businessCustomer.website" maxlength="256"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        <!--  -->
+                        <div class="card pt-0 pb-0 mb-0">
+                            <h5 class="mb-2 mt-0"> Thông tin tài khoản </h5>
+                            <div class="p-fluid p-formgrid grid">
+                                <div class="col-12 md:col-6">
+                                    <div class="field">
+                                        <label htmlFor="bankName">Tên ngân hàng</label>
+                                        <input [disabled]="true" pInputText value="{{ contractorDetail?.businessCustomer?.businessCustomerBank?.bankName }}" class="custom-input-disabled"/>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-6">
+                                    <div class="field">
+                                        <label htmlFor="bankBranchName">Chi nhánh</label>
+                                        <input [disabled]="true" pInputText value="{{ contractorDetail?.businessCustomer?.businessCustomerBank?.bankBranchName }}" class="custom-input-disabled"/>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-2">
+                                    <div class="field">
+                                        <label htmlFor="bankAccNo">Số tài khoản </label>
+                                        <input [disabled]="true" pInputText value="{{ contractorDetail?.businessCustomer?.businessCustomerBank?.bankAccNo }}" class="custom-input-disabled"/>
+                                    </div> 
+                                </div>
+                                <div class="col-12 md:col-10">
+                                    <div class="field">
+                                        <label htmlFor="bankAccName">Tên tài khoản</label>
+                                        <input [disabled]="true" pInputText value="{{ contractorDetail?.businessCustomer?.businessCustomerBank?.bankAccName }}" class="custom-input-disabled"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--  -->
+                        <div class="card pt-0 mb-0">
+                            <h5 class="mb-2 mt-2"> Thông tin người đại diện </h5>
+                            <div class="p-fluid p-formgrid grid">
+                                <div class="col-12 md:col-3 pb-0">
+                                    <div class="field">
+                                        <label htmlFor="repName">Tên người đại diện</label>
+                                        <input [disabled]="true" pInputText value="{{ contractorDetail?.businessCustomer?.repName }}" class="custom-input-disabled"/>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-3 pb-0">
+                                    <div class="field">
+                                        <label htmlFor="repPosition">Chức vụ</label>
+                                        <input [disabled]="true" pInputText value="{{ contractorDetail?.businessCustomer?.repPosition }}" class="custom-input-disabled"/>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-3 pb-0">
+                                    <div class="field">
+                                        <label htmlFor="decisionNo">Quyết định số </label>
+                                        <input [disabled]="true" pInputText value="{{ contractorDetail?.businessCustomer?.decisionNo }}" class="custom-input-disabled"/>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-3 pb-0">
+                                    <div class="field">
+                                        <label for="decisionDate">Ngày quyết định</label>
+                                        <input [disabled]="true" pInputText value="{{ formatDate(contractorDetail?.businessCustomer?.decisionDate) }}" class="custom-input-disabled"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </p-tabPanel>
+        </p-tabView>
+    </div>
+</wrapper-page-detail>

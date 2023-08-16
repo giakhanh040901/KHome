@@ -1,0 +1,41 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+	<FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ClosedXML" Version="0.100.3" />
+    <PackageReference Include="SignalRSwaggerGen" Version="4.2.0" />
+    <PackageReference Include="System.Reactive" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\EPIC.BondService\EPIC.DataAccess\EPIC.DataAccess.csproj" />
+    <ProjectReference Include="..\..\EPIC.CoreService\EPIC.CoreRepositories\EPIC.CoreRepositories.csproj" />
+    <ProjectReference Include="..\..\EPIC.CoreService\EPIC.CoreShareServices\EPIC.CoreSharedServices.csproj" />
+    <ProjectReference Include="..\..\EPIC.ImageService\EPIC.FileDomain\EPIC.FileDomain.csproj" />
+    <ProjectReference Include="..\..\EPIC.Libraries\EPIC.FillContractFile\EPIC.FillContractFile.csproj" />
+    <ProjectReference Include="..\..\EPIC.SharedService\EPIC.Notification\EPIC.Notification.csproj" />
+    <ProjectReference Include="..\EPIC.RealEstateRepositories\EPIC.RealEstateRepositories.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\EPIC.BondService\EPIC.DataAccess\EPIC.DataAccess.csproj" />
+    <ProjectReference Include="..\..\EPIC.CoreService\EPIC.CoreRepositories\EPIC.CoreRepositories.csproj" />
+    <ProjectReference Include="..\EPIC.RealEstateEntities\EPIC.RealEstateEntities.csproj" />
+    <ProjectReference Include="..\EPIC.RealEstateRepositories\EPIC.RealEstateRepositories.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\EPIC.BondService\EPIC.DataAccess\EPIC.DataAccess.csproj" />
+    <ProjectReference Include="..\..\EPIC.CoreService\EPIC.CoreRepositories\EPIC.CoreRepositories.csproj" />
+    <ProjectReference Include="..\EPIC.RealEstateEntities\EPIC.RealEstateEntities.csproj" />
+    <ProjectReference Include="..\EPIC.RealEstateRepositories\EPIC.RealEstateRepositories.csproj" />
+  </ItemGroup>
+
+</Project>

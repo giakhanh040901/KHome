@@ -1,0 +1,150 @@
+<app-loading-page *ngIf="isLoadingPage"></app-loading-page>
+
+<div class="grid px-4 py-2" [style.background]="'#FAF9FB'">
+  <div class="flex b-w-100 mb-2">
+    <div class="col-9">
+      <div class="flex justify-content-between mb-2">
+        <h4>Tổng quan</h4>
+        <p-dropdown
+          [options]="listProject"
+          optionLabel="name"
+          optionValue="code"
+          [autoDisplayFirst]="false"
+          placeholder="Chọn dự án"
+          [showClear]="true"
+          [(ngModel)]="filter.project"
+          (onChange)="onChangeProjectFilter($event)"
+        >
+        </p-dropdown>
+      </div>
+      <div class="flex mb-4">
+        <card-dashboard-overview
+          class="col mr-4"
+          [styleCard]="{ backgroundColor: '#AD96EA', textColor: '#FFFFFF' }"
+          [title]="'SL sản phẩm'"
+          [description]="'Tổng số sản phẩm'"
+          [value]="dataOverview.totalProduct"
+          [infor]="'Dự án đang bán'"
+          [valueInfor]="dataOverview.saleProject"
+        ></card-dashboard-overview>
+        <card-dashboard-overview
+          class="col mr-4"
+          [styleCard]="{ backgroundColor: '#EF4770', textColor: '#FFFFFF' }"
+          [title]="'SL sản phẩm đã bán'"
+          [description]="'SL căn KH đặt mua'"
+          [value]="dataOverview.totalProductSell"
+          [infor]="'Tỷ lệ'"
+          [valueInfor]="dataOverview.ratioProductSell + '%'"
+        ></card-dashboard-overview>
+        <card-dashboard-overview
+          class="col"
+          [styleCard]="{ backgroundColor: '#FFFFFF', textColor: '#212633' }"
+          [title]="'SL khách hàng'"
+          [description]="'Tổng số lượng khách'"
+          [value]="dataOverview.totalCustomer"
+          [infor]="'Đặt mua nhiều nhất'"
+          [valueInfor]="dataOverview.customerMaxsell"
+        ></card-dashboard-overview>
+      </div>
+      <div class="card height-chart">
+        <div class="flex justify-content-between py-4">
+          <h4>Biểu đồ bán hàng theo thời gian</h4>
+          <span class="p-float-label b-custom">
+            <e-calendar
+              [placeholder]="'dd-mm-yyyy đến dd-mm-yyyy'"
+              [(value)]="filter.dates"
+              [selectionMode]="'range'"
+              [inputId]="'tradingDate'"
+              [styleInline]="{'width':'18rem', 'border':'none'}"
+              (_onChange)="selectDays($event)"
+              (_onClear)="onClearDays($event)"
+              >
+          </e-calendar>
+          </span>
+        </div>
+        <div [style.height]="'calc(100% - 82px)'">
+          <p-chart
+            type="line"
+            height="230"
+            [data]="dataLine"
+            [options]="optionsLine"
+          ></p-chart>
+          <div
+            class="flex justify-content-center py-4"
+            [style.height]="'calc(100% - 230px)'"
+          >
+            <div class="flex align-items-center">
+              <div class="label-icon mr-2"></div>
+              <span class="label-text">Số lượng căn bán trong ngày</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card height-chart">
+        <div class="py-4">
+          <h4>Biểu đồ theo tỷ lệ bán hàng</h4>
+        </div>
+        <div>
+          <p-chart
+            type="bar"
+            height="230"
+            [data]="dataBar"
+            [options]="optionsBar"
+          ></p-chart>
+        </div>
+      </div>
+    </div>
+    <div class="col-3">
+      <div class="px-2" [style.background]="'#FFF'">
+        <div>
+          <p-galleria
+            [value]="listGalleria"
+            [showIndicators]="true"
+            [showThumbnails]="false"
+          >
+            <ng-template pTemplate="item" let-item>
+              <card-dashboard-galleria
+                class="block w-full"
+                [srcImg]="item.srcImg"
+                [title]="item.title"
+                [project]="item.project"
+              ></card-dashboard-galleria>
+            </ng-template>
+          </p-galleria>
+        </div>
+        <div>
+          <div class="py-3">
+            <span class="font-bold text-xl" [style.color]="'#212633'"
+              >Hoạt động gần đây</span
+            >
+          </div>
+          <ng-container *ngFor="let item of listRecentActivity">
+            <recent-activity
+              [avatar]="item.avatar"
+              [name]="item.name"
+              [infor]="item.infor"
+              [time]="item.time"
+            ></recent-activity>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="flex b-w-100">
+    <div class="col-12">
+      <div class="card">
+        <div class="py-4">
+          <h4>Biểu đồ số lượng căn theo từng loại hình và mức bán</h4>
+        </div>
+        <div>
+          <p-chart
+            type="bar"
+            height="230"
+            [data]="dataCombo"
+            [options]="optionsCombo"
+          ></p-chart>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

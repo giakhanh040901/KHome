@@ -1,0 +1,194 @@
+<div class="row">
+    <div class="col-12 grid-margin">
+      <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12 px-0">
+                    <span class="mb-0 h3 pr-1" style="color: #172b4d;"> {{ titlePage }} </span>
+                </div>
+            </div>
+            <div class="row mt-2 mb-3">
+                <div class="col-md-5 pl-0 d-flex align-items-end">
+                    <button class="btn btn-sm btn-primary" (click)="create()"><i class="mdi mdi-plus-circle mr-1"></i> Thêm chính sách </button>
+                </div>
+                <div class="col-md-7 d-flex justify-content-end pr-0">
+                    <div style="min-width: 150px">
+                        <ng-select [(ngModel)]="market" name="contractTypeId"
+                        (change)="changeMarket()"
+                        placeholder="Chọn thị trường"
+                        [closeOnSelect]="false"
+                        [notFoundText]="'Không có dữ liệu'"
+                        [multiple]="false" [clearable]="true">
+                        <ng-option *ngFor="let item of ProductPolicyConst.markets" [value]="item.code">{{ item.name }}</ng-option>
+                        </ng-select>
+                    </div>
+                    <div class="input-group input-search">
+                        <input type="text" class="form-control form-control-sm border-radius-default ml-2" name="keyword"
+                            [placeholder]="'Tìm kiếm...'" [(ngModel)]="keyword" (keyup)="changeKeyword()"
+                            (keyup.enter)="setPage({ offset: offset })"/>
+                        <div class="input-group-append">
+                        <button class="btn btn-sm btn-primary" type="button" (click)="setPage({ offset: offset })">
+                            <i class="icon-magnifier"></i>
+                        </button>
+                    </div>
+                    </div>
+                </div>
+
+            </div>
+          <div class="row">
+            <div class="col-md-12 px-0">
+                <ngx-datatable class="ngx-datatable-custom border-left-none"
+                #productPolicyTable
+                [rows]="rows"
+                [columnMode]="ColumnMode.force"
+                [footerHeight]="42" [rowHeight]="50"
+                [headerHeight]="50" [footerHeight]="42"
+                [scrollbarV]="true" [scrollbarH]="true" [virtualization]="false"
+                [externalPaging]="true" [count]="page.totalItems" [offset]="page.pageNumber" [limit]="page.pageSize"
+                [messages]="datatableMessage"
+                (page)="setPage($event)" [busy]="isLoading">
+                    <ngx-datatable-row-detail [rowHeight]="150" #myDetailRow (toggle)="onDetailToggle($event)">
+                        <ng-template let-row="row" let-expanded="expanded" ngx-datatable-row-detail-template>
+                            <div class="card wrapper-detail" style="overflow-y: scroll;">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label> Mã  </label>
+                                            <p> {{ row.policyCode }} </p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label> Tên </label>
+                                            <p> {{ row.policyName }} </p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label> Loại chính sách </label>
+                                            <p> {{ ProductPolicyConst.getNameType(row.policyType) }} </p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label> Thị trường </label>
+                                            <p> {{ ProductPolicyConst.getNameType(row.market) }} </p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label> Cho phép chuyển nhượng? </label>
+                                            <p> {{ YesNoConst.getName(row.allowTransfer) }} </p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label> Thuế chuyển nhượng </label>
+                                            <p> {{ transferTaxRate ? (row.transferTaxRate | number:'1.0-2') : '-' }} </p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label> Số ngày chốt phát hành </label>
+                                            <p> {{ row.callDay ?? '-' }} </p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label> Giá trị đầu tư tối thiểu </label>
+                                            <p> {{ minValue ? (row.minValue | number:'1.0-2') : '-' }} </p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label> Mô tả </label>
+                                            <p> {{ row.policyDesc.lenght > 0 ? row.policyDesc : '-' }} </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-row-detail>
+                    <ngx-datatable-column [width]="30" [resizeable]="false" [sortable]="false" [draggable]="false" [canAutoResize]="false" frozenLeft="true">
+                        <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+                        <a style="font-size: 25px;"
+                            href="javascript:void(0)"
+                            [class.datatable-icon-right]="!expanded"
+                            [class.datatable-icon-down]="expanded"
+                            title="Expand/Collapse Row"
+                            (click)="toggleExpandRow(row, expanded)"
+                        >
+                        </a>
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="policyCode" [width]="120" [sortable]="false">
+                        <ng-template let-column="column" ngx-datatable-header-template> Mã  </ng-template>
+                        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                            <div>
+                                {{ value }}
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column name="policyName" [width]="200" [sortable]="false">
+                        <ng-template let-column="column" ngx-datatable-header-template> Tên </ng-template>
+                        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                            <div>
+                                {{ value }}
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column name="policyType" [width]="60" [sortable]="false">
+                        <ng-template let-column="column" ngx-datatable-header-template> Loại </ng-template>
+                        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                            <div>
+                                {{ ProductPolicyConst.getNameType(value) }}
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column name="market" [width]="150" [sortable]="false">
+                        <ng-template let-column="column" ngx-datatable-header-template> <div class="ml-8px"> Thị trường </div> </ng-template>
+                        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                            <div class="ml-8px">
+                                {{ ProductPolicyConst.getNameMarket(value) }}
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column name="custType" [width]="150" [sortable]="false">
+                        <ng-template let-column="column" ngx-datatable-header-template> Loại KH </ng-template>
+                        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                            <div>
+                                {{ ProductPolicyConst.getCustomerType(value) }}
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column name="status" [width]="150" [sortable]="false">
+                        <ng-template let-column="column" ngx-datatable-header-template> Trạng thái </ng-template>
+                        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                            <div [title]="value">
+                                {{ ProductPolicyConst.getNameStatus(value) }}
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column [width]="100" [sortable]="false">
+                        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                            <div class="dropdown" dropdown #dropdown="bs-dropdown" [autoClose]="true">
+                                <button dropdownToggle class="btn btn-action-table dropdown-toggle" type="button" id="dropdownMenu"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Thao tác
+                                </button>
+                                <div class="dropdown-menu table-dropdown-menu" *dropdownMenu aria-labelledby="dropdownMenu">
+                                    <span>
+                                        <a class="dropdown-item dropdown-item-wrapper" (click)="edit(row.bondPolicyId)">
+                                            <i class="fas fa-pencil-alt"></i> Sửa
+                                        </a>
+                                        <a class="dropdown-item dropdown-item-wrapper" (click)="delete(row)">
+                                            <i class="fas fa-trash"></i>&nbsp; Xoá
+                                        </a>
+                                    </span>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+                </ngx-datatable>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+

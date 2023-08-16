@@ -1,0 +1,39 @@
+::ng-deep {
+    &.custom-tabview {
+        &.scenario {
+            .p-tabview-nav-container {
+                .p-tabview-nav-content {
+                    ul {
+                        border-bottom: 2px solid #ecececb0;
+                    }
+                }
+            }
+            .p-tabview-panels {
+                padding-right: 0 !important;
+                .p-tabview-panel {
+                    margin-top: 10px !important;
+                    border-color: white !important;
+                }
+            }
+        }
+    }
+
+    &.custom-table {
+        &.scenario {
+            tr {
+                background: white !important;
+                td {
+                    padding-left: 0 !important;
+                    position: relative; 
+                    .reoder {
+                        position: absolute;
+                        top: 35px;
+                        span {
+                            font-size: 130%;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

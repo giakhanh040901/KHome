@@ -1,0 +1,68 @@
+
+<div class="grid pt-0">
+    <div class="col-12">
+        <div class="card pt-0">
+            <p-table 
+                #tradingProviderTable [value]="rows" 
+                [loading]="isLoading" [rowHover]="true" [paginator]="false" responsiveLayout="scroll" dataKey="code"
+                [scrollable]="true" styleClass="p-datatable-gridlines mt-3 custom-table">
+                <ng-template pTemplate="caption">
+					<div class="">
+						<span class="block mt-2 md:mt-0 p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" placeholder="Tìm kiếm..." style="width: 50%;"
+								[(ngModel)]="keyword" (input)="changeKeyword($event)"/>
+                        </span>
+					</div>
+                </ng-template>
+                <ng-template pTemplate="header">
+					<tr>
+						<th style="min-width: 8rem;" pFrozenColumn alignFrozen="left">Mã ĐLSC </th>
+                        <th style="min-width: 12rem; border-right: 1px solid #dee2e6 !important;" pFrozenColumn alignFrozen="left"> Tên ĐLSC </th>
+                        <th style="min-width: 12rem;">Tên viết tắt </th>
+                        <th style="min-width: 12rem;">Tên Alias </th>
+                        <th style="min-width: 15rem;">Email </th>
+                        <th style="min-width: 12rem;">SĐT </th>
+                        <th style="min-width: 15rem;">Địa chỉ </th>
+                        <th style="min-width: 12rem;">Người đại diện </th>
+                        <th style="min-width: 8rem;">Chức vụ </th>
+                        <th style="min-width: 12rem;">Lĩnh vực kính doanh </th>
+                        <th style="width: 5rem;; justify-content: center;" pFrozenColumn alignFrozen="right"> Chọn </th>
+					</tr>
+				</ng-template>
+                <ng-template pTemplate="body" let-rowIndex="rowIndex" let-row>
+                    <tr>
+                        <td style="min-width: 8rem;" pFrozenColumn alignFrozen="left"> {{ row?.code }} </td>
+                        <td style="min-width: 12rem; border-right: 1px solid #dee2e6 !important;" pFrozenColumn alignFrozen="left"> {{ row?.name }} </td>
+                        <td style="min-width: 12rem;"> {{ row?.shortName }} </td>
+                        <td style="min-width: 12rem;"> {{ row?.aliasName }} </td>
+                        <td style="min-width: 15rem;"> {{ row?.email }} </td>
+                        <td style="min-width: 12rem;"> {{ row?.phone }} </td>
+                        <td style="min-width: 15rem;"> {{ row?.address }} </td>
+                        <td style="min-width: 12rem;"> {{ row?.repName }} </td>
+                        <td style="min-width: 8rem;"> {{ row?.repPosition }} </td>
+                        <td style="min-width: 12rem;"> {{ row?.business }} </td>
+                        <td style="width: 5rem; justify-content: center;" pFrozenColumn alignFrozen="right">
+                            <div class="flex">
+                                <button pButton pRipple type="button" icon="pi pi-check" class="p-button-rounded mr-2 mb-2" (click)="isChoose(row)"></button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="emptymessage">
+					<tr>
+						<td colspan="7">Không có dữ liệu.</td>
+					</tr>
+				</ng-template>
+				<ng-template pTemplate="loadingbody">
+					<tr>
+						<td colspan="7"> Đang tải dữ liệu ... </td>
+					</tr>
+				</ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>
+
+

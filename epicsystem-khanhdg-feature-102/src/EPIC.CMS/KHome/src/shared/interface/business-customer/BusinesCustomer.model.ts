@@ -1,0 +1,30 @@
+export class CreateOrEditBusinessCustomer {
+    id?: number = undefined;
+    businessCustomerTempId: number = undefined;
+    code: string = "";
+    taxCode: string = "";
+    licenseIssuer: string = "";
+    licenseDate: string = "";
+    numberModified?: number = undefined;
+    dateModified?: string = null;
+    name: string = "";
+    shortName: string = "";
+    capital: number = undefined;
+    email: string = "";
+    phone: string = "";
+    mobile?: string = "";
+    address: string = "";
+    nation: string = "";
+    tradingAddress: string = "";
+    website?: string = "";
+    bankId: number = undefined;
+    bankBranchName?: string = "";
+    bankAccNo: string = "";
+    bankAccName: string = "";
+    repName: string = "";
+    repPosition: string = "";
+    decisionNo?: string = "";
+    decisionDate?: string = null;
+    status?: number = undefined;
+}
+  

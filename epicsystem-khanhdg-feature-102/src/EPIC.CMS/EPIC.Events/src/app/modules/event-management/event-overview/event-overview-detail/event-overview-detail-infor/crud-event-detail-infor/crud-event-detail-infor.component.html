@@ -1,0 +1,118 @@
+<div class="w-full" style="padding-bottom: 70px">
+  <div class="card p-0 mb-0">
+    <h5 class="title-info">Thời gian tổ chức</h5>
+    <p class="font-italic">Thông tin chi tiết 1 khung thời gian tổ chức</p>
+    <div class="p-fluid p-formgrid grid">
+      <div class="flex w-full">
+        <div class="col-3">
+          <form-input-calendar
+            [label]="'Thời gian bắt đầu'"
+            [isRequired]="true"
+            [(ngModelValue)]="crudDTO.startTime"
+            [isDisabled]="isDisable"
+            [showTime]="true"
+            [placeholder]="'dd/mm/yy hh:mm'"
+            [showIcon]="!isDisable"
+            (_onChange)="onSelectStartTime($event)"
+          ></form-input-calendar>
+        </div>
+        <div class="col-3">
+          <form-input-calendar
+            [label]="'Thời gian kết thúc'"
+            [isRequired]="true"
+            [(ngModelValue)]="crudDTO.endTime"
+            [isDisabled]="isDisable"
+            [showTime]="true"
+            [placeholder]="'dd/mm/yy hh:mm'"
+            [showIcon]="!isDisable"
+            [minDate]="crudDTO.startTime"
+          ></form-input-calendar>
+        </div>
+      </div>
+      <div class="flex w-full">
+        <div class="col-3">
+          <form-dropdown
+            [label]="'Thời gian chờ thanh toán'"
+            [autoDisplayFirst]="true"
+            [options]="listWaitPay"
+            [(ngModelValue)]="crudDTO.waitPay"
+            [isDisabled]="isDisable"
+          ></form-dropdown>
+        </div>
+        <div class="col-3" *ngIf="crudDTO.waitPay === CO">
+          <form-input-mask
+            [label]="'Thời gian'"
+            [showDescription]="true"
+            [description]="'(Giờ:phút)'"
+            [isRequired]="true"
+            [(ngModelValue)]="crudDTO.waitTime"
+            [isDisabled]="isDisable"
+            [placeholder]="'hh:mm'"
+            [inputMask]="'99:99'"
+          ></form-input-mask>
+        </div>
+        <div class="col-3">
+          <form-dropdown
+            [label]="'Hiển thị số vé còn lại trên ứng dụng'"
+            [autoDisplayFirst]="true"
+            [options]="listShowRestTicket"
+            [(ngModelValue)]="crudDTO.showRestTicket"
+            [isDisabled]="isDisable"
+          ></form-dropdown>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card p-0 mb-0">
+    <div class="flex b-header justify-content-between">
+      <div class="b-title">
+        <h5 class="title-info">Thông tin loại vé</h5>
+        <p class="font-italic">Danh sách các loại vé cho khung giờ tổ chức</p>
+      </div>
+      <div class="flex b-action">
+        <form-button
+          class="mr-2"
+          [icon]="'pi pi-plus'"
+          [label]="'Thêm loại vé'"
+          (_onClick)="create($event)"
+        ></form-button>
+        <form-button
+          class="mr-2"
+          [icon]="'pi pi-angle-double-up'"
+          [label]="'Nhân bản'"
+          (_onClick)="replicate($event)"
+        ></form-button>
+      </div>
+    </div>
+    <div class="p-fluid p-formgrid grid">
+      <div class="flex w-full">
+        <div class="col-12">
+          <form-table
+            [columns]="headerColumns"
+            [dataSource]="crudDTO.detailInforItem"
+            [listAction]="listAction"
+            [scrollHeight]="'300px'"
+            [showPaginator]="false"
+          >
+          </form-table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="!isDisable" class="p-dialog-footer" style="width: 100%; position: fixed; left: 0; bottom: 0">
+    <form-button
+      [isTypeRipple]="true"
+      [classButton]="'p-button-text p-confirm-dialog-reject'"
+      [label]="'Hủy'"
+      [icon]="'pi pi-times'"
+      (_onClick)="close($event)"
+    ></form-button>
+    <form-button
+      [isTypeRipple]="true"
+      [classButton]="'p-button-text p-confirm-dialog-approve'"
+      [label]="'Lưu'"
+      [icon]="'pi pi-check'"
+      (_onClick)="save($event)"
+    ></form-button>
+  </div>
+</div>

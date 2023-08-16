@@ -1,0 +1,196 @@
+
+<div class="grid p-fluid">
+    <ng-container>
+        <ng-container>
+            <div class="col-12 md:col-6" *ngIf="!policyDetail.id">
+                <div class="field mb-0">
+                    <label htmlFor="code"> <b> <i> Chọn chính sách mẫu </i> </b>  </label>
+                    <p-dropdown 
+                        appendTo="body" emptyMessage="Không có dữ liệu"
+                        optionLabel="name"
+                        [options]="policyTemp" 
+                        [autoDisplayFirst]="false"
+                        (onChange)="changePolicyTemp($event.value)">
+                    </p-dropdown>
+                </div>
+            </div>
+            <div class="col-12 md:col-6" *ngIf="!policyDetail.id">
+                <div class="field mb-0">
+                    <label htmlFor="code"> <b> <i> Chọn kỳ hạn mẫu </i> </b>  </label>
+                    <p-dropdown 
+                        [options]="policyDetailTemps" 
+                        appendTo="body" emptyMessage="Không có dữ liệu"
+                        optionLabel="name"
+                        (onChange)="changePolicyDetailTemp($event.value)">
+                    </p-dropdown>
+                </div>
+            </div>
+        </ng-container>
+        <div class="col-12 md:col-3">
+            <div class="field mb-0">
+                <label htmlFor="stt">Số thứ tự <span class="required-field"> * </span></label>
+                <p-inputNumber id="stt" [(ngModel)]="policyDetail.stt"
+                    [ngClass]="{'ng-invalid ng-dirty' : submitted && !policyDetail.stt}">
+                </p-inputNumber>
+            </div>
+        </div>
+        <div class="col-12 md:col-3">
+            <div class="field mb-0">
+                <label htmlFor="periodQuantity">
+                    Số kỳ đầu tư
+                    <span class="required-field"> * </span>
+                </label>
+                <p-inputNumber 
+                    id="periodQuantity" [(ngModel)]="policyDetail.periodQuantity"
+                    [ngClass]="{'ng-invalid ng-dirty' : submitted && !policyDetail.periodQuantity}">
+                </p-inputNumber>
+            </div>
+        </div>
+        <div class="col-12 md:col-6">
+            <div class="field mb-0">
+                <label htmlFor="periodType"> Đơn vị <span class="required-field"> * </span></label>
+                <p-dropdown 
+                    optionLabel="name" optionValue="code" [autoDisplayFirst]="false"
+                    appendTo="body" [options]="PolicyDetailTemplateConst.interestPeriodType"
+                    [(ngModel)]="policyDetail.periodType"
+                    [ngClass]="{'ng-invalid ng-dirty' : submitted && !policyDetail.periodType}">
+                </p-dropdown>
+            </div>
+        </div>
+        <div class="col-12 md:col-3">
+            <div class="field mb-0">
+                <label htmlFor="shortName">Tên viết tắt <span class="required-field"> * </span>
+                </label>
+                <input type="text" id="shortName" name="shortName" pInputText
+                    [(ngModel)]="policyDetail.shortName"
+                    [ngClass]="{'ng-invalid ng-dirty' : submitted && !policyDetail.shortName}"
+                />
+            </div>
+        </div>
+        <div class="col-12 md:col-3">
+            <div class="field mb-0">
+                <label htmlFor="de-name"> Tên kỳ hạn <span class="required-field"> * </span></label>
+                <input type="text" id="de-name" code="name" pInputText
+                    [(ngModel)]="policyDetail.name" maxlength="256"
+                    [ngClass]="{'ng-invalid ng-dirty' : submitted && !policyDetail.name}" 
+                />
+            </div>
+        </div>
+        <div class="col-12 md:col-3">
+            <div class="field mb-0">
+                <label htmlFor="profit">Lợi nhuận (%) <span class="required-field"> * </span></label>
+                <input pInputText id="profit" type="number" [pKeyFilter]="blockText"
+                    [(ngModel)]="policyDetail.profit"
+                    [ngClass]="{'ng-invalid ng-dirty' : submitted && !policyDetail.profit}" 
+                />
+            </div>
+        </div>
+        <div class="col-12 md:col-3">
+            <div class="field mb-0">
+                <label htmlFor="interestDays"> Số ngày </label>
+                <p-inputNumber 
+                    id="interestDays" [(ngModel)]="policyDetail.interestDays"
+                    [ngClass]="{'ng-invalid ng-dirty' : submitted && !policyDetail.interestDays}">
+                </p-inputNumber>
+            </div>
+        </div>
+        <!-- <div class="col-12 md:col-3">
+            <div class="field mb-0">
+                <label htmlFor="periodQuantity">Số kỳ đáo hạn <span class="required-field"> * </span></label>
+                <p-inputNumber id="periodQuantity" class="custom-input-disabled"
+                    [(ngModel)]="policyDetail.periodQuantity"
+                    [ngClass]="{'ng-invalid ng-dirty' : submitted && !policyDetail.periodQuantity}">
+                </p-inputNumber>
+            </div>
+        </div>
+        <div class="col-12 md:col-3">
+            <div class="field mb-0">
+                <label htmlFor="periodType"> Đơn vị <span class="required-field"> * </span></label>
+                <p-dropdown optionLabel="name" optionValue="code" appendTo="body"
+                    class="custom-input-disabled" [autoDisplayFirst]="false"
+                    [options]="PolicyDetailTemplateConst.interestPeriodType"
+                    [(ngModel)]="policyDetail.periodType"
+                    [ngClass]="{'ng-invalid ng-dirty' : submitted && !policyDetail.periodType}">
+                </p-dropdown>
+            </div>
+        </div> -->
+        
+        <!--  -->
+        <div class="col-12 md:col-3">
+            <div class="field">
+                <label htmlFor="interestType"> 
+                    Kiểu trả lợi tức <span class="required-field"> * </span>
+                </label>
+                <p-dropdown *ngIf="policyTemplateType == null" optionLabel="name" optionValue="code" [autoDisplayFirst]="true"
+                    appendTo="body" [options]="PolicyDetailTemplateConst.interestType"
+                    [(ngModel)]="policyDetail.interestType"
+                    (onChange)="changeInterestType($event.value)"
+                    [ngClass]="{'ng-invalid ng-dirty' : submitted && !policyDetail.interestType}">
+                </p-dropdown>
+                <p-dropdown *ngIf="policyTemplateType != null" [disabled]="true" optionLabel="name" optionValue="code" [autoDisplayFirst]="true"
+                appendTo="body" [options]="PolicyDetailTemplateConst.interestType"
+                [(ngModel)]="policyDetail.interestType"
+                (onChange)="changeInterestType($event.value)"
+                [ngClass]="{'ng-invalid ng-dirty' : submitted && !policyDetail.interestType}">
+            </p-dropdown>
+            </div>
+        </div>
+        <div class="col-12 md:col-3">
+            <div class="field" *ngIf="policyTemplateType == null">
+                <label htmlFor="interestPeriodQuantity">Số kỳ lợi tức <span class="required-field" *ngIf="policyDetail.interestType !== PolicyDetailTemplateConst.INTEREST_RATE_TYPE_PERIOD_END"> * </span> </label>
+                <p-inputNumber id="interestPeriodQuantity" class="custom-input-disabled"
+                    [disabled]="policyDetail.interestType == PolicyDetailTemplateConst.INTEREST_RATE_TYPE_PERIOD_END"
+                    [(ngModel)]="policyDetail.interestPeriodQuantity"
+                    [ngClass]="{'ng-invalid ng-dirty' : submitted && !policyDetail.interestPeriodQuantity}">
+                </p-inputNumber>
+            </div>
+            <div class="field" *ngIf="policyTemplateType != null">
+                <label htmlFor="interestPeriodQuantity">Ngày chi trả <span class="required-field" *ngIf="policyDetail.interestType !== PolicyDetailTemplateConst.INTEREST_RATE_TYPE_PERIOD_END"> * </span> </label>
+                <p-inputNumber id="interestPeriodQuantity" class="custom-input-disabled" [max] = "28"
+                    [disabled]="policyDetail.interestType == PolicyDetailTemplateConst.INTEREST_RATE_TYPE_PERIOD_END"
+                    [(ngModel)]="policyDetail.fixedPaymentDate"
+                    [ngClass]="{'ng-invalid ng-dirty' : submitted && !policyDetail.fixedPaymentDate}">
+                </p-inputNumber>
+            </div>
+        </div>
+        <div class="col-12 md:col-6">
+            <div class="field" *ngIf="policyTemplateType == null">
+                <label htmlFor="interestPeriodType">Đơn vị <span class="required-field" *ngIf="policyDetail.interestType !== PolicyDetailTemplateConst.INTEREST_RATE_TYPE_PERIOD_END"> * </span> </label>
+                <p-dropdown optionLabel="name" optionValue="code" appendTo="body"
+                    class="custom-input-disabled" [autoDisplayFirst]="false"
+                    [disabled]="policyDetail.interestType == PolicyDetailTemplateConst.INTEREST_RATE_TYPE_PERIOD_END"
+                    [options]="PolicyDetailTemplateConst.interestPeriodType"
+                    [(ngModel)]="policyDetail.interestPeriodType"
+                    [ngClass]="{'ng-invalid ng-dirty' : submitted && !policyDetail.interestPeriodType}">
+                </p-dropdown>
+            </div>
+            <div class="field" *ngIf="policyTemplateType != null">
+                <label htmlFor="interestPeriodType">Đơn vị <span class="required-field" *ngIf="policyDetail.interestType !== PolicyDetailTemplateConst.INTEREST_RATE_TYPE_PERIOD_END"> * </span> </label>
+                <p-dropdown optionLabel="name" optionValue="code" appendTo="body"
+                    class="custom-input-disabled" [autoDisplayFirst]="false"
+                    [disabled]="policyDetail.interestType == PolicyDetailTemplateConst.INTEREST_RATE_TYPE_PERIOD_END"
+                    [options]="PolicyDetailTemplateConst.interestPeriodTypeQuarter"
+                    [(ngModel)]="policyDetail.interestPeriodType"
+                    [ngClass]="{'ng-invalid ng-dirty' : submitted && !policyDetail.interestPeriodType}">
+                </p-dropdown>
+            </div>
+        </div>
+        <div class="col-12 md:col-3" *ngIf="policyTemplateType != null">
+            <label htmlFor="interestPeriodType"><em>Ghi chú : </em></label>
+        </div>
+         <div class="col-12 md:col-9" *ngIf="policyTemplateType != null">
+            <label style="display:flex" htmlFor=""><b>
+                Chi trả vào ngày {{policyDetail.fixedPaymentDate}}
+                <span *ngIf="policyDetail.fixedPaymentDate == null">cố định</span>
+                <span *ngIf="policyDetail.interestPeriodType == 'Q'">&nbsp;trong tháng cuối&nbsp;</span>
+                của {{ PolicyDetailTemplateConst.getNameInterestPeriodTypeQuarter(policyDetail.interestPeriodType)}}
+            </b></label>
+        </div>
+    </ng-container>
+</div>
+<div class="p-dialog-footer e-custom-dialog-footer" >
+    <button pButton pRipple label="Hủy" icon="pi pi-times" class="p-button-text p-confirm-dialog-reject" (click)="close()"></button>
+    <button pButton pRipple label="Lưu" icon="pi pi-check" class="p-button-text p-confirm-dialog-approve" [disabled]="!validForm() || submitted" (click)="save()"></button>
+</div>
+
+         

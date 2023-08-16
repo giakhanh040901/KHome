@@ -1,0 +1,66 @@
+<div class="grid ml-0 mr-0 mt-0" *ngIf="isGranted([PermissionGarnerConst.GarnerSPTL_DLPP_DanhSach])">
+    <div class="col-12">
+        <div class="card p-0">
+            <p-toast></p-toast>
+            <p-confirmDialog [style]="{width: 'auto'}" [baseZIndex]="10000"></p-confirmDialog>
+            <p-table  
+                #userTable selectionMode="multiple" responsiveLayout="scroll" dataKey="id"
+                styleClass="custom-table" [value]="rows" [rowHover]="true" [paginator]="false" [scrollable]="true">
+                <ng-template pTemplate="caption">
+                    <div class="flex justify-content-between flex-column sm:flex-row">
+                        <div class="flex justify-content-between flex-column sm:flex-row">
+                        </div>
+                        <div class="">
+                            <button  *ngIf="isGranted([PermissionGarnerConst.GarnerSPTL_DLPP_ThemMoi])"
+                            pButton pRipple label="Thêm mới" icon="pi pi-plus-circle"
+                                class="p-button-success mr-2" (click)="createTradingProvider()"></button>
+                        </div>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="min-width:5rem; max-width:5rem;" > # ID </th>
+                        <th style="min-width:25rem;"> Tên đại lý </th>
+                        <th style="min-width:15rem; max-width:15rem;"> Tên viết tắt </th>
+                        <th style="min-width:10rem; max-width:10rem;"> Hạn mức </th>
+                        <th style="min-width:8rem; max-width:8rem;"> Số lượng </th>
+                        <th style="min-width:8rem; max-width:8rem;"> Đơn giá </th>
+                        <th style="min-width:10rem; max-width:10rem; justify-content: center;"> Ngày phân phối </th>
+                        <th style="min-width: 7rem; max-width: 7rem; justify-content: center;" pFrozenColumn alignFrozen="right"> Thao tác </th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-row let-rowIndex="rowIndex">
+                    <tr>
+                        <td style="width:5rem; max-width:5rem;" > {{ row.id }} </td>
+                        <td style="min-width:25rem;"> {{ row?.tradingProvider?.businessCustomer?.name }} </td>
+                        <td style="min-width:15rem; max-width:15rem;"> {{ row?.tradingProvider?.aliasName || row?.tradingProvider?.businessCustomer?.shortName }} </td>
+                        <td style="min-width:10rem; max-width:10rem;"> {{ row?.totalInvestmentSub ? formatCurrency(row?.totalInvestmentSub) : null }} </td>
+                        <td style="min-width:8rem; max-width:8rem;"> {{ row?.quantity ? formatCurrency(row?.quantity) : null  }} </td>
+                        <td style="min-width:8rem; max-width:8rem;"> {{ row?.totalInvestmentSub ? formatCurrency(row?.totalInvestmentSub/row?.quantity) : null  }} </td>
+                        <td style="min-width:10rem; max-width:10rem; justify-content: center;"> {{ row?.distributionDate | dateview  }} </td>
+                        <td style="min-width: 7rem; max-width:7rem; justify-content: center;" pFrozenColumn alignFrozen="right">
+                            <div class="flex" *ngIf="actions[rowIndex]?.length">
+                                <i class="pi pi-ellipsis-h" (click)="menu.toggle($event)"></i>
+                                <p-menu 
+                                    #menu [popup]="true" class="button-actions" [model]="actions[rowIndex]"
+                                    appendTo="body">
+                                </p-menu>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td colspan="7">Không có dữ liệu.</td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="loadingbody">
+                    <tr>
+                        <td colspan="7"> Đang tải dữ liệu ... </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>

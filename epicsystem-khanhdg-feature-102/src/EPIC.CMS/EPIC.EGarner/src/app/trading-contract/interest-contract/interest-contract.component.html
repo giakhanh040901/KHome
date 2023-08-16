@@ -1,0 +1,278 @@
+<div class="grid ml-0 mr-0 mt-0">
+    <div class="col-12">
+        <div class="card b-list">
+            <div class="p-fluid p-formgrid grid b-header">
+                <div class="col-12 md:col-12 b-title">
+                    <div class="flex justify-content-between flex-wrap card-container purple-container">
+                        <h4 style="display:inline"> Danh sách lệnh đến hạn chi trả </h4>
+                        <div class="flex flex-row flex-wrap">
+                            <!-- <p-button
+                                (onClick)="exportExcel()" class="mr-2"
+                                label="Xuất Excel" icon="pi pi-download" iconPos="right">
+                            </p-button> -->
+                            <p-button
+                                *ngIf="!isPartner && fieldFilters.status == InterestPaymentConst.STATUS_DUEDATE && isGranted([PermissionGarnerConst.GarnerHDPP_CTLC_LapDSChiTra])"
+                                (onClick)="createList()" class="ml-2"
+                                label="Lập danh sách" icon="pi pi-book" iconPos="right" 
+                                [disabled]="(selectedContracts?.length == 0 || (selectedContracts?.length != 0 && submitted)) ? true : false">
+                            </p-button>
+                            <p-button
+                                *ngIf="!isPartner && fieldFilters.status == InterestPaymentConst.STATUS_CREATED_LIST && isGranted([PermissionGarnerConst.GarnerHDPP_CTLC_DuyetChiTD]) "
+                                (onClick)="approveOnline()"  class="ml-2"
+                                label="Duyệt chi tự động" icon="pi pi-book" iconPos="right" 
+                                [disabled]="(selectedContracts?.length == 0 || (selectedContracts?.length != 0 && submitted))  ? true : false">
+                            </p-button>
+                            <p-button
+                                *ngIf="!isPartner && fieldFilters.status == InterestPaymentConst.STATUS_CREATED_LIST && isGranted([PermissionGarnerConst.GarnerHDPP_CTLC_DuyetChiTC])"
+                                (onClick)="approveOffline()" class="ml-2"
+                                label="Duyệt chi thủ công" icon="pi pi-book" iconPos="right" 
+                                [disabled]="(selectedContracts?.length == 0 || (selectedContracts?.length != 0 && submitted)) ? true : false">
+                            </p-button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p-toast></p-toast> 
+            <p-confirmDialog [style]="{width: 'auto'}" [baseZIndex]="10000"></p-confirmDialog>
+            <div class="mb-5" style="padding: 0px 15% 20px 15%; pointer-events: none;">
+                <div style="padding: 10px 50px 10px 30px;">
+                    <div class="b-step-check">
+                        <span class="b-handle-check-step {{ loadingStep == 0 ? 'step-one' : 'step-one-check' }}"></span>
+                        <span class="b-handle-check-step {{ loadingStep == 0 ? 'step-two' : 'step-two-check' }}" *ngIf="loadingStep !== 50"> {{ loadingStep == 0 ? '2' : null }} </span>
+                        <span class="b-handle-check-step step-two" style="opacity: 0;" *ngIf="loadingStep == 50"> 2 </span>
+                        <span class="b-handle-check-step {{ loadingStep !== 100 ? 'step-three' : '' }}" *ngIf="loadingStep !== 100"> {{ loadingStep !== 100 ? '3' : null }} </span>
+                    </div>
+                    <p-slider [(ngModel)]="loadingStep" [min]="0" [max]="100" [disabled]="false" styleClass="b-silder"></p-slider>
+                </div>
+                <div class="flex justify-content-between flex-wrap card-container purple-container b-step-handle">
+                    <span> Danh sách </span>
+                    <span> Đã lập chưa chi trả </span>
+                    <span> Đã lập đã chi trả </span>
+                </div>
+            </div>
+            <p-table 
+            #approveTable 
+            [value]="rows" [loading]="isLoading" [rowHover]="true"
+            rowGroupMode="subheader" groupRowsBy="distributionId"
+            [showCurrentPageReport]="true" [paginator]="false"
+            responsiveLayout="scroll" dataKey="distributionId" [resizableColumns]="false"
+            [scrollable]="true" [scrollHeight]="getTableHeight(50)" styleClass="custom-table order-group" sortMode="multiple" (onSort)="onSort($event)" [customSort]="true">
+            <ng-template pTemplate="caption">
+                <div class="flex justify-content-between flex-column sm:flex-row">
+                    <div class="flex justify-content-between flex-column sm:flex-row">
+                        <span class="block p-input-icon-left p-float-label b-custom mr-1 p-inputtext-filter">
+                            <i class="pi pi-search"></i>
+                            <input 
+                                pInputText type="text"
+                                placeholder="{{ OrderConst.getInfoFieldFilter(fieldFilters.searchField, 'placeholder') }}" 
+                                [(ngModel)]="keyword"
+                                (input)="changeKeyword($event)"
+                                [style]="{'min-width':'20rem'}" 
+                            />
+                            <label class="font-normal" for="">Tìm kiếm</label>
+                        </span>
+                        <span class="p-float-label b-custom ml-2">
+                            <p-dropdown 
+                                id="searchField" [style]="{'width':'14rem'}" [options]="OrderConst.fieldFilters"
+                                name="searchField" optionLabel="name" optionValue="field"
+                                [(ngModel)]="fieldFilters.searchField" [autoDisplayFirst]="true" (onChange)="changeFieldFilter()">
+                            </p-dropdown>
+                            <label class="font-normal" for="searchField">Tìm kiếm theo</label>
+                        </span>
+                        <span class="p-float-label b-custom ml-2">
+                            <p-dropdown
+                                emptyMessage="Không có dữ liệu" [style]="{'width':'14rem'}"
+                                [options]="InterestPaymentConst.statusInterest" 
+                                [(ngModel)]="fieldFilters.status" 
+                                optionLabel="name" optionValue="code"
+                                (onChange)="changeStatusInterest($event.value)">
+                                [autoDisplayFirst]="true">
+                            </p-dropdown>
+                            <label class="font-normal"> Loại chi trả </label>
+                        </span>
+                        <span class="p-float-label b-custom ml-2">
+                            <p-calendar inputId="dueDate" [style]="{'width':'12rem'}" [(ngModel)]="fieldFilters.ngayChiTra" appendTo="body" dateFormat="dd/mm/yy" (onSelect)="setPage($event)"></p-calendar>
+                            <label class="font-normal" for="dropdownStatus">Ngày chi trả</label>
+                        </span>
+                        <span class="p-float-label b-custom ml-2">
+                            <p-dropdown
+                                [style]="{'width':'13rem'}"
+                                [options]="InterestPaymentConst.typeExactDates" 
+                                [(ngModel)]="fieldFilters.isExactDate"
+                                optionLabel="name" optionValue="code"
+                                (onChange)="setPage()">
+                                [autoDisplayFirst]="true">
+                            </p-dropdown>
+                            <label class="font-normal"> Lọc theo </label>
+                        </span>
+                        <span class="p-float-label b-custom ml-2">
+                            <p-button
+                                styleClass="p-button custom-button"
+                                label="Refresh"
+                                icon="pi pi-replay"
+                                (click)="refreshFilter($event)"
+                            >
+                            </p-button>
+                        </span>
+                    </div>
+                </div>
+            </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th [ngStyle]="{'max-width': '3rem', 'min-width': '3rem'}"></th>
+                        <th pSortableColumn="investorId" style="min-width: 7rem; max-width: 7rem;">
+                            #ID<p-sortIcon field="investorId"></p-sortIcon> 
+                        </th>
+                        <ng-container *ngFor="let col of columns">
+                            <th  *ngIf="col.isSort" pSortableColumn="{{col.field}}"  [ngStyle]="{'max-width': !col?.isResize ? col?.width : '', 'min-width': col?.width}" [ngClass]="col.class">
+                                {{ col.header }} <p-sortIcon field="{{col.field}}"></p-sortIcon>
+                            </th>
+                            <th *ngIf="!col.isSort" [ngStyle]="{'max-width': !col?.isResize ? col?.width : '', 'min-width': col?.width}" [ngClass]="col.class">
+                                {{ col.header }} 
+                            </th>
+                        </ng-container>
+                        <!-- <th *ngIf="[StatusPaymentBankConst.PENDING, StatusPaymentBankConst.APPROVE_ONLINE].includes(fieldFilters.status)" style="min-width: 8rem; max-width: 8rem; justify-content: left;">
+                            Kết quả chi 
+                        </th> -->
+                        <!-- <th style="min-width: 7.7rem; max-width: 7.7rem; justify-content: left;" pFrozenColumn alignFrozen="right" [frozen]="true" class="b-border-frozen-right">
+                            Trạng thái 
+                        </th> -->
+                        <th style="min-width: 6rem; max-width: 6rem; justify-content: center;" pFrozenColumn alignFrozen="right" [frozen]="true" class="b-border-frozen-right">
+                        </th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="groupheader" let-row let-expanded="expanded" let-rowIndex="rowIndex">
+                    <tr [ngStyle]="{'cursor': 'pointer', 'color': expanded ? '#5858ff' : ''}" class="group" >
+                        <td colspan="5">
+                            <p-checkbox 
+                                name="groupDistribution" class="mr-3"
+                                [disabled]="StatusPaymentBankConst.END.includes(fieldFilters.status)"
+                                [value]="row.distributionId" 
+                                [(ngModel)]="distributionChecked" 
+                                (onChange)="onGroupSelect(row.distributionId, $event)">
+                            </p-checkbox>
+                            <button 
+                                type="button" pButton pRipple class="p-button-text p-button-rounded p-button-plain mr-2"
+                                [pRowToggler]="row" 
+                                [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'">
+                            </button>
+                            <b> 
+                                <span class="p-text-bold p-ml-2"> 
+                                    {{ 'ID: ' + row.distributionId }}, {{ row.product.code + ' - ' + row.product.name }}   
+                                </span> 
+                            </b>
+                        </td>
+                    </tr>
+                </ng-template>
+                
+                <ng-template pTemplate="rowexpansion" let-row let-rowIndex="rowIndex" let-expanded="expanded"  let-row.viewDetail="false">
+                    <tr style="background: #f7f7f7;" class="row">
+                        <td [ngStyle]="{'max-width': '3rem', 'min-width': '3rem'}">
+                            <p-checkbox 
+                                name="groupDistribution" class="mr-3"
+                                [disabled]="StatusPaymentBankConst.END.includes(fieldFilters.status)"
+                                [value]="row" 
+                                [(ngModel)]="selectedContracts"
+                                (onChange)="onRowSelect(row)">
+                            </p-checkbox>
+                        </td>
+                        <td style="min-width: 7rem; max-width: 7rem;"> 
+                            {{ row?.investor?.investorId }} 
+                        </td>
+                        <td *ngFor="let col of cols" [ngStyle]="{'max-width': !col?.isResize ? col?.width : '', 'min-width': col?.width}" [ngClass]="col?.class">
+                            <div *ngIf="col?.field === 'isCheck'">
+                                <p-checkbox [(ngModel)]="row.isCheck" [binary]="true" inputId="binary" [readonly]="true"></p-checkbox>
+                            </div>
+                            <div *ngIf="col?.field !== 'isCheck'" [ngClass]="col?.cutText" [title]="row[col?.field]">
+                                {{ row[col?.field]}}
+                            </div>
+                        </td>
+                        <!-- <td *ngIf="[StatusPaymentBankConst.PENDING, StatusPaymentBankConst.APPROVE_ONLINE].includes(fieldFilters.status)" style="min-width: 8rem; max-width: 8rem;justify-content: left;">
+                            <ng-container *ngIf="(row?.statusBank == StatusPaymentBankConst.RESPONSE_PENDING && row.status == StatusPaymentBankConst.PENDING_ONLINE) || row.status == StatusPaymentBankConst.APPROVE_ONLINE"> 
+                                <p-tag 
+                                    styleClass="p-tag-{{ StatusPaymentBankConst.getInfoResponse(row?.statusBank, 'severity') }}"
+                                    severity="{{ StatusPaymentBankConst.getInfoResponse(row?.statusBank, 'severity') }}"
+                                    value="{{ StatusPaymentBankConst.getInfoResponse(row.statusBank) }}">
+                                </p-tag>
+                            </ng-container>
+                        </td> -->
+                    
+                        <!-- <td style="min-width: 7.5rem; max-width: 7.5rem;justify-content: left;" pFrozenColumn alignFrozen="right" [frozen]="true" class="b-border-frozen-right">
+                            <p-tag 
+                                class="wrapper-status-phsc"
+                                styleClass="p-tag-{{StatusPaymentBankConst.getInfo(row?.status, 'severity')}}"
+                                severity="{{ StatusPaymentBankConst.getInfo(row?.status, 'severity') }}"
+                                value="{{ StatusPaymentBankConst.getInfo(row.status) }}">
+                            </p-tag>
+                        </td> -->
+                        <td style="min-width: 6rem; max-width: 6rem;justify-content: center; cursor: pointer;" pFrozenColumn alignFrozen="right" [frozen]="true">
+                            <span class="b-withdraw-show-detail" (click)="row.viewDetail = !row.viewDetail"> {{ !row.viewDetail ? 'Chi tiết' : 'Đóng' }} </span>
+                        </td>
+                    </tr>
+                    <ng-container *ngTemplateOutlet="extensiontemplate; context: row"></ng-container>
+                        <ng-template #extensiontemplate>
+                            <ng-container *ngIf="row.viewDetail">
+                                <p-table [value]="row.details">
+                                    <ng-template pTemplate="header">
+                                        <tr>
+                                            <th [ngStyle]="{'max-width': '3rem', 'min-width': '3rem'}"></th>
+                                            <th [ngStyle]="{'max-width': '5rem', 'min-width': '5rem'}"> ID </th>
+                                            <th [ngStyle]="{'max-width': '11rem', 'min-width': '11rem'}"> Mã hợp đồng </th>
+                                            <th [ngStyle]="{'max-width': '16rem', 'min-width': '16rem'}"> Ngày tích lũy </th>
+                                            <th [ngStyle]="{'max-width': '10rem', 'min-width': '10rem'}"> Số ngày </th>
+                                            <th [ngStyle]="{'max-width': '8rem', 'min-width': '8rem'}"> Kỳ trả lợi tức </th>
+                                            <th [ngStyle]="{'max-width': '11rem', 'min-width': '11rem'}"> Số tiền tích lũy </th>
+                                            <th [ngStyle]="{'max-width': '11rem', 'min-width': '11rem'}"> Hiện hữu </th>
+                                            <th [ngStyle]="{'max-width': '11rem', 'min-width': '11rem'}"> Lợi tức hợp đồng </th>
+                                            <th *ngIf="isGranted([PermissionGarnerConst.GarnerHDPP_CTLC_ThongTinChiTiet])" [ngStyle]="{'max-width': '10rem', 'min-width': '10rem'}"></th>
+                                            <th></th>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="body" let-detail let-index="rowIndex">
+                                        <tr>
+                                            <td [ngStyle]="{'max-width': '3rem', 'min-width': '3rem'}"></td>
+                                            <td [ngStyle]="{'max-width': '5rem', 'min-width': '5rem'}"> {{ detail?.orderId }}</td>
+                                            <td [ngStyle]="{'max-width': '11rem', 'min-width': '11rem'}"> {{ detail?.order?.contractCode }}</td>
+                                            <td [ngStyle]="{'max-width': '16rem', 'min-width': '16rem'}"> {{ formatDate(detail?.investDate) }}</td>
+                                            <td [ngStyle]="{'max-width': '10rem', 'min-width': '10rem'}"> {{ formatCurrency(detail?.numberOfDays)}}</td>
+                                            <td [ngStyle]="{'max-width': '8rem', 'min-width': '8rem'}"> {{index + 1}} </td>
+                                            <td [ngStyle]="{'max-width': '11rem', 'min-width': '11rem'}"> {{ formatCurrency(detail?.initTotalValue) }}</td>
+                                            <td [ngStyle]="{'max-width': '11rem', 'min-width': '11rem'}"> {{ formatCurrency(detail?.existingAmount) }}</td>
+                                            <td [ngStyle]="{'max-width': '11rem', 'min-width': '11rem'}"> {{ formatCurrency(detail?.amountReceived) }}</td>
+                                            <td *ngIf="isGranted([PermissionGarnerConst.GarnerHDPP_CTLC_ThongTinChiTiet])" [ngStyle]="{'max-width': '10rem', 'min-width': '10rem', 'cursor': 'pointer'}" class="b-table-actions">
+                                                <span class="b-withdraw-show-detail" (click)="detailOrder(detail?.order?.id)"> Thông tin chi tiết </span>
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="emptymessage">
+                                        <tr>
+                                            <td colspan="6">There are no order for this product yet.</td>
+                                        </tr>
+                                    </ng-template>
+                                </p-table>                   
+                            </ng-container>
+                        </ng-template>
+                    </ng-template>
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td colspan="7">Không có dữ liệu.</td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="loadingbody">
+                    <tr>
+                        <td colspan="7"> Đang tải dữ liệu ... </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+            <p-paginator 
+                [rows]="page.pageSize" 
+                [totalRecords]="page.totalItems" 
+                [rowsPerPageOptions]="page.perPageOptions" 
+                currentPageReportTemplate="Tất cả {{ page.totalItems }} dòng" 
+                showCurrentPageReport="true"
+                (onPageChange)="setPage($event)">
+            </p-paginator>
+        </div>
+    </div>
+</div>

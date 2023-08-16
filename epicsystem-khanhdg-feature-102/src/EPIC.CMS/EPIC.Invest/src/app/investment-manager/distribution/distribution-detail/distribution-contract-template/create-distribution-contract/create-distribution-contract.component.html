@@ -1,0 +1,106 @@
+<e-loading *ngIf="isLoading"></e-loading>
+<div class="grid p-fluid">
+    <!-- Thông tin đầu tư -->
+    <ng-container>
+        <ng-container>
+            <div class="col-12 md:col-6">
+                <div class="field mb-0">
+                    <label htmlFor="SampleContractConst"> Kiểu hợp đồng <span class="required-field"> * </span></label>
+                    <p-dropdown 
+                        optionLabel="name" optionValue="code" appendTo="body"
+                        class="b-disabled" [autoDisplayFirst]="false"
+                        [options]="SampleContractConst.contractSource"
+                        [(ngModel)]="contractDistributionTemplate.contractSource" (onChange)="changeContractSource($event.value)">
+                    </p-dropdown>
+                </div>
+            </div>
+            <div class="col-12 md:col-6">
+                <div class="field mb-0">
+                    <label htmlFor="SampleContractConst"> Chọn hợp đồng <span class="required-field"> * </span></label>
+                    <p-dropdown 
+                        optionLabel="labelName" optionValue="id" appendTo="body"
+                        class="b-disabled" [autoDisplayFirst]="false"
+                        [options]="contractTemplates"
+                        [(ngModel)]="contractDistributionTemplate.contractTemplateTempId"
+                        (onChange)="changeContractTemplateTemp($event.value)"
+                        >
+                    </p-dropdown>
+                </div>
+            </div>
+
+            <div class="col-12 md:col-6" *ngIf="!contractDistributionTemplate?.id">
+                <div class="field mb-0">
+                    <label htmlFor="policyId"> Chọn chính sách <span class="required-field"> * </span></label>
+                    <p-multiSelect
+                        optionLabel="labelName" optionValue="id" appendTo="body"
+                        [options]="policies" 
+                        [(ngModel)]="contractDistributionTemplate.policyIds">
+                    </p-multiSelect>
+                </div>
+            </div>
+            <!--  -->
+            <div class="col-12 md:col-6" *ngIf="contractDistributionTemplate?.id">
+                <div class="field mb-0">
+                    <label htmlFor="policyId"> Chọn chính sách <span class="required-field"> * </span></label>
+                    <p-dropdown 
+                        optionLabel="labelName" optionValue="id" appendTo="body"
+                        class="b-disabled" [autoDisplayFirst]="false"
+                        [options]="policies"
+                        [(ngModel)]="contractDistributionTemplate.policyId">
+                    </p-dropdown>
+                </div>
+            </div>
+            <!--  -->
+            <div class="col-12 md:col-6">
+                <div class="field mb-0">
+                    <label htmlFor="configContractId"> Chọn cấu trúc mã <span class="required-field"> * </span></label>
+                    <p-dropdown 
+                        optionLabel="name" optionValue="id" appendTo="body"
+                        class="b-disabled" [autoDisplayFirst]="false"
+                        [options]="contractCodeTemps"
+                        [(ngModel)]="contractDistributionTemplate.configContractId">
+                    </p-dropdown>
+                </div>
+            </div>
+            <div class="col-12 md:col-6">
+                <div class="field mb-0">
+                    <label htmlFor="displayType"> Loại hiện thị <span class="required-field"> * </span></label>
+                    <p-dropdown 
+                        optionLabel="name" optionValue="code" appendTo="body"
+                        class="b-disabled" [autoDisplayFirst]="false"
+                        [options]="DistributionContractTemplateConst.displayType"
+                        [(ngModel)]="contractDistributionTemplate.displayType">
+                    </p-dropdown>
+                </div>
+            </div>
+
+            <div class="col-12 md:col-6">
+                <div class="field mb-0">
+                    <label htmlFor="startDate">Ngày hiệu lực <span class="required-field"> * </span></label>
+                    <p-calendar 
+                        inputId="startDate" dateFormat="dd/mm/yy" locale="vi" 
+                        appendTo="body" utc="true" placeholder="dd/mm/yyyy"
+                        [(ngModel)]="contractDistributionTemplate.startDate"		
+                        styleClass="w-full" inputId="startDate"
+                        [showIcon]="true" >
+                    </p-calendar>
+                </div>
+            </div>
+            <!--  -->
+            <div class="col-12 md:col-12">
+                <div class="field mb-0">
+                    <label htmlFor="startDate"> Mô tả hợp đồng </label>
+                    <textarea disabled value="{{ contractTemplateChoose?.description }}" pInputText class="b-disabled"></textarea>
+                </div>
+            </div>
+        </ng-container>
+    </ng-container>
+</div>
+<div class="p-dialog-footer e-custom-dialog-footer" >
+    <button pButton pRipple label="Hủy" icon="pi pi-times" class="p-button-text p-confirm-dialog-reject" (click)="close()"></button>
+    <button 
+        pButton pRipple label="Lưu" icon="pi pi-check" class="p-button-text p-confirm-dialog-approve" (click)="save()">
+    </button>
+</div>
+
+         

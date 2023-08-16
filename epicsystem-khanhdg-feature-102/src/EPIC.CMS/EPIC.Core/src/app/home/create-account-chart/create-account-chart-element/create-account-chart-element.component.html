@@ -1,0 +1,21 @@
+<div class="container">
+  <div
+    class="trapezoid"
+    [style.width.px]="width"
+    [style.height.px]="height"
+    [style.background]="backgroundColor"
+  >
+    <div class="line line-top" [style.width.px]="width - 30"></div>
+    <div
+      class="line line-bottom"
+      [style.width.px]="width - 20"
+      [style.background]="backgroundColor"
+    ></div>
+  </div>
+  <div class="trapezoid-content text-center">
+    <div>
+      <div [ngClass]="classLabel + ' trapezoid-label'">{{ label }}</div>
+      <div class="trapezoid-value">{{ value }}</div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,45 @@
+<div class="w-full">
+  <div class="card">
+    <div class="p-fluid p-formgrid grid">
+      <div class="flex w-full">
+        <div class="col" *ngFor="let cardInfor of listCardInfor">
+          <form-card-infor
+            [bgIcon]="cardInfor.bgIcon"
+            [icon]="cardInfor.icon"
+            [colorLabel]="cardInfor.colorLabel"
+            [label]="cardInfor.label"
+            [colorValue]="cardInfor.colorValue"
+            [value]="cardInfor.value"
+          ></form-card-infor>
+        </div>
+      </div>
+      <div class="flex w-full justify-content-between mt-2 px-2" *ngIf="isGranted([PermissionEventConst.SoLenh_ChiTiet_GiaoDich_ThemMoi, PermissionEventConst.XuLyGiaoDich_ChiTiet_GiaoDich_ThemMoi])">
+        <ng-container *ngIf="!environment.production">
+          <form-button
+            [styleClassButton]="'p-button-secondary'"
+            [icon]="'pi pi-slack'"
+            [label]="'Giả lập MSB'"
+            (_onClick)="emulatorMSB($event)"
+          ></form-button>
+        </ng-container>
+        <ng-container *ngIf="environment.production">
+          <div></div>
+        </ng-container>
+        <form-button [icon]="'pi pi-plus'" [label]="'Thêm mới'" (_onClick)="create($event)"></form-button>
+      </div>
+      <div class="flex w-full">
+        <div class="col-12">
+          <form-table
+            [columns]="headerColumns"
+            [dataSource]="dataSource"
+            [listAction]="listAction"
+            [isLoading]="isLoading"
+            [scrollHeight]="screenHeight * 0.5 + 'px'"
+            [(page)]="page"
+            (_changePage)="changePage($event)"
+          ></form-table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,115 @@
+<div class="row">
+    <div class="col-12 grid-margin">
+      <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12 px-0 d-flex align-items-center ">
+                    <span class="mb-0 h3 pr-1 " style="color: #172b4d;"> {{ titlePage }} </span>
+                </div>
+            </div>
+            <div class="row mt-2 mb-3">
+                <div class="col-md-6 pl-0 d-flex align-items-end">
+                    <button class="btn btn-sm btn-primary" (click)="create()">
+                        <i class="mdi mdi-plus-circle mr-1"></i>
+                        Thêm loại sản phẩm trái phiếu
+                    </button>
+                </div>
+                <div class="col-md-6 d-flex justify-content-end pr-0">
+                    <div class="input-group input-search">
+                        <input type="text" class="form-control form-control-sm border-radius-default" name="keyword"
+                            [placeholder]="'Tìm kiếm...'" [(ngModel)]="keyword" (keyup)="changeKeyword()"
+                            (keyup.enter)="setPage({ offset: offset })"/>
+                        <div class="input-group-append">
+                        <button class="btn btn-sm btn-primary" type="button" (click)="setPage({ offset: offset })">
+                            <i class="icon-magnifier"></i>
+                        </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+          <div class="row">
+            <div class="col-md-12 px-0">
+                <ngx-datatable class="ngx-datatable-custom frozen-right"
+                #productBondTypeTable
+                [rows]="rows"
+                [columnMode]="ColumnMode.force"
+                [footerHeight]="42" [rowHeight]="50"
+                [headerHeight]="50" [footerHeight]="42"
+                [scrollbarV]="true" [scrollbarH]="true" [virtualization]="false"
+                [externalPaging]="true" [count]="page.totalItems" [offset]="page.pageNumber" [limit]="page.pageSize"
+                [messages]="datatableMessage"
+                (page)="setPage($event)" [busy]="isLoading">
+
+                <ngx-datatable-column name="code" [width]="250" [sortable]="false">
+                    <ng-template let-column="column" ngx-datatable-header-template> Mã loại TP</ng-template>
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                        <div style="margin-left: 8px;">
+                            {{ value }}
+                        </div>
+                    </ng-template>
+                </ngx-datatable-column>
+
+                    <ngx-datatable-column name="name" [width]="250" [sortable]="false" frozenLeft="true">
+                        <ng-template let-column="column" ngx-datatable-header-template> Tên loại TP </ng-template>
+                        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                            <div style="margin-left: 8px;">
+                                {{ value }}
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column name="icon" [width]="300" [sortable]="false">
+                        <ng-template let-column="column" ngx-datatable-header-template> Icon </ng-template>
+                        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                            <div class="mr-10px" [title]="value">
+                                {{ value | truncate:[70] }}
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column name="description" [width]="300" [sortable]="false">
+                        <ng-template let-column="column" ngx-datatable-header-template> Mô tả </ng-template>
+                        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                            <div class="mr-10px" [title]="value">
+                                {{ value | truncate:[50] }}
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column name="status" [width]="300" [sortable]="false">
+                        <ng-template let-column="column" ngx-datatable-header-template>Trạng thái </ng-template>
+                        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                            <div class="ml-10px" [title]="value">
+                                {{ productBondTypeConst.getStatusName(value) }}
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column [width]="100" [sortable]="false" frozenRight="true">
+                        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                            <div class="dropdown" dropdown #dropdown="bs-dropdown" [autoClose]="true">
+                                <button dropdownToggle class="btn btn-action-table dropdown-toggle" type="button" id="dropdownMenu"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Thao tác
+                                </button>
+                                <div class="dropdown-menu table-dropdown-menu" *dropdownMenu aria-labelledby="dropdownMenu">
+                                    <span>
+                                        <a class="dropdown-item dropdown-item-wrapper" (click)="edit(row.id)">
+                                            <i class="fas fa-pencil-alt"></i> Sửa
+                                        </a>
+                                        <a class="dropdown-item dropdown-item-wrapper" (click)="delete(row)">
+                                            <i class="fas fa-trash"></i>&nbsp; Xoá
+                                        </a>
+                                    </span>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+                </ngx-datatable>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>

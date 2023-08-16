@@ -1,0 +1,110 @@
+<p-toast [baseZIndex]="10000" key="policyTemp"></p-toast>
+<div class="grid p-fluid form-layout">
+    <!-- Thông tin đầu tư -->
+    <ng-container>
+        <ng-container>
+            <div class="col-12 md:col-12">
+                <div class="field">
+                    <label htmlFor="name">Tên cấu trúc<span class="required-field"> * </span> </label>
+                    <input 
+                        type="text" pInputText 
+                        [(ngModel)]="contractForm.name" maxlength="256"
+                    />
+                </div>
+            </div>
+        
+            <ng-container *ngFor="let configContractCodeDetail of configContractCodeDetails; let i = index">
+
+                <div class="col-12 md:col-6">
+                    <div class="field">
+                        <label htmlFor="key">
+                            Giá trị {{ i+1 }} <span class="required-field"> * </span>
+                            ( <i class="pi pi-trash b-icon-trash" (click)="removeElement(i)" title="Xóa giá trị"></i> )
+                        </label>
+                        <p-dropdown 
+                            optionLabel="name" optionValue="code" appendTo="body" 
+                            class="custom-input-disabled" [autoDisplayFirst]="false"
+                            (onChange)="genContractCodeStructure()"
+                            [options]="ContractFormConst.valueList"
+                            [(ngModel)]="configContractCodeDetail.key"
+                            [ngClass]="{'ng-invalid ng-dirty' : submitted && !configContractCodeDetails.key}">
+                        </p-dropdown>
+                    </div>
+                </div>
+                <div class="col-12 md:col-6" name="key{{i}}">
+                    <div class="field"  *ngIf="configContractCodeDetail.key == ContractFormConst.KyTu">
+                        <label htmlFor="value">
+                            Nhập ký tự
+                            <span class="required-field"> * </span>
+                        </label>
+                        <input 
+                            (keyup)="genContractCodeStructure()"
+                            type="text" id="name" name="name" pInputText 
+                            [(ngModel)]="configContractCodeDetail.value" maxlength="256"
+                        />
+                    </div>
+                </div>
+
+                
+            </ng-container>
+         
+            <div class="flex flex-row-reverse flex-wrap">
+                <div class="">
+                    <div class="col-12 md:col-12">
+                        <button                     
+                            pButton pRipple label="Thêm giá trị" icon="pi pi-plus"
+                            class="p-button-success mr-2" (click)="addvalue()">
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 md:col-12">
+                <div class="field">
+                    <label htmlFor="description">
+                        Ghi chú
+                    </label>
+                    <input 
+                    type="text" id="description" name="description" pInputText 
+                    [(ngModel)]="contractForm.description" maxlength="256"
+                    />
+                </div>
+            </div>
+            <div class="col-12 md:col-12">
+                <div class="field">
+                    <label htmlFor="contractCodeStructure">
+                        Cấu trúc mã hợp đồng
+                        <span class="required-field"> * </span>
+                    </label>
+                    <input 
+                    type="text" id="contractCodeStructure" name="contractCodeStructure" pInputText class="b-disabled" [disabled]="true"
+                    [(ngModel)]="contractForm.contractCodeStructure" maxlength="256"
+                    />
+                </div>
+            </div>
+            <div class="col-12 md:col-12">
+                <div class="field">
+                    <label htmlFor="bbb">
+                        Mã hợp đồng
+                        <span class="required-field"> * </span>
+                    </label>
+                    <input 
+                    type="text" id="name" name="name" class="b-disabled" pInputText [disabled]="true"
+                    [(ngModel)]="contractForm.contractCode" maxlength="256"
+                    />
+                </div>
+            </div>
+        </ng-container>
+        
+    </ng-container>
+    
+</div>
+<div class="p-dialog-footer e-custom-dialog-footer" >
+    <button pButton pRipple label="Hủy" icon="pi pi-times" class="p-button-text p-confirm-dialog-reject" (click)="close()"></button>
+    <button 
+        *ngIf="isGranted([PermissionInvestConst.InvestCSM_CapNhat])"
+        pButton pRipple label="Lưu" icon="pi pi-check" class="p-button-text p-confirm-dialog-approve" (click)="save()">
+    </button>
+    <!-- [disabled]="!validForm() || submitted" -->
+</div>
+
+         

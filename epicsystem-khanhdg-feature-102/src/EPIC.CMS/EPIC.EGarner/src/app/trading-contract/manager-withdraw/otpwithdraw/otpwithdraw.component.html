@@ -1,0 +1,24 @@
+<div class="card b-page-detail">
+    <div class="grid detail">
+        <div class="col-12">
+            <div class="card pt-0 pb-0 mb-0">
+                <div class="p-fluid p-formgrid grid">
+                    <div class="field col-12 md:col-12">
+                        <h6 class="text-center"> Vui lòng nhập OTP để xác nhận chi tiền tự động! </h6>
+                    </div>
+                    <div class="field col-12 md:col-12">
+                        <ng-otp-input 
+                            containerClass="b-wrapper-otp" 
+                            [config]="{length:6, allowNumbersOnly: true}"
+                            (onInputChange)="changeOtp($event)"> 
+                        </ng-otp-input>
+                    </div>
+                </div>  
+            </div>
+        </div>
+    </div>
+    <div class="p-dialog-footer" style="width: 100%; position: fixed; left: 0; bottom: 0; border: none;">
+        <button pButton pRipple label="Gửi lại OTP" icon="pi pi-check" class="p-button-text p-2 p-confirm-dialog-approve" (click)="getOtp()"></button>
+        <button pButton pRipple label="Xác nhận" icon="pi pi-check" class="p-button-text p-2 p-confirm-dialog-approve" [disabled]="submitted" (click)="sendOtp()"></button>
+    </div>
+</div>

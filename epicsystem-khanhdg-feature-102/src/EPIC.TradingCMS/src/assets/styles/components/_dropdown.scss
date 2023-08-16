@@ -1,0 +1,121 @@
+/* Dropdowns */
+
+.dropdown {
+  .dropdown-toggle {
+    &:after {
+      border-top: 0;
+      border-right: 0;
+      border-left: 0;
+      border-bottom: 0;
+      font: normal normal normal 24px/1 "themify";
+      content: "\e64b";
+      width: auto;
+      height: auto;
+      vertical-align: middle;
+      line-height: .625rem;
+      font-size: .875rem;
+      margin-left: .3rem;
+    }
+  }
+  .dropdown-menu {
+    margin-top: 0;
+    font-size: $default-font-size;
+    border-radius: 0;
+    .dropdown-item {
+      font-size: .875rem;
+      padding: .25rem 1.5rem;
+      cursor: pointer;
+      &:active {
+        background: initial;
+      }
+    }
+  }
+}
+
+.dropup {
+  .dropdown-menu {
+    .dropdown-item {
+      cursor: pointer;
+    }
+  }
+}
+
+.table-dropdown-menu {
+    border-radius: 4px !important;
+    top: -64px !important;
+    left: 4px !important;
+
+    .dropdown-item {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+        padding-top: 9px !important;
+        padding-bottom: 9px !important;
+    }
+}
+
+.table-responsive {
+    tr {
+        &:nth-last-child(1) {
+            .table-dropdown-menu {
+                top: -103px !important;
+            }
+        }
+    }
+}
+
+.btn-action-table-dropdown {
+    min-width: 120px;
+}
+
+
+.ng-select {
+    .ng-select-container {
+        border: 1px solid $border-color;
+        .ng-value-container {
+            .ng-placeholder {
+                top: 8px !important;
+                font-size: 0.875rem;
+            }
+            .ng-value {
+                .ng-value-label {
+                    font-size: 0.875rem;
+                }
+            }
+        }
+    }
+
+    .ng-dropdown-panel {
+        .ng-dropdown-panel-items {
+            .ng-option {
+                .ng-option-label {
+                    font-size: 0.875rem;
+                }
+                white-space: normal;
+            }
+            &.scroll-host {
+              .ng-option-disabled {
+                font-size: 0.875rem;
+              }
+            }
+        }
+        .ng-dropdown-header {
+          .wrapper-select-all {
+            font-size: 0.875rem;
+            label {
+              width: 90%;
+            }
+          }
+        }
+    }
+
+    &.ng-select-disabled {
+      .ng-select-container {
+        background-color: #e9ecef;
+      }
+    }
+}
+
+
+.ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected, .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected.ng-option-marked {
+    background-color: $selected-color;
+}

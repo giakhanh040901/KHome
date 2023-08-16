@@ -1,0 +1,289 @@
+<div class="e-page">
+    <p-toast></p-toast> 
+    <p-confirmDialog [style]="{width: 'auto'}" [baseZIndex]="10000"></p-confirmDialog>
+    <div class="wrapper-page-header" id="page-header">
+        <div class="b-header"> 
+            <div class="grid">
+                <div class="col-12 md:col-7 b-title">
+                    <h4 style="display:inline"> Chủ đầu tư </h4>
+                </div>
+                <div class="col-12 md:col-5 b-actions">
+                    <p-button 
+                        *ngIf="isGranted([PermissionInvestConst.InvestChuDT_ThemMoi])"
+                        label="Thêm mới" icon="pi pi-plus" styleClass="p-button-success" 
+                        (click)="create()">
+                    </p-button>
+                </div>
+            </div>
+        </div>
+        <div id="filter-table">
+            <ng-container *ngIf="dataTableEmit?.isShowFilter" >
+                <div class="flex wrapper-line-filter">
+                    <div class="b-wr-20 wrapper-filter">
+                        <input-search
+                            [placeholder]="'Tìm kiếm...'"
+                            [(keyword)]="page.keyword"
+                            (_onChange)="setPage()">
+                        </input-search>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+
+    <e-table
+        [rows]="rows"
+        [(page)]="page"
+        [columns]="columns"
+        [isLoading]="isLoading"
+        [listAction]="listAction"
+        [columnCacheName]="constructor.name"
+        [(isShowFilter)]="dataTableEmit.isShowFilter"
+        (_onPageChange)="setPage($event)"
+        (_onSort)="onSort($event)">
+    </e-table>
+
+    <p-dialog [(visible)]="modalDialog" [style]="{width: '1000px'}" header="Thêm mới chủ đầu tư" [modal]="true" class="p-fluid" [maximizable]="true">
+        <ng-template pTemplate="content">
+            <div class="card pt-0">
+                <div class="grid formgrid">
+                    <ng-container>
+                        <div class="col-12 md:col-12 title-group-input">
+                            <h6> Thông tin khách hàng doanh nghiệp </h6>
+                        </div>
+                        <div class="col-12 md:col-2">
+                            <div class="field">
+                                <label htmlFor="code">Mã doanh nghiệp </label>
+                                <input pInputText [disabled]="true" value="{{ businessCustomer?.code }}" class="custom-input-disabled"/>
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-2">
+                            <div class="field">
+                                <label htmlFor="taxCode"> Mã số thuế </label>
+                                <input pInputText [disabled]="true" value="{{ businessCustomer?.taxCode }}" class="custom-input-disabled"/>
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-6">
+                            <div class="field">
+                                <label htmlFor="licenseIssuer">Nơi cấp</label>
+                                <input [disabled]="true" pInputText value="{{ businessCustomer?.licenseIssuer }}" class="custom-input-disabled"/>
+                            </div>
+                        </div>
+
+                        <div class="col-12 md:col-2">
+                            <label htmlFor="search" class="mb-2"> &nbsp; </label> <br>
+                            <div style="vertical-align: -webkit-baseline-middle; margin-top: 6px">
+                                <p-button 
+                                    label="Tìm kiếm" icon="pi pi-search" styleClass="mr-2 mb-2" 
+                                    (onClick)="showBusinessCustomer()" class="custom-input-disabled">
+                                </p-button>                                                                                  
+                            </div>
+                        </div>
+
+                        <div class="col-12 md:col-2">
+                            <div class="field">
+                                <label for="licenseDate">Ngày cấp phép ĐKKD</label>
+                                <input pInputText value="{{ businessCustomer?.licenseDate | dateview }}" [disabled]="true" class="custom-input-disabled"/>
+                            </div>
+                        </div>
+                        
+                        <div class="col-12 md:col-2">
+                            <div class="field">
+                                <label htmlFor="numberModified">Số lần thay đổi </label>
+                                <input [disabled]="true" pInputText value="{{ businessCustomer?.numberModified }}" class="custom-input-disabled"/>
+                            </div>
+                        </div>
+
+                        <div class="col-12 md:col-2">
+                            <div class="field">
+                                <label for="dateModified">Ngày thay đổi</label>
+                                <input [disabled]="true" value="{{ businessCustomer?.dateModified | dateview}}" pInputText class="custom-input-disabled"/>
+                            </div>
+                        </div>
+                        
+                        
+                        <div class="col-12 md:col-6">
+                            <div class="field">
+                                <label htmlFor="name">Tên Doanh nghiệp </label>
+                                <input pInputText [disabled]="true" value="{{ businessCustomer?.name }}" class="custom-input-disabled"/>
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-2">
+                            <div class="field">
+                                <label htmlFor="shortName">Tên viết tắt</label>
+                                <input [disabled]="true" pInputText value="{{ businessCustomer?.shortName }}" class="custom-input-disabled"/>
+                            </div>
+                        </div>
+                        
+                        <div class="col-12 md:col-2">
+                            <div class="field">
+                                <label htmlFor="phone">Điện thoại </label>
+                                <input [disabled]="true" value="{{ businessCustomer?.phone }}" pInputText class="custom-input-disabled"/>
+                            </div>
+                        </div>
+
+                        <div class="col-12 md:col-2">
+                            <div class="field">
+                                <label htmlFor="mobile">Điện thoại khác</label>
+                                <input [disabled]="true" pInputText value="{{ businessCustomer?.mobile }}" class="custom-input-disabled"/>
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-3">
+                            <div class="field">
+                                <label htmlFor="email">Thư điện tử</label>
+                                <input [disabled]="true" pInputText  value="{{ businessCustomer?.email }}" class="custom-input-disabled"/>
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-3">
+                            <div class="field">
+                                <label [disabled]="true" htmlFor="capital">Vốn điều lệ</label>
+                                <input pInputText [disabled]="true" value="{{ utils.transformMoney(businessCustomer?.capital) }}" class="custom-input-disabled"/>
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-12 title-group-input">
+                            <h6> Địa chỉ </h6>
+                        </div>
+                        <div class="col-12 md:col-9">
+                            <div class="field">
+                                <label htmlFor="address">Địa chỉ đăng ký</label>
+                                <textarea [disabled]="true" rows="1" value="{{ businessCustomer?.address }}" pInputTextarea class="custom-input-disabled"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-3">
+                            <div class="field">
+                                <label htmlFor="nation">Quốc gia</label>
+                                <p-dropdown 
+                                    [disabled] = "true"
+                                    optionValue="code" name="nation" optionLabel="name" appendTo="body"
+                                    [options]="NationalityConst.List" [autoDisplayFirst]="false"
+                                    [(ngModel)]="businessCustomer.nation" 
+                                    class="custom-input-disabled">
+                                </p-dropdown>
+                            </div>
+                        </div>
+
+                        <div class="col-12 md:col-12">
+                            <div class="field">
+                                <label htmlFor="tradingAddress">Địa chỉ giao dịch </label>
+                                <textarea 
+                                    [disabled]="true" rows="1"
+                                    value="{{ businessCustomer?.tradingAddress }}" pInputTextarea
+                                    class="custom-input-disabled">
+                                </textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="col-12 md:col-12 title-group-input">
+                            <h6> Người đại diện </h6>
+                        </div>
+                        <div class="col-12 md:col-3">
+                            <div class="field">
+                                <label htmlFor="repName">Tên người đại diện</label>
+                                <input [disabled]="true" pInputText value="{{ businessCustomer?.repName }}" class="custom-input-disabled"/>
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-3">
+                            <div class="field">
+                                <label htmlFor="repPosition">Chức vụ</label>
+                                <input [disabled]="true" pInputText value="{{ businessCustomer?.repPosition }}" class="custom-input-disabled"/>
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-3">
+                            <div class="field">
+                                <label htmlFor="decisionNo">Quyết định số </label>
+                                <input [disabled]="true" pInputText value="{{ businessCustomer?.decisionNo }}" class="custom-input-disabled"/>
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-3">
+                            <div class="field">
+                                <label for="decisionDate">Ngày quyết định</label>
+                                <input [disabled]="true" pInputText value="{{ formatDate(businessCustomer?.decisionDate) }}" class="custom-input-disabled"/>
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-12 title-group-input">
+                            <h6> Thông tin tài chính </h6>
+                        </div>
+                        <div class="col-12 md:col-3">
+                            <div class="field">
+                                <label htmlFor="repName"> Doanh thu </label>
+                                <p-inputNumber mode="decimal" name="parValue" min="0"
+                                    [(ngModel)]="owner.businessTurnover"
+                                    locale="de-DE">
+                                </p-inputNumber>
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-3">
+                            <div class="field">
+                                <label htmlFor="repPosition"> Lợi nhuận sau thuế </label>
+                                <p-inputNumber mode="decimal" name="parValue" min="0"
+                                    [(ngModel)]="owner.businessProfit"
+                                    locale="de-DE">
+                                </p-inputNumber>
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-3">
+                            <div class="field">
+                                <label htmlFor="roa"> ROA </label>
+                                <input  type="number"
+                                        id="roa" 
+                                        pInputText
+                                        [pKeyFilter]="blockText"
+                                        [(ngModel)]="owner.roa" 
+                                />
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-3">
+                            <div class="field">
+                                <label for="decisionDate"> ROE </label>
+                                <input  type="number"
+                                        id="roe" 
+                                        pInputText
+                                        [pKeyFilter]="blockText"
+                                        [(ngModel)]="owner.roe" 
+                                />
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-12 title-group-input">
+                            <h6> Thông tin truyền thông </h6>
+                        </div>
+                        <div class="col-12 md:col-6">
+                            <div class="field">
+                                <label htmlFor="repName"> Fanpage </label>
+                                <input  type="text"
+                                        id="fanpage" 
+                                        pInputText
+                                        [(ngModel)]="owner.fanpage" 
+                                />
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-6">
+                            <div class="field">
+                                <label htmlFor="repPosition"> Đường dây nóng </label>
+                                <input  type="text"
+                                        id="hotline" 
+                                        pInputText  
+                                        [(ngModel)]="owner.hotline" 
+                                />
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-12">
+                            <div class="field">
+                                <label htmlFor="website"> Website </label>
+                                <input  type="text"
+                                        id="website" 
+                                        pInputText  
+                                        [(ngModel)]="owner.website" 
+                                />
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+            
+        </ng-template>
+        <ng-template pTemplate="footer">
+            <button pButton pRipple label="Hủy" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+            <button pButton pRipple label="Lưu" icon="pi pi-check" class="p-button-text" [disabled]="!validForm() || submitted" (click)="save()"></button>
+        </ng-template>
+    </p-dialog>
+</div>

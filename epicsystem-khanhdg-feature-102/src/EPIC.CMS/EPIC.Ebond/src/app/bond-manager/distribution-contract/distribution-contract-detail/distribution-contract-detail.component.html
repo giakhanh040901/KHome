@@ -1,0 +1,191 @@
+<app-loading-page *ngIf="isLoading"></app-loading-page>
+
+<div class="card b-page-detail" *ngIf="!isLoading">
+    <div class="p-fluid p-formgrid grid b-header">
+        <div class="col-12 md:col-7">
+            <h5 class="mb-0"> {{ distributionContractDetail?.contractCode }} </h5>
+        </div>
+        <div class="col-12 md:col-5 text-right b-actions">
+            <!-- <div class="text-right">
+                <p-button label="Chỉnh sửa" icon="pi pi-pencil" styleClass="p-button-sm custom-button"></p-button>
+            </div> -->
+            <p-button 
+                styleClass="p-button-sm custom-button  b-button-back" 
+                [routerLink]="'/bond-manager/distribution-contract'" 
+                label="Quay lại" icon="pi pi-chevron-left">
+            </p-button>
+        </div>
+    </div>                
+    <p-tabView styleClass="custom-tabview" [(activeIndex)]="activeIndex" (onChange)="changeTabview($event)">
+        <p-tabPanel *ngIf="isGranted([PermissionBondConst.Bond_HDPP_TTC])">
+            <ng-template pTemplate = "header">
+                <span> Thông tin chung </span>
+            </ng-template>
+            <div *ngIf="isGranted([PermissionBondConst.Bond_HDPP_TTC_ChiTiet])" class="grid detail distribution-contract">
+                <div class="col-12">
+                    <div class="card pt-0 mb-0">
+                        <h5> Thông tin hợp đồng </h5>
+                        <div class="p-fluid p-formgrid grid">
+                            <div class="field col-12 md:col-4">
+                                <label class="title-info"> Mã </label>
+                                <input [disabled]="true" pInputText [value]="distributionContractDetail?.distributionContractId" class="custom-input-disabled"/>
+                            </div>
+                            <div class="field col-12 md:col-4">
+                                <label class="title-info">Mã HĐ phân phối</label>
+                                <input [disabled]="true" pInputText [value]="'2029392938384TPSUNHIWARK'" class="custom-input-disabled"/>
+                            </div>
+                            <div class="field col-12 md:col-4">
+                                <label class="title-info"> Loại GD </label>
+                                <input [disabled]="true" pInputText [value]="'Phân phối'" class="custom-input-disabled"/>
+                            </div>
+                            <!-- <div class="field col-4">
+                                <label class="title-info">Ngày giao dịch</label>
+                                <input [disabled]="true" pInputText [value]="formatDate(distributionContractDetail.createdDate)" class="custom-input-disabled"/>
+                            </div> -->
+                        </div>
+                    </div>
+                    <div class="card pt-0 mb-0">
+                        <h5 class="mt-3"> Thông tin đại lý </h5>
+                        <div class="p-fluid p-formgrid grid">
+                            <div class="field col-12 md:col-6">
+                                <label class="title-info">Tên ĐLSC</label>
+                                <input [disabled]="true" pInputText value="{{ distributionContractDetail?.tradingProvider?.businessCustomer?.name }}" class="custom-input-disabled"/>
+                            </div>
+                            <!-- <div class="field col-12 md:col-2">
+                                <label class="title-info">Số TK</label>
+                                <input [disabled]="true" pInputText value="{{ distributionContractDetail?.tradingProvider?.businessCustomer?.bankAccNo }}" class="custom-input-disabled"/>
+                            </div> -->
+                            <div class="field col-12 md:col-2">
+                                <label class="title-info">Số điện thoại</label>
+                                <input [disabled]="true" pInputText value="{{ distributionContractDetail?.tradingProvider?.businessCustomer?.phone }}" class="custom-input-disabled"/>
+                            </div>
+                            <div class="field col-12 md:col-4">
+                                <label class="title-info">Email</label>
+                                <input [disabled]="true" pInputText value="{{ distributionContractDetail?.tradingProvider?.businessCustomer?.email }}" class="custom-input-disabled"/>
+                            </div>
+                            <div class="field col-12 md:col-6">
+                                <label class="title-info">Người đại diện</label>
+                                <input [disabled]="true" pInputText value="{{ distributionContractDetail?.tradingProvider?.businessCustomer?.repName }}" class="custom-input-disabled"/>
+                            </div>
+                            <div class="field col-12 md:col-2">
+                                <label class="title-info">Chức vụ</label>
+                                <input [disabled]="true" pInputText value="{{ distributionContractDetail?.tradingProvider?.businessCustomer?.repPosition }}" class="custom-input-disabled"/>
+                            </div>
+                            <!-- <div class="field col-12 md:col-2">
+                                <label class="title-info">Mã cổ đông</label>
+                                <input [disabled]="true" pInputText [value]="distributionContractDetail?.tradingProvider?.maCoDong ?? null" class="custom-input-disabled"/>
+                            </div> -->
+                            <div class="field col-12 md:col-2">
+                                <label class="title-info">Mã số thuế</label>
+                                <input [disabled]="true" pInputText value="{{ distributionContractDetail?.tradingProvider?.businessCustomer?.taxCode }}" class="custom-input-disabled"/>
+                            </div>
+                            <div class="field col-12 md:col-2">
+                                <label class="title-info">Ngày cấp</label>
+                                <input [disabled]="true" pInputText value="{{ formatDate(distributionContractDetail?.tradingProvider?.businessCustomer?.licenseDate) }}" class="custom-input-disabled"/>
+                            </div>
+                            <div class="field col-12 md:col-12">
+                                <label class="title-info">Địa chỉ</label>
+                                <input [disabled]="true" pInputText value="{{ distributionContractDetail?.tradingProvider?.businessCustomer?.address }}" class="custom-input-disabled"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card pt-0 mb-0">
+                        <h5 class="mt-3"> Thông tin phát hành </h5>
+                        <div class="p-fluid p-formgrid grid">
+                            <div class="field col-12 md:col-4">
+                                <label class="title-info"> Đơn vị phát hành </label>
+                                <input [disabled]="true" pInputText value="{{ distributionContractDetail?.productBondInfo?.issuer?.businessCustomer?.name }}" class="custom-input-disabled"/>
+                            </div>
+                            <div class="field col-12 md:col-4">
+                                <label class="title-info"> Đơn vị giữ TP </label>
+                                <input [disabled]="true" pInputText value="{{ distributionContractDetail?.productBondInfo?.issuer?.businessCustomer?.name }}" class="custom-input-disabled"/>
+                            </div>
+                            <div class="field col-12 md:col-4">
+                                <label class="title-info"> Đại lý lưu ký </label>
+                                <input [disabled]="true" pInputText value="{{ distributionContractDetail?.productBondInfo?.depositProvider?.businessCustomer?.name }}" class="custom-input-disabled"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card pt-0 mb-0">
+                        <h5 class="mt-3"> Thông tin lô TP </h5>
+                        <div class="p-fluid p-formgrid grid">
+                            <div class="field col-12 md:col-4">
+                                <label class="title-info"> Mã TP - Tên TP </label>
+                                <input [disabled]="true" pInputText value="{{ distributionContractDetail?.productBondInfo?.bondCode }} - {{ distributionContractDetail?.productBondInfo?.bondName }}" class="custom-input-disabled"/>
+                            </div>
+                            <!-- <div class="field col-12 md:col-4">
+                                <label class="title-info"> Tên TP </label>
+                                <p class="info"> {{ distributionContractDetail.productBondInfo.bondName }} </p>
+                            </div> -->
+
+                            <div class="field col-12 md:col-2">
+                                <label class="title-info">Ngày phát hành</label>
+                                <input [disabled]="true" pInputText [value]="formatDate(distributionContractDetail?.productBondInfo?.issueDate)" class="custom-input-disabled"/>
+                            </div>
+                            <div class="field col-12 md:col-2">
+                                <label class="title-info">Ngày đáo hạn</label>
+                                <input [disabled]="true" pInputText [value]="formatDate(distributionContractDetail.productBondInfo.dueDate)" class="custom-input-disabled"/>
+                            </div>
+                            <div class="field col-12 md:col-2">
+                                <label class="title-info"> Mệnh giá </label>
+                                <input [disabled]="true" pInputText [value]="utils.transformMoney(distributionContractDetail.productBondInfo.parValue)" class="custom-input-disabled"/>
+                            </div>
+                            <div class="field col-12 md:col-2">
+                                <label class="title-info"> Giá trị </label>
+                                <input [disabled]="true" pInputText [value]="utils.transformMoney(distributionContractDetail.productBondInfo.parValue * distributionContractDetail.productBondInfo.quantity)" class="custom-input-disabled"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card pt-0 mb-0">
+                        <h5 class="mt-3"> Thông tin sản phẩm </h5>
+                        <div class="p-fluid p-formgrid grid">
+                            <div class="field col-12 md:col-4">
+                                <label class="title-info"> Giá trị mua </label>
+                                <input [disabled]="true" pInputText [value]="utils.transformMoney(distributionContractDetail.totalValue)" class="custom-input-disabled"/>
+                            </div>
+                            <div class="field col-12 md:col-2">
+                                <label class="title-info"> Số lượng </label>
+                                <input [disabled]="true" pInputText [value]="utils.transformMoney(distributionContractDetail.quantity)" class="custom-input-disabled"/>
+                            </div>
+                            <div class="field col-12 md:col-2">
+                                <label class="title-info"> Đơn giá </label>
+                                <input [disabled]="true" pInputText [value]="utils.transformMoney(distributionContractDetail.totalValue/distributionContractDetail.quantity)" class="custom-input-disabled"/>
+                            </div>
+                            
+                            <div class="field col-12 md:col-2">
+                                <label class="title-info"> Ngày mua </label>
+                                <input [disabled]="true" pInputText [value]="formatDate(distributionContractDetail.dateBuy)" class="custom-input-disabled"/>
+                            </div>
+                            <div class="field col-12 md:col-2">
+                                <label class="title-info">Lãi suất (%)</label>
+                                <input [disabled]="true" pInputText [value]="utils.transformPercent(distributionContractDetail.productBondInfo.interestRate)" class="custom-input-disabled"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </p-tabPanel>
+        <p-tabPanel [header]="'thongTinThanhToan'" *ngIf="isGranted([PermissionBondConst.Bond_HDPP_TTThanhToan])">
+            <ng-template pTemplate = "header">
+                <!-- <i class="pi pi-credit-card mr-2"></i> -->
+                <span>Thông tin thanh toán</span>
+            </ng-template>
+            <app-distribution-contract-payment [(distributionContractDetail)]="distributionContractDetail" *ngIf="tabViewActive.thongTinThanhToan && isGranted([PermissionBondConst.Bond_HDPP_TTThanhToan])"></app-distribution-contract-payment>
+        </p-tabPanel>
+        <p-tabPanel [header]="'danhMucHoSo'" *ngIf="isGranted([PermissionBondConst.Bond_HDPP_DMHSKHK])">
+            <ng-template pTemplate = "header">
+                <!-- <i class="pi pi-folder-open mr-2"></i> -->
+                <span> Danh mục hồ sơ khách hàng ký</span>
+            </ng-template>
+            <app-distribution-contract-file *ngIf="tabViewActive.danhMucHoSo && isGranted([PermissionBondConst.Bond_HDPP_DMHSKHK])"></app-distribution-contract-file>
+        </p-tabPanel>
+        
+        <p-tabPanel [header]="'thongTinTraiTuc'" *ngIf="isGranted([PermissionBondConst.Bond_HDPP_TTTraiTuc])">
+            <ng-template pTemplate = "header">
+                <!-- <i class="pi pi-star mr-2"></i> -->
+                <span> Thông tin trái tức</span>
+            </ng-template>
+            <app-distribution-contract-interest-period [(distributionContractId)]="distributionContractId" *ngIf="tabViewActive.thongTinTraiTuc && isGranted([PermissionBondConst.Bond_HDPP_TTTraiTuc])"></app-distribution-contract-interest-period>
+        </p-tabPanel>
+    </p-tabView>
+</div>

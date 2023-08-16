@@ -1,0 +1,34 @@
+<div id="contentView">
+    <!-- MARKDOWN CONTENT -->
+    <ng-container *ngIf="dialogData?.type === ContentTypeEView.MARKDOWN">
+        <div class="content-mark-down">
+            <markdown disabled="true" class="border-box" [data]="dialogData.content"></markdown>
+        </div>
+    </ng-container>
+
+    <!-- HTML CONTENT -->
+    <ng-container *ngIf="dialogData?.type === ContentTypeEView.HTML">
+        <div [innerHTML]="genHtml | function"></div>
+    </ng-container>
+
+    <!-- IMAGE -->
+    <ng-container *ngIf="dialogData?.type === ContentTypeEView.IMAGE">
+        <p-image
+            [width]="0" 
+            [src]="src"
+            (onHide)="hideDialog()"
+            [preview]="true"
+            styleClass="e-preview-image"
+            #pImage
+        >
+        </p-image>
+    </ng-container>
+    <!-- VIEW FILE DOC, XLSX, PDF (KHÔNG ỔN ĐỊNH NGHIÊN CỨU THÊM)-->
+    <ng-container *ngIf="dialogData?.type === ContentTypeEView.FILE">
+        <e-loading *ngIf="isLoading"></e-loading>
+        <ngx-doc-viewer 
+            [url]="dialogData.content" viewer="google"  style="width:100%; height:93vh;" [style]="{ width: '100%', height: contentHeight }"
+            (loaded)="isLoading=false">
+        </ngx-doc-viewer>
+    </ng-container>
+</div>

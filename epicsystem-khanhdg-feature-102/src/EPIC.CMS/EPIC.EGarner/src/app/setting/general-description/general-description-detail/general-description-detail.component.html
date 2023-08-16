@@ -1,0 +1,205 @@
+<app-loading-page *ngIf="isLoadingPage"></app-loading-page>
+<p-toast></p-toast>
+<p-confirmDialog [style]="{width: 'auto'}" [baseZIndex]="10000"></p-confirmDialog>
+
+<div class="card b-page-detail {{ isLoadingPage ? 'b-loading' : '' }}" *ngIf="!isLoadingPage">
+    <div class="p-fluid p-formgrid grid b-header">
+        <div class="card col-12 md:col-12 b-actions">
+            <div class="flex justify-content-between flex-wrap card-container purple-container">
+                <h5 class="title-info mb-0 ml-0"> Mô tả sản phẩm tích lũy  </h5>
+                <div>
+                    <p-button
+                            *ngIf="isGranted([PermissionGarnerConst.GarnerMTC_ThongTinMTC_NoiBat])"
+                            styleClass="p-button-sm custom-button" label="Đặt làm sản phẩm nổi bật" icon="pi pi-arrow-up"
+                            (click)="approveEpic(distributionDetail.id)">
+                    </p-button>
+
+                    <ng-container *ngIf="isGranted([PermissionGarnerConst.GarnerMTC_ThongTinMTC_Sua]) && activeIndex == 0">
+                        <p-button 
+                            styleClass="p-button-sm custom-button" label="{{ labelButtonEdit() }}"
+                            icon="pi {{ isEdit ? 'pi-save' : 'pi-pencil' }}" (click)="changeEdit()">
+                        </p-button>
+                    </ng-container>
+                    <p-button 
+                        styleClass="p-button-sm custom-button   border-600 b-button-back"
+                        [routerLink]="'/setting/general-description'" label="Quay lại"
+                        icon="pi pi-chevron-left" class="b-0">
+                    </p-button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <p-tabView styleClass="custom-tabview" [(activeIndex)]="activeIndex">
+        <p-tabPanel >
+            <ng-template pTemplate="header">
+                <span> Tổng quan </span>
+            </ng-template>
+
+            <div style="min-height: 300px;" class="card mb-6">
+                <!-- Hình ảnh sản phẩm -->
+                <p-table 
+                    #userTable [value]="generalDescription.images" (onRowReorder)="onRowReorderImage($event)"
+                    selectionMode="multiple" responsiveLayout="scroll" dataKey="id"
+                    styleClass="p-datatable-gridlines custom-table" [rowHover]="true"
+                        [scrollable]="true">
+                    <ng-template pTemplate="caption">
+                        <div class="flex justify-content-between flex-column sm:flex-row">
+                            <div class="flex justify-content-between flex-column sm:flex-row">
+                                <h5>Hình ảnh sản phẩm</h5>
+                            </div>
+                            <div class="">
+                                <button *ngIf="isGranted([PermissionGarnerConst.GarnerMTC_ThemMoi])"
+                                 pButton pRipple label="Thêm mới" icon="pi pi-plus-circle"
+                                    class="p-button-success mr-2" [disabled]="!isEdit" (click)="createImage()"></button>
+                            </div>
+                        </div>
+                    </ng-template>
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <!-- <th style="max-width:4rem; min-width:4rem; justify-content: center;"> # </th> -->
+                            <th style="max-width:3rem; min-width:3rem; justify-content: center;"></th>
+                            <th style="max-width: 10rem; min-width: 10rem; justify-content: center;" pFrozenColumn alignFrozen="left" class="b-border-frozen-left">Ảnh</th>
+                            <th style="max-width:10rem; min-width:10rem;"> Vị trí </th>
+                            <th style="min-width:30rem;"> Đường dẫn </th>
+                            <!-- <th style="max-width: 7rem; min-width: 7rem;" pFrozenColumn alignFrozen="right" [frozen]="true" class="b-border-frozen-right"> Trạng thái </th> -->
+                            <th style="max-width: 3rem; min-width: 3rem; justify-content: center;" pFrozenColumn alignFrozen="right" class="b-border-frozen-right" [frozen]="true"></th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-row let-index="rowIndex" let-columns="columns">
+                        <tr [pReorderableRow]="index">
+                            <td style="max-width:3rem; min-width:3rem; justify-content: center;">
+                                <span class="pi pi-bars" pReorderableRowHandle></span>
+                            </td>
+                            <td style="max-width: 10rem; min-width: 10rem;" pFrozenColumn alignFrozen="left" class="b-border-frozen-left">
+                                <p-image *ngIf="row.path"src="{{baseUrl}}/{{ row.path }}" alt="Image" width="100"></p-image>
+                            </td>
+                            <td style="max-width:10rem; min-width:10rem;"> {{ GeneralDescriptionConst.getPositionName(row?.position) }}</td>
+                            <td style="min-width:30rem;"> {{ row?.path }}</td>
+                            <!-- <td style="max-width: 7rem; min-width: 7rem; justify-content: center;" pFrozenColumn alignFrozen="right" [frozen]="true" class="b-border-frozen-right">
+                                <p-tag 
+                                    styleClass="p-tag-{{ GeneralDescriptionConst.getStatusSeverity(row.status) }}" 
+                                    severity="{{ GeneralDescriptionConst.getStatusSeverity(row.status) }}"
+                                    value="{{ GeneralDescriptionConst.getStatusNews(row.status) }}">
+                                </p-tag>
+                            </td> -->
+                            <td style="max-width: 3rem; min-width: 3rem;" pFrozenColumn alignFrozen="right" [frozen]="true" class="b-border-frozen-right b-table-actions">
+                                <div class="flex">
+                                    <i class="pi pi-ellipsis-h"  (click)="menu.toggle($event)"></i>
+                                    <p-menu 
+                                        #menu [popup]="true"class="button-actions"
+                                        [model]="listActionImage[index]" appendTo="body"
+                                        >
+                                    </p-menu>
+                                </div>
+                            </td>
+
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+
+            <div class="card">
+                <div class="p-fluid p-formgrid grid">
+                    <div class="field col-12"> 
+                        <h5 htmlFor="content">Mô tả sản phẩm</h5>
+                        <p-selectButton [disabled]="!isEdit"  optionValue="value" optionLabel="name" class="mb-2 mt-2" [(ngModel)]="descriptionContent.descriptionContentType "  [options]="htmlMarkdownOptions" ></p-selectButton>
+                    </div>
+                    <div class="field {{ descriptionContent.descriptionContentType == 'MARKDOWN' ? 'col-6' : 'col-12' }}">
+                        <label htmlFor="description">Nội dung</label>
+                        
+                        <div *ngIf="descriptionContent.descriptionContentType == 'MARKDOWN'">
+                            <textarea  
+                                #myTextArea pInputTextarea [rows]="11" name="description" id="emailContent" class="custom-input b-textarea"
+                                (click)="getCaretPos(myTextArea)" 
+                                (keyup)="getCaretPos(myTextArea)"  
+                                [(ngModel)]="descriptionContent.description">
+                            </textarea>
+                            <!--  -->
+                            <div style="width: 150px;">
+                                <p-button 
+                                    [disabled]="!isEdit" (click)="insertImage()" class="p-button-outlined p-button-info" label="Chèn ảnh" icon="pi pi-image" iconPos="left">
+                                </p-button>
+                            </div>
+                        </div>
+        
+                        <div *ngIf="descriptionContent.descriptionContentType == 'HTML'">
+                            <angular-editor 
+                                [(ngModel)]="descriptionContent.description" id="content" class="custom-input" name="description"
+                                [placeholder]="'Nhập nội dung'" [config]="{height: '15rem', editable: true, sanitize: false }">
+                            </angular-editor>
+                        </div>
+                    </div>
+                    <div *ngIf="descriptionContent.descriptionContentType =='MARKDOWN'"  class=" field col-6 md:col-6 ">
+                        <label htmlFor=" description">Nội dung xem trước</label>
+                        <markdown class="border-box" [data]="descriptionContent.description"></markdown>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-6 mb-6" style="min-height: 300px;">
+                <!-- Tiêu chí nổi bật -->
+                <p-table 
+                    #userTable [value]="generalDescription.features" (onRowReorder)="onRowReorderFeature($event)"
+                    selectionMode="multiple" responsiveLayout="scroll" dataKey="id"
+                    styleClass="p-datatable-gridlines custom-table" [rowHover]="true"
+                        [scrollable]="true">
+                    <ng-template pTemplate="caption">
+                        <div class="flex justify-content-between flex-column sm:flex-row">
+                            <div class="flex justify-content-between flex-column sm:flex-row">
+                                <h5>Tiêu chí nổi bật</h5>
+                            </div>
+                            <div class="">
+                                <button *ngIf="isGranted([PermissionGarnerConst.GarnerMTC_ThemMoi])"
+                                 pButton pRipple label="Thêm mới" icon="pi pi-plus-circle"
+                                    class="p-button-success mr-2" [disabled]="!isEdit" (click)="createFeatures()"></button>
+                            </div>
+                        </div>
+                    </ng-template>
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <!-- <th style="max-width:4rem; min-width:4rem; justify-content: center;"> # </th> -->
+                            <th style="max-width:3rem; min-width:3rem; justify-content: center;"></th>
+                            <th style="max-width: 5rem; min-width: 5rem; justify-content: center;" pFrozenColumn alignFrozen="left" class="b-border-frozen-left">Icon</th>
+                            <th style="min-width:20rem; "> Tệp tin/Đường dẫn </th>
+                            <th style="min-width:20rem; "> Mô tả </th>
+                            <!-- <th style="max-width: 7rem; min-width: 7rem;" pFrozenColumn alignFrozen="right" [frozen]="true" class="b-border-frozen-right"> Trạng thái </th> -->
+                            <th style="max-width: 3rem; min-width: 3rem; justify-content: center;" pFrozenColumn alignFrozen="right" class="b-border-frozen-right" [frozen]="true"></th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-row let-index="rowIndex" let-columns="columns">
+                        <tr [pReorderableRow]="index">
+                            <!-- <td style="max-width:4rem; min-width:4rem; justify-content: center;"> </td> -->
+                            <td style="max-width:3rem; min-width:3rem; justify-content: center;">
+                                <span class="pi pi-bars" pReorderableRowHandle></span>
+                            </td>
+                            <td style="max-width: 5rem; min-width: 5rem;" pFrozenColumn alignFrozen="left" class="b-border-frozen-left">
+                                <p-image *ngIf="row.iconUri" src="{{baseUrl}}/{{ row.iconUri }}" alt="Image" width="40"></p-image>
+                            </td>
+                            <td style="min-width:20rem;"> {{ row?.fileUrl }}</td>
+                            <td style="min-width:20rem;"> {{ row?.description }}</td>
+                            <!-- <td style="max-width: 7rem; min-width: 7rem; justify-content: center;" pFrozenColumn alignFrozen="right" [frozen]="true" class="b-border-frozen-right">
+                                <p-tag 
+                                    styleClass="p-tag-{{ GeneralDescriptionConst.getStatusSeverity(row.status) }}" 
+                                    severity="{{ GeneralDescriptionConst.getStatusSeverity(row.status) }}"
+                                    value="{{ GeneralDescriptionConst.getStatusNews(row.status) }}">
+                                </p-tag>
+                            </td> -->
+                            <td style="max-width: 3rem; min-width: 3rem;" pFrozenColumn alignFrozen="right" [frozen]="true" class="b-border-frozen-right b-table-actions">
+                                <div class="flex">
+                                    <i class="pi pi-ellipsis-h"  (click)="menu.toggle($event)"></i>
+                                    <p-menu 
+                                        #menu [popup]="true"class="button-actions"
+                                        [model]="listActionFeature[index]" appendTo="body"
+                                        >
+                                    </p-menu>
+                                </div>
+                            </td>
+
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+
+        </p-tabPanel>
+    </p-tabView>
+</div>

@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>..\..</DockerfileContext>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="signing-key.jwk" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="signing-key.jwk">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="log4net" Version="2.0.15" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.15" />
+    <PackageReference Include="Oracle.EntityFrameworkCore" Version="5.21.90" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\EPIC.IdentityServer\EPIC.IdentityServer\EPIC.IdentityServer.csproj" />
+    <ProjectReference Include="..\EPIC.RocketchatDomain\EPIC.RocketchatDomain.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,40 @@
+
+<div class="wrapper-loading">
+    <e-loading *ngIf="submitted"></e-loading>
+    <div class="grid">
+        <div class="col-12">
+            <div class="card">
+                <div class="p-fluid p-formgrid grid">
+                    <div class="field col-12 md:col-2 flex align-content-center flex-wrap">
+                        <label class="title-info"> Chọn ngân hàng <span class="required-field"> * </span> </label>
+                    </div>
+                    <div class="field col-12 md:col-10">
+                        <p-dropdown 
+                            class="custom-input-disabled" optionLabel="labelName" optionValue="businessCustomerBankAccId" appendTo="body"
+                            emptyMessage="Không có dữ liệu" [options]="banks" [autoDisplayFirst]="true"
+                            [(ngModel)]="body.tradingBankAccId">
+                        </p-dropdown>
+                    </div>
+                </div>
+            </div>
+            <!--  -->
+            <e-table
+                [rows]="rows"
+                [columns]="columns"
+                [(selectedItems)]="selectedRequests"
+                [isShowIconFilter]="false"
+                [isShowPaginator]="false"
+                [isHeightAuto]="true"
+                >
+            </e-table>
+        </div>
+    </div>
+    <div class="p-dialog-footer e-custom-dialog-footer" >
+        <button pButton pRipple label="Hủy" icon="pi pi-times" class="p-button-text p-confirm-dialog-reject" (click)="cancel()"></button>
+        <button pButton pRipple label="Gửi yêu cầu chi" icon="pi pi-check" class="p-button-text p-confirm-dialog-approve" [disabled]="submitted" (click)="save()"></button>
+    </div>
+</div>
+
+<div>
+    <p-confirmDialog [style]="{width: '20vw'}" icon="pi pi-exclamation-triangle"></p-confirmDialog>
+</div>

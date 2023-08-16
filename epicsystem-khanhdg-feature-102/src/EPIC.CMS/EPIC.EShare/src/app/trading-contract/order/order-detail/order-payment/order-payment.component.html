@@ -1,0 +1,274 @@
+<div *ngIf="isGranted([PermissionCompanyShareConst.CompanyShareHDPP_SoLenh_TTCT_TTThanhToan_DanhSach])" class="grid ml-0 mr-0 mt-0">
+    <div class="col-12 pb-0">
+        <div class="card p-fluid p-0">
+            <div class="p-fluid p-formgrid grid mt-3 mb-2 ">
+                  <div class="col b-count-price " >
+                    <div class="b-count-icon">
+                        <img src="../../../../../assets/layout/images/money.png" alt="">
+                    </div>
+                    <div style="margin-left: 16px;">
+                        <p class="p-count-price" >{{ utils.transformMoney(paymentCurrencyInfo.total)  }}</p>
+                        <p > Tổng tiền thanh toán</p>
+                    </div>  
+                </div>
+                <div class=" col b-count-price">
+                    <div class="b-count-icon">
+                        <img src="../../../../../assets/layout/images/moneybag.png" alt="">
+                    </div>
+                    <div style="margin-left: 16px;" >
+                        <p class="p-count-price" >{{ utils.transformMoney(paymentCurrencyInfo.paid)  }}</p>
+                        <p > Số tiền đã thanh toán </p>
+                    </div>  
+                </div>
+                <div class="col b-count-price " >
+                    <div class="b-count-icon">
+                        <img src="../../../../../assets/layout/images/moneyfalling.png" alt="">
+                    </div>
+                    <div style="margin-left: 16px;">
+                        <p class="p-count-price" >{{ utils.transformMoney(paymentCurrencyInfo.remain)  }}</p>
+                        <p > Số tiền chênh lệch </p>
+                    </div>  
+                </div>
+            </div>
+        </div>
+    </div>
+    <p-toast></p-toast>
+    <p-confirmDialog [style]="{width: 'auto'}" [baseZIndex]="10000"></p-confirmDialog>
+
+    <div class="col-12 pt-0">
+        <div class="card p-0">
+            <p-table 
+                #orderPaymentTable [value]="rows"
+                [loading]="isLoading" [rowHover]="true" 
+                (onPageChange)="setPage($event)" responsiveLayout="scroll" dataKey="code"
+                [scrollable]="true" styleClass="mt-3 custom-table">
+                <ng-template pTemplate="caption">
+					<div class="flex justify-content-between flex-column sm:flex-row">
+                        <div class="">
+						</div>
+                        <div class="block mt-2 md:mt-0 ml-3 p-input-icon-left mb-2">
+                            <!-- <button pButton pRipple label="Gửi thông báo" icon="pi pi-send" class="p-button-success p-button-sm mr-2" (click)="resentNotify()" *ngIf="disableButtonPayment"></button> -->
+                            <button 
+                                pButton pRipple label="Thêm thanh toán" icon="pi pi-plus" class="p-button-success" 
+                                (click)="create()" *ngIf="!disableButtonPayment && isGranted([PermissionCompanyShareConst.CompanyShareHDPP_SoLenh_TTCT_TTThanhToan_ThemMoi])">
+                            </button>
+                        </div>
+					</div>
+                </ng-template>
+                <ng-template pTemplate="header">
+					<tr>
+						<th style="min-width: 10rem;" pFrozenColumn alignFrozen="left" class="b-border-frozen-left"> Mã giao dịch </th>
+                        <th style="min-width: 8rem;"> Thu/Chi </th>
+                        <th style="min-width: 10rem;"> Loại </th>
+                        <th style="min-width: 12rem;"> Ngày giao dịch </th>
+                        <th style="min-width: 12rem;"> Số tiền </th>
+                        <th style="min-width: 35rem;"> Mô tả </th>
+                        <th style="min-width: 10rem; max-width: 10rem;" pFrozenColumn alignFrozen="right" [frozen]="true" class="b-border-frozen-right">Trạng thái </th>
+                        <th style="min-width: 5rem; max-width: 5rem; justify-content: center;" pFrozenColumn alignFrozen="right" [frozen]="true"></th>
+					</tr>
+				</ng-template>
+                <ng-template pTemplate="body" let-row let-rowIndex ="rowIndex" let-columns="columns">
+                    <tr>
+                        <td style="min-width: 10rem;" pFrozenColumn alignFrozen="left" class="b-border-frozen-left"> {{ row.orderPaymentId }} </td>
+                        <td style="min-width: 7rem;"> {{ OrderPaymentConst.getNameTransactionType(row.tranType) }} </td>
+                        <td style="min-width: 10rem;"> {{ OrderPaymentConst.getNamePaymentType(row.paymentType) }} </td>
+                        <td style="min-width: 12rem;"> {{ row.tranDate | datetimeview }} </td>
+                        <td style="min-width: 12rem;"> {{ utils.transformMoney(row.paymentAmnount) }} </td>
+                        <td style="min-width: 35rem;"> {{ row.description }} </td>
+                        <td style="min-width: 10rem; max-width: 10rem;" pFrozenColumn alignFrozen="right" [frozen]="true" class="b-border-frozen-right"> 
+                            <p-tag styleClass="p-tag-{{ OrderPaymentConst.getSeverityPaymentStatus(row.status) }}" severity="{{ OrderPaymentConst.getSeverityPaymentStatus(row.status) }}" value="{{ OrderPaymentConst.getNamePaymentStatus(row.status) }}"></p-tag> 
+                        </td>
+                        <td style="min-width: 5rem; max-width: 5rem; justify-content: center;" pFrozenColumn alignFrozen="right" [frozen]="true">
+                            <div class="flex">
+                                <i class="pi pi-ellipsis-h" style="cursor:pointer;" (click)="menu.toggle($event)"></i>
+                                <p-menu 
+                                    #menu [popup]="true"class="button-actions"
+                                    [model]="listAction[rowIndex]" appendTo="body"
+                                    >
+                                </p-menu>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+					<tr>
+						<td colspan="7">Không có dữ liệu.</td>
+					</tr>
+				</ng-template>
+				<ng-template pTemplate="loadingbody">
+					<tr>
+						<td colspan="7"> Đang tải dữ liệu ... </td>
+					</tr>
+				</ng-template>
+            </p-table>
+        </div>
+		<!-- THEM & SUA-->
+        <p-dialog [(visible)]="modalDialog" [style]="{width: '1000px'}" [header]="header()" [modal]="true" class="p-fluid" [maximizable]="true">
+            <ng-template pTemplate="content">
+                <div class="card pt-0">
+                    <div class="grid formgrid">
+                        <!-- Lô cổ phần -->
+                        <ng-container>
+                            <div class="col-12 md:col-12 title-group-input">
+                                <h6> Thông tin thanh toán </h6>
+                            </div>
+                            <div class="col-12 md:col-4">
+                                <div class="field">
+                                    <label htmlFor="orderId"> Số giao dịch </label>
+                                    <input class="p-component" [disabled]="true" pInputText value="{{ orderPayment?.codeId }}" class="custom-input-disabled"/>
+                                </div>
+                            </div>
+
+                            <div class="col-12 md:col-4">
+                                <div class="field">
+                                    <label htmlFor="tranClassify"> Loại giao dịch </label>
+                                    <p-dropdown
+                                        class="custom-input-disabled"
+                                        optionValue="code" name="name" optionLabel="name" appendTo="body"
+                                        [options]="[{name: 'Thanh toán hợp đồng', code: 1}]" [autoDisplayFirst]="true" [disabled]="true"
+                                        [(ngModel)]="orderPayment.tranClassify" 
+                                        [ngClass]="{'ng-invalid ng-dirty' : (submitted && !orderPayment.tranClassify) || fieldErrors?.tranClassify } + 'custom-input-disabled' + 'p-component'"
+                                        (click)="resetValid('tranClassify')">
+                                    </p-dropdown>
+                                </div>
+                            </div>
+                            <div class="col-12 md:col-4">
+                                <div class="field">
+                                    <label htmlFor="orderId"> Ngày giao dịch </label>
+                                    <p-calendar
+                                            class="custom-input-disabled" panelStyleClass="b-trandate"
+                                            inputId="tranDate" dateFormat="dd/mm/yy" locale="vi" appendTo="body" utc="true" placeholder="dd/mm/yyyy"
+                                            [showTime]="true" [showIcon]="true"
+                                            [(ngModel)]="orderPayment.tranDate" 
+                                            [ngClass]="{'ng-invalid ng-dirty' : fieldErrors?.tranDate} + 'custom-input-disabled'" 
+                                            (click)="resetValid('tranDate')"
+                                            [disabled]="isDetail">
+                                        </p-calendar>
+                                </div>
+                            </div>
+
+                            <div class="col-12 md:col-4">
+                                <div class="field">
+                                    <label htmlFor="transactionType"> Kiểu giao dịch </label>
+                                    <p-dropdown
+                                        class="custom-input-disabled"
+                                        optionValue="code" name="name" optionLabel="name" appendTo="body"
+                                        [options]="OrderPaymentConst.transactionTypes" [autoDisplayFirst]="true" [disabled]="true"
+                                        [(ngModel)]="orderPayment.tranType" 
+                                        [ngClass]="{'ng-invalid ng-dirty' : (submitted && !orderPayment.transactionType) || fieldErrors?.transactionType } + 'custom-input-disabled'  + 'p-component'"
+                                        (click)="resetValid('transactionType')">
+                                    </p-dropdown>
+                                </div>
+                            </div>
+                            <!--  -->
+                            <div class="col-12 md:col-4">
+                                <div class="field">
+                                    <label htmlFor="paymentType"> Loại thanh toán <span class="required-field"> * </span> </label>
+                                    <p-dropdown
+                                        class="custom-input-disabled"
+                                        optionValue="code" name="name" optionLabel="name" appendTo="body"
+                                        [options]="OrderPaymentConst.paymentTypes" [autoDisplayFirst]="true"
+                                        [(ngModel)]="orderPayment.paymentType" 
+                                        [ngClass]="{'ng-invalid ng-dirty' : (submitted && !orderPayment.paymentType) || fieldErrors?.paymentType }"
+                                        (click)="resetValid('paymentType')" [disabled]="isDetail">
+                                    </p-dropdown>
+                                </div>
+                            </div>
+
+                            <div class="col-12 md:col-4">
+                                <div class="field">
+                                    <label htmlFor="paymentAmnount"> Số tiền <span class="required-field"> * </span> </label>
+                                    <p-inputNumber
+                                        class="custom-input-disabled" 
+                                        name="paymentAmnount" 
+                                        [(ngModel)]="orderPayment.paymentAmnount" mode="decimal"
+                                        [disabled]="isDetail"
+                                        locale="de-DE">
+                                    </p-inputNumber>
+                                </div>
+                            </div>
+
+                            <div class="col-12 md:col-12">
+                                <div class="field">
+                                    <label htmlFor="orderId"> Tài khoản thụ hưởng </label> 
+                                    <input 
+                                        [disabled]="true" pInputText 
+                                        value="{{ paymentAccountTradingProvider }}" 
+                                        class="custom-input-disabled p-component"
+                                    />
+                                </div>
+                            </div>
+
+                          
+                            <!--  -->
+                            <div class="col-12 md:col-12">
+                                <div class="field">
+                                    <label htmlFor="description"> Mô tả </label>
+                                    <textarea pInputTextarea maxlength="512" [(ngModel)]="orderPayment.description" [disabled]="isDetail" class="custom-input-disabled"></textarea>
+                                </div>
+                            </div>
+
+                        </ng-container>
+                        <!-- Thông tin phát hành sơ cấp -->
+                        <ng-container>
+                            <div class="col-12 md:col-12 title-group-input">
+                                <h6> Người dùng </h6>
+                            </div>
+                            <div class="col-12 md:col-4">
+                                <div class="field">
+                                    <label htmlFor="code"> Người tạo </label>
+                                    <input pInputText [(ngModel)]="orderPayment.createdBy" [disabled]="true" class="custom-input-disabled p-component"/>
+                                </div>
+                            </div>
+                            <div class="col-12 md:col-2">
+                                <div class="field">
+                                    <label htmlFor="name"> Ngày tạo </label>
+                                    <input pInputText [value]="formatDate(orderPayment.createdDate)" [disabled]="true" class="custom-input-disabled"/>
+                                </div>
+                            </div>
+                            <div class="col-12 md:col-4">
+                                <div class="field">
+                                    <label htmlFor="name"> Người duyệt </label>
+                                    <input pInputText [disabled]="true" [(ngModel)]="orderPayment.approveBy" class="custom-input-disabled p-component"/>
+                                </div>
+                            </div>
+                            <div class="col-12 md:col-2">
+                                <div class="field">
+                                    <label htmlFor="name"> Ngày duyệt </label>
+                                    <input pInputText [value]="formatDate(orderPayment.approveDate)" [disabled]="true" class="custom-input-disabled"/>
+                                </div>
+                            </div>
+                        </ng-container>
+                    </div>
+                </div>
+            </ng-template>
+            <ng-template pTemplate="footer">
+                <div *ngIf="!orderPayment?.status || orderPayment?.status == OrderPaymentConst.PAYMENT_TEMP">
+                    <button pButton pRipple label="Hủy" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+                    <button pButton pRipple label="Lưu" icon="pi pi-check" class="p-button-text" [disabled]="!validForm() || submitted" (click)="save()"></button>
+                </div>
+            </ng-template>
+        </p-dialog>
+		<!-- XOA -->
+        <!-- <p-dialog [(visible)]="deleteItemDialog" header="Xóa phát hành sơ cấp" [modal]="true" [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                <span *ngIf="orderPayment">Bạn có chắc chắn xóa phát hành sơ cấp {{ distributionContract.name }} ?</span>
+            </div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="Không" (click)="deleteItemDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Có" (click)="confirmDelete()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="confirmRequestDialog" header="Gửi yêu cầu duyệt" [modal]="true" [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <span *ngIf="orderPayment">Bạn muốn gửi yêu cầu phê duyệt cho phát hành sơ cấp này ?</span>
+            </div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="Không" (click)="confirmRequestDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Có" (click)="confirmRequest()"></button>
+            </ng-template>
+        </p-dialog> -->
+    </div>
+</div>

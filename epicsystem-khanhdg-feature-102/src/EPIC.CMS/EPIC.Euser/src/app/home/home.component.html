@@ -1,0 +1,51 @@
+<div class="grid layout-dashboard ml-0 mr-0">
+    <div class="col-12 lg:col-12 xl:col-12 md:col-12">
+        <div class="card b-home">
+            <div class="grid p-fluid">
+                <div class="col-12 text-center">
+                    <div class="b-profile-image">
+                        <img src="assets/layout/images/dashboard/avatar-carmelita.png" alt="mirage-layout" />
+                    </div>
+                    <div>
+                        <h3 class="mt-3">
+                            Xin chào {{ userInfo?.displayName }}
+                        </h3>   
+                        <p class="b-color-text"> 
+                            Quản lý thông tin, quyền riêng tư và chế độ bảo mật để Epic hoạt động hiệu quả cho bạn 
+                            <a href="javascript:void(0)" (click)="logout()">Thoát tài khoản</a>
+                        </p>
+                    </div>
+                </div>
+                <div class="col-7 lg:col-7 md:col-7">
+                    <div style="border: 1px solid #E2E6F2; border-radius: 12px;" class="p-3">
+                        <h4> Quyền riêng tư và cá nhân hóa </h4>
+                        <div class="grid">
+                            <div class="col-8">
+                                <div> 
+                                    <p class="b-color-text"> Bạn đã đăng nhập thành công vào hệ thống </p> 
+                                    <p class="b-color-text"> Đăng nhập gần nhất 02/07/2022 </p> 
+                                    <p class="b-color-text"> Lần đăng nhập lỗi: 0 lần </p> 
+                                    <p class="b-color-text"> Hết hạn mật khẩu: Còn 365 ngày </p> 
+                                </div>
+                            </div>
+                            <div class="col-4 text-center">
+                                <div>
+                                    <p-image src="assets/layout/images/home/khien.png" alt="Image" width="auto"></p-image> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-5 lg:col-5 md:col-5">
+                    <div>
+                        <div class="grid">
+                            <div class="col-12">
+                                <p-image src="assets/layout/images/home/button.png" alt="Image" width="330px"></p-image>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </div>
+    
+</div>

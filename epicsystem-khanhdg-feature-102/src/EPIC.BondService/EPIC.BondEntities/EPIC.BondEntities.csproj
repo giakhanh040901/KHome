@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+	<PackageReference Include="AutoMapper" Version="11.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\EPIC.CoreService\EPIC.CoreEntities\EPIC.CoreEntities.csproj" />
+    <ProjectReference Include="..\..\EPIC.IdentityServer\EPIC.IdentityEntities\EPIC.IdentityEntities.csproj" />
+    <ProjectReference Include="..\EPIC.Entities\EPIC.Entities.csproj" />
+  </ItemGroup>
+</Project>

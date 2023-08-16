@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+	
+  <ItemGroup>
+    <ProjectReference Include="..\..\EPIC.BondService\EPIC.DataAccess\EPIC.DataAccess.csproj" />
+    <ProjectReference Include="..\..\EPIC.CoreService\EPIC.CoreRepositories\EPIC.CoreRepositories.csproj" />
+    <ProjectReference Include="..\..\EPIC.CoreService\EPIC.CoreShareServices\EPIC.CoreSharedServices.csproj" />
+    <ProjectReference Include="..\..\EPIC.ImageService\EPIC.FileDomain\EPIC.FileDomain.csproj" />
+    <ProjectReference Include="..\..\EPIC.Libraries\EPIC.OpenXml\EPIC.OpenXmlLibrary\EPIC.OpenXmlLibrary.csproj" />
+    <ProjectReference Include="..\EPIC.EventEntites\EPIC.EventEntites.csproj" />
+    <ProjectReference Include="..\EPIC.EventRepositories\EPIC.EventRepositories.csproj" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.1" />
+  </ItemGroup>
+</Project>

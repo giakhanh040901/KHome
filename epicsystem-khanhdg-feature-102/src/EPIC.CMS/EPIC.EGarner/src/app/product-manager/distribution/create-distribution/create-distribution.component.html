@@ -1,0 +1,111 @@
+<app-loading-page *ngIf="isLoadingPage"></app-loading-page>
+<p-toast></p-toast>
+
+<div  class="grid p-fluid {{ isLoadingPage ? 'b-loading' : '' }}" *ngIf="!isLoadingPage">
+    <ng-container>
+        <div class="col-12 md:col-12">
+            <h6 class="mb-2 mt-0">Thông tin sản phẩm </h6>
+            <hr class="m-0">
+        </div>
+        <div class="col-12 md:col-3">
+            <div class="field mb-0">
+                <label htmlFor="">Chọn sản phẩm <span class="required-field"> * </span></label>
+                <p-dropdown 
+                    optionLabel="displayName" optionValue="id" appendTo="body"
+                    [autoDisplayFirst]="false" [options]="products" 
+                    (onChange)="onChangeProduct($event)"
+                    [(ngModel)]="distribution.productId" 
+                    [ngClass]="{'ng-invalid ng-dirty' : submitted && !distribution.productId}">
+                </p-dropdown>
+            </div>
+        </div>
+        <div class="col-12 md:col-3">
+            <div class="field mb-0">   
+                    <label htmlFor="code"> Mã sản phẩm</label>
+                    <input pInputText [disabled]="true" value="{{ product?.code }}" class="custom-input-disabled"/>			           
+            </div>
+        </div>
+        <div class="col-12 md:col-6">
+            <div class="field mb-0">   
+                    <label htmlFor="code"> Tên sản phẩm</label>
+                    <input pInputText [disabled]="true" value="{{ product?.name }}" class="custom-input-disabled"/>			           
+            </div>
+        </div>
+        <div class="col-12 md:col-6">
+            <div class="field mb-0">   
+                    <label htmlFor="code"> Tổ chức phát hành / Tổng thầu</label>
+                    <input pInputText [disabled]="true" value="{{ product?.cpsIssuer?.name || product?.invGeneralContractor?.name }}" class="custom-input-disabled"/>			           
+            </div>
+        </div>
+        <div class="col-12 md:col-3">
+            <div class="field mb-0">
+                <label htmlFor="code"> Hạn mức phân phối </label>
+                <input pInputText [disabled]="true" value="{{ formatCurrency(product?.totalInvestment) }}" class="custom-input-disabled"/>
+            </div>
+        </div>
+
+        
+        <div class="col-12 md:col-3">
+            <div class="field mb-0">
+                <label htmlFor="code"> Lợi nhuận từ tổ chức phát hành </label>
+                <input pInputText [disabled]="true" value="{{ product?.isProfitFromPartner }}" class="custom-input-disabled"/>
+            </div>
+        </div>
+        
+        <div class="col-12 md:col-12">
+            <h6 class="mb-2 mt-0">Thông tin phân phối </h6>
+            <hr class="m-0">
+        </div>
+        <div class="col-12 md:col-3">
+            <div class="field mb-0">
+                <label htmlFor="openCellDate">Ngày mở bán <span class="required-field"> * </span> </label>
+                <p-calendar inputId="openCellDate" dateFormat="dd/mm/yy" locale="vi" 
+                    appendTo="body" utc="true" 
+                    [(ngModel)]="distribution.openCellDate" 
+                    (onSelect)="onChangeOpenCellDate($event)"
+                    [maxDate]="distribution.openCellDate"
+                    [showIcon]="true">
+                </p-calendar>
+            </div>
+        </div>
+        <div class="col-12 md:col-3">
+            <div class="field mb-0">
+                <label htmlFor="closeCellDate">Ngày kết thúc<span class="required-field"> * </span> </label>
+                <p-calendar inputId="closeCellDate" dateFormat="dd/mm/yy" locale="vi" 
+                    appendTo="body" utc="true" 
+                    [(ngModel)]="distribution.closeCellDate" 
+                    [showIcon]="true" 
+                    [readonlyInput]="true"
+                    [minDate]="distribution.openCellDate">
+                </p-calendar>
+            </div>
+        </div>
+        <div class="col-12 md:col-3">
+            <div class="field mb-0">
+                <label htmlFor=""> Tài khoản nhận tiền <span class="required-field"> * </span></label>
+                <p-multiSelect 
+                    name="tradingBankAccountCollects" appendTo="body"
+                    [options]="listBanks" optionLabel="labelName" optionValue="businessCustomerBankAccId"
+                    [(ngModel)]="distribution.tradingBankAccountCollects">
+                </p-multiSelect>
+            </div>
+        </div> 
+        <div class="col-12 md:col-3">
+            <div class="field mb-0">
+                <label htmlFor=""> Tài khoản chi tiền </label>
+                <p-multiSelect 
+                    name="tradingBankAccountPays" appendTo="body"
+                    [options]="listBanks" optionLabel="labelName" optionValue="businessCustomerBankAccId"
+                    [(ngModel)]="distribution.tradingBankAccountPays">
+                </p-multiSelect>
+            </div>
+        </div> 
+    </ng-container>
+</div>
+<div class="p-dialog-footer" style="width: 100%; position: fixed; left: 0; bottom: 0;">
+    <button pButton pRipple label="Hủy" icon="pi pi-times" class="p-button-text p-confirm-dialog-reject" (click)="close()"></button>
+    <button pButton pRipple label="Lưu" icon="pi pi-check" class="p-button-text p-confirm-dialog-approve" (click)="save()"></button> 
+    <!-- !validForm() ||  -->
+</div>
+
+         

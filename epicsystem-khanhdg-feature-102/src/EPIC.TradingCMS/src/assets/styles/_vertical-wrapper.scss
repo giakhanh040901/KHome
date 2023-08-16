@@ -1,0 +1,109 @@
+.page-body-wrapper {
+  min-height: calc(100vh - #{$navbar-height});
+  @include display-flex();
+  @include flex-direction(row);
+  padding-left: 0;
+  padding-right: 0;
+  padding-top: $navbar-height - 20px;
+
+  &.full-page-wrapper {
+    width: 100%;
+    min-height: 100vh;
+    padding-top: 0;
+  }
+}
+
+.main-panel {
+  transition: width $action-transition-duration $action-transition-timing-function, margin $action-transition-duration $action-transition-timing-function;
+  width: calc(100% - #{$sidebar-width-lg});
+  min-height: calc(100vh - #{$navbar-height});
+  @include display-flex();
+  @include flex-direction(column);
+  @media (max-width: 991px) {
+    margin-left: 0;
+    width: 100%;
+  }
+  &.main-panel-only {
+    transition: none;
+  }
+}
+
+.content-wrapper {
+  background: $content-bg;
+  // padding: 2.68rem 2.5rem; theme
+  padding: 20px 10px;
+  width: 100%;
+  @include flex-grow(1);
+  @media(max-width: 767px) {
+    padding: 1.5rem 1.5rem;
+  }
+}
+.input-search {
+  max-width: 350px !important;
+}
+.grid-margin {
+  .card {
+    // padding: 0px 8px;
+    .card-body {
+      .row {
+        .input-search {
+          max-width: 350px !important;
+        }
+        .wrapper-detail {
+          border-top: 1px solid #626262;
+          background: #f1f1f1;
+          .card-body {
+            padding: 5px 0px 5px 30px;
+            .row {
+              border-bottom: 1px solid gray;
+              padding-top: 5px;
+              div {
+                label {
+                  margin-bottom: 3px;
+                  font-size: 14px;
+                  font-weight: 500;
+                }
+                p {
+                  color: #282828;
+                  margin-bottom: 0px;
+                  white-space: initial;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+.ng-select {
+    .ng-select-container {
+      height: 2.35rem !important;
+  }
+}
+
+// datepicker
+.bs-datepicker-container {
+  padding: 0px;
+}
+// custom css notity
+.swal2-popup.swal2-toast {
+  padding: 15px !important;
+  .swal2-header {
+    margin-bottom: 5px;
+  }
+  .swal2-content {
+    #swal2-content {
+      padding: 0px;
+    }
+  }
+}
+
+//
+.cut-text { 
+  text-overflow: ellipsis;
+  overflow: hidden; 
+  width: 160px; 
+  height: 1.2em; 
+  white-space: nowrap;
+}

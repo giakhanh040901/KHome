@@ -1,0 +1,16 @@
+
+<div>
+    <e-table
+        [rows]="rows"
+        [(page)]="page"
+        [columns]="columns"
+        [class]="'pt-5'"
+        [tabContentHeight]="contentHeight"
+        [isLoading]="isLoading"
+        [columnCacheName]="constructor.name"
+        [isShowIconFilter]="false"
+        (_onPageChange)="setPage($event)">
+    </e-table>
+</div>
+
+

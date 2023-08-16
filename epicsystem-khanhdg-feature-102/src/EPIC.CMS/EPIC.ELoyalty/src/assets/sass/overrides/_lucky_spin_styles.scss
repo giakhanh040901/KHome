@@ -1,0 +1,474 @@
+
+$colorBorderUpload: #cdcdcd;
+$colorHoverBorderUpload: #e2541b5e;
+$colorButtonRemoveImage: red;
+$timeFlicker: 3s;
+$widthInputColor: 45px;
+
+// STYLE DIV CHỌN FILE, ICON_REMOVE FILE, IMAGE
+@mixin choose-image-upload {
+    .wrapper-choose-image {
+        height: 120px;
+        width: 100%;
+        border: 2px dashed $colorBorderUpload;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        // 
+        &.icon-button {
+            height: 60px;
+            width: 60px;
+            margin: 0 auto;
+            .choose-image {
+                .pi-plus {
+                    font-weight: bold;
+                    opacity: 0.5;
+                }
+                img {
+                    width: 100%;
+                    padding: 5px;
+                    max-height: 60px;
+                }
+            }
+            //
+            &.iconPlay:hover {
+                animation: flicker 3s infinite;
+            }
+        } 
+        //
+        .remove-icon-image {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            color: $colorButtonRemoveImage;
+            font-size: 120%;
+        }
+        //
+        &.background {
+            height: 388px;
+            width: 100%;
+            .choose-image {
+                img {
+                    max-height: 388px;
+                }
+            }
+        }
+        // 
+        cursor: pointer;
+        &:hover {
+            border-color: $colorHoverBorderUpload;
+        }
+        .choose-image {
+            img {
+                width: 100%;
+                max-height: 120px;
+                padding: 10px;
+                &.background {
+                    max-height: 100%;
+                }
+            }
+        }
+        i.remove-image {
+            position: absolute;
+            font-size: 130%;
+            color: $colorButtonRemoveImage;
+            cursor: pointer;
+            top: -10px;
+            right: -10px;
+        }
+    }
+}
+
+@mixin title-upload {
+    .title-upload {
+        position: absolute;
+        top: -2px;
+        left: 10px;
+        height: 15px;
+        background: white;
+        width: auto;
+        h6 {
+            margin: 0;
+            color: #000000ab;
+            font-size: 90%;
+        }
+
+        &.banner, &.background {
+            top: -8px;
+        }
+    }
+}
+
+.wrapper-lucky-spin {
+    .setting {
+        .template-image-backgrounds {
+            margin-bottom: 15px;
+            .wrapper-template {
+                display: flex;
+                .item-template {
+                    padding-right: 2.5%;
+                    cursor: pointer;
+                    img {
+                        width: 100%;
+                        max-height: 185px;
+                        &:hover {
+                            box-shadow: 1px 1px 10px 5px #9b47c985;
+                        }
+                    }
+
+                    &.template-active {
+                        img {
+                            box-shadow: 1px 1px 10px 5px #9b47c985;
+                        }
+                        
+                    }
+                }
+            }
+            
+        }
+
+        // CHO PHÉP HIỂN THỊ 
+        .button {
+            width: 100%;
+            .grid {
+                .p-checkbox {
+                    margin-right: 10px;
+                    .p-checkbox-box {
+                        &.p-highlight {
+                            background: #E2541B !important;
+                            background-color: #E2541B !important;
+                            border-color: #E2541B !important;
+                        }
+                        &.p-focus {
+                            box-shadow: none;
+                            border-color: #ced4da;
+                        }
+                        
+                    }
+                }
+            }
+        }
+
+        // THAY ICON BUTTON
+        .icon-button {
+            .col-4 {
+                position: relative;
+                @include choose-image-upload;
+                .button-description {
+                    margin-top: 10px;
+                    text-align: center;
+                }
+            }
+        }
+
+        // NỘI DUNG TRÚNG THƯỞNG
+        .color, .win-text {
+            .wrapper-picker-color{
+                display: flex;
+                .input-value {
+                    input {
+                        width: 100px;
+                        border-top-right-radius: 0;
+                        border-bottom-right-radius: 0;
+                    }
+
+                }
+                .input-color{
+                    position: relative;
+                    padding: 5px;
+                    border: 1px solid #ced4da;
+                    /* border-radius: 2px; */
+                    border-left: none;
+                    border-top-right-radius: 5px;
+                    border-bottom-right-radius: 5px;
+                    .instead-input-color {
+                        position: absolute;
+                        height: 20px;
+                        width: $widthInputColor;
+                        background: black;
+                        border-radius: 3px;
+                    }
+
+                    .choose-color {
+                        opacity: 0;
+                        width: $widthInputColor;
+                        cursor: pointer;
+                    }
+                }
+            }
+        }
+
+        // ẢNH BANNER, VÒNG QUAY, HÌN NỀN FULL MÀN
+        .banner-ferris-wheel-background-image {
+            display: flex;
+            .banner-ferris-wheel {
+                width: 65%;
+                .col-12 {
+                    position: relative;
+                    @include choose-image-upload;
+                    @include title-upload;
+                }
+                //
+                .ferris-wheel {
+                    .col-6, .col-12 {
+                        position: relative;
+                        @include choose-image-upload;
+                        @include title-upload;
+                    }
+                    
+                }
+            }
+            // 
+            .background {
+                width: 35%;
+                position: relative;
+                @include choose-image-upload;
+                @include title-upload;
+            }
+        }
+        
+    }
+
+    // STYLE GIAO DIỆN DEMO
+    .view {
+        margin-top: 15%;
+        display: flex;
+        justify-content: center;
+        .background {
+            height: 550px;
+            width: 275px;
+            background-size: cover !important;
+            position: relative;
+            // ẢNH NỀN GIAO DIỆN
+            .border-iphone {
+                width: 325px;
+                position: absolute;
+                left: -25px;
+                top: -21px;
+                height: 589px;
+                border-bottom-left-radius: 30px;
+                border-bottom-right-radius: 30px;
+            }
+
+            // BANNER 
+            .wrapper-banner {
+                height: 100px;
+                .banner {
+                    width: 100%;
+                    height: 100px;
+                }
+            }
+
+            // ICON IPHONE: GIỜ, VẠCH SÓNG, PIN
+            .icon-top {
+                .icon-top-left {
+                    img {
+                        position: absolute;
+                        top: 25px;
+                        left: 5px;
+                        border-radius: 50%;
+                        opacity: 1;
+                    }
+                    // ICON GIỜ
+                    .hours {
+                        position: absolute;
+                        top: 5px;
+                        left: 17px;
+                        color: #040404d6;
+                        font-weight: bold;
+                        font-size: 90%;
+                    }
+                }
+                //
+                .icon-top-right {
+                    opacity: 0.8;
+                    img {
+                        position: absolute;
+                    }
+                    // ICON VẠCH SÓNG
+                    img.icon-signal {
+                        right: 40px;
+                        top: 5px;
+                        width: 15px;
+                    }
+                    // ICON PIN
+                    img.icon-battery {
+                        right: 15px;
+                        top: 8px;
+                        width: 18px;
+                    }
+                }
+
+                // ĐỔI MÀU ICON SANG MÀU TRẮNG ĐỐI VỚI GIAO DIỆN TỐI
+                // DEFAULT LÀ MÀU ĐEN
+                &.icon-blue {
+                    .icon-top-left {
+                        .hours {
+                            color: white;
+                            opacity: 0.85;
+                        }
+                    }
+                    .icon-top-right {
+                        .icon-signal, .icon-battery {
+                            filter: invert(1);
+                        }
+                    }
+                }
+            }
+            
+            // NỘI DUNG TRÚNG THƯỞNG
+            .wrapper-title {
+                position: relative;
+                .title {
+                    background: rgba(255, 255, 255, 0.3);
+                    padding: 5px 0;
+                    border-radius: 2px;
+                    text-align: center;
+                    color: white;
+                }
+
+                // STYLE BORDER TOP, BOTTOM
+                .title-border-top-winner, .title-border-bottom-winner {
+                    background: radial-gradient(49.99% 42.5% at 50% 50.04%, #ffffff 0%, #000000 99.18%);
+                    mix-blend-mode: screen;
+                    opacity: 0.62;
+                    width: 100%;
+                    height: 5px;
+                }
+                //
+                img.arrow-guide-top {
+                    width: 30%;
+                    position: absolute;
+                    bottom: 0;
+                    filter: invert(1);
+                    bottom: -65px;
+
+
+                }
+                //
+                .flicker-wrapper-prize-content {
+                    animation: flicker $timeFlicker infinite;
+                    span {
+                        opacity: 0;
+                    }
+                }
+                .flicker-prize-content {
+                    animation: flicker $timeFlicker infinite;
+                }
+                
+            }
+
+            // VÒNG QUAY MAY MẮN
+            .rotation-wrapper {
+                margin: 40px 30px;
+                height: 200px;
+                position: relative;
+                // ẢNH Nền VÒNG QUAY
+                img.rotation-background {
+                    width: 100%;
+                    position: absolute;
+                }
+                // ẢNH VÒNG QUAY
+                .rotation-image {
+                    border-radius: 50%;
+                    // background: white;
+                    width: 100%;
+                    padding: 15px;
+                }
+                // NÚT PLAY
+                .rotation-start {
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    -ms-transform: translate(-50%, -50%);
+                    transform: translate(-50%, -50%);
+                    max-height: 70px;
+                    cursor: pointer;
+                    &.spin-svg {
+                        max-height: 125px;
+                        padding-bottom: 5px;
+                        padding-left: 1px;
+                    }
+                }
+            }
+
+            // NÚT CHƠI, LỊCH SỬ, XẾP HẠNG
+            .options {
+                display: flex;
+                flex-wrap: wrap;
+                padding: 5% 15% 0;
+                position: relative;
+                div {
+                    width: 33.3333%;
+                    text-align: center;
+                    img.icon-button-child {
+                        background: rgb(255, 152, 0);
+                        padding: 7%;
+                        border-radius: 50%;
+                        width: 28px;
+                        height: 28px;
+                        object-fit: contain;
+                        &.iconPlay, &.iconHistory, &.iconRank {
+                            animation: flicker $timeFlicker infinite;
+                        }
+                    }
+                }
+                //
+                .flicker-buttonColor {
+                    animation: flicker $timeFlicker infinite;
+                }
+            }
+
+            // THANH TRƯỢT IPHONE
+            .footer {
+                display: flex;
+                justify-content: center;
+                .touch {
+                    position: absolute;
+                    height: 5px;
+                    width: 150px;
+                    background: white;
+                    border-radius: 5px;
+                    bottom: 10px;
+                }
+            }
+        }
+    }
+    //
+    .e-button {
+        &.zoom-in, &.zoom-out {
+            box-shadow: none;
+            .p-button-icon {
+                font-weight: bold;
+            }
+        }
+
+        &.display-show-button {
+            padding: 3px 12px;
+        }
+    }
+    //
+    .opcity-0 {
+        opacity: 0;
+    }
+
+    //
+    .mouse-pointer {
+        cursor: pointer;
+    }
+}
+
+.pi-question-circle {
+    &:hover {
+        color: red;
+    }
+}
+
+@keyframes flicker {
+    0% {opacity: 1;}
+    25% {opacity: 0;}
+    50% {opacity: 1;}
+    75% {opacity: 0;}
+    100% {opacity: 1;}
+}

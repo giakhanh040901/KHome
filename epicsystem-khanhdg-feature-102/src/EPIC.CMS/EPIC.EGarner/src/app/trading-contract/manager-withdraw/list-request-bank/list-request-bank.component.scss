@@ -1,0 +1,23 @@
+.detail-request {
+    font-weight: normal;
+    color: black;
+    cursor: pointer;
+    text-decoration: underline;
+    &:hover {
+        color: blue;
+    }
+}
+
+.text-error {
+    color: red;
+}
+
+.icon-check-green {
+    font-weight: bold;
+    font-size: 18px;
+    color: green;
+}
+
+::ng-deep .custom-table .ui-datatable-scrollable-view .ui-datatable-scrollable-body {
+    min-height: 100vh;
+}

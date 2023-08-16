@@ -1,0 +1,148 @@
+
+<p-table 
+    [value]="rows" 
+    [loading]="isLoadingPersonList" 
+    [rowHover]="true" 
+    [paginator]="false"
+    responsiveLayout="scroll" 
+    dataKey="userId"
+    [scrollable]="true"  
+    scrollHeight="{{ (screenHeight*0.6) + 'px' }}"
+    styleClass="custom-table" 
+    [(selection)]="selectedCustomers" (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnSelect($event)">
+    <ng-template pTemplate="caption">
+        <div class="flex flex-row flex-wrap card-container blue-container mb-2">
+            <div class="w-20-pc">
+                <span class="block mt-2 md:mt-0 p-input-icon-left">
+                    <i class="pi pi-search"></i>
+                    <input 
+                        pInputText type="text" placeholder="{{ NotifyManagerConst.getFieldSearchInfo(dataFilter.fieldSearch, 'placeholder') }}"  
+                        [(ngModel)]="keyword" (keyup)="changeKeyword($event)" class="w-full"
+                    />
+                </span>
+            </div>
+            <div class="ml-2 w-12-pc">
+                <span class="p-float-label b-custom ml-1">
+                    <p-dropdown 
+                        id="fieldSearch" [options]="NotifyManagerConst.fieldSearchs"
+                        name="fieldSearch" optionLabel="name" optionValue="field" styleClass="w-full"
+                        [(ngModel)]="dataFilter.fieldSearch" [autoDisplayFirst]="true" (onChange)="changeFilter(true)">
+                    </p-dropdown>
+                    <label class="font-normal" for="fieldSearch">Tìm kiếm theo</label>
+                </span>
+            </div>
+            <div class="ml-2 w-12-pc">
+                <span class="p-float-label b-custom ml-1">
+                    <p-dropdown 
+                        id="customerType" [options]="NotifyManagerConst.customerTypes"
+                        name="customerType" optionLabel="name" optionValue="code" styleClass="w-full"
+                        [(ngModel)]="dataFilter.customerType" [autoDisplayFirst]="true" 
+                        (onChange)="changeFilter()">
+                    </p-dropdown>
+                    <label class="font-normal" for="customerType">Đối tượng gửi</label>
+                </span>
+            </div>
+            <div class="ml-2 w-10-pc">
+                <span class="p-float-label b-custom ml-1">
+                    <p-dropdown 
+                        id="sex" [options]="InvestorConst.ListSex"
+                        name="sex" optionLabel="name" optionValue="code" styleClass="w-full"
+                        [(ngModel)]="dataFilter.sex" [autoDisplayFirst]="true" placeholder="Tất cả" [showClear]="true"
+                        (onChange)="changeFilter()">
+                    </p-dropdown>
+                    <label class="font-normal" for="sex">Giới tính</label>
+                </span>
+            </div>
+            <div class="ml-2 w-10-pc">
+                <span class="p-float-label b-custom ml-1">
+                    <p-dropdown 
+                        id="startAge" [options]="optionAges"
+                        name="startAge" styleClass="w-full" 
+                        [(ngModel)]="dataFilter.startAge" 
+                        [autoDisplayFirst]="false"
+                        [showClear]="true"
+                        (onChange)="changeFilter()">
+                    </p-dropdown>
+                    <label class="font-normal" for="startAge">Độ tuổi</label>
+                </span>
+            </div>
+            <div class="flex align-content-center flex-wrap">
+                <div class="p-1"> đến </div>
+            </div>
+            <div class="w-10-pc">
+                <span class="p-float-label b-custom">
+                    <p-dropdown 
+                        id="endAge" [options]="optionAges"
+                        name="endAge" styleClass="w-full"
+                        [(ngModel)]="dataFilter.endAge" 
+                        [autoDisplayFirst]="false" 
+                        [showClear]="true"
+                        (onChange)="changeFilter()">
+                    </p-dropdown>
+                    <label class="font-normal text-while" for="endAge">Độ tuổi</label>
+                </span>
+            </div>
+            <div>
+                <span class="p-float-label b-custom ml-1">
+                    <button 
+                        pButton pRipple label="Lưu danh sách" icon="pi pi-save" class="p-button-primary ml-2"
+                        (click)="addPeopleToSendingList()">
+                    </button>
+                    <label class="font-normal text-while" for="fieldFilter">Giới tính</label>
+                </span>
+            </div>
+        </div>
+
+    </ng-template>
+    
+    <ng-template pTemplate="header">
+        <tr>
+            <th style="min-width: 6rem; max-width: 6rem;" pFrozenColumn alignFrozen="left">
+                <p-tableHeaderCheckbox (click)="selectedAll(!statusCheckedAll)"></p-tableHeaderCheckbox>
+                <span class="ml-3"> ({{ selectedCustomers?.length }}) </span>
+            </th>
+            <th style="min-width: 15rem;" pFrozenColumn alignFrozen="left">Tên</th>
+            <th style="min-width: 20rem;">Email</th>
+            <th style="min-width: 15rem;">Số điện thoại</th>
+            <th style="min-width: 5rem;"> Mã NV/CH</th> 
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-row>
+        <tr>
+            <td style="min-width: 6rem; max-width: 6rem;" pFrozenColumn alignFrozen="left">
+                <p-tableCheckbox [value]="row"></p-tableCheckbox>
+            </td>
+            <td style="min-width: 15rem;" pFrozenColumn alignFrozen="left">
+                {{ row.name }}
+            </td>
+            <td style="min-width: 20rem;">
+                {{ row.email }}
+            </td>
+            <td style="min-width: 15rem;">
+                {{row.phone}}
+            </td>
+            <td style="min-width: 5rem;">
+                {{ row?.defaultIdentification?.id }}
+            </td> 
+        </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+        <tr>
+            <td colspan="7">Không có dữ liệu.</td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="loadingbody">
+        <tr>
+            <td colspan="7"> Đang tải dữ liệu ... </td>
+        </tr>
+    </ng-template>
+</p-table>
+<!--  -->
+<p-paginator 
+    [rows]="personListPage.pageSizeNotify" 
+    [totalRecords]="personListPage.totalItems" 
+    currentPageReportTemplate="Tất cả {{ personListPage.totalItems }} dòng" 
+    showCurrentPageReport="true"
+    (onPageChange)="setPersonList($event)">
+</p-paginator>

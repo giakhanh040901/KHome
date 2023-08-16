@@ -1,0 +1,149 @@
+<div *ngIf="isGranted([PermissionCompanyShareConst.CompanyShare_BTKH_TTCT_MauHopDong_DanhSach])" class="grid ml-0 mr-0 mt-0">
+    <div class="col-12">
+        <div class="card b-list pt-0 pl-0 pr-0">
+            <p-toast></p-toast>
+            <p-table 
+                #userTable 
+                selectionMode="multiple" responsiveLayout="scroll" scrollHeight="{{(screenHeight*0.56) + 'px'}}" dataKey="id" styleClass="custom-table"
+                [value]="rows" [rowHover]="true" [showCurrentPageReport]="true" [paginator]="true" [rows]="page.pageSize" totalRecords="{{ page.totalItems }}" currentPageReportTemplate="Tất cả {totalRecords} dòng" [rowsPerPageOptions]="[25, 50, 100, 200]"
+                (onPageChange)="setPage($event)" [scrollable]="true">
+                <ng-template pTemplate="caption">
+                    <div class="grid">
+                        <div class="col-10 flex flex-row flex-wrap">
+                            <span class="block mt-2 md:mt-0 p-input-icon-left">
+                                <i class="pi pi-search"></i>
+                                <input 
+                                    pInputText type="text" placeholder="Tìm kiếm..." style="width: 300px;"
+                                    [(ngModel)]="keyword" 
+                                    (input)="changeKeyword($event)"
+                                />
+                            </span>
+                            <p-dropdown [style]="{'width':'200px'}" optionLabel="name" optionValue="code" placeholder="Chọn phân loại" class="ml-2"
+                                        [options]="classifysSearch" 
+                                        [(ngModel)]="classifyId" 
+                                        (onChange)="changeClassify($event.value)">
+							</p-dropdown>
+                        <p-dropdown  [style]="{'width':'200px'}"optionLabel="name" optionValue="code" placeholder="Hợp đồng dành cho" class="ml-2"
+                            [options]="typesSearch" [(ngModel)]="type" 
+                            (onChange)="changeClassify($event.value)">
+                        </p-dropdown>
+
+                        </div>
+                        <div class="col-2 flex flex-row-reverse flex-wrap">
+                            <button *ngIf="isGranted([PermissionCompanyShareConst.CompanyShare_BTKH_TTCT_MauHopDong_ThemMoi])" pButton pRipple label="Thêm mới" icon="pi pi-plus" class="p-button-success" (click)="create()"></button>
+                        </div>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="min-width:30rem;" pFrozenColumn alignFrozen="left" class="b-border-frozen-left">Tên hợp đồng</th>
+                        <th style="min-width: 10rem;"> Mã hợp đồng </th>
+                        <th style="min-width:10rem;">Loại HĐ</th>
+                        <th style="min-width:15rem;">Hợp đồng dành cho</th>
+                        <th style="min-width:25rem;">Loại hợp đồng</th>
+                        <th style="min-width:7rem;"pFrozenColumn alignFrozen="right"  [frozen]="true" class="b-border-frozen-right">Trạng thái</th>
+                        <th style="min-width:5rem;"pFrozenColumn alignFrozen="right"  [frozen]="true"></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-row let-rowIndex="rowIndex">
+                    <tr>
+                        <td style="min-width:30rem;" pFrozenColumn alignFrozen="left" class="b-border-frozen-left"> {{ row.name }} </td>
+                        <td style="min-width: 10rem;"> {{ row.code }} </td>
+
+                        <td style="min-width: 10rem;"> 
+                            {{ ContractTemplateConst.classify[row.classify - 1].name }} 
+                        </td>
+                        <td style="min-width: 15rem;"> 
+                            {{ ProductCompanyShareSecondaryConst.getType(row.type) }} 
+                        </td>
+
+                        <td style="min-width:25rem;"> 
+                            {{ ContractTemplateConst.contractType[row.contractType - 1].name }} 
+                        </td>
+                        <td style="min-width: 7rem;" pFrozenColumn alignFrozen="right"  [frozen]="true" class="b-border-frozen-right"> 
+                            <p-tag styleClass="p-tag-{{ ContractTemplateConst.statusName[row.status].color }}" severity="{{ ContractTemplateConst.statusName[row.status].color }}" value="{{ ContractTemplateConst.statusName[row.status].name }}"></p-tag> 
+                        </td>
+                        <td style="width: 5rem;" pFrozenColumn alignFrozen="right"  [frozen]="true" class="b-table-actions">
+                            <div class="flex">
+                                <div class="flex">
+                                    <!-- <button type="button" pButton icon="pi pi-ellipsis-h" (click)="menu.toggle($event)"></button> -->
+                                    <i class="pi pi-ellipsis-h"  (click)="menu.toggle($event)"></i> 
+                                    <p-menu 
+                                        #menu [popup]="true"class="button-actions"
+                                        [model]="listAction[rowIndex]" appendTo="body"
+                                        >
+                                    </p-menu>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+            <!-- <p-paginator styleClass="at-paginator-sm" [totalRecords]="page.totalItems" [rows]="page.pageSize" (onPageChange)="setPage($event)"></p-paginator> -->
+        </div>
+			<!-- THEM & SUA-->
+            <p-dialog [(visible)]="modalDialog" [style]="{width: '40%'}" [header]="headerTitle" [modal]="true" class="p-fluid">
+                <ng-template pTemplate="content">
+                    <div class="grid formgrid">        
+                        <div style="margin-bottom: 0" class="field col-6">
+                            <div class="field">
+                                <label for="name">Tên hợp đồng</label>
+                                <input type="text" id="name" name="name" maxlength="100" pInputText [(ngModel)]="contractTemplate.name" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !contractTemplate.name}" [disabled]="contractTemplate.userId >=0"/>
+                            </div>
+                        </div>
+                        <div style="margin-bottom: 0" class="field col-6">
+                            <div class="field">
+                                <label for="code">Mã hợp đồng</label>
+                                <input type="text" id="code" name="code" pInputText [(ngModel)]="contractTemplate.code" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !contractTemplate.code}"/>
+                            </div>
+                        </div>
+                        <div style="margin-bottom: 0" class="field col-6">
+                            <div class="field">
+                                <label for="typeId">Dành cho nhà đầu tư</label>
+                                <p-dropdown  id="typeId" name="type" [options]="types" optionLabel="name" optionValue="code" placeholder="Dành cho nhà đầu tư" [(ngModel)]="contractTemplate.type"></p-dropdown>
+                            </div>
+                        </div>
+                        <div style="margin-bottom: 0" class="field col-6">
+                            <div class="field">
+                                <label for="displayType">Hiển thị</label>
+                                <p-dropdown  id="displayType" name="displayType" [options]="displayTypes" optionLabel="name" optionValue="code" placeholder="Hiển thị" [(ngModel)]="contractTemplate.displayType"></p-dropdown>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div style="margin-bottom: 1rem" class="field col-12">
+                                <p-fileUpload 
+                                    name="demo[]" accept=".docx" [customUpload]="true" class="custom-file-upload"
+                                    chooseIcon="pi pi-cloud-upload" 
+                                    (uploadHandler)="myUploader($event)"
+                                    [auto]="true"
+                                    chooseLabel="Chọn file upload">
+                                </p-fileUpload>
+                            </div>
+                        </div>
+        
+                        <div class="field col-12">
+                            <span class="p-float-label">
+                                <input type="text" id="contractTempUrl" name="contractTempUrl" disabled pInputText [value]="contractTemplate.contractTempUrl || ''" required autofocus/>
+                                <label for="contractTempUrl">Đường dẫn file mẫu</label>
+                            </span>
+                        </div>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="footer">
+                    <button pButton pRipple label="Hủy" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+                    <button pButton pRipple label="Lưu" icon="pi pi-check" class="p-button-text" [disabled]="!validForm() || submitted" (click)="save()"></button>
+                </ng-template>
+            </p-dialog>
+		<!-- XOA -->
+        <!-- <p-dialog [(visible)]="deleteItemDialog" header="Xóa tài khoản" [modal]="true" [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                <span *ngIf="contractTemplate">Bạn có chắc chắn xóa mẫu hợp đồng {{ contractTemplate.Name }} ?</span>
+            </div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No" (click)="deleteItemDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes" (click)="confirmDelete()"></button>
+            </ng-template>
+        </p-dialog> -->
+    </div>
+</div>

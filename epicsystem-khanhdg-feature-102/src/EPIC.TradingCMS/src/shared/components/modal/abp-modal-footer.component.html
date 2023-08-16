@@ -1,0 +1,13 @@
+<div class="modal-footer justify-content-between">
+  <button
+    type="button"
+    class="btn btn-sm btn-default"
+    [disabled]="cancelDisabled"
+    (click)="onCancelClick.emit()"
+  >
+    Huỷ
+  </button>
+  <button type="submit" class="btn btn-sm btn-primary" [disabled]="saveDisabled">
+    Lưu
+  </button>
+</div>

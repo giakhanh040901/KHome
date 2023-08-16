@@ -1,0 +1,48 @@
+<app-loading-page *ngIf="isLoadingBank"></app-loading-page>
+<p-toast [baseZIndex]="10000" key="policyTemp"></p-toast>
+<div class="grid p-fluid">
+    <div class="grid formgrid">
+        <ng-container>
+            <div class="col-12 md:col-6">
+                <div class="field b-field">
+                    <label htmlFor="bankName">Ngân hàng </label>
+                    <p-dropdown 
+                        (onChange)="changeBankId($event.value)" appendTo="body" optionLabel="labelName" optionValue="bankId" [autoDisplayFirst]="false" [filter]="true" filterBy="bankName"
+                        styleClass="w-full" [options]="banks" [(ngModel)]="businessCustomerBank.bankId">
+                    </p-dropdown>   
+                </div>
+            </div>
+            <div class="col-12 md:col-6">
+                <div class="field">
+                    <label htmlFor="bankAccNo">Số tài khoản (<span class="required-field"> * </span>)</label>
+                    <input type="text" id="bankAccNo" name="bankAccNo" pInputText
+                        [(ngModel)]="businessCustomerBank.bankAccNo" (keypress)="numberOnly($event)"
+                        (click)="resetValid('bankAccNo')" maxlength="128" (keyup)="changeKeyword()" 
+                    />
+                </div>
+            </div>
+            <div class="col-12 md:col-6">
+                <div class="field">
+                    <label htmlFor="bankAccName">Tên tài khoản (<span class="required-field"> * </span>)</label>
+                    <input style="text-transform: uppercase" type="text" id="bankAccName" AccName="bankAccName" pInputText
+                        [(ngModel)]="businessCustomerBank.bankAccName" [pKeyFilter]="KeyFilter.stringOnlyBlockSpecial"
+                        [disabled]="isLoadingBank" class="b-disabled" (click)="resetValid('bankAccName')" maxlength="512"
+                    />
+                </div>
+            </div>
+            <div class="col-12 md:col-6">
+                <div class="field">
+                    <label htmlFor="bankBranchName"> Chi nhánh </label>
+                    <input type="text" id="bankBranchName" name="bankBranchName" pInputText
+                        [(ngModel)]="businessCustomerBank.bankBranchName" maxlength="512"
+                        (click)="resetValid('bankBranchName')" 
+                    />
+                </div>     
+            </div>
+        </ng-container>
+    </div>
+</div>
+<div class="p-dialog-footer" style="width: 100%; position: fixed; left: 0; bottom: 0;">
+    <button pButton pRipple label="Đóng" icon="pi pi-times" class="p-button-text p-confirm-dialog-reject" (click)="close()"></button>
+    <button pButton pRipple label="Lưu" icon="pi pi-check" class="p-button-text p-confirm-dialog-approve" (click)="save()"></button>
+</div>

@@ -1,0 +1,125 @@
+
+<e-loading *ngIf="isLoading"></e-loading>
+<p-card>
+    <ng-template pTemplate="content">
+            <ng-container>
+                <div class="">
+                    <h5 class="title-info mb-2">Thông tin dự án</h5>
+                    <hr class="mt-0" style="border-width: 2px 0 0">
+                    <div class="p-fluid p-formgrid grid">
+                        <div class="pb-0 field col-12 md:col-6">
+                            <label class="title-info"> Dự án <span class="required-field"> * </span> </label>
+                            <p-dropdown 
+                                [options]="distributions" optionLabel="invName" optionValue="id"
+                                [autoDisplayFirst]="false"
+                                [(ngModel)]="distributionInfo.id" 
+                                (onChange)="changeProject($event.value)">
+                            </p-dropdown>
+                        </div>
+                        <!-- <div class="pb-0 field col-12 md:col-3">
+                            <label class="title-info">Tên dự án</label>
+                            <input [disabled]="true" pInputText [value]="projectInformation?.invName ?? null" class="custom-input-disabled"/>
+                        </div> -->
+                        <div class="pb-0 field col-12 md:col-6">
+                            <label class="title-info">Mã dự án</label>
+                            <input [disabled]="true" pInputText [value]="projectInformation?.invCode ?? null" class="custom-input-disabled"/>
+                        </div>
+                        <div class="pb-0 field col-12 md:col-3">
+                            <label class="title-info">Ngày bắt đầu</label>
+                            <input [disabled]="true" pInputText [value]="formatDate(projectInformation?.startDate)" class="custom-input-disabled"/>
+                        </div>
+                        <div class="pb-0 field col-12 md:col-3">
+                            <label class="title-info"> Ngày kết thúc </label>
+                            <input [disabled]="true" pInputText [value]="formatDate(projectInformation?.endDate)"class="custom-input-disabled"/>
+                        </div>
+                        <div class="pb-0 field col-12 md:col-6">
+                            <label class="title-info">Hạn mức đầu tư </label>
+                            <input [disabled]="true" pInputText value="{{ utils.transformMoney(distributionInfo?.hanMucToiDa) }}" class="custom-input-disabled"/>
+                        </div>
+                    </div>
+                    <!--  -->
+                    <h5 class="title-info mb-2 mt-0">Chính sách lãi</h5>
+                    <hr class="mt-0" style="border-width: 2px 0 0">
+                    <div class="p-fluid p-formgrid grid">
+                        <div class="pb-0 field col-12 md:col-3">
+                            <label class="title-info"> Loại chính sách <span class="required-field"> * </span></label>
+                            <p-dropdown
+                                class="custom-input-disabled" optionLabel="name" emptyMessage="Không có dữ liệu" optionValue="code"
+                                [options]="policyTypes" [autoDisplayFirst]="false" [disabled]="!projectInformation.id"
+                                [(ngModel)]="policyType" (onChange)="changePolicyType($event.value)">
+                            </p-dropdown>
+                        </div>
+                        <div class="pb-0 field col-12 md:col-3">
+                            <label class="title-info">Chọn chính sách <span class="required-field"> * </span></label>
+                            <p-dropdown
+                                class="custom-input-disabled" optionLabel="name" emptyMessage="Không có dữ liệu"
+                                [options]="policyDisplays" [disabled]="!projectInformation.id" [autoDisplayFirst]="false" 
+                                [(ngModel)]="policyInfo" (onChange)="changePolicy($event.value)">
+                            </p-dropdown>
+                        </div>
+                        <div class="pb-0 field col-12 md:col-6">
+                            <label class="title-info">Mã chính sách</label>
+                            <span [pTooltip]="policyInfo?.code" tooltipPosition="bottom">
+                                <input pInputText value="{{ policyInfo?.code }}" maxlength="100" [disabled]="true" class="custom-input-disabled"/>
+                            </span>
+                        </div>
+                        <div class="pb-0 field col-12 md:col-3">
+                            <label class="title-info">Loại</label>
+                            <input pInputText value="{{ ProductPolicyConst.getTypeName(policyInfo?.type) }}" [disabled]="true" class="custom-input-disabled"/>
+                        </div>
+                        <div class="pb-0 field col-12 md:col-3">
+                            <label class="title-info">Thuế thu nhập</label>
+                            <input pInputText value="{{ policyInfo?.incomeTax ? utils.transformPercent(policyInfo?.incomeTax) + ' %' : null }}" [disabled]="true" class="custom-input-disabled"/>
+                        </div>
+                        <div class="pb-0 field col-12 md:col-6">
+                            <label class="title-info">Số tiền đầu tư tối thiểu</label>
+                            <input pInputText value="{{ utils.transformMoney(policyInfo?.minMoney) }}" [disabled]="true" class="custom-input-disabled"/>
+                        </div>
+                        <div class="pb-0 field col-12 md:col-12">
+                            <label class="title-info">Mô tả chính sách</label>
+                            <textarea pInputText value="{{ policyInfo?.description }}" [disabled]="true" class="custom-input-disabled" [rows]="1"></textarea>
+                        </div>
+                    </div>
+                    <!--  -->
+                    <h5 class="title-info mb-2 mt-0"> Thời hạn <span class="required-field"> * </span> </h5>
+                    <div class="p-fluid p-formgrid grid">
+                        <div class="pb-0 field col-12 md:col-3">
+                            <label class="title-info">Thời hạn</label>
+                            <p-dropdown
+                                class="custom-input-disabled" optionLabel="periodQuantityPeriodType" optionValue="id" emptyMessage="Không có dữ liệu"
+                                [options]="policyDetails" [autoDisplayFirst]="false" [disabled]="!orderInformation?.policyId"
+                                [(ngModel)]="orderInformation.policyDetailId" (onChange)="changePolicyDetail($event.value)">
+                            </p-dropdown>
+                        </div>
+                        <div class="pb-0 field col-12 md:col-3">
+                            <label class="title-info">Tỉ lệ lợi nhuận</label>
+                            <input pInputText value="{{ profitPolicy ? (utils.transformPercent(profitPolicy) + ' %') : '' }} " [disabled]="true" class="custom-input-disabled"/>
+                        </div>
+                    </div>
+                    <!--  -->
+                    <h5 class="title-info mb-2 mt-0"> Thông tin cần nhập </h5>
+                    <hr class="mt-0" style="border-width: 2px 0 0">
+                    <div class="p-fluid p-formgrid grid">
+                        <div class="pb-0 field col-12 md:col-3">
+                            <label class="title-info"> Tổng số tiền <span class="required-field"> * </span> </label>
+                            <p-inputNumber 
+                                mode="decimal"
+                                [(ngModel)]="orderInformation.totalValue"
+                                locale="de-DE">
+                            </p-inputNumber>
+                        </div>
+                        <div class="pb-0 field col-12 md:col-3">
+                            <label class="title-info">Ngày đặt lệnh <span class="required-field"> * </span> </label>
+                            <input class="custom-input-disabled" pInputText type="text" [disabled]="true" [value]="formatDateTime(orderInformation.buyDate)">
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+    </ng-template>
+    <ng-template pTemplate="footer">
+        <div class="grid grid-nogutter justify-content-between">
+            <p-button label="Quay lại" (onClick)="prevPage()" icon="pi pi-angle-left"></p-button>
+            <p-button label="Tiếp theo" (onClick)="nextPage()" icon="pi pi-angle-right" iconPos="right"></p-button>
+        </div>
+    </ng-template>
+</p-card>

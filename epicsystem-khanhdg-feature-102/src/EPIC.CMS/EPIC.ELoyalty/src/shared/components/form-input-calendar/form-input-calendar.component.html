@@ -1,0 +1,47 @@
+<!-- #region filter -->
+<ng-container *ngIf="floatLabel">
+  <span class="p-float-label b-custom w-full">
+    <p-calendar
+      [showButtonBar]="showButtonBar"
+      [style]="{ width: widthInput }"
+      dateFormat="dd/mm/yy"
+      locale="vi"
+      appendTo="body"
+      utc="true"
+      [(ngModel)]="ngModelValue"
+      [readonlyInput]="readonlyInput"
+      [placeholder]="placeholder"
+      [showIcon]="showIcon"
+      (onClearClick)="handleClearClick($event)"
+      (onSelect)="handleSelect($event)"
+    >
+    </p-calendar>
+    <label class="font-normal" *ngIf="showLabel">{{ label }}</label>
+  </span>
+</ng-container>
+<!-- #endregion -->
+
+<!-- #region form -->
+<ng-container *ngIf="!floatLabel">
+  <div [ngClass]="'field' + classContainer">
+    <label [ngClass]="'title-info' + classLabel" *ngIf="showLabel">
+      {{ label }}
+      <span class="required-field" *ngIf="isRequired"> * </span></label
+    >
+    <p-calendar
+      dateFormat="dd/mm/yy"
+      locale="vi"
+      appendTo="body"
+      utc="true"
+      class="b-disabled"
+      [placeholder]="placeholder"
+      [(ngModel)]="ngModelValue"
+      (onSelect)="handleSelect($event)"
+      (onInput)="handleInput($event)"
+      [showIcon]="showIcon"
+      [disabled]="isDisabled"
+    >
+    </p-calendar>
+  </div>
+</ng-container>
+<!-- #endregion -->

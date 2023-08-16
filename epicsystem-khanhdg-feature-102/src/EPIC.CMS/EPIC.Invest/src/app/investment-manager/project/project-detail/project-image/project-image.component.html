@@ -1,0 +1,38 @@
+<div>
+    <p-toast></p-toast>
+    <p-confirmDialog [style]="{width: 'auto'}" [baseZIndex]="10000"></p-confirmDialog>
+    <div #pageHeader> 
+        <div class="grid tabview-table-header">
+            <div class="col-12 md:col-6">
+                <div class="flex">
+                    <span class="p-float-label b-custom filter">
+                        <!--  -->
+                    </span>
+                </div>
+            </div>
+            <div class="col-12 md:col-6 flex justify-content-end flex-column sm:flex-row">
+                <button
+                    *ngIf="isGranted([PermissionInvestConst.InvestSPDT_HADT_ThemMoi])" 
+                    pButton pRipple label="Thêm hình ảnh" icon="pi pi-plus-circle" 
+                    class="p-button-success" (click)="selectImg()">
+                </button>
+            </div>
+        </div>
+    </div>
+    <div [style.height.px]="scrollHeight" [style.overflow-y]="'auto'" class="pr-1">
+        <div class="grid wapper-images mr-0">
+            <div *ngFor="let image of images" class="gallery col-3 flex align-content-between flex-wrap mb-3 justify-content-center">
+                <p-image
+                    id="image{{image.id}}"  
+                    [src]="AppConsts.remoteServiceBaseUrl+'/'+image.url"
+                    [preview]="true"
+                    imageClass="b-w-100"
+                    [imageStyle]="{'border-radius':'8px','max-height':'240px'}">
+                </p-image>
+                <div class="icon-trash" (click)="removeFile(image)" *ngIf="isGranted([PermissionInvestConst.InvestSPDT_HADT_Xoa])">
+                    <i class="remove-img pi pi-trash"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

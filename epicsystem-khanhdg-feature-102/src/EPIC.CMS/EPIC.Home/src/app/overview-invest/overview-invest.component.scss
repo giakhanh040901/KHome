@@ -1,0 +1,210 @@
+::ng-deep .b-calendar-home {
+    width: 100%;
+    .p-datepicker {
+      width: 100% !important;
+      border: none;
+      .p-datepicker-header {
+        border-bottom: none;
+      }
+      .p-datepicker-calendar-container {
+        table {
+          thead {
+            th {
+              tr {
+                th {
+                  padding: 0;
+                }
+              }
+            }
+          }
+          tbody {
+            tr {
+              td {
+                padding: 0;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+    
+  .b-nav-right {
+    border-left: 1px solid #f6f6f6;
+    border-bottom: 1px solid #f6f6f6;
+    border-radius: 8px;
+  }
+    
+    ::ng-deep .pcalendarHome {
+      span {
+        input {
+          background: rgba(0, 0, 0, 0.02);
+          transform: scale(1);
+        }
+      }
+    }
+    ::ng-deep #reportTradingProviderId {
+      position: relative;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+  
+  // ----------------------------------------------------------------//
+  ::ng-deep .notice {
+    display: flex;
+    justify-content: center;
+  }
+  .notice1,
+  .notice2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 1rem;
+  }
+  .block_notice1,
+  .block_notice2 {
+    min-width: 40px;
+    height: 12px;
+    margin-right: 10px;
+  }
+  .block_notice1 {
+    background-color: #6c63f0;
+  }
+  .block_notice2 {
+    background-color: #ed589d;
+  }
+    
+  //   // Policy
+    
+  ::ng-deep #policyId {
+    position: relative;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+    
+  // 
+  .cash_wrapper {
+    flex-wrap: wrap;
+    margin-top: 3rem;
+  }
+  
+  .cash_item {
+    padding: 2.5rem;
+    box-shadow: 0px 4px 30px rgb(173 150 234 / 50%);
+  }
+  
+  .widget-overview-box {
+    .overview-box-text {
+      color: #FFF;
+      .overview-box-price {
+        font-weight: 700;
+        font-size: 16px;
+        line-height: 36px;
+        &.xl {
+          font-size: 25px;
+        }
+      }
+      .overview-box-accumulated-title {
+        font-size: 16px;
+      }
+      .overview-box-accumulated-price {
+        font-size: 16px; 
+        line-height: 24px;
+      }
+    }
+  }
+  
+  .overview-box-1 {
+    background: #AD96EA;
+  }
+  
+  .overview-box-2 {
+    background: #EF4770;
+  }
+  
+  .widget-overview-box .overview-box-3 {
+    background: #FFF;
+    .overview-box-text {
+      color: #200E32;
+    }
+  }
+  
+  .dashboard_pl-1 {
+    padding-left: 1rem;
+  }
+  
+  .chart-item {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Mobile & tablet */
+  @media (max-width: 1023px) {
+    .hide-on-mobile-tablet {
+      display: none;
+    }
+  }
+    
+  /* Tablet */
+  @media (min-width: 740px) and (max-width: 1023px) {
+    .hide-on-tablet {
+      display: none;
+    }
+  }
+    
+  /* Mobile */
+  @media (max-width: 739px) {
+    .hide-on-mobile {
+      display: none;
+    } 
+    .cash_item {
+      padding: 1rem;
+    }
+    h3 {
+      font-size: 1.5rem;
+    }
+    .dashboard_pl-1 {
+      padding-left: 0.5rem;
+    }
+    .widget-overview-box {
+      .overview-box-icon img {
+        height: 24px;
+        width: 24px;
+      }
+      .overview-box-text {
+        height: 32px
+      }
+    }
+    .dashboard_heading {
+      flex-direction: column;
+      align-items: center;
+    }
+    .mobile_mb-1 {
+      margin-bottom: 1rem;
+    }
+    .cash_wrapper {
+      margin-top: 1rem;
+    }
+    .overview-box-1,
+    .overview-box-2 {
+      .overview-box-text {
+        .overview-box-price,
+        .overview-box-accumulated-price {
+          font-size: 16px;
+          &.xl {
+            font-size: 25px;
+          }
+        }
+      }
+    }
+  }
+  
+  @for $i from 19 through 31 {
+    ::ng-deep .chart-#{$i}i div{
+        width: $i*22 + px;
+      }
+  }
+  
+  .scroll-x {
+    overflow-x: scroll;
+  }

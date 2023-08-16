@@ -1,0 +1,135 @@
+<div class="grid layout-dashboard ml-0 mr-0" *ngIf="refreshTemplate">
+    <div class="col-12 dashboard_pl-1">
+        <!-- Tổng quan -->
+        <div class="overall">
+            <div class="flex card-container blue-container dashboard_heading">
+                <div class="flex-none flex align-items-center justify-content-center mt-3">
+                    <h4>Tổng quan Bond</h4>
+                </div>
+                <div class="grid grid-nogutter">
+                    <div class="col-6 pr-1">
+                        <p-dropdown 
+                            id="dropdownStatus" [style]="{'width':'100%'}"
+                            [options]="distributions" optionLabel="invName" optionValue="id" class=""
+                            [autoDisplayFirst]="false" placeholder="Chọn sản phẩm"
+                            [(ngModel)]="dataFilter.distributionId" (onChange)="changeDistribute($event.value)">
+                        </p-dropdown>
+                    </div>
+                    <div class="col-6">
+                        <p-calendar 
+                            class="pcalendarHome" placeholder="dd/mm/yyyy đến dd/mm/yyyy" appendTo="body" dateFormat="dd/mm/yy" 
+                            [(ngModel)]="rangeDates" [maxDate]="maxDate"  selectionMode="range" [readonlyInput]="true" inputId="tradingDate" 
+                            [showIcon]="true" 
+                            locale="vi" (onSelect)="SelectDays()">
+                        </p-calendar>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!-- 3 thẻ hiển thị tiền -->
+        <div class="grid flex widget-board cash_wrapper">
+            <div class="flex align-items-center justify-content-center xl:col-4 md:col-4 col-6">
+                <div class="grid grid-nogutter widget-overview-box overview-box-1 cash_item">
+                    <div class="col-3 overview-box-icon">
+                        <img src="assets/layout/images/dashboard/icon-messages.svg" alt="mirage-layout" />
+                    </div>
+                    <div class="col-9 overview-box-text">
+                        <h5>TIỀN VÀO</h5>
+                        <span>Doanh thu ngày</span>
+                    </div>
+                    <div class="col-12 overview-box-text mt-2">
+                        <p class="overview-box-price">{{cashInInfo?.tienVao?.tienVao ? utils.transformMoney(cashInInfo?.tienVao?.tienVao) : 0}}</p>
+                    </div>
+                    <div class="col-12 overview-box-text">
+                        <p class="overview-box-accumulated-title mb-0">Lũy kế</p>
+                        <p class="overview-box-accumulated-price">{{ cashInInfo?.tienVao?.luyKe ? utils.transformMoney(cashInInfo?.tienVao?.luyKe) : 0 }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="flex align-items-center justify-content-center xl:col-4 md:col-4 col-6">
+                <div class="grid grid-nogutter widget-overview-box overview-box-2 cash_item">
+                    <div class="col-3 overview-box-icon">
+                        <img src="assets/layout/images/dashboard/icon-messages.svg" alt="mirage-layout" />
+                    </div>
+                    <div class="col-9 overview-box-text">
+                        <h5>TIỀN RA</h5>
+                        <span>Doanh thu ngày</span>
+                    </div>
+                    <div class="col-12 overview-box-text mt-2">
+                        <p class="overview-box-price">{{cashInInfo?.tienRa?.tienRa ? utils.transformMoney(cashInInfo?.tienRa?.tienRa) : 0}}</p>
+                    </div>
+                    <div class="col-12 overview-box-text">
+                        <p class="overview-box-accumulated-title mb-0">Lũy kế</p>
+                        <p class="overview-box-accumulated-price">{{ cashInInfo?.tienRa?.luyKe ? utils.transformMoney(cashInInfo?.tienRa?.luyKe) : 0 }}</p>
+                    </div>
+                </div>
+                
+            </div>
+            <div class="flex align-items-center justify-content-center xl:col-4 md:col-4 col-12">
+                <div class="grid grid-nogutter widget-overview-box overview-box-3 cash_item">
+                    <div class="col-3 overview-box-icon">
+                        <img src="assets/layout/images/dashboard/icon-messages.svg" alt="mirage-layout" />
+                    </div>
+                    <div class="col-9 overview-box-text">
+                        <br>
+                        <span>Doanh thu ngày</span>
+                    </div>
+                    <div class="col-12 overview-box-text mt-2">
+                        <p class="overview-box-price xl">{{cashInInfo?.soDu?.soDu ? utils.transformMoney(cashInInfo?.soDu?.soDu) : 0}}</p>
+                    </div>
+                    <div class="col-6 overview-box-text mt-2">
+                        <p class="overview-box-accumulated-title">Tỉ lệ</p>
+                    </div>
+                    <div class="col-6 overview-box-text mt-2" style="text-align: right">
+                        <p class="overview-box-accumulated-price">{{ cashInInfo?.soDu?.tyLe ? utils.transformMoney(cashInInfo?.soDu?.tyLe) + '%' : '0%' }}</p>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        <!-- Chart dòng tiền theo ngày -->
+        <h3>Dòng tiền theo ngày</h3>
+        <div class="mt-4 {{ (widthCashFlowByDay != '100%') ? 'scroll-x' : '' }}">
+            <p-chart 
+                type="bar" [data]="cashFlowByDay" [options]="cashFlowByDayOptions" 
+                height="200"
+                [width]="widthCashFlowByDay">
+            </p-chart>
+        </div>
+        <!-- Chart DS theo kỳ hạn sản phẩm -->
+        <div  class="grid mt-2 col-12 xl:col-12 md:col-12 chart-item">
+            <h3> DS theo kỳ hạn sản phẩm </h3> 
+            <div id="policyId" class=" xl:col-12 md:col-12">
+                <p-chart type="bar" [data]="policy" width="{{widthPolicy}}" [options]="policyOptions"  height="200"></p-chart>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-12 dashboard_pl-1">
+        <!-- Báo cáo doanh số và số lượng bán theo từng đại lý -->
+        <h3 class="mb-0"> Doanh số và Số lượng bán theo Đại lý </h3> 
+        <div class="notice">
+            <div class="notice1">
+                <div class="block_notice1"></div>
+                <p>Doanh số (tỉ đồng)</p>
+            </div>
+            <div class="notice2">
+                <div class="block_notice2"></div>
+                <p>Số lượng sales</p>
+            </div>
+        </div>
+        <div id="reportTradingProviderId" #reportTradingProviderChart class="col-12 xl:col-12 md:col-12" >
+        <p-chart 
+            id="tradingOrDepartment" type="bar" [plugins]="reportTradingProviderPlugins" [data]="reportTradingProvider" 
+            [options]="reportTradingProviderOptions" width="{{widthReport}}" height="200">
+            <!-- <canvas id="myChart"></canvas> -->
+        </p-chart>
+        </div>
+        <!-- Báo cáo dự chi -->
+        <div class="mt-2 mb-6">
+            <h3> Báo cáo dự chi </h3> 
+            <p-chart type="bar" [data]="report" [options]="cashFlowByDayOptions" height="200"></p-chart>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,151 @@
+<p-dialog [(visible)]="modalDialog" [style]="{width: '1000px'}" [header]="header" 
+		[modal]="true" [closeOnEscape]="false" class="p-fluid" (onHide)="hideDialog()">
+	<ng-template pTemplate="content">
+		<div class="card pt-0">
+			<h5 class="mb-2">Gói cổ phần</h5>
+            <hr class="mt-0">
+			<div class="grid formgrid">
+				<div class="col-12 md:col-4">
+					<div class="field">
+						<label htmlFor="companySharePrimaryId">Chọn gói cổ phần <span class="required-field"> * </span> </label>
+						<p-dropdown optionLabel="companyShareName" optionValue="companySharePrimaryId" 
+							[autoDisplayFirst]="false" [options]="listPrimary" 
+							[disabled]="!allowEdit"
+							(onChange)="onChangePrimary($event)"
+							[(ngModel)]="companyShareSecondary.companySharePrimaryId" 
+							[ngClass]="{'ng-invalid ng-dirty' : submitted && !companyShareSecondary.companySharePrimaryId}">
+						</p-dropdown>
+					</div>
+				</div>
+				<div class="col-12 md:col-2">
+					<div class="field">
+						<label htmlFor="code">Mã cổ phần </label>
+						<input pInputText [disabled]="true" value="{{ selectedPrimary?.companyShareInfo?.companyShareCode }}" class="custom-input-disabled"/>
+					</div>
+				</div>
+				<div class="col-12 md:col-6">
+					<div class="field">
+						<label htmlFor="code">Tên cổ phần </label>
+						<input pInputText [disabled]="true" value="{{ selectedPrimary?.companyShareInfo?.companyShareName }}" class="custom-input-disabled"/>
+					</div>
+				</div>
+				<div class="col-12 md:col-2">
+					<div class="field">
+						<label htmlFor="code">Kỳ hạn </label>
+						<input pInputText [disabled]="true" value="{{ selectedPrimary?.companyShareInfo?.companySharePeriod ? (selectedPrimary?.companyShareInfo?.companySharePeriod + ' ' + CompanyShareInterestConst.getPeriodUnits(selectedPrimary?.companyShareInfo?.companySharePeriodUnit)) : null }}" class="custom-input-disabled"/>			
+					</div>
+				</div>
+				<div class="col-12 md:col-2">
+					<div class="field">
+						<label htmlFor="code">Kỳ trả lãi (Tháng) </label>
+						<input pInputText [disabled]="true" value="{{ selectedPrimary?.companyShareInfo?.interestPeriod ? (selectedPrimary?.companyShareInfo?.interestPeriod + ' ' + CompanyShareInterestConst.getPeriodUnits(selectedPrimary?.companyShareInfo?.interestPeriodUnit)) : null }}" class="custom-input-disabled"/>
+					</div>
+				</div>
+				<div class="col-12 md:col-2">
+					<div class="field">
+						<label htmlFor="code">Mệnh giá </label>
+						<input pInputText [disabled]="true" value="{{ utils.transformMoney(selectedPrimary?.companyShareInfo?.parValue) }}" class="custom-input-disabled"/>
+					</div>
+				</div>
+				<div class="col-12 md:col-2">
+					<div class="field">
+						<label htmlFor="code">Số lượng </label>
+						<input pInputText [disabled]="true" value="{{ utils.transformMoney(selectedPrimary?.quantity) }}" class="custom-input-disabled"/>
+					</div>
+				</div>
+				<div class="col-12 md:col-4">
+					<div class="field">
+						<label htmlFor="code">Tổng giá trị </label>
+						<input pInputText [disabled]="true" value="{{ utils.transformMoney(selectedPrimary?.companyShareInfo?.parValue * selectedPrimary?.quantity)}}" class="custom-input-disabled"/>
+					</div>
+				</div>
+				<div class="col-12 md:col-2">
+					<div class="field">
+						<label htmlFor="code">Lãi suất (%/Năm) </label>
+						<input pInputText [disabled]="true" value="{{ selectedPrimary?.companyShareInfo?.interestRate }}" class="custom-input-disabled"/>
+					</div>
+				</div>
+				<div class="col-12 md:col-2">
+					<div class="field">
+						<label htmlFor="code">Số khách hàng tối đa </label>
+						<input pInputText [disabled]="true" value="{{ utils.transformMoney(selectedPrimary?.maxInvestor) }}" class="custom-input-disabled"/>
+					</div>
+				</div>
+				<div class="col-12 md:col-2">
+					<div class="field mr-2">
+						<label htmlFor="code">Ngày phát hành </label>
+						<input pInputText [disabled]="true" value="{{ selectedPrimary?.openCellDate ? (selectedPrimary?.openCellDate | dateview) : null }}" class="custom-input-disabled"/>
+					</div>
+				</div>
+				<div class="col-12 md:col-2">
+					<div class="field ml-2">
+						<label htmlFor="code">Ngày đáo hạn </label>
+						<input pInputText [disabled]="true" value="{{ selectedPrimary?.closeCellDate ? (selectedPrimary?.closeCellDate | dateview) : null }}" class="custom-input-disabled" />
+					</div>
+				</div>
+			</div>
+			<h5 class="mb-2 mt-0">Thông tin bán theo kỳ hạn</h5>
+            <hr class="mt-0">
+			<div class="grid formgrid">
+				<div class="col-12 md:col-2">
+					<div class="field">
+						<label htmlFor="openCellDate">Ngày mở bán <span class="required-field"> * </span> </label>
+						<p-calendar inputId="openCellDate" dateFormat="dd/mm/yy" locale="vi" 
+							appendTo="body" utc="true" 
+							[(ngModel)]="companyShareSecondary.openCellDate" 
+							(onSelect)="onChangeOpenCellDate($event)"
+							[ngClass]="{'ng-invalid ng-dirty' : fieldErrors?.openCellDate}"
+							[minDate]="minDate"
+							[maxDate]="maxDate"
+							[showIcon]="true" 
+							[disabled]="!allowEdit" >
+						</p-calendar>
+					</div>
+				</div>
+				<div class="col-12 md:col-2">
+					<div class="field">
+						<label htmlFor="closeCellDate">Ngày kết thúc<span class="required-field"> * </span> </label>
+						<p-calendar inputId="closeCellDate" dateFormat="dd/mm/yy" locale="vi" 
+							appendTo="body" utc="true" 
+							[(ngModel)]="companyShareSecondary.closeCellDate" 
+							[ngClass]="{'ng-invalid ng-dirty' : fieldErrors?.closeCellDate}"
+							[showIcon]="true" 
+							[readonlyInput]="true"
+							[minDate]="companyShareSecondary.openCellDate"
+							[maxDate]="maxDate"
+							[disabled]="!allowEdit" >
+						</p-calendar>
+					</div>
+				</div>
+				<div class="col-12 md:col-2">
+					<div class="field">
+						<label htmlFor="quantity"> SL cổ phần </label>
+						<input 
+							id="quantity" pInputText
+							value="{{ utils.transformMoney(selectedPrimary.soLuongTraiPhieuNamGiu) }}" 
+							[disabled]="true" class="custom-input-disabled" 
+						/>
+					</div>
+					<!-- <small class="ng-dirty ng-invalid" *ngIf="submitted && !issuer.name"> => Nhập tên hiển thị!</small> -->
+				</div>
+				<div class="col-12 md:col-6">
+					<div class="field">
+						<label htmlFor="quantity"> TK thụ hưởng <span class="required-field"> * </span></label>
+						<p-dropdown optionLabel="labelName" optionValue="businessCustomerBankId" appendTo="body"
+							[autoDisplayFirst]="true" [options]="listBanks" 
+							[disabled]="!allowEdit"
+							[(ngModel)]="companyShareSecondary.businessCustomerBankAccId" 
+							[ngClass]="{'ng-invalid ng-dirty' : submitted && !companyShareSecondary.businessCustomerBankAccId}">
+						</p-dropdown>
+					</div>
+					<!-- <small class="ng-dirty ng-invalid" *ngIf="submitted && !issuer.name"> => Nhập tên hiển thị!</small> -->
+				</div>
+			</div>
+		</div>
+		
+	</ng-template>
+	<ng-template pTemplate="footer">
+		<button pButton pRipple label="Hủy" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+		<button pButton pRipple label="Lưu" icon="pi pi-check" class="p-button-text" [disabled]="!validForm() || submitted" (click)="save()"></button>
+	</ng-template>
+</p-dialog>

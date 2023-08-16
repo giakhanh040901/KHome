@@ -1,0 +1,305 @@
+<p-toast [baseZIndex]="10000"></p-toast>
+<p-confirmDialog [style]="{width: 'auto'}" [baseZIndex]="10000"></p-confirmDialog>
+<div class="grid p-fluid form-layout">
+    <!-- Thông tin đầu tư -->
+    <ng-container>
+        <div class="col-12 md:col-12">
+            <h6 class="mb-0"> 
+                Thông tin chính sách 
+                <span class="mb-0" style="padding: 0 10px; cursor: pointer;" (click)="collapse()" [pTooltip]="!isCollapse ? 'Thu gọn thông tin' : 'Hiển thị đủ thông tin'"> 
+                    <i class="pi pi-angle-double-{{ isCollapse ? 'down' : 'up' }}" style="font-weight: bold; color: #5346E0; -webkit-transform:scale(1.5,1.2);"></i> 
+                </span>
+            </h6>
+        </div>
+        <ng-container *ngIf="!isCollapse">
+            <div class="col-12 md:col-3">
+                <div class="field">
+                    <label htmlFor="code">Mã chính sách <span class="required-field"> * </span> </label>
+                    <input type="text" id="code" name="code" pInputText [(ngModel)]="policyTemplate.code" maxlength="256"/>
+                </div>
+            </div>
+            <div class="col-12 md:col-6">
+                <div class="field">
+                    <label htmlFor="name">Tên chính sách <span class="required-field"> * </span> </label>
+                    <input type="text" id="name" name="name" pInputText [(ngModel)]="policyTemplate.name" maxlength="256" />
+                </div>
+            </div>
+            <div class="col-12 md:col-3">
+                <div class="field">
+                    <label htmlFor="minMoney">
+                        Đầu tư tối thiểu 1 HĐ (VNĐ)
+                        <span class="required-field"> * </span>
+                    </label>
+                    <p-inputNumber 
+                        id="minMoney" [(ngModel)]="policyTemplate.minMoney"
+                        locale="de-DE">
+                    </p-inputNumber>
+                </div>
+            </div>
+            <div class="col-12 md:col-3">
+                <div class="field">
+                    <label htmlFor="maxMoney">
+                        Đầu tư tối đa 1 HĐ (VND) 
+                    </label>
+                    <p-inputNumber 
+                        id="maxMoney" [(ngModel)]="policyTemplate.maxMoney"
+                        locale="de-DE">
+                    </p-inputNumber>
+                </div>
+            </div>
+            <div class="col-12 md:col-3">
+                <div class="field">
+                    <label htmlFor="type">Loại chính sách <span class="required-field"> * </span> </label>
+                    <p-dropdown 
+                        appendTo="body" [options]="PolicyTemplateConst.types" dataValue="code" optionValue="code" name="type" optionLabel="name"
+                        [(ngModel)]="policyTemplate.type" required autofocus
+                        (onChange)="changePolicyType()">
+                    </p-dropdown>
+                </div>
+            </div>
+            <!--  -->
+            <div *ngIf="policyTemplate.type == PolicyTemplateConst.TYPE_LINH_HOAT" class="col-12 md:col-3">
+                <div class="field">
+                    <label htmlFor="minInvestDay">
+                        Số ngày đầu tư tối thiểu <span class="required-field"> * </span>
+                    </label>
+                    <p-inputNumber id="classify" [(ngModel)]="policyTemplate.minInvestDay"locale="de-DE"></p-inputNumber>
+                </div>
+            </div>
+            <!--  -->
+            <div class="col-12 md:col-3">
+                <div class="field">
+                    <label htmlFor="incomeTax">Thuế lợi nhuận (%) <span class="required-field"> * </span></label>
+                    <input [(ngModel)]="policyTemplate.incomeTax" pInputText id="incomeTax" type="number" [pKeyFilter]="blockText" />
+                </div>
+            </div>
+            <!--  -->
+            <div class="col-12 md:col-3">
+                <div class="field">
+                    <label htmlFor="classify">Kiểu chính sách <span class="required-field"> * </span> </label>
+                    <p-dropdown 
+                        [options]="classifies" dataValue="code" optionValue="code" name="classify" optionLabel="name"
+                        [(ngModel)]="policyTemplate.classify"
+                        (onChange)="changePolicyType()">
+                    </p-dropdown>
+                </div>
+            </div>
+            <div class="col-12 md:col-3">
+                <div class="field">
+                    <label htmlFor="calculateType">Cách tính lợi tức<span class="required-field"> * </span>
+                    </label>
+                    <p-dropdown 
+                        appendTo="body" optionValue="code" name="calculateType" optionLabel="name"
+                        [options]="PolicyTemplateConst.calculateType"
+                        [(ngModel)]="policyTemplate.calculateType" required autofocus>
+                    </p-dropdown>
+                </div>
+            </div>
+            <!--  -->
+            <div class="col-12 md:col-3">
+                <div class="field">
+                    <label htmlFor="sortOrder">Thứ tự hiển thị <span class="required-field"> * </span>
+                    </label>
+                    <p-dropdown 
+                        appendTo="body" dataValue="code" optionValue="code" name="sortOrder" optionLabel="name"
+                        [options]="PolicyTemplateConst.policyDisplayOrder" 
+                        [(ngModel)]="policyTemplate.policyDisplayOrder">
+                    </p-dropdown>
+                </div>
+            </div>
+            <!--  -->
+            <div class="col-12 md:col-3">
+                <div class="field">
+                    <label htmlFor="minTakeContract">
+                        Gửi y/c nhận hợp đồng từ (VND) 
+                        <span class="required-field"> * </span>
+                    </label>
+                    <p-inputNumber 
+                        id="classify" [(ngModel)]="policyTemplate.minTakeContract"locale="de-DE">
+                    </p-inputNumber>
+                </div>
+            </div>
+            <!--  -->
+            <div class="col-12 md:col-12">
+                <div class="field">
+                    <label htmlFor="description">Mô tả</label>
+                    <textarea maxlength="50" pInputTextarea [(ngModel)]="policyTemplate.description" rows="4"  placeholder="Nhập nội dung mô tả"></textarea>  
+                </div>
+                </div>
+
+            <!-- Thông tin rút vốn -->
+            <ng-container>
+                <div class="col-12 md:col-12">
+                    <h6 class="mb-0"> Thông tin rút vốn </h6>
+                </div>
+             <!--  -->
+             <div class="col-12 md:col-3">
+                <div class="field">
+                    <label htmlFor="calculateWithdrawType">Cách tính lợi tức rút<span class="required-field"> * </span>
+                    </label>
+                    <p-dropdown 
+                        appendTo="body" dataValue="code" optionValue="code" name="calculateWithdrawType" optionLabel="name"
+                        [options]="PolicyTemplateConst.calculateWithdrawTypes" 
+                        [(ngModel)]="policyTemplate.calculateWithdrawType">
+                    </p-dropdown>
+                </div>
+            </div>
+            <!--  -->
+            <div *ngIf="policyTemplate.calculateWithdrawType != PolicyTemplateConst.KY_HAN_THAP_HON_GAN_NHAT" class="col-12 md:col-3">
+                <div class="field">
+                    <label htmlFor="profitRateDefault">Lợi tức rút (%) <span class="required-field"> * </span></label>
+                    <input [(ngModel)]="policyTemplate.profitRateDefault" pInputText id="profitRateDefault" type="number" [pKeyFilter]="blockText" />
+                </div>
+            </div>
+                <div class="col-12 md:col-3">
+                    <div class="field">
+                        <label htmlFor="minWithDraw">
+                            Số tiền rút vốn tối thiểu
+                            <span class="required-field"> * </span>
+                        </label>
+                        <p-inputNumber 
+                            id="minWithdraw" [(ngModel)]="policyTemplate.minWithdraw"
+                            locale="de-DE">
+                        </p-inputNumber>
+                    </div>
+                </div>
+
+                <div class="col-12 md:col-3">
+                    <div class="field">
+                        <label htmlFor="maxWithDraw">
+                            Số tiền rút tối đa (%)
+                            <span class="required-field"> * </span>
+                        </label>
+                        <!-- <input  [(ngModel)]="policyTemplate.maxWithDraw" type="number" id="maxWithDraw" pInputText [pKeyFilter]="blockText" /> -->
+                        <p-inputNumber 
+                            id="maxWithDraw" [(ngModel)]="policyTemplate.maxWithDraw" locale="de-DE">
+                        </p-inputNumber>
+                    </div>
+                </div>
+
+                <div class="col-12 md:col-3">
+                    <div class="field">
+                        <label htmlFor="exitFee">Phí rút tiền (%) <span class="required-field"> * </span></label>
+                        <input 
+                            pInputText id="exitFee" type="number" [pKeyFilter]="blockText"
+                            [(ngModel)]="policyTemplate.exitFee" 
+                        />
+                    </div>
+                </div>
+
+                <div class="col-12 md:col-3">
+                    <div class="field">
+                        <label htmlFor="exitFeeType">Kiểu của phí rút tiền <span class="required-field"> * </span>
+                        </label>
+                        <p-dropdown 
+                            appendTo="body" dataValue="code" optionValue="code" name="exitFeeType" optionLabel="name"
+                            [options]="PolicyTemplateConst.exitFeeType"
+                            [(ngModel)]="policyTemplate.exitFeeType">
+                        </p-dropdown>
+                    </div>
+                </div>
+
+                <div class="col-12 md:col-3">
+                    <div class="field">
+                        <label htmlFor="isTransfer">Chuyển đổi tài sản <span class="required-field"> * </span>
+                        </label>
+                        <p-dropdown 
+                            appendTo="body" dataValue="code" optionValue="code" name="isTransfer" optionLabel="name"
+                            [options]="PolicyTemplateConst.isTransfer" (onChange)="changeTrafer($event.value)"
+                            [(ngModel)]="policyTemplate.isTransfer">
+                        </p-dropdown>
+                    </div>
+                </div>
+
+                <div class="col-12 md:col-3">
+                    <div class="field">
+                        <label htmlFor="transferTax">Phí chuyển đổi tài sản (%) <span class="required-field"> * </span></label>
+                        <input class="custom-input-disabled" [disabled]="policyTemplate.isTransfer == PolicyTemplateConst.NO"[(ngModel)]="policyTemplate.transferTax" type="number" id="transferTax" pInputText [pKeyFilter]="blockText" />
+                    </div>
+                </div>
+            </ng-container>
+
+            <!-- Thông tin tái tục -->
+            <ng-container>
+                <div class="col-12 md:col-12">
+                    <h6 class="mb-0"> Thông tin tái tục </h6>
+                </div>
+                <div class="col-12 md:col-3">
+                    <div class="field">
+                        <label htmlFor="remindRenewals">
+                            Nhắc tái tục trước (ngày)
+                            <span class="required-field"> * </span>
+                        </label>
+                        <p-inputNumber 
+                            id="classify" [(ngModel)]="policyTemplate.remindRenewals"
+                            locale="de-DE">
+                        </p-inputNumber>
+                    </div>
+                </div>
+
+
+                <div class="col-12 md:col-3">
+                    <div class="field"> 
+                        <label htmlFor="expirationRenewals">
+                            Gửi y/c tái tục trước (ngày)
+                            <span class="required-field"> * </span>
+                            <span [pTooltip]="tootipLabelExpirationRenewals"> 
+                                <i class="pi pi-info-circle" style="color: #5346E0;font-weight: 600;font-size: 16px;"></i> 
+                            </span>
+                        </label>
+                        <p-inputNumber 
+                            id="classify" [(ngModel)]="policyTemplate.expirationRenewals"
+                            locale="de-DE">
+                        </p-inputNumber>
+                    </div>
+                </div>
+
+
+                <div class="col-12 md:col-3">
+                    <div class="field">
+                        <label htmlFor="renewalsType">Loại hợp đồng tái tục<span class="required-field"> * </span>
+                        </label>
+                        <p-dropdown 
+                            appendTo="body" [options]="PolicyTemplateConst.renewalsTypes"
+                            dataValue="code" optionValue="code" name="renewalsType" optionLabel="name"
+                            [(ngModel)]="policyTemplate.renewalsType">
+                        </p-dropdown>
+                    </div>
+                </div>
+            </ng-container>
+            <!--  -->
+        </ng-container>
+    </ng-container>
+
+    <div class="col-12 md:col-12">
+        <div class="flex justify-content-between flex-column sm:flex-row">
+            <div class="mb-3">
+                <button 
+                    *ngIf="isGranted([PermissionInvestConst.InvestCSM_KyHan_ThemMoi])"
+                    pButton pRipple label="Thêm kỳ hạn" icon="pi pi-plus"  class="p-button-success mr-2"
+                    (click)="createPolicyDetail()"></button>
+            </div>
+        </div>
+        <e-table
+            [rows]="policyTemplate.policyDetailTemp"
+            [(page)]="page"
+            [columns]="columnPolicyDetails"
+            [isLoading]="isLoading"
+            [listAction]="listActionPolicyDetail"
+            [isShowIconFilter]="false"
+            [isShowPaginator]="false"
+            [isHeightAuto]="200"
+            >
+        </e-table>
+    </div>
+</div>
+<div class="p-dialog-footer e-custom-dialog-footer" >
+    <button pButton pRipple label="Hủy" icon="pi pi-times" class="p-button-text p-confirm-dialog-reject" (click)="close()"></button>
+    <button 
+        *ngIf="isGranted([PermissionInvestConst.InvestCSM_CapNhat])"
+        (click)="save()" label="Lưu" icon="pi pi-check" class="p-button-text p-confirm-dialog-approve" pButton pRipple>
+    </button>
+</div>
+
+
+         

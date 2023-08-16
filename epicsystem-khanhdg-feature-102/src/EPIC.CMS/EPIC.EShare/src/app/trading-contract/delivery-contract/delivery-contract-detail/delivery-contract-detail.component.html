@@ -1,0 +1,268 @@
+
+<app-loading-page *ngIf="isLoadingPage"></app-loading-page>
+<div class="card b-page-detail {{ isLoadingPage ? 'b-loading' : '' }}">
+    <div class="p-fluid p-formgrid grid b-header">
+        <div class="col-12 md:col-6">
+            <h5 class="title-info mb-0"> {{ OrderStatusTitle }} </h5>
+        </div>
+        <div class="col-12 md:col-6 b-actions">
+            <div class="text-right" >
+                
+                <!--  -->
+                <p-button 
+                    styleClass="p-button-sm custom-button  b-button-back" 
+                    [routerLink]="'/trading-contract/delivery-contract'" 
+                    label="Quay lại" icon="pi pi-chevron-left">
+                </p-button>
+            </div>
+        </div>
+    </div>
+    
+    <p-tabView styleClass="custom-tabview" [(activeIndex)]="activeIndex" (onChange)="changeTab($event)">
+        <p-tabPanel *ngIf="isGranted([PermissionCompanyShareConst.CompanyShareHDPP_GiaoNhanHopDong_TTC])">
+            <ng-template pTemplate = "header">
+                <span> Thông tin chung </span>
+            </ng-template>
+            <div class="grid detail">
+                <div class="col-12">
+                    <div class="card pt-0 mb-0">
+                        <h5 class="title-info mb-2">Thông tin khách hàng</h5>
+                        <div class="p-fluid p-formgrid grid">
+                            <div class="field col-12 md:col-6">
+                                <label class="title-info">Tên khách hàng</label>
+                                <input [disabled]="true" pInputText [value]="(orderDetail?.businessCustomer?.name ?? (orderDetail?.investor?.name ?? orderDetail?.investor?.investorIdentification?.fullname)) ?? null" class="custom-input-disabled"/>
+                            </div>
+                            <div class="field col-12 md:col-3">
+                                <label class="title-info">Số điện thoại</label>
+                                <input [disabled]="true" pInputText [value]="(orderDetail?.businessCustomer?.phone ?? orderDetail?.investor?.phone) ?? null" class="custom-input-disabled"/>
+                            </div>
+                            <div class="field col-12 md:col-3">
+                                <label class="title-info">Email</label>
+                                <input [disabled]="true" pInputText [value]="(orderDetail?.businessCustomer?.email ?? orderDetail?.investor?.email) ?? null" class="custom-input-disabled"/>
+                            </div>
+                            <div *ngIf="!listContactAddress && !orderDetail.contractAddressId"  class="field col-12 md:col-6">
+                                <label class="title-info">Địa chỉ</label>
+                                <textarea [disabled]="true" pInputText [value]="orderDetail?.businessCustomer?.address ??null" class="custom-input-disabled" [rows]="2"></textarea>
+                            </div>
+                            <!-- <div class="pb-0 field col-12 md:col-6">
+                                <label class="title-info">Địa chỉ</label>
+                                <textarea [disabled]="true" pInputText [value]="(orderDetail?.businessCustomer?.customerInfo?.address ?? customerInformation?.customerInfo?.defaultIdentification?.placeOfResidence) ?? null" class="custom-input-disabled" [rows]="2"></textarea>
+                            </div> -->
+                            <div class="field mb-0 col-12 md:col-6" *ngIf="listContactAddress">
+                                <label class="title-info">Địa chỉ liên hệ</label>
+                                <p-dropdown 
+                                    class="custom-input-disabled" emptyMessage="Không có dữ liệu"
+                                    [options]="listContactAddress" optionLabel="contactAddress" optionValue="contactAddressId"
+                                    [autoDisplayFirst]="true" [disabled]="!isEdit"
+                                    (onChange)="changeContractAddress($event.value)"
+                                    [(ngModel)]="orderDetail.contractAddressId">
+                                </p-dropdown>
+                            </div>
+                            <div class="field col-12 md:col-6">
+                                <label class="title-info {{ (isEdit && (fieldUpdates.bankAccount.isEdit || isEditAll)) ? 'hightline-title' : '' }}">Tài khoản thụ hưởng</label>
+                                <p-dropdown 
+                                    class="custom-input-disabled" emptyMessage="Không có dữ liệu"
+                                    [options]="listBank" optionLabel="labelName" optionValue="investorBankAccId"
+                                    [autoDisplayFirst]="false" [disabled]="!(isEdit && (fieldUpdates.bankAccount.isEdit || isEditAll))"
+                                    [(ngModel)]="orderDetail.investorBankAccId">
+                                </p-dropdown>
+                            </div>
+                        </div>
+                        <!--  -->
+						<h5 class="title-info mb-2 mt-2">Thông tin cổ phần</h5>
+                        <div class="p-fluid p-formgrid grid">
+                            <div class="field col-12 md:col-6">
+                                <label class="title-info">Cổ phần</label>
+                                <p-dropdown 
+                                    class="custom-input-disabled"
+                                    [options]="companyShareInfos" optionLabel="companyShareName" optionValue="companyShareSecondaryId"
+                                    [autoDisplayFirst]="true" [disabled]="true"
+                                    [(ngModel)]="orderDetail.companyShareSecondaryId">
+                                </p-dropdown>
+                            </div>
+                            <div class="field col-12 md:col-3">
+                                <label class="title-info"> Mã hợp đồng </label>
+                                <input [disabled]="true" pInputText [value]="orderDetail?.contractCode" class="custom-input-disabled" />
+                            </div>
+                            <div class="field col-12 md:col-3">
+                                <label class="title-info">Mã cổ phần</label>
+                                <input [disabled]="true" pInputText [value]="companyShareSecondary?.CompanyShareInfo?.companyShareCode ?? null" class="custom-input-disabled"/>
+                            </div>
+                            <div class="field col-12 md:col-3">
+                                <label class="title-info">Ngày phát hành</label>
+                                <input [disabled]="true" pInputText [value]="formatDate(companyShareSecondary?.openCellDate)" class="custom-input-disabled"/>
+                            </div>
+                            <div class="field col-12 md:col-3">
+                                <label class="title-info">Số lượng nắm giữ</label>
+                                <input [disabled]="true" pInputText value="{{ utils.transformMoney(companyShareSecondary?.soLuongTraiPhieuNamGiu) }}" class="custom-input-disabled"/>
+                            </div>
+                            <div class="field col-12 md:col-3">
+                                <label class="title-info">Số lượng còn lại</label>
+                                <input [disabled]="true" pInputText value="{{ utils.transformMoney(companyShareSecondary?.soLuongConLai) }}" class="custom-input-disabled"/>
+                            </div>
+                            <div class="field col-12 md:col-3">
+                                <label class="title-info">Tổng giá trị</label>
+                                <input [disabled]="true" pInputText [value]=" utils.transformMoney(companyShareSecondary?.soLuongTraiPhieuNamGiu * companyShareSecondary?.CompanyShareInfo?.parValue) ?? null" class="custom-input-disabled"/>
+                            </div>
+                        </div>
+                        <!--  -->
+                        <h5 class="title-info mb-2 mt-3">Chính sách lãi</h5>
+                            <div class="p-fluid p-formgrid grid">
+                                <div class="field col-12 md:col-4">
+                                    <label class="title-info {{ (isEdit && (fieldUpdates.policy.isEdit || isEditAll)) ? 'hightline-title' : '' }}">Chọn chính sách</label>
+                                    <p-dropdown
+                                        class="custom-input-disabled"
+                                        optionLabel="name" optionValue="companySharePolicyId" emptyMessage="Không có dữ liệu"
+                                        [options]="policies" 
+                                        [autoDisplayFirst]="false" [disabled]="!(isEdit && (fieldUpdates.policy.isEdit || isEditAll))"
+                                        [(ngModel)]="orderDetail.companySharePolicyId"
+                                        (onChange)="changePolicy($event.value)">
+                                    </p-dropdown>
+                                </div>
+                                <div class="field col-12 md:col-2">
+                                    <label class="title-info">Mã chính sách</label>
+                                    <input pInputText value="{{ policyInfo?.code }}" [disabled]="true" class="custom-input-disabled"/>
+                                </div>
+                                <div class="field col-12 md:col-2">
+                                    <label class="title-info">Loại</label>
+                                    <input pInputText value="{{ ProductPolicyConst.getTypeName(policyInfo?.type) }}" [disabled]="true" class="custom-input-disabled"/>
+                                </div>
+                                <div class="field col-12 md:col-2">
+                                    <label class="title-info">Số ngày được bán lại</label>
+                                    <input pInputText value="{{ policyInfo?.soNgayDuocBanLai }}" [disabled]="true" class="custom-input-disabled"/>
+                                </div>
+                                <div class="field col-12 md:col-2">
+                                    <label class="title-info">Kỳ hạn (Ngày)</label>
+                                    <input pInputText value="{{ policyInfo?.kyHan }}" [disabled]="true" class="custom-input-disabled"/>
+                                </div>
+                            </div>
+                            <!--  -->
+                            <h5 class="title-info mb-2 mt-3 {{(isEdit && (fieldUpdates.policy.isEdit && isEditAll)) ? 'hightline-title' : '' }}"> Kỳ hạn </h5>
+                            <div class="p-fluid p-formgrid grid">
+                                <div class="field col-12 md:col-4">
+                                    <label class="title-info">Kỳ hạn
+                                        <span class="required-field"> * </span>
+                                    </label>
+                                    <p-dropdown
+                                        class="custom-input-disabled"
+                                        optionLabel="name" optionValue="companySharePolicyDetailId" emptyMessage="Không có dữ liệu"
+                                        [options]="policyDetails" 
+                                        [disabled]="!(isEdit && (fieldUpdates.policy.isEdit || isEditAll))"
+                                        [autoDisplayFirst]="false"
+                                        (onChange)="setDueDate($event.value)"
+                                        [(ngModel)]="orderDetail.companySharePolicyDetailId">
+                                    </p-dropdown>
+                                </div>
+                                <div class="field col-12 md:col-3">
+                                    <label class="title-info">Lợi tức</label>
+                                    <input pInputText value="{{ profit ?  utils.transformPercent(profit) + '%' : ''  }}" [disabled]="true"
+                                        class="custom-input-disabled" />
+                                </div>
+                            </div>
+                            <!--  -->
+                            <h5 class="title-info mb-2 mt-3"> Thông tin cần nhập </h5>
+                            <div class="p-fluid p-formgrid grid">
+                                <div class="field col-12 md:col-2">
+                                    <label class="title-info {{ (isEdit && (fieldUpdates.totalValue.isEdit || isEditAll)) ? 'hightline-title' : '' }}">Tổng số tiền</label>
+                                    <p-inputNumber
+                                        class="custom-input-disabled"
+                                        mode="decimal" [disabled]="!(isEdit && (fieldUpdates.totalValue.isEdit || isEditAll))"
+                                        [(ngModel)]="orderDetail.totalValue"
+                                        locale="de-DE">
+                                    </p-inputNumber>
+                                </div>
+                                <div class="field col-12 md:col-2">
+                                    <label class="title-info {{ (isEdit && (fieldUpdates.totalValue.isEdit || isEditAll)) ? 'hightline-title' : '' }}">Ngày đặt lệnh</label>
+                                    <p-calendar
+                                        class="custom-input-disabled "
+                                        inputId="buyDate" dateFormat="dd/mm/yy" locale="vi" appendTo="body" utc="true" placeholder="dd/mm/yyyy"
+                                        [(ngModel)]="orderDetail.buyDate" [disabled]="!(isEdit && (fieldUpdates.totalValue.isEdit || isEditAll))"
+                                        [ngClass]="{'ng-invalid ng-dirty' : fieldErrors?.buyDate}" 
+                                        (click)="resetValid('buyDate')"
+                                        [showIcon]="false">
+                                    </p-calendar>
+                                </div>
+                                <div class="field col-12 md:col-2 b-disabled-click">
+                                    <label class="title-info">Chi trả trái tức</label>
+                                    <p-selectButton
+                                        class="custom-input-disabled"
+                                        class="p-custom-select-button"
+                                        optionLabel="name" optionValue="code" 
+                                        [options]="OrderConst.interestTypes" 
+                                        [(ngModel)]="orderDetail.isInterest" >
+                                    </p-selectButton>
+                                </div>
+                                <div class="col-12 md:col-6"></div>
+                                
+                                <div class="field col-12 md:col-2">
+                                    <label class="title-info"> Số lượng </label>
+                                    <p-inputNumber 
+                                        [disabled]="true" class="custom-input-disabled" mode="decimal" locale="de-DE" 
+                                        [(ngModel)]="orderDetail.orderQuantity">
+                                    </p-inputNumber>
+                                </div>
+                                <div class="field col-12 md:col-2">
+                                    <label class="title-info">Đơn giá </label>
+                                    <p-inputNumber
+                                        [disabled]="true" class="custom-input-disabled" mode="decimal" locale="de-DE"
+                                        [(ngModel)]="orderDetail.orderPrice" [minFractionDigits]="3">
+                                    </p-inputNumber>
+                                </div>
+                                <div class="field col-12 md:col-2">
+                                    <label class="title-info">Ngày đầu tư </label>
+                                   
+                                    <input pInputText value="{{ (orderDetail.investDate || orderDetail.buyDate) | dateview }}" [disabled]="true" class="custom-input-disabled"/>
+                                </div>
+                             
+                                <div class="field col-12 md:col-2">
+                                    <label class="title-info">Ngày đáo hạn </label>
+                                    <input pInputText value="{{ orderDetail.dueDate | dateview }}" [disabled]="true" class="custom-input-disabled"/>
+                                </div>
+                            </div>
+                            <!--  -->
+                            <h5 class="title-info mb-2 mt-2">Mã giới thiệu</h5>
+                            <div class="p-fluid p-formgrid grid">
+                                <div class="field col-12 mb-0 md:col-2">
+                                    <label class="title-info">Mã giới thiệu</label>
+                                    <div class="p-inputgroup">
+                                        <input  [disabled]="!(isEdit && (fieldUpdates.referralCode.isEdit || isEditAll))" readonly class="custom-input-disabled" value="{{ sale?.referralCode }}" type="text" pInputText placeholder="Bấm đề tìm kiếm">   
+                                        <button [disabled]="!(isEdit && (fieldUpdates.referralCode.isEdit || isEditAll))" (click)="showSale()" class="title-info" type="button" pButton pRipple icon="pi pi-search" styleClass="p-button-warn"></button>      
+                                    </div>
+                                </div>
+                                <div class="field col-12 mb-0 md:col-4">
+                                    <label class="title-info">Tên người giới thiệu</label>
+                                    <input
+                                        pInputText [disabled]="true" class="custom-input-disabled"
+                                        value="{{ sale?.investor?.investorIdentification.fullname ?? sale?.businessCustomer?.name }}" 
+                                        title="{{ sale?.investor?.investorIdentification.fullname ?? sale?.businessCustomer?.name }}" 
+                                    />
+                                </div> 
+                                <div class="field col-12 mb-0 md:col-3">
+                                    <label class="title-info">Số điện thoại</label>
+                                    <input pInputText [disabled]="true" value="{{ sale?.investor?.phone ?? sale?.businessCustomer?.phone }}" class="custom-input-disabled"/>
+                                </div>
+                                <div class="field col-12 mb-0 md:col-3">
+                                    <label class="title-info">Email</label>
+                                    <input pInputText [disabled]="true" value="{{ investorSale?.email ?? sale?.businessCustomer?.phone }}" class="custom-input-disabled"/>
+                                </div>
+                                <div class="field col-12 mb-0 md:col-6">
+                                    <label class="title-info">Phòng GD quản lý </label>
+                                    <input pInputText [disabled]="true" value="{{ sale?.departmentName }}" class="custom-input-disabled"/>
+                                </div>
+                                <div class="field col-12 mb-0 md:col-6">
+                                    <label class="title-info">Phòng GD QL hợp đồng</label>
+                                    <input pInputText [disabled]="true" value="{{ sale?.departmentName }}" class="custom-input-disabled"/>
+                                </div>
+                            </div>
+                    </div>
+				</div>
+            </div>
+        </p-tabPanel>
+        <p-tabPanel [header]="'HSKHDangKy'">
+            <ng-template pTemplate = "header">
+                <span> HSKH đăng ký </span>
+            </ng-template>
+            <app-order-contract [orderDetail]="orderDetail" *ngIf="tabViewActive.HSKHDangKy"></app-order-contract>
+        </p-tabPanel>
+    </p-tabView>
+</div>

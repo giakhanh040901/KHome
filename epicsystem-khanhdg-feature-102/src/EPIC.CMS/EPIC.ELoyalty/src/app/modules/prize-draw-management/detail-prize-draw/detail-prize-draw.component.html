@@ -1,0 +1,27 @@
+<div class="card">
+    <h3 class="mb-0"> Chi tiết chương trình </h3>
+    <p-tabView styleClass="custom-tabview" [(activeIndex)]="activeIndex" (onChange)="changeTab($event)">
+        <p-tabPanel [header]="'thongTinChuongTrinh'" [ngClass]="'tab-scroll'">
+            <ng-template pTemplate="header" >
+                <span> Thông tin chương trình </span>
+            </ng-template>
+            <ng-container>
+                <app-program-infomation [prizeDrawId]="prizeDraw.id"></app-program-infomation>
+            </ng-container>
+        </p-tabPanel>
+        <p-tabPanel 
+            *ngIf="isGranted([this.PermissionLoyaltyConst.LoyaltyCT_TrungThuong_PageChiTiet_CauHinhChuongTrinh])"
+            [header]="'cauHinhChuongTrinh'" [ngClass]="'table'">
+            <ng-template pTemplate="header">
+                <span> Cấu hình chương trình </span>
+            </ng-template>
+            <app-program-configuration *ngIf="tabViewActive['cauHinhChuongTrinh']" [prizeDrawId]="prizeDraw.id"></app-program-configuration>
+        </p-tabPanel>
+        <p-tabPanel *ngIf="isGranted([this.PermissionLoyaltyConst.LoyaltyCT_TrungThuong_PageChiTiet_LichSu])" [header]="'lichSu'" [ngClass]="'pb-0'">
+            <ng-template pTemplate="header">
+                <span> Lịch sử </span>
+            </ng-template>
+            <app-history-update-prize-draw *ngIf="tabViewActive['lichSu']" [prizeDrawId]="prizeDraw.id"></app-history-update-prize-draw>
+        </p-tabPanel>
+    </p-tabView>
+</div>

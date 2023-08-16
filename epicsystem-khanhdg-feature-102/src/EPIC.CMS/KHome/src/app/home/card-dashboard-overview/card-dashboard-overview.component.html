@@ -1,0 +1,23 @@
+<div
+  [style.background]="styleCard.backgroundColor"
+  [style.color]="styleCard.textColor"
+  class="container"
+>
+  <div class="flex">
+    <img
+      src="assets/layout/images/dashboard/icon-messages.svg"
+      alt="mirage-layout"
+      width="44"
+      height="44"
+    />
+    <div class="ml-3" [style.lineHeight]="'22px'">
+      <div class="font-bold text-lg">{{ title }}</div>
+      <div class="text-lg opacity-80">{{ description }}</div>
+    </div>
+  </div>
+  <div class="mt-3 text-5xl font-semibold">{{ value }}</div>
+  <div class="mt-3">
+    <span class="text-lg font-medium opacity-80">{{ infor }}</span>
+    <span class="text-xl font-semibold ml-3">{{ valueInfor }}</span>
+  </div>
+</div>

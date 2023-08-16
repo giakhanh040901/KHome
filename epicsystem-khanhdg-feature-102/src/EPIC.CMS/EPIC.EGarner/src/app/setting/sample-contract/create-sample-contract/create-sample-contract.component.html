@@ -1,0 +1,97 @@
+
+<div class="grid p-fluid">
+    <p-toast key="policyContract"></p-toast>
+    <ng-container>
+        <div class="col-12">
+         
+        </div>
+        <div class="col-12 md:col-6">
+            <div class="field mb-0">
+                <label htmlFor="code">Tên hợp đồng<span class="required-field"> * </span>
+                </label>
+                <input type="text" id="name" name="name" pInputText
+                [(ngModel)]="sampleContract.name" maxlength="256"
+                [ngClass]="{'ng-invalid ng-dirty' : submitted && !sampleContract?.name}">
+               
+            </div>
+        </div>
+        <div class="col-12 md:col-3">
+            <div class="field mb-0">
+                <label htmlFor="name">Loại hợp đồng <span class="required-field"> * </span>
+                </label>
+                <p-dropdown optionLabel="name" optionValue="code" appendTo="body"
+                    class="custom-input-disabled" [autoDisplayFirst]="false"
+                    [options]="SampleContractConst.contractType"
+                    [(ngModel)]="sampleContract.contractType"
+                    [ngClass]="{'ng-invalid ng-dirty' : submitted && !sampleContract?.contractType}">
+                </p-dropdown>
+            </div>
+        </div>
+        
+        <div class="col-12 md:col-3">
+            <div class="field mb-0">
+                <label htmlFor="SampleContractConst"> Kiểu hợp đồng <span class="required-field"> * </span></label>
+                <p-dropdown optionLabel="name" optionValue="code" appendTo="body"
+                    class="custom-input-disabled" [autoDisplayFirst]="false"
+                    [options]="SampleContractConst.contractSource"
+                    [(ngModel)]="sampleContract.contractSource"
+                    [ngClass]="{'ng-invalid ng-dirty' : submitted && !sampleContract?.contractSource}">
+                </p-dropdown>
+            </div>
+        </div>
+        <!-- <div class="col-12 md:col-6"> 
+
+        </div>-->
+        <div class="col-12 md:col-9">
+            <div class="field mb-0">
+                <label htmlFor="periodType"> File cá nhân<span class="required-field"> * </span></label>
+                <input type="text" id="fileInvestor" name="fileInvestor" class="b-disabled" [disabled]="true" pInputText [value]="sampleContract?.fileInvestor || ''"/>
+            </div>
+        </div>
+        <div class="col-12 md:col-3">
+            <div class="field mb-0 upload-file-form">
+                <label htmlFor=""> </label>
+                <p-fileUpload 
+                            name="demo[]" accept=".pdf,.doc,.docx" [customUpload]="true" class="custom-file-upload w-100 b-disabled"
+                            chooseIcon="pi pi-cloud-upload" 
+                            (uploadHandler)="myUploaderInvestor($event)"
+                            [auto]="true"
+                            chooseLabel="Chọn file upload">
+                </p-fileUpload>
+            </div>
+        </div>
+       
+        <div class="col-12 md:col-9">
+            <div class="field mb-0">
+                <label htmlFor="periodType"> File doanh nghiệp <span class="required-field"> * </span></label>
+                <input type="text" id="fileBusinessCustomer" name="fileBusinessCustomer" class="b-disabled" [disabled]="true" pInputText [value]="sampleContract?.fileBusinessCustomer || ''"/>
+            </div>
+        </div>
+        <div class="col-12 md:col-3">
+            <div class="field mb-0 upload-file-form">
+                <label htmlFor=""> </label>
+                <p-fileUpload 
+                    name="demo[]" accept=".pdf,.doc,.docx" [customUpload]="true" class="custom-file-upload w-100"
+                    chooseIcon="pi pi-cloud-upload" 
+                    (uploadHandler)="myUploaderBusiCus($event)"
+                    [auto]="true"
+                    chooseLabel="Chọn file upload">
+                </p-fileUpload>
+            </div>
+        </div>
+        <!--  -->
+        <div class="col-12 md:col-12">
+            <div class="field mb-0 upload-file-form">
+                <label htmlFor=""> Mô tả </label>
+                <textarea name="description" [(ngModel)]="sampleContract.description" pInputText></textarea>
+            </div>
+        </div>
+    </ng-container>
+</div>
+<div class="p-dialog-footer" style="width: 100%; position: fixed; left: 0; bottom: 0;">
+    <button pButton pRipple label="Hủy" icon="pi pi-times" class="p-button-text p-confirm-dialog-reject" (click)="close()"></button>
+    <button pButton pRipple label="Lưu" icon="pi pi-check" class="p-button-text p-confirm-dialog-approve" (click)="save()"></button>
+    <!-- || !validForm() -->
+</div>
+
+         

@@ -1,0 +1,73 @@
+ <div>
+    <e-loading *ngIf="isDownload"></e-loading>
+    <div #pageEl>
+        <p-toast></p-toast>
+        <p-confirmDialog [style]="{width: 'auto'}" [baseZIndex]="10000"></p-confirmDialog>
+        <div [id]="idHeader"> 
+            <div class="grid tabview-table-header">
+                <div class="col-12 md:col-8">
+                    <div class="flex">
+                        <div class="b-wr-15 filter-item">
+                            <span class="p-float-label b-custom filter">
+                                <p-dropdown
+                                    styleClass="input-filter" placeholder="Tất cả"
+                                    [options]="policies" name="searchField" optionLabel="labelName" optionValue="id"
+                                    [(ngModel)]="dataFilter.policyId"
+                                    [showClear]="true" 
+                                    [autoDisplayFirst]="false" 
+                                    (onChange)="setPage()">
+                                </p-dropdown>
+                                <label class="font-normal">Chính sách</label>
+                            </span>
+                        </div>
+                        <div class="b-wr-12 filter-item">
+                            <span class="p-float-label b-custom filter">
+                                <p-dropdown
+                                    styleClass="input-filter"
+                                    [showClear]="true" placeholder="Tất cả"
+                                    [autoDisplayFirst]="false"
+                                    [options]="SampleContractConst.contractSource" optionLabel="name" optionValue="code"
+                                    [(ngModel)]="dataFilter.contractSource"
+                                    (onChange)="setPage()">
+                                </p-dropdown>   
+                                <label class="font-normal"> Kiểu hợp đồng </label>
+                            </span>
+                        </div>
+                        <div class="b-wr-12 filter-item">
+                            <span class="p-float-label b-custom filter">
+                                <p-dropdown
+                                    styleClass="input-filter"
+                                    [showClear]="true" placeholder="Tất cả"
+                                    [autoDisplayFirst]="false"
+                                    [options]="ActiveDeactiveConst.list" optionLabel="name" optionValue="code"
+                                    [(ngModel)]="dataFilter.status"
+                                    (onChange)="setPage()">
+                                </p-dropdown>   
+                                <label class="font-normal"> Trạng thái </label>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 md:col-4 flex justify-content-end flex-column sm:flex-row">
+                    <p-button  
+                        label="Thêm mẫu hợp đồng" icon="pi pi-plus-circle"
+                        *ngIf="isGranted([PermissionInvestConst.InvestPPDT_MauHopDong_ThemMoi])" class="p-button-success" 
+                        (click)="createMultiple()">
+                    </p-button>
+                </div>
+            </div>
+        </div>
+        <e-table
+            [rows]="rows"
+            [(page)]="page"
+            [columns]="columns"
+            [isLoading]="isLoading"
+            [listAction]="listAction"
+            [tabContentHeight]="contentHeight"
+            [idHeader]="idHeader"
+            [columnCacheName]="constructor.name"
+            [isShowIconFilter]="false"
+            (_onPageChange)="setPage($event)">
+        </e-table>
+    </div>
+</div>

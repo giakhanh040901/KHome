@@ -1,0 +1,273 @@
+<div>
+	<p-confirmDialog
+		[style]="{ width: 'auto', 'min-width': '20vw' }"
+		[baseZIndex]="10000"
+	></p-confirmDialog>
+	<p-toast></p-toast>
+</div>
+<!--  -->
+<div class="grid ml-0 mr-0 mt-0">
+    <div class="col-12">
+        <div class="card">
+            <div class="p-fluid p-formgrid grid b-header">
+                <div class="col-12 md:col-12 b-title mb-3">
+                    <h5 style="display:inline">Danh sách yêu cầu rút tiền</h5>
+                    <div class="flex flex-row-reverse flex-wrap">
+                        <p-button
+                            *ngIf="!isPartner && !StatusPaymentBankConst.END.includes(fieldFilters.status) && isGranted([PermissionGarnerConst.GarnerHDPP_XLRutTien_HuyYeuCau])"
+                            (onClick)="cancelApprove()" class="ml-2"
+                            label="Hủy yêu cầu" icon="pi pi-book" iconPos="right" 
+                            [disabled]="!selectedRequests?.length">
+                        </p-button>
+                        <!--  -->
+                        <p-button
+                            *ngIf="!isPartner && !StatusPaymentBankConst.END.includes(fieldFilters.status) && isGranted([PermissionGarnerConst.GarnerHDPP_XLRutTien_ChiTienTC])"
+                            (onClick)="approveOffline()" class="ml-2"
+                            label="Chi tiền thủ công" icon="pi pi-book" iconPos="right" 
+                            [disabled]="!selectedRequests?.length">
+                        </p-button>
+                        <!--  -->
+                        <p-button
+                            *ngIf="!isPartner && !StatusPaymentBankConst.END.includes(fieldFilters.status) && isGranted([PermissionGarnerConst.GarnerHDPP_XLRutTien_ChiTienTD])"
+                            (onClick)="createList()" 
+                            label="Chi tiền tự động" icon="pi pi-book" iconPos="right" 
+                            [disabled]="!selectedRequests?.length">
+                        </p-button>
+                    </div>
+                </div>
+            </div>
+            <!--  -->
+            <p-table 
+            #approveTable 
+            [value]="rows" [loading]="isLoading" [rowHover]="true"
+            rowGroupMode="subheader" groupRowsBy="distributionId"
+            [showCurrentPageReport]="true" [paginator]="false"
+            responsiveLayout="scroll" dataKey="distributionId" [resizableColumns]="false"
+            [scrollable]="true" [scrollHeight]="getTableHeight(60)" styleClass="custom-table order-group">
+            <!--  -->
+                <ng-template pTemplate="caption">
+                    <div class="flex">
+                        <div class="flex justify-content-between flex-column sm:flex-row">
+                            <span class="block p-input-icon-left p-float-label b-custom mr-1 p-inputtext-filter">
+                                <i class="pi pi-search"></i>
+                                <input 
+                                    class="pr-3" pInputText type="text" 
+                                    placeholder="{{ WithdrawConst.getInfoFieldFilter(fieldFilters.fieldSearch, 'placeholder') }}"
+                                    [(ngModel)]="keyword" (input)="changeKeyword($event)" 
+                                />
+                                <label class="font-normal" for="">Tìm kiếm</label>
+                            </span>
+                            <span class="p-float-label b-custom ml-2 mr-1">
+                                <p-dropdown 
+                                    id="fieldSearch" [style]="{'width':'16rem'}" [options]="WithdrawConst.fieldSearch"
+                                    name="fieldSearch" optionLabel="name" optionValue="field"
+                                    [(ngModel)]="fieldFilters.fieldSearch" [autoDisplayFirst]="true" (onChange)="changeFieldFilter()">
+                                </p-dropdown>
+                                <label class="font-normal" for="fieldFilter">Tìm kiếm theo</label>
+                            </span>
+                        </div>
+                        <div class="flex justify-content-between flex-column sm:flex-row">
+                            <span class="p-float-label b-custom ml-1">
+                                <p-dropdown 
+                                    id="dropdownStatus" [style]="{'width':'14rem'}" [options]="StatusPaymentBankConst.list"
+                                    optionLabel="name" optionValue="code" placeholder="Chọn trạng thái" [showClear]="true"
+                                    [(ngModel)]="fieldFilters.status" class=" ml-2" (onChange)="changeStatus()">
+                                </p-dropdown>
+                                <label class="font-normal" for="dropdownStatus">Trạng thái</label>
+                            </span>
+                        </div>
+                        <div class="flex justify-content-between flex-column sm:flex-row">
+                            <span class="p-float-label b-custom ml-2">
+                                <p-calendar class="ml-2" inputId="issuerDate" showButtonBar="true"
+                                    [style]="{'width':'11.5rem'}" dateFormat="dd/mm/yy" locale="vi" appendTo="body"
+                                    [(ngModel)]="fieldFilters.withdrawalDate" readonlyInput="true" [placeholder]="'dd/mm/yyyy'"
+                                    showIcon="true" (onClearClick)="setPage()"
+                                    (onSelect)="setPage()">
+                                </p-calendar>
+                                <label class="p-top-label" style=" font-weight: 400;">Ngày yêu cầu</label>
+                            </span>
+                        </div>
+                        <div class="flex justify-content-between flex-column sm:flex-row">
+                            <span class="p-float-label b-custom ml-2">
+                                <p-calendar class="ml-2" inputId="issuerDate" showButtonBar="true"
+                                    [style]="{'width':'11.5rem'}" dateFormat="dd/mm/yy" locale="vi" appendTo="body"
+                                    [(ngModel)]="fieldFilters.approveDate" readonlyInput="true" [placeholder]="'dd/mm/yyyy'"
+                                    showIcon="true" (onClearClick)="setPage()()"
+                                    (onSelect)="setPage()()">
+                                </p-calendar>
+                                <label class="p-top-label" style=" font-weight: 400;">Ngày duyệt</label>
+                            </span>
+                        </div>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th [ngStyle]="{'max-width': '3rem', 'min-width': '3rem'}"></th>
+                        <th style="min-width: 5rem; max-width: 5rem;">
+                            #ID 
+                        </th>
+                        <!--  -->
+                        <ng-container *ngFor="let col of cols">
+                            <th [ngClass]="col?.class" [ngStyle]="{'max-width': !col?.isResize ? col?.width : '', 'min-width': col?.width}"> 
+                                {{ col?.header }}
+                            </th>
+                        </ng-container>
+                        <th *ngIf="[StatusPaymentBankConst.PENDING, StatusPaymentBankConst.APPROVE_ONLINE].includes(fieldFilters.status)" style="min-width: 8rem; max-width: 8rem; justify-content: left;">
+                            Kết quả chi 
+                        </th>
+                        <!--  -->
+                        <th style="min-width: 7.5rem; max-width: 7.5rem; justify-content: left;" pFrozenColumn alignFrozen="right" [frozen]="true" class="b-border-frozen-right">
+                            Trạng thái 
+                        </th>
+                        <th style="min-width: 6rem; max-width: 6rem; justify-content: center;" pFrozenColumn alignFrozen="right" [frozen]="true" class="b-border-frozen-right">
+                            <!-- Thông tin   -->
+                        </th>
+                    </tr>
+                </ng-template>
+                <!--  -->
+                <ng-template pTemplate="groupheader" let-row let-expanded="expanded" let-rowIndex="rowIndex">
+                    <!-- <tr pRowGroupHeader style="background:#dee2e6" (click)="onGroupSelect(row.distributionId)"> -->
+                    <tr [ngStyle]="{'cursor': 'pointer', 'color': expanded ? '#5858ff' : ''}" class="group" >
+                        <td colspan="5">
+                            <p-checkbox 
+                                name="groupDistribution" class="mr-3"
+                                [disabled]="StatusPaymentBankConst.END.includes(fieldFilters.status)"
+                                [value]="row.distributionId" 
+                                [(ngModel)]="distributionChecked" 
+                                (onChange)="onGroupSelect(row.distributionId, $event)">
+                            </p-checkbox>
+                            <button 
+                                type="button" pButton pRipple class="p-button-text p-button-rounded p-button-plain mr-2"
+                                [pRowToggler]="row" 
+                                [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'">
+                            </button>
+                            <!--  -->
+                            <b> 
+                                <span class="p-text-bold p-ml-2"> 
+                                    {{ 'ID: ' + row.distributionId }}, {{ row.product.code + ' - ' + row.policy.name + ' (' + row.withdrawalDetail.length  + ')' }}   
+                                </span> 
+                            </b>
+                        </td>
+                    </tr>
+                </ng-template>
+                
+                <ng-template pTemplate="rowexpansion" let-row let-rowIndex="rowIndex" let-expanded="expanded"  let-row.viewDetail="false">
+                    <tr style="background: #f7f7f7;" class="row">
+                        <td [ngStyle]="{'max-width': '3rem', 'min-width': '3rem'}">
+                            <!-- <p-tableCheckbox [value]="row" class="custom-input-disabled" [disabled]="StatusPaymentBankConst.END.includes(fieldFilters.status)"></p-tableCheckbox> -->
+                            <p-checkbox 
+                                name="groupDistribution" class="mr-3"
+                                [disabled]="StatusPaymentBankConst.END.includes(fieldFilters.status)"
+                                [value]="row" 
+                                [(ngModel)]="selectedRequests"
+                                (onChange)="onRowSelect(row)">
+                            </p-checkbox>
+                        </td>
+                        <td style="min-width: 5rem; max-width: 5rem;"> 
+                            {{ row.id }} 
+                        </td>
+                        <!--  -->
+                        <td *ngFor="let col of cols" [ngStyle]="{'max-width': !col?.isResize ? col?.width : '', 'min-width': col?.width}" [ngClass]="col?.class">
+                            <div *ngIf="col?.field === 'isCheck'">
+                                <p-checkbox [(ngModel)]="row.isCheck" [binary]="true" inputId="binary" [readonly]="true"></p-checkbox>
+                            </div>
+                            <div *ngIf="col?.field !== 'isCheck'" [ngClass]="col?.cutText" [title]="row[col?.field]">
+                                {{ row[col?.field]}}
+                            </div>
+                        </td>
+                        <td *ngIf="[StatusPaymentBankConst.PENDING, StatusPaymentBankConst.APPROVE_ONLINE].includes(fieldFilters.status)" style="min-width: 8rem; max-width: 8rem;justify-content: left;">
+                            <ng-container *ngIf="(row?.statusBank == StatusPaymentBankConst.RESPONSE_PENDING && row.status == StatusPaymentBankConst.PENDING_ONLINE) || row.status == StatusPaymentBankConst.APPROVE_ONLINE"> 
+                                <p-tag 
+                                    styleClass="p-tag-{{ StatusPaymentBankConst.getInfoResponse(row?.statusBank, 'severity') }}"
+                                    severity="{{ StatusPaymentBankConst.getInfoResponse(row?.statusBank, 'severity') }}"
+                                    value="{{ StatusPaymentBankConst.getInfoResponse(row.statusBank) }}">
+                                </p-tag>
+                            </ng-container>
+                        </td>
+                        <!--  -->
+                        <td style="min-width: 7.5rem; max-width: 7.5rem;justify-content: left;" pFrozenColumn alignFrozen="right" [frozen]="true" class="b-border-frozen-right">
+                            <p-tag 
+                                class="wrapper-status-phsc"
+                                styleClass="p-tag-{{StatusPaymentBankConst.getInfo(row?.status, 'severity')}}"
+                                severity="{{ StatusPaymentBankConst.getInfo(row?.status, 'severity') }}"
+                                value="{{ StatusPaymentBankConst.getInfo(row.status) }}">
+                            </p-tag>
+                        </td>
+                        <td style="min-width: 6rem; max-width: 6rem;justify-content: center; cursor: pointer;" pFrozenColumn alignFrozen="right" [frozen]="true">
+                            <span class="b-withdraw-show-detail" (click)="row.viewDetail = !row.viewDetail"> {{ !row.viewDetail ? 'Chi tiết' : 'Đóng' }} </span>
+                        </td>
+                    </tr>
+                    <ng-container *ngTemplateOutlet="extensiontemplate; context: row"></ng-container>
+                        <ng-template #extensiontemplate>
+                            <ng-container *ngIf="row.viewDetail">
+                                <p-table [value]="row.withdrawalDetail">
+                                    <ng-template pTemplate="header">
+                                        <tr>
+                                            <th [ngStyle]="{'max-width': '3rem', 'min-width': '3rem'}"></th>
+                                            <th [ngStyle]="{'max-width': '5rem', 'min-width': '5rem'}"> Id </th>
+                                            <th [ngStyle]="{'max-width': '8rem', 'min-width': '8rem'}"> Mã HĐ </th>
+                                            <th [ngStyle]="{'max-width': '16rem', 'min-width': '16rem'}"> Ngày tích lũy </th>
+                                            <th [ngStyle]="{'max-width': '10rem', 'min-width': '10rem'}"> Số tiền đầu tư </th>
+                                            <th [ngStyle]="{'max-width': '12rem', 'min-width': '12rem'}"> Hiện hữu </th>
+                                            <th [ngStyle]="{'max-width': '11rem', 'min-width': '11rem'}"> Số tiền rút </th>
+                                            <th [ngStyle]="{'max-width': '11rem', 'min-width': '11rem'}"> Lợi tức rút </th>
+                                            <th [ngStyle]="{'max-width': '11rem', 'min-width': '11rem'}"> Thực nhận </th>
+                                            <th [ngStyle]="{'max-width': '11rem', 'min-width': '11rem'}"> Còn lại </th>
+                                            <th *ngIf="isGranted([PermissionGarnerConst.GarnerHDPP_XLRutTien_ThongTinChiTiet])" [ngStyle]="{'max-width': '10rem', 'min-width': '10rem'}"></th>
+                                            <th></th>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="body" let-detail>
+                                        <tr>
+                                            <td [ngStyle]="{'max-width': '3rem', 'min-width': '3rem'}"></td>
+                                            <td [ngStyle]="{'max-width': '5rem', 'min-width': '5rem'}"> {{ detail?.garnerOrder?.id }}</td>
+                                            <td [ngStyle]="{'max-width': '8rem', 'min-width': '8rem'}"> {{ detail?.garnerOrder?.contractCode }}</td>
+                                            <td [ngStyle]="{'max-width': '16rem', 'min-width': '16rem'}"> {{ formatDate(detail?.garnerOrder?.investDate) }}</td>
+                                            <td [ngStyle]="{'max-width': '10rem', 'min-width': '10rem'}"> {{ formatCurrency(detail?.garnerOrder?.initTotalValue) }}</td>
+                                            <td [ngStyle]="{'max-width': '12rem', 'min-width': '12rem'}"> {{ formatCurrency(detail?.garnerOrder?.totalValue) }}</td>
+                                            <td [ngStyle]="{'max-width': '11rem', 'min-width': '11rem'}"> {{ formatCurrency(detail?.amountMoney) }}</td>
+                                            <td [ngStyle]="{'max-width': '11rem', 'min-width': '11rem'}"> {{ formatCurrency(detail?.actuallyProfit) }}</td>
+                                            <td [ngStyle]="{'max-width': '11rem', 'min-width': '11rem'}"> {{ formatCurrency(detail?.amountReceived) }}</td>
+                                            <td [ngStyle]="{'max-width': '11rem', 'min-width': '11rem'}"> 
+                                                {{ formatCurrency(StatusPaymentBankConst.SUCCESS.includes(fieldFilters.status) 
+                                                                    ? detail?.garnerOrder?.totalValue 
+                                                                    : +detail?.garnerOrder?.totalValue - +detail?.amountMoney
+                                                                ) 
+                                                }}
+                                            </td>
+                                            <td *ngIf="isGranted([PermissionGarnerConst.GarnerHDPP_XLRutTien_ThongTinChiTiet])" [ngStyle]="{'max-width': '10rem', 'min-width': '10rem', 'cursor': 'pointer'}" class="b-table-actions">
+                                                <span class="b-withdraw-show-detail" (click)="detailOrder(detail?.garnerOrder?.id)"> Thông tin chi tiết </span>
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="emptymessage">
+                                        <tr>
+                                            <td colspan="6">There are no order for this product yet.</td>
+                                        </tr>
+                                    </ng-template>
+                                </p-table>                   
+                            </ng-container>
+                        </ng-template>
+                    </ng-template>
+                <!--  -->
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td colspan="7">Không có dữ liệu.</td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="loadingbody">
+                    <tr>
+                        <td colspan="7"> Đang tải dữ liệu ... </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+            <p-paginator 
+                [rows]="page.pageSize" [totalRecords]="page.totalItems"
+                [rowsPerPageOptions]="page.perPageOptions" currentPageReportTemplate="Tất cả {{ page.totalItems }} dòng"
+                showCurrentPageReport="true" (onPageChange)="setPage($event)">
+            </p-paginator>
+            <!--  -->
+        </div>
+    </div>
+</div>

@@ -1,0 +1,43 @@
+<app-loading-page *ngIf="isLoading"></app-loading-page>
+<p-toast [baseZIndex]="10000" key="policyTemp"></p-toast>
+<div class="grid p-fluid">
+    <div class="grid formgrid">
+        <ng-container>
+            <div class="col-12">
+                <div class="field b-field">
+                    <label class="b-hightline-title">Ngân hàng </label>
+                    <p-dropdown 
+                        [style]="{'max-width':'580px'}"optionLabel= "labelName" optionValue="bankId" appendTo="body"
+                        [autoDisplayFirst]="false" [filter]="true" filterBy="labelName" 
+                        [disabled]="investorBank.id" class="custom-input-disabled w-full"
+                        styleClass="w-full" [options]="banks" [(ngModel)]="investorBank.bankId"
+                        (onChange)="changeBankId($event.value)">
+                    </p-dropdown>
+                </div>
+            </div>
+
+            <div class="col-12">
+                <div class="field" >
+                    <label htmlFor="bankAccount">Số tài khoản(<span class="required-field"> *
+                        </span>)</label>
+                    <input type="text" id="bankAccount" name="bankAccount" pInputText maxlength="128"
+                        [(ngModel)]="investorBank.bankAccount" (keypress)="numberOnly($event)"
+                        (click)="resetValid('bankAccount')"  (keyup)="changeKeyword()" />
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="field">
+                    <label htmlFor="ownerAccount">Tên tài khoản(<span class="required-field"> *
+                        </span>)</label>
+                    <input type="text" id="ownerAccount" AccName="ownerAccount" pInputText class="custom-input-disabled w-full"
+                        [disabled]="isLoading" [(ngModel)]="investorBank.ownerAccount" maxlength="512" [pKeyFilter]="KeyFilter.stringOnlyBlockSpecial"
+                        (click)="resetValid('ownerAccount')" />
+                </div>
+            </div>
+        </ng-container>
+    </div>
+</div>
+<div class="p-dialog-footer" style="width: 100%; position: fixed; left: 0; bottom: 0;">
+    <button pButton pRipple label="Đóng" icon="pi pi-times" class="p-button-text p-confirm-dialog-reject" (click)="close()"></button>
+    <button pButton pRipple label="Lưu" icon="pi pi-check" class="p-button-text p-confirm-dialog-approve" (click)="save()"></button>
+</div>

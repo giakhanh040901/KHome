@@ -1,0 +1,15 @@
+<div
+  class="donut"
+  [style.width.px]="limitSize"
+  [style.height.px]="limitSize"
+  [style.background]="getBackGround()"
+>
+  <div
+    class="hole flex justify-content-center align-items-center"
+    [style.width.px]="limitSize - 24"
+    [style.height.px]="limitSize - 24"
+    [style.background]="backgroundParent"
+  >
+    <span>{{ value }}%</span>
+  </div>
+</div>

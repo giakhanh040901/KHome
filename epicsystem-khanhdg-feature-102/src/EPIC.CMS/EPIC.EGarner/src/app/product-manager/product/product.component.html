@@ -1,0 +1,153 @@
+<app-loading-page *ngIf="isLoadingPage"></app-loading-page>
+<p-toast></p-toast>
+<div class="grid ml-0 mr-0 mt-0">
+    <div class="col-12">
+        <div class="card b-list">
+            <div class="p-fluid p-formgrid grid b-header">
+                <div class="col-12 md:col-7 b-title">
+                    <h4 style="display:inline"> Danh sách sản phẩm </h4>
+                </div>
+                <div class="col-12 md:col-5 b-action">
+                    <button
+                        pButton pRipple label="Thêm sản phẩm" icon="pi pi-plus" class="p-button-success mr-2"
+                        *ngIf="isGranted([PermissionGarnerConst.GarnerSPTL_ThemMoi])"
+                        (click)="showProductType()">
+                    </button>
+                </div>
+            </div>
+            <p-confirmDialog [style]="{width: 'auto'}" [baseZIndex]="10000"></p-confirmDialog>
+            <p-table 
+                #productBondSecondaryTable 
+                [value]="rows" 
+                [columns]="_selectedColumns"
+                [loading]="isLoading" [rowHover]="true" [showCurrentPageReport]="true" [paginator]="false"
+                responsiveLayout="scroll" dataKey="id"
+                [resizableColumns]="false" [scrollable]="true" [scrollHeight]="getTableHeight()" styleClass="custom-table">
+                <ng-template pTemplate="caption">
+                    <div class="flex">
+                        <div class="flex justify-content-between flex-column sm:flex-row">
+                            <span class="block mt-2 md:mt-0 p-input-icon-left">
+                                <i class="pi pi-search"></i>
+                                <input pInputText type="text" placeholder="Nhập mã sản phẩm..." style="width: 300px;"
+                                    [(ngModel)]="keyword" (input)="changeKeyword($event)" />
+                            </span>
+                        </div>
+                        <div class="flex justify-content-between flex-column sm:flex-row">
+                            <span class="p-float-label b-custom ml-1">
+                            <p-dropdown [style]="{'width':'300px'}" [options]="issuers" optionLabel="name"
+                                optionValue="businessCustomerId" placeholder="Chọn tổ chức phát hành"
+                                [(ngModel)]="fieldFilters.issuerId" class="ml-3"
+                                (onChange)="changeStatus($event.value)" [showClear]="true" [autoDisplayFirst]="false">
+                            </p-dropdown>
+                                <label class="font-normal" for="dropdownStatus">Tổ chức phát hành</label>
+                            </span>
+                        </div>
+                        <div class="flex justify-content-between flex-column sm:flex-row">
+                            <span class="p-float-label b-custom ml-1">
+                            <p-dropdown [style]="{'width':'175px'}" [options]="statusSearch" optionLabel="name"
+                                optionValue="code" [(ngModel)]="fieldFilters.status" class="ml-3"
+                                (onChange)="changeStatus($event.value)" [showClear]="false" [autoDisplayFirst]="true">
+                            </p-dropdown>
+                                <label class="font-normal" for="dropdownStatus">Trạng thái</label>
+                            </span>
+                        </div>
+                        <div class="flex justify-content-between flex-column sm:flex-row">
+                            <span class="p-float-label b-custom ml-1">
+                            <p-dropdown [style]="{'width':'175px'}" [options]="productTypes" optionLabel="name"
+                                optionValue="code" [(ngModel)]="fieldFilters.productType" class="ml-3"
+                                (onChange)="changeStatus($event.value)" [showClear]="false" [autoDisplayFirst]="true">
+                            </p-dropdown>
+                                <label class="font-normal" for="dropdownStatus">Loại tích lũy</label>
+                            </span>
+                        </div>
+                    </div>
+
+                </ng-template>
+                <ng-template pTemplate="header" let-columns>
+                    <tr>
+                        <th style="max-width: 5rem; min-width: 5rem;" pFrozenColumn alignFrozen="left" class="b-border-frozen-left"> #ID </th>
+                        <th *ngFor="let col of columns" [ngStyle]="{'max-width': !col.isResize ? col?.width : '', 'min-width': col?.width}" [ngClass]=" col.class ">
+                            {{ col.header }}
+                        </th> 
+                        <th style="min-width: 7rem; max-width: 7rem; justify-content: left;" pFrozenColumn alignFrozen="right" [frozen]="true" class="b-border-frozen-right">Trạng thái </th>
+                        <th style="max-width: 3rem; min-width: 3rem; justify-content: center;" pFrozenColumn alignFrozen="right" [frozen]="true" class=" b-table-actions">
+                            <i class="pi pi-cog" (click)="setColumn(cols, _selectedColumns)"></i>
+                        </th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-row let-rowIndex="rowIndex" let-columns="columns">
+                    <tr>
+                        <td style="max-width: 5rem; min-width: 5rem;" pFrozenColumn alignFrozen="left" class="b-border-frozen-left"> {{ row.id }} </td>
+                        
+                        <td *ngFor="let col of columns" [ngStyle]="{'max-width': !col.isResize ? col?.width : '', 'min-width': col.width}" [ngClass]=" col.class">
+                            <div *ngIf="col.field === 'isCheck'">
+                                <p-checkbox [(ngModel)]="row.isCheck" [binary]="true" inputId="binary" [readonly]="true"></p-checkbox>
+                            </div>
+                            <div *ngIf="col.field !== 'isCheck'" [ngClass]="col.cutText" [title]="row[col.field]">
+                                {{ row[col.field]}}
+                            </div>
+                        </td>
+                        <td style="min-width: 7rem; max-width: 7rem;justify-content: left;" pFrozenColumn alignFrozen="right" [frozen]="true" class="b-border-frozen-right">
+                            <p-tag 
+                                styleClass="p-tag-{{ StatusApprove.getStatusInfo(row.status, 'severity') }}"
+                                severity="{{ StatusApprove.getStatusInfo(row.status, 'severity') }}"
+                                value="{{ StatusApprove.getStatusInfo(row.status, 'name') }}">
+                            </p-tag>
+                        </td>
+                        <td style="max-width: 3rem; min-width: 3rem; justify-content: center;" pFrozenColumn alignFrozen="right" [frozen]="true"
+                            class="b-table-actions">
+                            <div class="flex">
+                                <i class="pi pi-ellipsis-h" (click)="menu.toggle($event)"></i>
+                                <p-menu 
+                                    #menu [popup]="true" class="button-actions" [model]="listAction[rowIndex]"
+                                    styleClass="b-menu-dropdown"
+                                    appendTo="body">
+                                </p-menu>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+            <p-paginator 
+                [rows]="page.pageSize" 
+                [totalRecords]="page.totalItems" 
+                [rowsPerPageOptions]="page.perPageOptions" 
+                currentPageReportTemplate="Tất cả {{ page.totalItems }} dòng" 
+                showCurrentPageReport="true"
+                (onPageChange)="setPage($event)">
+            </p-paginator>
+        </div>
+    </div>
+</div>
+
+<!-- DANH SÁCH CÁC LOẠI HÌNH SẢN PHẨM -->
+<p-dialog [(visible)]="modalDialog" [style]="{width: '500px', 'overflow': 'hidden'}" header="Loại hình tích lũy" [modal]="true" class="p-fluid" [dismissableMask]="true">
+    <ng-template pTemplate="content">
+        <div class="card pt-0">
+            <div class="grid formgrid">
+                <ng-container>
+                    <!-- ĐẦU TƯ CỔ PHẦN -->
+                    <div class="col-12 md:col-6">
+                        <div class="field">
+                            <button
+                                pButton pRipple label="Đầu tư cổ phần" icon="pi pi-plus" class="p-button-success mr-2"
+                                *ngIf="isGranted([PermissionGarnerConst.GarnerSPTL_ThemMoi])"
+                                (click)="createShare()">
+                            </button>
+                        </div>
+                    </div>
+                    <!-- ĐẦU TƯ BĐS -->
+                    <div class="col-12 md:col-6">
+                        <div class="field">
+                            <button
+                                pButton pRipple label="Đầu tư bất động sản" icon="pi pi-plus" class="p-button-success mr-2"
+                                *ngIf="isGranted([PermissionGarnerConst.GarnerSPTL_ThemMoi])"
+                                (click)="createInvest()">
+                            </button>
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+    </ng-template>
+</p-dialog>

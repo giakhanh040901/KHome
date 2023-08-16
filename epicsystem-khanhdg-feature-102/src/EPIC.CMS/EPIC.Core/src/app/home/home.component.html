@@ -1,0 +1,138 @@
+<app-loading-page *ngIf="isLoadingPage"></app-loading-page>
+<spinner-loading></spinner-loading>
+
+<div class="px-4 py-2" [style.background]="'#FAF9FB'">
+  <div class="flex w-full mb-2">
+    <div class="w-full py-4">
+      <div class="mb-4 px-2">
+        <span class="text-2xl font-semibold">Tổng quan</span>
+      </div>
+      <div class="mb-4 px-2">
+        <span class="p-float-label b-custom">
+          <p-calendar
+            placeholder="dd/mm/yyyy đến dd/mm/yyyy"
+            appendTo="body"
+            dateFormat="dd/mm/yy"
+            selectionMode="range"
+            [readonlyInput]="true"
+            [showIcon]="true"
+            [style]="{ width: '18rem', border: 'none' }"
+            locale="vi"
+            [showButtonBar]="true"
+            [(ngModel)]="filterDates"
+            (onSelect)="selectDays($event)"
+            (onClearClick)="onClearDays($event)"
+          ></p-calendar>
+        </span>
+      </div>
+      <ng-container *ngFor="let listCardChill of listCard">
+        <div class="flex w-full">
+          <ng-container *ngFor="let card of listCardChill">
+            <div class="col-6 pr-8">
+              <overview-card
+                [backgroundInfor]="card.backgroundInfor"
+                [textColorInfor]="card.textColorInfor"
+                [contentFirstLevel]="card.contentFirstLevel"
+                [valueFirstLevel]="card.valueFirstLevel"
+                [contentSecondLevel]="card.contentSecondLevel"
+                [valueSecondLevel]="card.valueSecondLevel"
+                [transactionColor]="card.transactionColor"
+              ></overview-card>
+            </div>
+          </ng-container>
+        </div>
+      </ng-container>
+    </div>
+    <create-account-chart
+      class="mx-6"
+      [listValue]="listValueAccountOverview"
+    ></create-account-chart>
+  </div>
+  <div class="flex w-full mb-2">
+    <div class="col-7 pr-3">
+      <div class="bg-white px-3 py-4 border-radius-8">
+        <h4>Biểu đồ theo các thế hệ gen</h4>
+        <p-chart
+          type="bar"
+          height="300"
+          [data]="dataGeneration"
+          [options]="optionsBar"
+        ></p-chart>
+      </div>
+    </div>
+    <div class="col-5 pl-3">
+      <div class="bg-white px-3 py-4 border-radius-8">
+        <h4>Biểu đồ khách hàng theo giới tính</h4>
+        <p-chart
+          type="bar"
+          height="300"
+          [data]="dataGender"
+          [options]="optionsBar"
+        ></p-chart>
+      </div>
+    </div>
+  </div>
+  <div class="flex w-full mb-2">
+    <div class="col-12">
+      <div class="bg-white px-3 py-4 border-radius-8">
+        <p-table
+          [value]="dataTable"
+          [columns]="selectedColumns"
+          [loading]="isLoading"
+          [rowHover]="true"
+          [showCurrentPageReport]="true"
+          [paginator]="false"
+          responsiveLayout="scroll"
+          [resizableColumns]="false"
+          [scrollable]="true"
+          styleClass="table-dashboard"
+          sortMode="multiple" (onSort)="onSort($event)" [customSort]="true"
+        >
+          <ng-template pTemplate="header" let-columns>
+            <tr>
+              <ng-container *ngFor="let col of columns">
+                <th  *ngIf="col.fieldSort" pSortableColumn="{{col.fieldSort}}"  [ngStyle]="{'max-width': !col?.isResize ? col?.width : '', 'min-width': col?.width}" [ngClass]="col.class">
+                  {{ col.header }} <p-sortIcon *ngIf="col.fieldSort" field="{{col.fieldSort}}"></p-sortIcon>
+                </th>
+                <th *ngIf="!col.fieldSort" [ngStyle]="{'max-width': !col?.isResize ? col?.width : '', 'min-width': col?.width}" [ngClass]="col.class">
+                    {{ col.header }} 
+                </th>
+              </ng-container>
+              <!-- <th *ngFor="let col of columns" [ngStyle]="{'max-width': col.width || '', 'min-width': col.width || ''}">
+                {{ col.header }}
+              </th> -->
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-rowData let-columns="columns">
+            <tr>
+              <td *ngFor="let col of columns" [ngStyle]="{'max-width': col.width || '', 'min-width': col.width || ''}">
+                {{ rowData[col.field] }}
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="7">Không có dữ liệu.</td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="loadingbody">
+            <tr>
+              <td colspan="7">Đang tải dữ liệu ...</td>
+            </tr>
+          </ng-template>
+        </p-table>
+        <p-paginator
+          #paginator
+          [rows]="page.pageSize"
+          [totalRecords]="page.totalItems"
+          [rowsPerPageOptions]="page.perPageOptions"
+          currentPageReportTemplate="Tất cả {{ page.totalItems }} dòng"
+          showCurrentPageReport="true"
+          styleClass="paginator-dashboard"
+          (onPageChange)="setPage($event)"
+        >
+        </p-paginator>
+      </div>
+    </div>
+  </div>
+</div>

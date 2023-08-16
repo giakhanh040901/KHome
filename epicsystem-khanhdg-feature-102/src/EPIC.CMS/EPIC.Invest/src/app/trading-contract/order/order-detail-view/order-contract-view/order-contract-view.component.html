@@ -1,0 +1,41 @@
+<div [style.height.px]="contentHeight" [style.overflow]="'hidden'">
+    <p-toast></p-toast>
+    <p-confirmDialog [style]="{width: 'auto'}" [baseZIndex]="10000"></p-confirmDialog>
+    <e-table
+        [rows]="rows"
+        [(page)]="page"
+        [columns]="columns"
+        [isLoading]="isLoading"
+        [class]="'pt-3'"
+        [tabContentHeight]="contentHeight"
+        [columnCacheName]="constructor.name"
+        (_onPageChange)="setPage($event)">
+    </e-table>
+    <p-dialog [(visible)]="modalDialog" [style]="{width: '40%'}" header="Lưu trữ hợp đồng" [modal]="true" class="p-fluid">
+        <ng-template pTemplate="content">
+            <div class="grid formgrid">
+                <div class="field col-12">
+                    <p-fileUpload 
+                        name="demo[]" accept=".pdf" [customUpload]="true" class="custom-file-upload"
+                        chooseIcon="pi pi-cloud-upload" 
+                        (uploadHandler)="myUploader($event)"
+                        [auto]="true"
+                        chooseLabel="Chọn file upload">
+                    </p-fileUpload>
+                </div>
+                <div class="field col-12">
+                        <input placeholder="Đường dẫn file" type="text" id="fileScanUrl" name="fileScanUrl" disabled pInputText [value]="orderContractFile.fileScanUrl || ''" required autofocus/>
+                        <!-- <label for="fileScanUrl">Đường dẫn file</label> -->
+                </div>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="footer">
+            <button pButton pRipple label="Hủy" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+            <button pButton pRipple label="Lưu" icon="pi pi-check" class="p-button-text" [disabled]="!validForm() || submitted" (click)="saveOrderContractFile()"></button>
+        </ng-template>
+    </p-dialog>
+    <!-- Xem hồ sơ tải lên -->
+    <app-form-view-pdf-file (onClose)="hideDialog()" [modalDialogPDF]="modalDialogPDF" [urlfilePDF]="urlfilePDF"></app-form-view-pdf-file>
+</div>
+
+

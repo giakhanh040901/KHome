@@ -1,0 +1,287 @@
+<app-loading-page *ngIf="isLoading"></app-loading-page>
+<div class="card b-page-detail" *ngIf="!isLoading">
+    <div class="p-fluid p-formgrid grid b-header">
+        <div class="col-12 md:col-7">
+            <h4 class="mb-0"> {{ issuerDetail?.businessCustomer?.name }} </h4>
+        </div>
+        <div class="col-12 md:col-5 text-right b-actions">
+            <div class="text-right">
+                <p-button 
+                    *ngIf="isGranted([PermissionBondConst.Bond_TCPH_CapNhat])"
+                    styleClass="p-button-sm custom-button" 
+                    label="{{ labelButtonEdit }}" 
+                    icon="pi {{ isEdit ? 'pi-save' : 'pi-pencil' }}" 
+                    (click)="changeEdit()">
+                </p-button>
+                <p-button 
+                    styleClass="p-button-sm custom-button  b-button-back" 
+                    [routerLink]="'/setting/issuer'" 
+                    label="Quay lại" icon="pi pi-chevron-left">
+                </p-button>
+            </div>
+        </div>
+    </div>
+    <p-tabView styleClass="custom-tabview" [(activeIndex)]="activeIndex">
+        <p-tabPanel *ngIf="isGranted([PermissionBondConst.Bond_TCPH_ThongTinChung])">
+            <ng-template pTemplate = "header">
+                <span> Thông tin chung </span>
+            </ng-template>
+            <div *ngIf="isGranted([PermissionBondConst.Bond_TCPH_ChiTiet])" class="grid detail business-customer">
+                <div class="col-12">
+                    <div class="card pt-0 pb-0 mb-0 grid">
+                        <div class="col-9">
+                            <h5 class="mb-2"> Thông tin tổ chức phát hành </h5>
+                            <div class="p-fluid p-formgrid grid">
+                                <div class="col-12 md:col-2">
+                                    <div class="field">
+                                        <label htmlFor="code">Mã doanh nghiệp </label>
+                                        <input pInputText [disabled]="true" value="{{ issuerDetail?.businessCustomer?.code }}" class="custom-input-disabled"/>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-2">
+                                    <div class="field">
+                                        <label htmlFor="taxCode"> Mã số thuế </label>
+                                        <input pInputText [disabled]="true" value="{{ issuerDetail?.businessCustomer?.taxCode }}" class="custom-input-disabled"/>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-6">
+                                    <div class="field">
+                                        <label htmlFor="licenseIssuer">Nơi cấp</label>
+                                        <input [disabled]="true" pInputText value="{{ issuerDetail?.businessCustomer?.licenseIssuer }}" class="custom-input-disabled"/>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-2">
+                                    <div class="field">
+                                        <label for="licenseDate">Ngày cấp ĐKKD</label>
+                                        <input pInputText value="{{ formatDate(issuerDetail?.businessCustomer?.licenseDate) }}" [disabled]="true" class="custom-input-disabled"/>
+                                    </div>                    
+                                </div>
+                                
+                                <div class="col-12 md:col-2">
+                                    <div class="field">
+                                        <label htmlFor="numberModified">Số lần thay đổi </label>
+                                        <input [disabled]="true" pInputText value="{{ issuerDetail?.businessCustomer?.numberModified }}" class="custom-input-disabled"/>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 md:col-2">
+                                    <div class="field">
+                                        <label for="dateModified">Ngày thay đổi</label>
+                                        <input [disabled]="true" value="{{ formatDate(issuerDetail?.businessCustomer?.dateModified) }}" pInputText class="custom-input-disabled"/>
+                                    </div>
+                                </div>
+                                
+                                
+                                <!--  -->
+                                <div class="col-12 md:col-6">
+                                    <div class="field">
+                                        <label htmlFor="name">Tên Doanh nghiệp </label>
+                                        <input pInputText [disabled]="true" value="{{ issuerDetail?.businessCustomer?.name }}" class="custom-input-disabled"/>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-2">
+                                    <div class="field">
+                                        <label htmlFor="shortName">Tên viết tắt</label>
+                                        <input [disabled]="true" pInputText value="{{ issuerDetail?.businessCustomer?.shortName }}" class="custom-input-disabled"/>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-12 md:col-2">
+                                    <div class="field">
+                                        <label htmlFor="phone">Điện thoại </label>
+                                        <input [disabled]="true" value="{{ issuerDetail?.businessCustomer?.phone }}" pInputText class="custom-input-disabled"/>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 md:col-2">
+                                    <div class="field">
+                                        <label htmlFor="mobile">Điện thoại khác</label>
+                                        <input [disabled]="true" pInputText value="{{ issuerDetail?.businessCustomer?.mobile }}" class="custom-input-disabled"/>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-4">
+                                    <div class="field">
+                                        <label htmlFor="email">Thư điện tử</label>
+                                        <input [disabled]="true" pInputText  value="{{ issuerDetail?.businessCustomer?.email }}" class="custom-input-disabled"/>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-4">
+                                    <div class="field">
+                                        <label [disabled]="true" htmlFor="capital">Vốn điều lệ</label>
+                                        <input pInputText [disabled]="true" value="{{ utils.transformMoney(issuerDetail?.businessCustomer?.capital) }}" class="custom-input-disabled"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--  -->
+                            <h5 class="mb-2 mt-2"> Địa chỉ </h5>
+                        <div class="p-fluid p-formgrid grid">
+                            <div class="col-12 md:col-10">
+                                <div class="field">
+                                    <label htmlFor="address">Địa chỉ đăng ký</label>
+                                    <textarea [disabled]="true" rows="1" value="{{ issuerDetail?.businessCustomer?.address }}" pInputTextarea class="custom-input-disabled"></textarea>
+                                </div>
+                            </div>
+                            <div class="col-12 md:col-2">
+                                <div class="field">
+                                    <label htmlFor="nation">Quốc gia </label>
+                                    <p-dropdown 
+                                        [disabled]="true"
+                                        optionValue="code" name="name" optionLabel="name" appendTo="body"
+                                        [options]="NationalityConst.List" [autoDisplayFirst]="false"
+                                        [(ngModel)]="issuerDetail.businessCustomer.nation" 
+                                        class="custom-input-disabled">
+                                    </p-dropdown>                              
+                                </div>
+                            </div>
+                            <div class="col-12 md:col-12">
+                                <div class="field">
+                                    <label htmlFor="tradingAddress">Địa chỉ giao dịch </label>
+                                    <textarea 
+                                        [disabled]="true" rows="1"
+                                        value="{{ issuerDetail?.businessCustomer?.tradingAddress }}" pInputTextarea
+                                        class="custom-input-disabled">
+                                    </textarea>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                        <div class="col-3 text-center mt-3">
+                            <div class="p-fluid p-formgrid grid">
+                                <div class="col-12 wrapper-avatar-issuer">
+                                    <p-image
+                                        [src]="issuerDetail?.businessCustomer?.avatarImageUrl ? (AppConsts.remoteServiceBaseUrl + '/' + issuerDetail?.businessCustomer?.avatarImageUrl) : imageDefault" 
+                                        imageClass="b-w-100"
+                                        [imageStyle]="{'border-radius':'8px','max-height':'350px'}" 
+                                        [preview]="true">
+                                    </p-image>
+                                </div>
+                                <div class="col-12">
+                                    <p-fileUpload
+                                        [disabled]="!isEdit"
+                                        name="demo[]" accept=".png,.jpeg,.jpg" 
+                                        chooseLabel="Chọn ảnh đại diện"
+                                        chooseIcon="pi pi-image"
+                                        class="custom-file-upload mt-3"  
+                                        [customUpload]="true" 
+                                        (uploadHandler)="myUploader($event)"
+                                        [auto]="true" >
+                                    </p-fileUpload>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--  -->
+                    <div class="card pt-0 pb-0 mb-0">
+                        
+                    </div>
+                    <!--  -->
+                    <div class="card pt-0 pb-0 mb-0">
+                        <h5 class="mb-2 mt-0"> Thông tin tài khoản ngân hàng </h5>
+                        <div class="p-fluid p-formgrid grid">
+                            <div class="col-12 md:col-12">
+                                <div class="field">
+                                    <!-- <label htmlFor="bankName">Tên ngân hàng</label> -->
+                                    <input 
+                                        [disabled]="true" pInputText class="custom-input-disabled"
+                                        value="{{ issuerDetail?.businessCustomer?.businessCustomerBank?.bankAccNo
+                                        + ' - ' + issuerDetail?.businessCustomer?.businessCustomerBank?.bankAccName 
+                                        + ' - ' + issuerDetail?.businessCustomer?.businessCustomerBank?.bankName 
+                                        + (issuerDetail?.businessCustomer?.businessCustomerBank?.bankBranchName ? (' - ' + issuerDetail?.businessCustomer?.businessCustomerBank?.bankBranchName) : '') 
+                                        }}" 
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--  -->
+                    <div class="card pt-0 mb-0">
+                        <h5 class="mb-2 mt-2"> Thông tin người đại diện </h5>
+                        <div class="p-fluid p-formgrid grid">
+                            <div class="col-12 md:col-3">
+                                <div class="field">
+                                    <label htmlFor="repName">Tên người đại diện</label>
+                                    <input [disabled]="true" pInputText value="{{ issuerDetail?.businessCustomer?.repName }}" class="custom-input-disabled"/>
+                                </div>
+                            </div>
+                            <div class="col-12 md:col-3">
+                                <div class="field">
+                                    <label htmlFor="repPosition">Chức vụ</label>
+                                    <input [disabled]="true" pInputText value="{{ issuerDetail?.businessCustomer?.repPosition }}" class="custom-input-disabled"/>
+                                </div>
+                            </div>
+                            <div class="col-12 md:col-3">
+                                <div class="field">
+                                    <label htmlFor="decisionNo">Quyết định số </label>
+                                    <input [disabled]="true" pInputText value="{{ issuerDetail?.businessCustomer?.decisionNo }}" class="custom-input-disabled"/>
+                                </div>
+                            </div>
+                            <div class="col-12 md:col-3">
+                                <div class="field">
+                                    <label for="decisionDate">Ngày quyết định</label>
+                                    <input [disabled]="true" pInputText value="{{ formatDate(issuerDetail?.businessCustomer?.decisionDate) }}" class="custom-input-disabled"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card pt-0 mb-0">
+                        <h5 class="mb-2 mt-2"> Thông tin tài chính </h5>
+                        <div class="p-fluid p-formgrid grid">
+                            <div class="col-12 md:col-3">
+                                <div class="field">
+                                    <label htmlFor="repName"> Doanh thu </label>
+                                    <p-inputNumber
+                                        class="custom-input-disabled"
+                                        [disabled]="!isEdit"
+                                        mode="decimal" name="parValue" min="0"
+                                        [(ngModel)]="issuerDetail.businessTurnover"
+                                        locale="de-DE">
+                                    </p-inputNumber>
+                                </div>
+                            </div>
+                            <div class="col-12 md:col-3">
+                                <div class="field">
+                                    <label htmlFor="repPosition"> Lợi nhuận sau thuế </label>
+                                    <p-inputNumber
+                                        class="custom-input-disabled" 
+                                        [disabled]="!isEdit"
+                                        mode="decimal" name="parValue" min="0"
+                                        [(ngModel)]="issuerDetail.businessProfit"
+                                        locale="de-DE">
+                                    </p-inputNumber>
+                                </div>
+                            </div>
+                            <div class="col-12 md:col-3">
+                                <div class="field">
+                                    <label htmlFor="roa"> ROA </label>
+                                    <input  
+                                        class="custom-input-disabled"
+                                        [disabled]="!isEdit"    
+                                        type="number"
+                                        id="roa" 
+                                        pInputText
+                                        [pKeyFilter]="blockText"
+                                        [(ngModel)]="issuerDetail.roa" 
+                                    />
+                                </div>
+                            </div>
+                            <div class="col-12 md:col-3">
+                                <div class="field">
+                                    <label for="decisionDate"> ROE </label>
+                                    <input
+                                        class="custom-input-disabled"  
+                                        [disabled]="!isEdit"
+                                        type="number"
+                                        id="roe" 
+                                        pInputText
+                                        [pKeyFilter]="blockText"
+                                        [(ngModel)]="issuerDetail.roe" 
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </p-tabPanel>
+    </p-tabView>
+</div>

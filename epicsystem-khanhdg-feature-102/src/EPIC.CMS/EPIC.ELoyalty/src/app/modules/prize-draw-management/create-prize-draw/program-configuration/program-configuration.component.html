@@ -1,0 +1,243 @@
+<e-loading *ngIf="isLoading"></e-loading>
+
+<!-- Chi tiết -->
+<ng-container *ngIf="prizeDrawId">
+    <div class="card pl-3 mb-0">
+        <div class="text-right p-2 pb-0">
+            <p-button 
+                *ngIf="isGranted([this.PermissionLoyaltyConst.LoyaltyCT_TrungThuong_CauHinhChuongTrinh_ChinhSua])"
+                [label]="isEdit ? 'Lưu chỉnh sửa' : 'Chỉnh sửa'" [icon]="isEdit ? 'pi pi-save' : 'pi pi-pencil'" 
+                styleClass="p-button-sm"
+                (onClick)="changeEdit()"
+            >
+            </p-button>
+        </div>
+        <ng-container [ngTemplateOutlet]="configurationContent"></ng-container>
+    </div>
+</ng-container>
+<!-- Thêm mới -->
+<ng-container *ngIf="!prizeDrawId">
+    <p-card>
+        <ng-container [ngTemplateOutlet]="configurationContent"></ng-container>
+        <div class="grid grid-nogutter justify-content-between">
+            <p-button label="Quay lại" (onClick)="prevPage()" icon="pi pi-angle-left"></p-button>
+            <p-button label="Hoàn thành" (onClick)="complete()" [disabled]="" icon="pi pi-angle-right" iconPos="right"
+                styleClass="p-button-success"></p-button>
+        </div>
+    </p-card>
+</ng-container>
+
+<ng-template #configurationContent>
+    <div class="grid">
+        <div class="col-12">
+            <!-- <h5>Tạo kịch bản</h5> -->
+            <p-button 
+                *ngIf="prizeDrawProgramInfo?.luckyScenarios?.length == 0"
+                label="Thêm kịch bản" icon="pi pi-plus"
+                [style]="{ width: 'auto' }"
+                (onClick)="createLuckyScenario()" 
+                >
+            </p-button>
+        </div>
+        <div class="col-12">
+            <p-table 
+                #programConfiggurationTable 
+                [value]="prizeDrawProgramInfo.luckyScenarios"  
+                [columns]="cols"
+                [rowHover]="true" responsiveLayout="scroll" dataKey="id" [showCurrentPageReport]="true" [paginator]="false" 
+                [scrollable]="true" [scrollHeight]="prizeDrawProgramInfo.luckyScenarios.length ? 'auto' : '100px'" styleClass="custom-table" sortMode="multiple">
+                <ng-template pTemplate="header" let-columns>
+                    <tr>
+                        <th style="max-width: 7rem; min-width: 7rem;" pFrozenColumn alignFrozen="left" class="b-border-frozen-left"> ID</th>
+                        <ng-container *ngFor="let col of columns">
+                            <th [ngStyle]="{'max-width': !col?.isResize ? col?.width : '', 'min-width': col?.width}" [ngClass]="col.class">
+                                {{ col.header }}
+                            </th>
+                        </ng-container>
+                        <th style="max-width: 10rem; min-width: 10rem; justify-content: center;" pFrozenColumn alignFrozen="right" [frozen]="true" class="b-border-frozen-right"> Trạng thái </th>
+                        <th style="max-width: 3rem; min-width: 3rem; justify-content: center;" [frozen]="true" pFrozenColumn alignFrozen="right" class="b-table-actions"> 
+                            <!-- <i class="pi pi-cog" (click)="setColumn(cols, _selectedColumns)"></i> -->
+                        </th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-row let-rowIndex="rowIndex" let-columns="columns">
+                    <tr>
+                        <td style="max-width: 7rem; min-width: 7rem;" pFrozenColumn alignFrozen="left" class="b-border-frozen-left"> {{ row?.id }} </td>
+                        <td *ngFor="let col of columns" [ngStyle]="{'max-width': !col.isResize ? col?.width : '', 'min-width': col.width}" [ngClass]=" col.class " [alignFrozen]="col.alignFrozen" [col.pFrozenColumn]>
+                            <div [ngClass]="col.cutText" [title]="row[col.field]">
+                                {{ row[col.field]}}
+                            </div>						
+                        </td>
+                        <td style="max-width: 10rem; min-width: 10rem; justify-content:center;" pFrozenColumn alignFrozen="right" [frozen]="true" class="b-border-frozen-right"> 
+                            <p-tag
+                            styleClass="p-tag-{{ ActiveDeactiveConst.getInfo(row.status, 'severity') }}" 
+                            severity="{{ ActiveDeactiveConst.getInfo(row.status, 'severity') }}" 
+                            value="{{ ActiveDeactiveConst.getInfo(row.status, 'name') }}">
+                            </p-tag> 
+                        </td>
+                        <td style="max-width: 3rem; min-width: 3rem; justify-content: center;" pFrozenColumn alignFrozen="right" [frozen]="true" class="b-table-actions">
+                            <div class="flex">
+                                <i class="pi pi-ellipsis-h" (click)="menu.toggle($event)"></i>
+                                <p-menu 
+                                    #menu [popup]="true"class="button-actions"
+                                    [model]="listAction[rowIndex]" appendTo="body">
+                                </p-menu>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td colspan="7">Không có dữ liệu.</td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="loadingbody">
+                    <tr>
+                        <td colspan="7"> Đang tải dữ liệu ... </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+        <div class="col-12 mt-5">
+            <h5>Giới hạn tham gia chương trình</h5>
+            <div>
+                <p-checkbox
+                    [disabled]="(!isEdit && prizeDrawId)"
+                    class="col-12 checkbox"
+                    name="selectedColumns"
+                    [binary]="true"
+                    label="Cài đặt thời gian tham gia"
+                    inputId="selectAllCheckbox"
+                    (onChange)="changeTimeSetting($event)"
+                    [(ngModel)]="isJoinTimeSetting">
+                </p-checkbox>
+                <div *ngIf="isJoinTimeSetting">
+                    <p-checkbox
+                        [disabled]="(!isEdit && prizeDrawId)"
+                        class="pl-5 col-12 checkbox circle-check-box"
+                        name="selectedColumns"
+                        [binary]="true"
+                        label="Tính theo mốc thời gian"
+                        inputId="selectAllCheckbox"
+                        (onChange)="changeJoinTimeSetting($event, PrizeDrawManagement.TIMELINE)"
+                        [(ngModel)]="isTimeLine">
+                    </p-checkbox>
+                    <div *ngIf="isTimeLine">
+                        <div class="flex col-12 pl-0">
+                            <div class="col-3 pt-3 pl-0">
+                                <span class="pl-7">Lượt tham gia</span>
+                            </div>
+                            <div class="col-2 pl-0">
+                                <p-inputNumber 
+                                    [disabled]="(!isEdit && prizeDrawId)"
+                                    [(ngModel)]="prizeDrawProgramInfo.numberOfTurn" 
+                                    inputId="numberOfTurn" 
+                                    placeholder="Nhập lượt tham gia">
+                                </p-inputNumber>
+                            </div>
+                        </div>
+                        <div class="flex col-12 pl-0">
+                            <div class="col-3 pt-3 pl-0">
+                                <span class="pl-7">Thời gian bắt đầu</span>
+                            </div>
+                            <div class="col-2 pl-0">
+                                <e-calendar
+                                    [showTime]="true"
+                                    [disabled]="(!isEdit && prizeDrawId)"
+                                    inputId="startTurnDate"
+                                    [(value)]="prizeDrawProgramInfo.startTurnDate">
+                                </e-calendar>
+                            </div>
+                        </div>
+                        <div class="flex col-12 pl-0">
+                            <div class="col-3 pt-3 pl-0">
+                                <span class="pl-7">Reset lượt sau</span>
+                            </div>
+                            <div class="col-2 pl-0">
+                                <p-inputNumber 
+                                    [disabled]="(!isEdit && prizeDrawId)"
+                                    [(ngModel)]="prizeDrawProgramInfo.resetTurnQuantity" 
+                                    inputId="resetTurnQuantity" 
+                                    placeholder="Nhập số lượng">
+                                </p-inputNumber>
+                            </div>
+                            <div class="col-2">
+                                <form-dropdown
+                                    [isDisabled]="(!isEdit && prizeDrawId)"
+                                    [options]="PrizeDrawManagement.listTime"
+                                    [(ngModelValue)]="prizeDrawProgramInfo.resetTurnType"
+                                    [placeholder]="'Tuỳ chọn'"
+                                ></form-dropdown>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="isJoinTimeSetting">
+                    <p-checkbox
+                        [disabled]="(!isEdit && prizeDrawId)"
+                        class="pl-5 col-12 checkbox circle-check-box"
+                        name="selectedColumns"
+                        [binary]="true"
+                        label="Tính theo thời điểm khi khách hàng tham gia"
+                        inputId="selectAllCheckbox" (onChange)="changeJoinTimeSetting($event, PrizeDrawManagement.CUSTOMER_JOIN)"
+                        [(ngModel)]="isTimeCustomerJoin">
+                    </p-checkbox>
+                    <div *ngIf="isTimeCustomerJoin">
+                        <div class="flex col-12 pl-0">
+                            <div class="col-3 pt-3 pl-0">
+                                <span class="pl-7">Lượt tham gia</span>
+                            </div>
+                            <div class="col-2 pl-0">
+                                <p-inputNumber 
+                                    [disabled]="(!isEdit && prizeDrawId)"
+                                    [(ngModel)]="prizeDrawProgramInfo.numberOfTurn" 
+                                    inputId="numberOfTurn" 
+                                    placeholder="Nhập lượt tham gia">
+                                </p-inputNumber>
+                            </div>
+                        </div>
+                        <div class="flex col-12 pl-0">
+                            <div class="col-3 pt-3 pl-0">
+                                <span class="pl-7">Reset lượt sau</span>
+                            </div>
+                            <div class="col-2 pl-0">
+                                <p-inputNumber 
+                                    [disabled]="(!isEdit && prizeDrawId)"
+                                    [(ngModel)]="prizeDrawProgramInfo.resetTurnQuantity" 
+                                    inputId="resetTurnQuantity" 
+                                    placeholder="Nhập số lượng">
+                                </p-inputNumber>
+                            </div>
+                            <div class="col-2">
+                                <form-dropdown
+                                    [isDisabled]="(!isEdit && prizeDrawId)"
+                                    [options]="PrizeDrawManagement.listTime"
+                                    [(ngModelValue)]="prizeDrawProgramInfo.resetTurnType"
+                                    [placeholder]="'Tuỳ chọn'"
+                              ></form-dropdown>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <p-checkbox
+                    [disabled]="(!isEdit && prizeDrawId)"
+                    class="col-3 checkbox"
+                    name="selectedColumns"
+                    [binary]="true"
+                    label="Lượt tham gia tối đa của mỗi IP"
+                    inputId="selectAllCheckbox"
+                    [(ngModel)]="isMaxNumberOfTurnByIp">
+                </p-checkbox>
+                <p-inputNumber 
+                    [disabled]="!(isMaxNumberOfTurnByIp && (isEdit || !prizeDrawId))" 
+                    [(ngModel)]="prizeDrawProgramInfo.maxNumberOfTurnByIp" 
+                    inputId="isMaxNumberOfTurnByIp" suffix=" /lượt"
+                    placeholder="    /lượt">
+                </p-inputNumber>
+            </div>
+        </div>
+    </div>
+</ng-template>
+

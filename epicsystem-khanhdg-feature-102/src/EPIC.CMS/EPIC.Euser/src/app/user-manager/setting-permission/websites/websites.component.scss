@@ -1,0 +1,56 @@
+::ng-deep .b-permission-website-dialog {
+    .p-dialog-content {
+        padding-left: 0;
+        .card {
+            padding: 0;
+            .permission-tree {
+                // height: 75vh;
+                border: none;
+                padding-left: 0;
+                .p-treenode {
+                    .p-treenode-content{
+                        .p-tree-toggler:focus{
+                            outline-style: none;
+                            box-shadow: none;
+                            border-color: transparent;
+                        }
+                        //
+                        &:focus {
+                            box-shadow: none;
+                        }
+                        &.p-highlight {
+                            background-color: white !important;
+                            color: black !important;
+                            box-shadow: unset !important;
+                            .p-treenode-icon {
+                                color: black !important;
+                            }
+                            button {
+                                color: #525B73 !important;
+                            }
+                        }
+
+                    }
+                }  
+            }
+        }
+    }
+    // custom style srcoll bar
+    ::-webkit-scrollbar {
+        width: 6px !important; //scroll-y
+        height: 10px !important; //scroll-x
+    }
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+        box-shadow: inset 0 0 5px rgb(231, 231, 231); 
+        // border-radius: 5px;
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+        background: #b3b3b3; 
+        border-radius: 10px;
+    }
+}
+

@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+	<GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+	<NoWarn>1701;1702;1591</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+	<NoWarn>1701;1702;1591</NoWarn>
+  </PropertyGroup>
+	
+  <ItemGroup>
+    <None Remove="signing-key.jwk" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="signing-key.jwk">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\EPIC.Libraries\EPIC.UnitTestsBase\EPIC.UnitTestsBase.csproj" />
+    <ProjectReference Include="..\..\EPIC.Libraries\EPIC.WebAPIBase\EPIC.WebAPIBase.csproj" />
+    <ProjectReference Include="..\EPIC.LoyaltyDomain\EPIC.LoyaltyDomain\EPIC.LoyaltyDomain.csproj" />
+    <ProjectReference Include="..\EPIC.LoyaltyEntities\EPIC.LoyaltyEntities\EPIC.LoyaltyEntities.csproj" />
+  </ItemGroup>
+
+</Project>

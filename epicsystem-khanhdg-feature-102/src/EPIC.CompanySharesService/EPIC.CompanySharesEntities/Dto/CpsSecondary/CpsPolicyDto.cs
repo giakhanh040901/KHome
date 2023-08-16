@@ -1,0 +1,35 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace EPIC.CompanySharesEntities.Dto.CpsSecondary
+{
+    public class CpsPolicyDto
+    {
+        public int PolicyId { get; set; }
+        public int TradingProviderId { get; set; }
+        public int SecondaryId { get; set; }
+        public string Code { get; set; }
+        public string Name { get; set; }
+        public int? Type { get; set; }
+        public string InvestorType { get; set; }
+        public decimal? IncomeTax { get; set; }
+        public decimal? TransferTax { get; set; }
+        public decimal? Classify { get; set; }
+        public decimal? MinMoney { get; set; }
+        public string IsTransfer { get; set; }
+        public string Status { get; set; }
+        public DateTime? CreatedDate { get; set; }
+        public string CreatedBy { get; set; }
+        public string ModifiedBy { get; set; }
+        public DateTime? ModifiedDate { get; set; }
+        public string Deleted { get; set; }
+        public string IsShowApp { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
+        public string Description { get; set; }
+        public List<CpsPolicyDetailDto> PolicyDetails { get; set; }
+    }
+}

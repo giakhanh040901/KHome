@@ -1,0 +1,77 @@
+<div class="col-12" style="padding-bottom: 70px">
+  <div class="card p-0 mb-0">
+    <div class="p-fluid p-formgrid grid">
+      <div class="flex w-full">
+        <div class="col-6">
+          <form-input
+            [label]="'Tên cấu trúc'"
+            [isRequired]="true"
+            [(ngModelValue)]="crudDTO.name"
+            [placeholder]="'Nhập tên cấu trúc'"
+            [isDisabled]="isDisable"
+          ></form-input>
+        </div>
+      </div>
+      <div class="w-full">
+        <ng-container *ngFor="let item of crudDTO.contractCodeItem; let i = index">
+          <contract-code-item
+            [index]="i"
+            [isDisabled]="isDisable"
+            [(dataSource)]="crudDTO.contractCodeItem[i]"
+            (_onChange)="genContractCodeStructure()"
+            (_onRemove)="remove($event, i); genContractCodeStructure()"
+          ></contract-code-item>
+        </ng-container>
+      </div>
+      <div class="flex w-full" *ngIf="!isDisable">
+        <div class="p-2">
+          <form-button [icon]="'pi pi-plus'" [label]="'Thêm giá trị'" (_onClick)="add($event)"></form-button>
+        </div>
+      </div>
+      <div class="flex w-full">
+        <div class="col-12">
+          <form-input
+            [label]="'Ghi chú'"
+            [(ngModelValue)]="crudDTO.note"
+            [placeholder]="'Nhập ghi chú'"
+            [isDisabled]="isDisable"
+          ></form-input>
+        </div>
+      </div>
+      <div class="flex w-full">
+        <div class="col-12">
+          <form-input
+            [label]="'Cấu trúc mã hợp đồng'"
+            [(ngModelValue)]="crudDTO.contractCodeStructure"
+            [isDisabled]="true"
+          ></form-input>
+        </div>
+      </div>
+      <div class="flex w-full">
+        <div class="col-12">
+          <form-input
+            [label]="'Mã hợp đồng'"
+            [(ngModelValue)]="crudDTO.contractCode"
+            [isDisabled]="true"
+          ></form-input>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="!isDisable" class="p-dialog-footer" style="width: 100%; position: fixed; left: 0; bottom: 0">
+    <form-button
+      [isTypeRipple]="true"
+      [classButton]="'p-button-text p-confirm-dialog-reject'"
+      [label]="'Hủy'"
+      [icon]="'pi pi-times'"
+      (_onClick)="close($event)"
+    ></form-button>
+    <form-button
+      [isTypeRipple]="true"
+      [classButton]="'p-button-text p-confirm-dialog-approve'"
+      [label]="'Lưu'"
+      [icon]="'pi pi-check'"
+      (_onClick)="save($event)"
+    ></form-button>
+  </div>
+</div>

@@ -1,0 +1,55 @@
+.b-order-contract.b-actions>* {
+    margin-left: 1rem;
+}
+
+::ng-deep .ng2-pdf-viewer-container {
+    // overflow-x: unset !important;
+}
+
+::ng-deep .b-view-pdf {
+    .p-dialog-header {
+        padding: 0.5rem;
+    }
+
+    .p-dialog-content {
+        padding: 0px;
+    }
+}
+
+::ng-deep {
+    .updateBtn button {
+        padding: 0px;
+        gap: 24px;
+        width: 190px;
+        height: 40px;
+        background: #F6F6FE;
+        border: 1px solid #E6E6E6;
+        border-radius: 8px;
+    }
+    .updateBtn button:hover {
+        background: #F6F6FE !important;
+        color: #ffffff;
+        border-color: #ccc !important;
+    }
+
+    .updateBtn button:active {
+        background: #F6F6FE !important;
+        color: #ffffff;
+        border-color: #ccc !important;
+    }
+
+    .updateBtn>button>.p-button-label {
+
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 24px;
+        display: flex;
+        align-items: center;
+        color: #212633;
+    }
+
+    .updateBtn>button>.p-button-icon-left {
+        color: #212633;
+
+    }
+}

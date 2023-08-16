@@ -1,0 +1,345 @@
+<div class="grid ml-0 mr-0 mt-0">
+	<div class="col-12">
+		<div class="card b-list">
+			<div class="p-fluid p-formgrid grid b-header">
+				<div class="col-12 md:col-7 b-title">
+					<h4 style="display: inline">Lịch sử tích lũy</h4>
+				</div>
+			</div>
+			<p-toast></p-toast>
+			<p-confirmDialog
+				[style]="{ width: 'auto' }"
+				[baseZIndex]="10000"
+			></p-confirmDialog>
+			<!-- Từ {first} đến {last} trong tổng {totalRecords} bản ghi -->
+			<p-table
+				#garnerHistoryTable
+				[value]="rows"
+				[columns]="_selectedColumns"
+				styleClass="custom-table"
+				[loading]="isLoading"
+				[rowHover]="true"
+				responsiveLayout="scroll"
+				dataKey="code"
+				[showCurrentPageReport]="true"
+				[paginator]="false"
+				[scrollable]="true"
+				[scrollHeight]="getTableHeight(60)"
+				sortMode="multiple"
+				(onSort)="onSort($event)"
+				[customSort]="true"
+			>
+				<ng-template pTemplate="caption">
+					<div class="flex">
+						<div class="field mb-0">
+							<div class="flex" style="flex-wrap: wrap">
+								<span
+									class="block p-input-icon-left p-float-label b-custom mr-1 p-inputtext-filter"
+								>
+									<i class="pi pi-search"></i>
+									<input
+										pInputText
+										type="text"
+										placeholder="{{
+											OrderConst.getInfoFieldFilter(
+												dataFilter.fieldFilter,
+												'placeholder'
+											)
+										}}"
+										[(ngModel)]="keyword"
+										(input)="changeKeyword($event)"
+										[style]="{ 'min-width': '20rem' }"
+									/>
+									<label class="font-normal" for="">Tìm kiếm</label>
+								</span>
+								<span class="p-float-label b-custom ml-2 mr-1">
+									<p-dropdown
+										id="fieldFilter"
+										[style]="{ width: '16rem' }"
+										[options]="OrderConst.fieldFilters"
+										name="fieldFilter"
+										optionLabel="name"
+										optionValue="field"
+										[(ngModel)]="dataFilter.fieldFilter"
+										[autoDisplayFirst]="true"
+										(onChange)="changeFieldFilter()"
+									>
+									</p-dropdown>
+									<label class="font-normal" for="fieldFilter"
+										>Tìm kiếm theo</label
+									>
+								</span>
+								<!-- <span class="p-float-label b-custom ml-2">
+                                    <p-dropdown
+                                        class="ml-2" 
+                                        id="dropdownStatus" 
+                                        [style]="{'width':'16rem'}" 
+                                        [options]="statusSearch" optionLabel="name" optionValue="code"
+                                        [(ngModel)]="status"
+                                        (onChange)="changeStatus($event.value)">
+                                        </p-dropdown>   
+                                    <label class="font-normal" for="dropdownStatus">Trạng thái</label>
+                                </span> -->
+
+								<span class="p-float-label b-custom ml-2">
+									<p-dropdown
+										class="ml-2"
+										id="dropdownStatus"
+										[style]="{ width: '16rem' }"
+										[options]="sources"
+										optionLabel="name"
+										optionValue="code"
+										[(ngModel)]="dataFilter.source"
+										(onChange)="setPage($event.value)"
+									>
+									</p-dropdown>
+									<label class="font-normal" for="dropdownStatus"
+										>Loại hình</label
+									>
+								</span>
+
+								<span class="p-float-label b-custom ml-2 mr-3">
+									<p-dropdown
+										class="ml-2"
+										emptyMessage="Không có dữ liệu"
+										[style]="{ width: '16rem' }"
+										[options]="orderSources"
+										optionLabel="name"
+										optionValue="code"
+										(onChange)="setPage($event.value)"
+										[(ngModel)]="dataFilter.orderSource"
+										[autoDisplayFirst]="true"
+									>
+									</p-dropdown>
+									<label class="font-normal">Nguồn đặt lệnh</label>
+								</span>
+
+								<span class="p-float-label b-custom">
+									<p-dropdown
+										[options]="distributions"
+										[style]="{ width: '20rem' }"
+										[(ngModel)]="dataFilter.distributionId"
+										optionLabel="garnerProduct.name"
+										optionValue="id"
+										placeholder="Tất cả"
+										[showClear]="true"
+										(onChange)="changeDistribution($event.value)"
+										[autoDisplayFirst]="false"
+									>
+									</p-dropdown>
+									<label class="font-normal" for="dropdownStatus"
+										>Gói tích lũy</label
+									>
+								</span>
+								<span class="p-float-label b-custom">
+									<p-calendar
+										inputId="issuerDate"
+										placeholder="dd/mm/yyyy"
+										dateFormat="dd/mm/yy"
+										[style]="{ width: '16rem' }"
+										readonlyInput="true"
+										[(ngModel)]="dataFilter.settlementDate"
+										appendTo="body"
+										[showIcon]="true"
+										locale="vi"
+										showButtonBar="true"
+										(onSelect)="setPage($event)"
+										(onClearClick)="setPage()"
+									>
+									</p-calendar>
+									<label class="font-normal">Ngày tất toán</label>
+								</span>
+							</div>
+						</div>
+					</div>
+				</ng-template>
+				<ng-template pTemplate="header" let-columns>
+					<tr>
+						<th
+							pSortableColumn="id"
+							style="max-width: 5rem; min-width: 5rem; right: 42px"
+							pFrozenColumn
+							alignFrozen="left"
+							class="b-border-frozen-left"
+						>
+							#ID <p-sortIcon field="id"></p-sortIcon>
+						</th>
+						<!-- <th style="min-width: 12rem;" pFrozenColumn alignFrozen="left"> Dự án </th> -->
+						<ng-container *ngFor="let col of columns">
+							<th
+								*ngIf="col.isSort"
+								pSortableColumn="{{ col.field }}"
+								[ngStyle]="{
+									'max-width': !col?.isResize ? col?.width : '',
+									'min-width': col?.width
+								}"
+								[ngClass]="col.class"
+							>
+								{{ col.header }}
+								<p-sortIcon
+									field="{{ col.field }}"
+								></p-sortIcon>
+							</th>
+							<th
+								*ngIf="!col.isSort"
+								[ngStyle]="{
+									'max-width': !col?.isResize ? col?.width : '',
+									'min-width': col?.width
+								}"
+								[ngClass]="col.class"
+							>
+								{{ col.header }}
+							</th>
+						</ng-container>
+						<th
+							style="
+								max-width: 8.1rem;
+								min-width: 8.1rem;
+								justify-content: left;
+							"
+							pFrozenColumn
+							alignFrozen="right"
+							[frozen]="true"
+							class="b-border-frozen-right"
+						>
+							Trạng thái
+						</th>
+						<th
+							style="max-width: 3rem; min-width: 3rem; justify-content: center"
+							pFrozenColumn
+							[frozen]="true"
+							alignFrozen="right"
+							class="b-table-actions"
+						>
+							<i
+								class="pi pi-cog"
+								(click)="setColumn(cols, _selectedColumns)"
+							></i>
+						</th>
+					</tr>
+				</ng-template>
+				<ng-template
+					pTemplate="body"
+					let-row
+					let-rowIndex="rowIndex"
+					let-columns="columns"
+				>
+					<tr>
+						<td
+							style="max-width: 5rem; min-width: 5rem"
+							pFrozenColumn
+							alignFrozen="left"
+							class="b-border-frozen-left"
+						>
+							{{ row?.id }}
+						</td>
+						<!-- <td style="min-width: 12rem;" pFrozenColumn alignFrozen="left">
+                            <div class="b-cut-text-12" [title]="row?.project?.invName">
+                                {{ row?.project?.invName }}
+                            </div>
+                        </td> -->
+						<td
+							*ngFor="let col of columns"
+							[ngStyle]="{
+								'max-width': !col.isResize ? col?.width : '',
+								'min-width': col.width
+							}"
+							[ngClass]="col.class"
+							[alignFrozen]="col.alignFrozen"
+							[col.pFrozenColumn]
+						>
+							<div
+								*ngIf="!['source', 'orderer'].includes(col?.field)"
+								[ngClass]="col.cutText"
+								[title]="row[col.field]"
+							>
+								{{ row[col.field] }}
+							</div>
+							<p-tag
+								*ngIf="col?.field == 'source'"
+								styleClass="p-tag-{{
+									OrderConst.getInfoSource(row.source, 'severity')
+								}}"
+								severity="{{
+									OrderConst.getInfoSource(row.source, 'severity')
+								}}"
+								value="{{ OrderConst.getInfoSource(row.source, 'name') }}"
+							>
+							</p-tag>
+							<!--  -->
+							<p-tag
+								*ngIf="col?.field == 'orderer'"
+								styleClass="p-tag-{{
+									OrderConst.getInfoOrderer(row.orderer, 'severity')
+								}}"
+								severity="{{
+									OrderConst.getInfoOrderer(row.orderer, 'severity')
+								}}"
+								value="{{ OrderConst.getInfoOrderer(row.orderer, 'name') }}"
+							>
+							</p-tag>
+						</td>
+						<td
+							style="
+								max-width: 8.1rem;
+								min-width: 8.1rem;
+								justify-content: left;
+							"
+							pFrozenColumn
+							alignFrozen="right"
+							[frozen]="true"
+							class="b-border-frozen-right"
+						>
+							<p-tag
+								styleClass="p-tag-{{
+									OrderConst.getSeverityStatus(row.status)
+								}}"
+								severity="{{ OrderConst.getSeverityStatus(row.status) }}"
+								value="{{ OrderConst.getNameStatus(row.status) }}"
+							></p-tag>
+						</td>
+						<td
+							style="max-width: 3rem; min-width: 3rem; justify-content: center"
+							pFrozenColumn
+							alignFrozen="right"
+							[frozen]="true"
+							class="b-table-actions"
+						>
+							<div class="flex">
+								<!-- <button type="button" pButton icon="pi pi-ellipsis-h" (click)="menu.toggle($event)"></button> -->
+								<i class="pi pi-ellipsis-h" (click)="menu.toggle($event)"></i>
+								<p-menu
+									#menu
+									[popup]="true"
+									class="button-actions"
+									[model]="listAction[rowIndex]"
+									appendTo="body"
+								>
+								</p-menu>
+							</div>
+						</td>
+					</tr>
+				</ng-template>
+				<ng-template pTemplate="emptymessage">
+					<tr>
+						<td colspan="7">Không có dữ liệu.</td>
+					</tr>
+				</ng-template>
+				<ng-template pTemplate="loadingbody">
+					<tr>
+						<td colspan="7">Đang tải dữ liệu ...</td>
+					</tr>
+				</ng-template>
+			</p-table>
+			<p-paginator
+				[rows]="page.pageSize"
+				[totalRecords]="page.totalItems"
+				[rowsPerPageOptions]="page.perPageOptions"
+				currentPageReportTemplate="Tất cả {{ page.totalItems }} dòng"
+				showCurrentPageReport="true"
+				(onPageChange)="setPage($event)"
+			>
+			</p-paginator>
+		</div>
+	</div>
+</div>

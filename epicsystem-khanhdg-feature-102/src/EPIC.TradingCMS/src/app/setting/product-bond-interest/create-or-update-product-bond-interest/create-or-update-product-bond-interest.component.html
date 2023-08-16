@@ -1,0 +1,59 @@
+<form class="form-horizontal" autocomplete="off" #createModal="ngForm" (ngSubmit)="save()" [busy]="isLoading">
+    <abp-modal-header [title]="title" (onCloseClick)="bsModalRef.hide()"></abp-modal-header>
+    <div class="grid-margin stretch-card mb-0">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="form-group required col-md-6">
+                        <label for="bondPolicyId"> Chính sách ( <span class="field-required">*</span> ) </label>
+                        <ng-select type="number" name="bondPolicyId" id="bondPolicyId" required
+                            [notFoundText]="'Không có dữ liệu'" maxlength="22" #bondPolicyId
+                            placeholder="Mã gói trái phiếu" [(ngModel)]="productBondInterest.bondPolicyId"
+                            [multiple]="false" [clearable]="false" #bondPolicyIdModel="ngModel" #bondPolicyIdEl>
+                            <ng-option *ngFor="let item of productPolicies" [value]="item.bondPolicyId" [title]="item.policyName">{{ item.policyName }}</ng-option>
+                        </ng-select>
+                        <abp-validation-summary [control]="bondPolicyIdModel" [controlEl]="bondPolicyIdEl"></abp-validation-summary>
+                    </div>
+                    <div class="form-group required col-md-6">
+                        <label for="interestRate"> Lãi suất (%) </label>
+                        <input type="number" class="form-control form-control-sm" name="interestRate" id="interestRate" #interestRate
+                            placeholder="Lãi suất" maxlength="22" [(ngModel)]="productBondInterest.interestRate" #interestRateModel="ngModel" #interestRateEl/>
+                        <abp-validation-summary [control]="interestRateModel" [controlEl]="interestRateEl"></abp-validation-summary>
+                    </div>
+                    <div class="form-group required col-md-6">
+                        <label for="interestPeriod"> Kỳ hạn trả lãi </label>
+                        <input type="number" class="form-control form-control-sm" name="interestPeriod" id="interestPeriod" #interestPeriod
+                            placeholder="Kỳ hạn trả lãi" maxlength="22" [(ngModel)]="productBondInterest.interestPeriod" #interestPeriodModel="ngModel" #interestPeriodEl/>
+                        <abp-validation-summary [control]="interestPeriodModel" [controlEl]="interestPeriodEl"></abp-validation-summary>
+                    </div>
+                    <div class="form-group required col-md-6">
+                        <label for="interestPeriodUnit"> Đơn vị kỳ hạn trả lãi </label>
+                        <ng-select name="interestPeriodUnit" id="interestPeriodUnit" [notFoundText]="'Không có dữ liệu'" placeholder="Đơn vị kỳ hạn trả lãi"
+                            #interestPeriodUnit
+                            [(ngModel)]="productBondInterest.interestPeriodUnit"
+                            [multiple]="false" [clearable]="false"
+                            #interestPeriodUnitModel="ngModel" #interestPeriodUnitEl>
+                            <ng-option *ngFor="let item of interestPeriodUnits" [value]="item.code" [title]="item.name">{{ item.name }}</ng-option>
+                        </ng-select>
+                        <abp-validation-summary [control]="interestPeriodUnitModel" [controlEl]="interestPeriodUnitEl"></abp-validation-summary>
+                    </div>
+                    <div class="form-group required col-md-6">
+                        <label for="feeRate"> Lệ phí </label>
+                        <input type="number" class="form-control form-control-sm" name="feeRate" id="feeRate" placeholder="Lệ phí"
+                            #feeRate
+                            maxlength="22" [(ngModel)]="productBondInterest.feeRate" #feeRateModel="ngModel" #feeRateEl/>
+                        <abp-validation-summary [control]="feeRateModel" [controlEl]="feeRateEl"></abp-validation-summary>
+                    </div>
+                    <div class="form-group required col-md-12">
+                        <label for="description"> Mô tả </label>
+                        <textarea #description [(ngModel)]="productBondInterest.description" rows="2"
+                        name="description" class="form-control form-control-sm" id="description" placeholder="Mô tả ..." >
+                        </textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <abp-modal-footer [cancelDisabled]="saving" [saveDisabled]="!createModal.form.valid || saving"
+        (onCancelClick)="bsModalRef.hide()"></abp-modal-footer>
+</form>

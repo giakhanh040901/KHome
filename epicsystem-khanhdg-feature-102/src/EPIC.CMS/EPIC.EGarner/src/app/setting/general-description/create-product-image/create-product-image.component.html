@@ -1,0 +1,72 @@
+<p-toast [baseZIndex]="10000" key="contractPolicyTemp"></p-toast>
+<app-loading-page *ngIf="isLoadingPage"></app-loading-page>
+
+<div class="grid p-fluid">
+    <ng-container>
+
+        <div class="col-12 md:col-12">
+            <div class="field mb-0">
+                <label htmlFor="position">Vị trí <span class="required-field"> * </span> </label>
+                <p-dropdown 
+                    class="b-disabled"
+                    appendTo="body" [options]="GeneralDescriptionConst.positionList"
+                    dataValue="code" optionValue="code" name="position" optionLabel="name"
+                    [disabled]="isView"
+                    [(ngModel)]="image.position"
+                    (onChange)="changePosition($event.value)">
+                </p-dropdown>
+            </div>
+        </div>
+
+        <div style="margin-top: 1rem;" class="field col-9">
+            <span class="field mb-0">
+                <label htmlFor="path">Tên file <span class="required-field"> * </span> </label>
+                <input type="text" id="contractTempUrl" name="contractTempUrl" disabled pInputText [value]="image.path || ''" required autofocus/>
+            </span>
+        </div>
+        <div style="margin-top: 1.5rem;" class="field col-3">
+            <span class="field mb-0">
+                <label htmlFor="path"></label>
+                <p-fileUpload *ngIf="!isView" name="demo[]" accept="image/*" [customUpload]="true" class="custom-file-upload"
+                    chooseIcon="pi pi-cloud-upload" (uploadHandler)="onUpload($event)"
+                    [auto]="true" chooseLabel="Chọn file">
+                </p-fileUpload>
+            </span>
+        </div>
+
+        <div style="margin-top: 1rem;" class="field col-12">
+            <span class="field mb-0">
+                <label htmlFor="path">Ảnh <span class="required-field"> * </span> </label>
+            </span>
+        </div>
+        <div style="display: flex; justify-content: center;" class="field col-12">
+            <p-image *ngIf="image.path"src="{{baseUrl}}/{{ image.path }}" alt="Image" width="400"></p-image>
+        </div>
+        
+            <!-- <div class="col-12 md:col-9">
+                <div class="field mb-0">
+                    <label for="path">Tên file <span class="required-field"> * </span></label>
+                    <span class="p-float-label">
+                        <input type="text" id="path" name="path" disabled pInputText [value]="image?.path || '' " required autofocus/>
+                    </span>
+                </div>
+            </div>
+            <div class="col-12 md:col-3">
+                <p-fileUpload name="demo[]" accept="image/*" [customUpload]="true" class="custom-file-upload"
+                    chooseIcon="pi pi-cloud-upload" (uploadHandler)="onUpload($event)"
+                    [auto]="true" chooseLabel="Chọn file">
+                </p-fileUpload>
+            </div> -->
+
+
+   
+        
+    </ng-container>
+</div>
+<div class="p-dialog-footer" style="width: 100%; position: fixed; left: 0; bottom: 0;">
+    <button pButton pRipple label="Hủy" icon="pi pi-times" class="p-button-text p-confirm-dialog-reject" (click)="close()"></button>
+    <button pButton pRipple label="Lưu" icon="pi pi-check" class="p-button-text p-confirm-dialog-approve" (click)="save()"></button>
+    <!-- || !validForm() -->
+</div>
+
+         

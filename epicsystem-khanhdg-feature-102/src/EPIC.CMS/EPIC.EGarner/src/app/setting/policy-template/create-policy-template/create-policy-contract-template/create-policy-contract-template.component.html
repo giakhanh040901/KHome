@@ -1,0 +1,88 @@
+<p-toast [baseZIndex]="10000" key="contractPolicyTemp"></p-toast>
+<div class="grid p-fluid">
+    <ng-container>
+        <div class="col-12">
+            <!-- <h6 class="mb-2 mt-0">Thông tin mẫu hợp đồng </h6>
+            <hr class="m-0"> -->
+        </div>
+        <div class="col-12 md:col-4">
+            <div class="field mb-0">
+                <label htmlFor="code">Mã HĐ <span class="required-field"> * </span>
+                </label>
+                <input type="text" id="code" name="code" pInputText
+                    [(ngModel)]="contractTemplateTemps.code" maxlength="256"
+                    [ngClass]="{'ng-invalid ng-dirty' : submitted && !contractTemplateTemps.code}">
+            </div>
+        </div>
+        <div class="col-12 md:col-8">
+            <div class="field mb-0">
+                <label htmlFor="name">Tên HĐ <span class="required-field"> * </span>
+                </label>
+                <input type="text" id="name" name="name" pInputText
+                    [(ngModel)]="contractTemplateTemps.name" maxlength="256"
+                    [ngClass]="{'ng-invalid ng-dirty' : submitted && !contractTemplateTemps.name}">
+            </div>
+        </div>
+        
+        <div class="col-12 md:col-4">
+            <div class="field mb-0">
+                <label htmlFor="periodType"> Loại hợp đồng mẫu <span class="required-field"> * </span></label>
+                <p-dropdown optionLabel="name" optionValue="code" appendTo="body"
+                    class="custom-input-disabled" [autoDisplayFirst]="false"
+                    [options]="PolicyDetailTemplateConst.typePolicyContractTemplate"
+                    [(ngModel)]="contractTemplateTemps.type"
+                    [ngClass]="{'ng-invalid ng-dirty' : submitted && !contractTemplateTemps.periodType}">
+                </p-dropdown>
+            </div>
+        </div>
+        <div class="col-12 md:col-4">
+            <div class="field mb-0">
+                <label htmlFor="displayType"> Loại hợp đồng mẫu <span class="required-field"> * </span></label>
+                <p-dropdown optionLabel="name" optionValue="code" appendTo="body"
+                    class="custom-input-disabled" [autoDisplayFirst]="false"
+                    [options]="PolicyDetailTemplateConst.displayTypePolicyContractTemplate"
+                    [(ngModel)]="contractTemplateTemps.displayType"
+                    [ngClass]="{'ng-invalid ng-dirty' : submitted && !contractTemplateTemps.displayType}">
+                </p-dropdown>
+            </div>
+        </div>
+        <div class="col-12 md:col-4">
+            <div class="field mb-0">
+                <label htmlFor="contractType"> Loại file <span class="required-field"> * </span></label>
+                <p-dropdown optionLabel="name" optionValue="code" appendTo="body"
+                    class="custom-input-disabled" [autoDisplayFirst]="false"
+                    [options]="PolicyDetailTemplateConst.contractTypePolicyContractTemplate"
+                    [(ngModel)]="contractTemplateTemps.contractType"
+                    [ngClass]="{'ng-invalid ng-dirty' : submitted && !contractTemplateTemps.contractType}">
+                </p-dropdown>
+            </div>
+        </div>
+        <div class="col-12 md:col-12">
+            <div class="field mb-0">
+                <p-fileUpload 
+                            name="demo[]" accept=".pdf,.doc,.docx" [customUpload]="true" class="custom-file-upload"
+                            chooseIcon="pi pi-cloud-upload" 
+                            (uploadHandler)="myUploader($event)"
+                            [auto]="true"
+                            chooseLabel="Chọn file upload">
+                </p-fileUpload>
+            </div>
+        </div>
+        <div class="col-12 md:col-12">
+            <div class="field mb-0">
+                <span class="p-float-label">
+                    <input type="text" id="contractTempUrl" name="contractTempUrl" disabled pInputText [value]="contractTemplateTemps.contractTempUrl || ''" required autofocus/>
+                    <label for="contractTempUrl">Đường dẫn file mẫu</label>
+                </span>
+            </div>
+        </div>
+        
+    </ng-container>
+</div>
+<div class="p-dialog-footer" style="width: 100%; position: fixed; left: 0; bottom: 0;">
+    <button pButton pRipple label="Hủy" icon="pi pi-times" class="p-button-text p-confirm-dialog-reject" (click)="close()"></button>
+    <button pButton pRipple label="Lưu" icon="pi pi-check" class="p-button-text p-confirm-dialog-approve" [disabled]="submitted " (click)="save()"></button>
+    <!-- || !validForm() -->
+</div>
+
+         

@@ -1,0 +1,39 @@
+<div
+  class="layout-wrapper h-full"
+  (click)="onLayoutClick()"
+  [ngClass]="{
+    'layout-horizontal': app.horizontalMenu,
+    'layout-wrapper-static': staticMenuActive,
+    'layout-rightpanel-active': rightPanelActive,
+    'layout-topbar-mobile-active': topbarMobileMenuActive,
+    'layout-megamenu-mobile-active': megaMenuMobileActive,
+    'layout-sidebar-mobile-active': menuMobileActive,
+    'p-input-filled': app.inputStyle === 'filled',
+    'p-ripple-disabled': !app.ripple
+  }"
+  [class]="app.menuColor"
+>
+  <app-menu></app-menu>
+  <p-toast></p-toast>
+  <p-confirmDialog [style]="{ width: 'auto' }" [baseZIndex]="10000"></p-confirmDialog>
+  <spinner-loading></spinner-loading>
+  <div class="layout-main h-full">
+    <app-topbar></app-topbar>
+
+    <!-- <app-rightpanel></app-rightpanel> -->
+
+    <app-breadcrumb></app-breadcrumb>
+
+    <div class="layout-content custom-layout" [style.height]="'calc(100% - 46px)'">
+      <router-outlet></router-outlet>
+    </div>
+
+    <!-- <app-footer></app-footer> -->
+
+    <!-- <app-config></app-config> -->
+
+    <div class="layout-main-mask"></div>
+
+    <div class="layout-config-mask" *ngIf="configActive" [@mask-anim]="'visible'"></div>
+  </div>
+</div>

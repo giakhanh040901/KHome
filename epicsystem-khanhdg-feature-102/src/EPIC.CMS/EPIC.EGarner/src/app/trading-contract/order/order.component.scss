@@ -1,0 +1,11 @@
+:host ::ng-deep b {
+    display: block
+}
+
+:host ::ng-deep .p-card-body {
+    padding: 2rem;
+}
+
+.custom-button-height {
+    height: 34px;
+}

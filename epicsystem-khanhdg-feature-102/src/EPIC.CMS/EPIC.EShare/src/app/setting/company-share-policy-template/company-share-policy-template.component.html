@@ -1,0 +1,807 @@
+<div *ngIf="isGranted([PermissionCompanyShareConst.CompanyShareCaiDat_CSM_DanhSach])" class="grid ml-0 mr-0 mt-0">
+    <div class="col-12">
+        <div class="card b-list">
+            <div class=" flex p-fluid p-formgrid grid b-header">
+                <div class="col-12 md:col-7 b-title">
+                    <h4 style="display:inline"> Chính sách mẫu </h4>
+                </div>
+                <div class="col-12 md:col-5 b-action">
+                    <button *ngIf="isGranted([PermissionCompanyShareConst.CompanyShareCaiDat_CSM_ThemChinhSach])" pButton pRipple label="Thêm mới" icon="pi pi-plus" class="p-button-success mr-2" (click)="create()"></button>
+                </div>
+            </div>
+            
+            <p-toast></p-toast>
+            <p-table  
+                #companySharePolicyTemplateTable 
+                [value]="rows" 
+                [columns]="_selectedColumns"
+                [loading]="isLoading" [rowHover]="true" [showCurrentPageReport]="true" [paginator]="false" 
+                (onPageChange)="setPage($event)" responsiveLayout="scroll" dataKey="companySharePolicyTempId"
+                [scrollable]="true" selectionMode="multiple"  scrollHeight="{{(screenHeight*0.65) + 'px'}}" styleClass="custom-table p-datatable-customers">
+                <ng-template pTemplate="caption">
+                    <div class="flex justify-content-between flex-column sm:flex-row">
+                        <div class="flex justify-content-between flex-column sm:flex-row">
+                        <span class="block mt-2 md:mt-0 p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" placeholder="Tìm kiếm..." [(ngModel)]="keyword"
+                                (input)="changeKeyword($event)" />
+                        </span>
+                        <span class="p-float-label b-custom ml-1">
+                            <p-dropdown id="dropdownStatus" [style]="{'width':'12rem'}" [options]="statusSearch" optionLabel="name"
+                            optionValue="code" [(ngModel)]="status" class=" ml-2"
+                            placeholder="Chọn trạng thái"
+                            (onChange)="changeStatus($event.value)">
+                            </p-dropdown>   
+                            <label class="font-normal ml-2" for="dropdownStatus">Trạng thái</label>
+                        </span>
+                        </div>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header" let-columns>
+                    <tr>
+                        <th style="max-width: 5rem; min-width: 5rem;" pFrozenColumn alignFrozen="left" class="b-border-frozen-left">#ID </th>
+                        <th *ngFor="let col of columns" [ngStyle]="{'max-width': !col.isPin ? col.width : '', 'min-width': col.width}" [ngClass]=" col.class " [pTooltip]=" col.pTooltip" [tooltipPosition]="col.tooltipPosition">
+                            {{ col.header }} &nbsp; <i [ngClass]=" col.iClass"></i>
+                        </th> 
+                        <th style="max-width: 7rem; min-width: 7rem;" pFrozenColumn alignFrozen="right" [frozen]="true" class="b-border-frozen-right"> Trạng thái </th>
+                        <th style="max-width: 3rem; min-width: 3rem;" pFrozenColumn alignFrozen="right" [frozen]="true" class=" b-table-actions">
+                            <i class="pi pi-cog" (click)="setColumn(cols, _selectedColumns)"></i>
+                        </th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-row let-expanded="expanded" let-index="rowIndex"
+                    let-rowIndex="rowIndex" let-columns="columns">
+                    <tr>
+                        <td style="max-width: 5rem; min-width: 5rem;" pFrozenColumn alignFrozen="left" class="b-border-frozen-left"> {{ row.id }} </td>
+                        <td *ngFor="let col of columns" [ngStyle]="{'max-width': !col.isPin ? col.width : '', 'min-width': col.width}" [ngClass]="col.class">
+                            <div [ngClass]="col.cutText" [title]="row[col.field]">
+                                {{ row[col.field] }}
+                            </div>
+                        </td>
+                        <td style="max-width: 7rem; min-width: 7rem;" pFrozenColumn alignFrozen="right" [frozen]="true" class="b-border-frozen-right">
+                            <p-tag styleClass="p-tag-{{ CompanySharePolicyTemplateConst.getSeverityStatus(row.status) }}"
+                                severity="{{ CompanySharePolicyTemplateConst.getSeverityStatus(row.status) }}"
+                                value="{{ CompanySharePolicyTemplateConst.getNameStatus(row.status) }}"></p-tag>
+                        </td>
+                        <td style="max-width: 3rem; min-width: 3rem;" pFrozenColumn alignFrozen="right" class="b-table-actions" [frozen]="true">
+                            <!-- Thao tác -->
+                            <div class="flex">
+                                <i class="pi pi-ellipsis-h" (click)="menu.toggle($event)"></i>
+                                <p-menu #menu [popup]="true" class="button-actions" [model]="listAction[rowIndex]"
+                                    appendTo="body">
+                                </p-menu>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+            <p-paginator 
+                [rows]="page.pageSize" 
+                [totalRecords]="page.totalItems" 
+                [rowsPerPageOptions]="[25, 50, 100, 200]" 
+                currentPageReportTemplate="Tất cả {{ page.totalItems }} dòng" 
+                showCurrentPageReport="true"
+                (onPageChange)="setPage($event)">
+            </p-paginator>
+        </div>
+
+        <!-- THEM CHÍNH SÁCH-->
+        <p-dialog [(visible)]="modalDialog" [style]="{width: '1050px'}" header="Thêm chính sách mẫu" [modal]="true" [closeOnEscape]="false" class="p-fluid" styleClass="b-dialog policy-template">
+            <ng-template pTemplate="content">
+                <div class="card">
+                    <div class="grid formgrid">
+                        <div class="col-12 md:col-2">
+                            <div class="field">
+                                <label htmlFor="code">Mã chính sách <span class="required-field"> * </span> </label>
+                                <input type="text" id="code" name="code" pInputText maxlength="100" [(ngModel)]="policyTemplate.code"
+                                    [ngClass]="{'ng-invalid ng-dirty' : submitted && !policyTemplate.code}" />
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-3">
+                            <div class="field">
+                                <label htmlFor="name">Tên chính sách <span class="required-field"> * </span> </label>
+                                <input type="text" id="name" name="name" pInputText maxlength="256" [(ngModel)]="policyTemplate.name"
+                                    [ngClass]="{'ng-invalid ng-dirty' : submitted && !policyTemplate.name}" />
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-2">
+                            <div class="field">
+                                <label htmlFor="incomeTax">Thuế lợi nhuận <span class="required-field"> * </span></label>
+                                <input pInputText id="incomeTax" type="number" [pKeyFilter]="blockText"
+                                    [(ngModel)]="policyTemplate.incomeTax"
+                                    [ngClass]="{'ng-invalid ng-dirty' : submitted && !policyTemplate.incomeTax}">
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-2">
+                            <div class="field">
+                                <label htmlFor="transferTax">
+                                    Thuế chuyển nhượng 
+                                    <span class="required-field"> * </span> </label>
+                                <input class="custom-input-disabled" type="number" id="transferTax" pInputText [pKeyFilter]="blockText"
+                                    [(ngModel)]="policyTemplate.transferTax" [disabled]="policyTemplate.isTransfer == 'N'"
+                                    [ngClass]="{'ng-invalid ng-dirty' : submitted && !policyTemplate.transferTax}">
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-3">
+                            <div class="field">
+                                <label htmlFor="isTransfer">Cho phép chuyển nhượng <span class="required-field"> * </span>
+                                </label>
+                                <p-dropdown appendToo="body" [options]="CompanySharePolicyTemplateConst.isTransfer"
+                                    dataValue="code" optionValue="code" name="isTransfer" optionLabel="name"
+                                    [(ngModel)]="policyTemplate.isTransfer" required autofocus
+                                    [ngClass]="{'ng-invalid ng-dirty' : (submitted && !policyTemplate.isTransfer) || fieldErrors?.isTransfer }"
+                                    (click)="resetValid('isTransfer')" (onChange)="resetTransferTax()"></p-dropdown>
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-2">
+                            <div class="field">
+                                <label htmlFor="investorType">Loại nhà đầu tư <span class="required-field"> * </span>
+                                </label>
+                                <p-dropdown appendToo="body" [options]="CompanySharePolicyTemplateConst.investorType"
+                                    dataValue="code" optionValue="code" name="investorType" optionLabel="name"
+                                    [(ngModel)]="policyTemplate.investorType" required autofocus
+                                    [ngClass]="{'ng-invalid ng-dirty' : (submitted && !policyTemplate.investorType) || fieldErrors?.investorType }"
+                                    (click)="resetValid('investorType')"></p-dropdown>
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-3">
+                            <div class="field">
+                                <label htmlFor="type">Kiểu chính sách <span class="required-field"> * </span> </label>
+                                <p-dropdown appendToo="body" [options]="CompanySharePolicyTemplateConst.type"
+                                    dataValue="code" optionValue="code" name="type" optionLabel="name"
+                                    [(ngModel)]="policyTemplate.type" required autofocus
+                                    [ngClass]="{'ng-invalid ng-dirty' : (submitted && !policyTemplate.type) || fieldErrors?.type }"
+                                    (click)="resetValid('type')"></p-dropdown>
+                            </div>
+                        </div>
+                        
+                        <div class="col-12 md:col-2">
+                            <div class="field">
+                                <label htmlFor="classify">Phân loại <span class="required-field"> * </span> </label>
+                                <p-dropdown [options]="CompanySharePolicyTemplateConst.classify" dataValue="code"
+                                    optionValue="code" name="classify" optionLabel="name"
+                                    [(ngModel)]="policyTemplate.classify" required autofocus
+                                    [ngClass]="{'ng-invalid ng-dirty' : (submitted && !policyTemplate.classify) || fieldErrors?.classify }"
+                                    (click)="resetValid('classify')"></p-dropdown>
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-5">
+                            <div class="field">
+                                <label htmlFor="minMoney">Số tiền đầu tư tối thiểu 
+                                    <span class="required-field"> * </span>
+                                </label>
+                                <p-inputNumber id="classify" [(ngModel)]="policyTemplate.minMoney"
+                                    [ngClass]="{'ng-invalid ng-dirty' : submitted && !policyTemplate.minMoney}"
+                                    locale="de-DE">
+                                </p-inputNumber>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <!-- Table kỳ hạn -->
+                    <p-table 
+                        #policyDetailTempalteTable styleClass="custom-table-border-none" isLoading="isLoading"
+                        [value]="policyTemplate.policyDetailTemp" [expandedRowKeys]="expandedRows"
+                        [scrollable]="true" scrollHeight="{{ policyTemplate.policyDetailTemp?.length > 5 ? '350px' : '200px'}}" dataKey="fakeId">
+                        <ng-template pTemplate="caption">
+                            <div class="flex justify-content-between flex-column sm:flex-row">
+                                <div class="">
+                                    <button pButton pRipple label="Thêm kỳ hạn" icon="pi pi-plus"
+                                        class="p-button-success mr-2" (click)="createPolicyDetailTemplateUnSave()"></button>
+                                </div>
+                            </div>
+                        </ng-template>
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th style="min-width: 4rem;"> STT </th>
+                                <!-- <th style="min-width: 4rem;"> Tên kỳ hạn </th> -->
+                                <th style="min-width: 12rem;"> Kỳ đầu tư </th>
+                                <th style="min-width: 5rem;"> Lợi tức </th>
+                                <th style="min-width: 5rem;"> Số ngày </th>
+                                <th style="min-width: 6rem;"> Kiểu trả lãi </th>
+                                <th style="min-width: 5rem;"> Kỳ lợi tức </th>
+                                <th style="min-width: 10rem; justify-content: center;"> Thao tác</th>
+                            </tr>
+                        </ng-template>
+                        <!--let-index="rowIndex" let-row let-rowIndex="rowIndex" -->
+                        <ng-template pTemplate="body" let-policyDetailTemp let-expanded="expanded" >
+                            <tr>
+                                <td style="min-width: 4rem;">{{ policyDetailTemp.stt }}</td>
+                                <!-- <td style="min-width: 4rem;">{{ policyDetailTemp.name }}</td> -->
+                                <td style="min-width: 12rem;">
+                                    {{ policyDetailTemp.periodQuantity }} 
+                                    {{ CompanySharePolicyDetailTemplateConst.getNameInterestPeriodType(policyDetailTemp.periodType) }}
+                                </td>
+                                <td style="min-width: 5rem;">{{ utils.transformPercent(policyDetailTemp.profit) }}</td>
+                                <td style="min-width: 5rem;">{{ utils.transformMoney(policyDetailTemp.interestDays) }}</td>
+                                <td style="min-width: 6rem;">
+                                    {{ CompanySharePolicyDetailTemplateConst.getNameInterestType(policyDetailTemp.interestType)}}
+                                </td>
+                                <td style="min-width: 5rem;">
+                                    {{ policyDetailTemp?.interestPeriodQuantity ? policyDetailTemp?.interestPeriodQuantity : null }}   
+                                    {{ CompanySharePolicyDetailTemplateConst.getNameInterestPeriodType(policyDetailTemp.interestPeriodType) }}</td>
+                                <!-- <td style="min-width: 8rem;">{{ policyDetailTemp.stt }}</td> -->
+                                <td style="min-width: 10rem; justify-content: center;">
+                                    <div class="flex">
+                                        <i class="pi pi-ellipsis-h" (click)="menu.toggle($event)"></i>
+                                        <p-menu #menu [popup]="true" class="button-actions" [model]="actions"
+                                            appendTo="body">
+                                        </p-menu>
+                                    </div>
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+
+            </ng-template>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Hủy" icon="pi pi-times" class="p-button-text"
+                    (click)="hideDialog('modalDialog')"></button>
+                <button pButton pRipple label="Lưu" icon="pi pi-check" class="p-button-text"
+                    [disabled]="!validForm() || submitted" (click)="save()"></button>
+            </ng-template>
+        </p-dialog>     
+
+        <!-- SUA CHÍNH SÁCH-->
+        <p-dialog [(visible)]="modalUpdateDialogPolicyTemplate" [style]="{width: '1050px'}" header="Sửa chính sách" [modal]="true" class="p-fluid" styleClass="b-dialog policy-template">
+            <ng-template pTemplate="content">
+                <div class="card">
+                    <div class="grid formgrid">
+                        <div class="col-12 md:col-2">
+                            <div class="field">
+                                <label htmlFor="code">Mã chính sách <span class="required-field"> * </span> </label>
+                                <input type="text" id="code" name="code" pInputText maxlength="100" [(ngModel)]="policyTemplate.code"
+                                    [ngClass]="{'ng-invalid ng-dirty' : submitted && !policyTemplate.code}" />
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-3">
+                            <div class="field">
+                                <label htmlFor="update-name">Tên chính sách <span class="required-field"> * </span>
+                                </label>
+                                <input type="text" id="update-name" name="name" pInputText maxlength="256" [(ngModel)]="policyTemplate.name"
+                                    [ngClass]="{'ng-invalid ng-dirty' : submitted && !policyTemplate.name}" />
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-2">
+                            <div class="field">
+                                <label htmlFor="update-incomeTax">
+                                    Thuế lợi nhuận <span class="required-field"> * </span>
+                                </label>
+                                <input 
+                                    type="number" id="update-incomeTax" pInputText [pKeyFilter]="blockText"
+                                    [(ngModel)]="policyTemplate.incomeTax"
+                                    [ngClass]="{'ng-invalid ng-dirty' : submitted && !policyTemplate.incomeTax}"
+                                />
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-2">
+                            <div class="field">
+                                <label htmlFor="update-transferTax">
+                                    Thuế chuyển nhượng <span class="required-field"> * </span>
+                                </label>
+                                <input 
+                                    class="custom-input-disabled" type="number" id="update-transferTax" pInputText [pKeyFilter]="blockText"
+                                    [(ngModel)]="policyTemplate.transferTax" [disabled]="policyTemplate.isTransfer == 'N'"
+                                    [ngClass]="{'ng-invalid ng-dirty' : submitted && !policyTemplate.transferTax}"
+                                />
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-3">
+                            <div class="field">
+                                <label htmlFor="update-isTransfer">
+                                    Cho phép chuyển nhượng <span class="required-field"> * </span>
+                                 </label>
+                                <p-dropdown 
+                                    appendToo="body" [options]="CompanySharePolicyTemplateConst.isTransfer"
+                                    dataValue="code" optionValue="code" name="isTransfer" optionLabel="name"
+                                    [(ngModel)]="policyTemplate.isTransfer" required autofocus
+                                    [ngClass]="{'ng-invalid ng-dirty' : (submitted && !policyTemplate.isTransfer) || fieldErrors?.isTransfer }"
+                                    (click)="resetValid('isTransfer')" (onChange)="resetTransferTax()">
+                                </p-dropdown>
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-2">
+                            <div class="field">
+                                <label htmlFor="update-investorType">
+                                    Loại nhà đầu tư <span class="required-field"> * </span>
+                                 </label>
+                                <p-dropdown 
+                                    appendToo="body" [options]="CompanySharePolicyTemplateConst.investorType"
+                                    dataValue="code" optionValue="code" name="investorType" optionLabel="name"
+                                    [(ngModel)]="policyTemplate.investorType" required autofocus
+                                    [ngClass]="{'ng-invalid ng-dirty' : (submitted && !policyTemplate.investorType) || fieldErrors?.investorType }"
+                                    (click)="resetValid('investorType')">
+                                </p-dropdown>
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-3">
+                            <div class="field">
+                                <label htmlFor="type">Kiểu trả lãi <span class="required-field"> * </span></label>
+                                <p-dropdown 
+                                    appendToo="body" optionLabel="name" optionValue="code"
+                                    [options]="CompanySharePolicyTemplateConst.type" [(ngModel)]="policyTemplate.type"
+                                    [ngClass]="{'ng-invalid ng-dirty' : submitted && !policyTemplate.type}">
+                                </p-dropdown>
+                            </div>
+
+                        </div>
+                        <div class="col-12 md:col-2">
+                            <div class="field">
+                                <label htmlFor="update-classify"> Phân loại <span class="required-field"> * </span>
+                                </label>
+                                <p-dropdown 
+                                    appendToo="body" [options]="CompanySharePolicyTemplateConst.classify"
+                                    dataValue="code" optionValue="code" name="classify" optionLabel="name"
+                                    [(ngModel)]="policyTemplate.classify" required autofocus
+                                    [ngClass]="{'ng-invalid ng-dirty' : (submitted && !policyTemplate.classify) || fieldErrors?.classify }"
+                                    (click)="resetValid('classify')">
+                                </p-dropdown>
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-5">
+                            <div class="field">
+                                <label htmlFor="update-minMoney">
+                                    Số tiền đầu tư tối thiểu <span class="required-field"> * </span>
+                                </label>
+                                <p-inputNumber 
+                                    id="update-minMoney" [(ngModel)]="policyTemplate.minMoney"
+                                    [ngClass]="{'ng-invalid ng-dirty' : submitted && !policyTemplate.minMoney}"
+                                    locale="de-DE">
+                                </p-inputNumber>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                    <p-table 
+                        #policyDetailTempalteTable styleClass="custom-table-border-none" isLoading="isLoading"
+                        [value]="policyTemplate?.policyDetailTemp" [expandedRowKeys]="expandedRows"
+                        [scrollable]="true" scrollHeight="{{ policyTemplate.policyDetailTemp?.length > 5 ? '350px' : '200px'}}">
+                        <ng-template pTemplate="caption">
+                            <div class="flex justify-content-between flex-column sm:flex-row">
+                                <div class="">
+                                    <button pButton pRipple label="Thêm kỳ hạn" icon="pi pi-plus" *ngIf="isGranted([PermissionCompanyShareConst.CompanyShareCaiDat_CSM_ThemKyHan])"
+                                        class="p-button-success mr-2" (click)="createPolicyDetailTemplate(policyTemplate?.companySharePolicyTempId);this.getDetail(policyTemplate?.companySharePolicyTempId)"></button>
+                                </div>
+                            </div>
+                        </ng-template>
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th style="min-width: 5rem;"> STT </th>
+                                <th style="min-width: 5rem;"> Kỳ đầu tư </th>
+                                <th style="min-width: 5rem;"> Lợi tức </th>
+                                <th style="min-width: 5rem;"> Số ngày </th>
+                                <th style="min-width: 5rem;"> Kiểu trả lãi </th>
+                                <th style="min-width: 5rem;"> Kỳ lợi tức </th>
+                                <th style="min-width: 5rem;"> Trạng thái </th>
+                                <th style="min-width: 10rem; justify-content: center;"> Thao tác</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-policyDetailTemp let-expanded="expanded" let-index="rowIndex" let-row let-rowIndex="rowIndex">
+                            <tr>
+
+                                <td style="min-width: 5rem;">{{ policyDetailTemp.stt }}</td>
+                                <td style="min-width: 5rem;">
+                                    {{ policyDetailTemp.periodQuantity }} 
+                                    {{ CompanySharePolicyDetailTemplateConst.getNameInterestPeriodType(policyDetailTemp.periodType) }}
+                                </td>
+                                <td style="min-width: 5rem;">{{ utils.transformPercent(policyDetailTemp.profit) }}</td>
+                                <td style="min-width: 5rem;">{{ utils.transformMoney(policyDetailTemp.interestDays) }}</td>
+                                <td style="min-width: 5rem;">{{
+                                    CompanySharePolicyDetailTemplateConst.getNameInterestType(policyDetailTemp.interestType)}}
+                                </td>
+                                <td style="min-width: 5rem;">
+                                    {{ policyDetailTemp?.interestPeriodQuantity ? policyDetailTemp?.interestPeriodQuantity : null }} 
+                                    {{ CompanySharePolicyDetailTemplateConst.getNameInterestPeriodType(policyDetailTemp.interestPeriodType) }}
+                                </td>
+
+                                <td style="min-width: 8rem;" pFrozenColumn alignFrozen="right" [frozen]="true">
+                                    <p-tag styleClass="p-tag-{{ CompanySharePolicyTemplateConst.getSeverityStatus(row.status) }}"
+                                        severity="{{ CompanySharePolicyTemplateConst.getSeverityStatus(row.status) }}"
+                                        value="{{ CompanySharePolicyTemplateConst.getNameStatus(row.status) }}"></p-tag>
+                                </td>
+
+                                <td style="min-width: 10rem; justify-content: center;" pFrozenColumn alignFrozen="right" class="b-table-actions">
+                                    <div class="flex">
+                                        <i class="pi pi-ellipsis-h" (click)="menu.toggle($event)"></i>
+                                        <p-menu #menu [popup]="true" class="button-actions" [model]="listActionTerm[rowIndex]"
+                                            appendTo="body">
+                                        </p-menu>
+                                    </div>
+                                </td>
+                                    
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+            </ng-template>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Hủy" icon="pi pi-times" class="p-button-text"
+                    (click)="hideDialog('modalUpdateDialogPolicyTemplate')"></button>
+                <button pButton pRipple label="Lưu" icon="pi pi-check" class="p-button-text"
+                    [disabled]="!validForm() || submitted" (click)="save()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <!-- THEM & SUA KY HAN-->
+        <p-dialog [(visible)]="modalDialogPolicyDetailTemplate" [style]="{width: '700px'}"
+            [header]="policyDetailTemp.policyDetailTempId ? 'Cập nhật kỳ hạn' : 'Thêm kỳ hạn'" [modal]="true"
+            class="p-fluid">
+            <ng-template pTemplate="content">
+                <div class="card pt-0">
+                    <div class="grid formgrid">
+                        <ng-container>
+                            <div class="col-12 md:col-12 title-group-input">
+                                <h6>Thông tin đầu tư </h6>
+                            </div>
+                            <div class="col-12 md:col-3">
+                                <div class="field">
+                                    <label htmlFor="stt">Số thứ tự <span class="required-field"> * </span></label>
+                                    <p-inputNumber id="stt" [(ngModel)]="policyDetailTemp.stt"
+                                        [ngClass]="{'ng-invalid ng-dirty' : submitted && !policyDetailTemp.stt}">
+                                    </p-inputNumber>
+                                </div>
+                            </div>
+                            <div class="col-12 md:col-3">
+                                <div class="field">
+                                    <label htmlFor="periodQuantity">
+                                        Số kỳ đầu tư
+                                        <span class="required-field"> * </span>
+                                    </label>
+                                    <p-inputNumber id="periodQuantity" [(ngModel)]="policyDetailTemp.periodQuantity"
+                                        [ngClass]="{'ng-invalid ng-dirty' : submitted && !policyDetailTemp.periodQuantity}">
+                                    </p-inputNumber>
+                                </div>
+                            </div>
+                            <div class="col-12 md:col-6">
+                                <div class="field">
+                                    <label htmlFor="periodType"> Đơn vị <span class="required-field"> * </span></label>
+                                    <p-dropdown 
+                                        optionLabel="name" optionValue="code" [autoDisplayFirst]="false"
+                                        appendTo="body" [options]="CompanySharePolicyDetailTemplateConst.interestPeriodType"
+                                        [(ngModel)]="policyDetailTemp.periodType"
+                                        [ngClass]="{'ng-invalid ng-dirty' : submitted && !policyDetailTemp.periodType}">
+                                    </p-dropdown>
+                                </div>
+                            </div>
+                            <div class="col-12 md:col-3">
+                                <div class="field">
+                                    <label htmlFor="shortName">Tên viết tắt <span class="required-field"> * </span>
+                                    </label>
+                                    <input type="text" id="shortName" name="shortName" pInputText maxlength="256"
+                                        [(ngModel)]="policyDetailTemp.shortName"
+                                        [ngClass]="{'ng-invalid ng-dirty' : submitted && !policyDetailTemp.shortName}">
+                                </div>
+                            </div>
+                            <div class="col-12 md:col-3">
+                                <div class="field">
+                                    <label htmlFor="de-name">Tên kỳ hạn <span class="required-field"> * </span></label>
+                                    <input type="text" id="de-name" code="name" pInputText maxlength="256"
+                                        [(ngModel)]="policyDetailTemp.name"
+                                        [ngClass]="{'ng-invalid ng-dirty' : submitted && !policyDetailTemp.name}" />
+                                </div>
+                            </div>
+                            <div class="col-12 md:col-3">
+                                <div class="field">
+                                    <label htmlFor="profit">Lợi tức (%/Năm) 
+                                        <span class="required-field"> * </span>
+                                    </label>
+                                    <input pInputText id="profit" type="number" [pKeyFilter]="blockText"
+                                        [(ngModel)]="policyDetailTemp.profit"
+                                        [ngClass]="{'ng-invalid ng-dirty' : submitted && !policyDetailTemp.profit}" />
+                                </div>
+                            </div>
+                            <div class="col-12 md:col-3">
+                                <div class="field">
+                                    <label htmlFor="interestDays">Số ngày</label>
+                                    <p-inputNumber id="interestDays" [(ngModel)]="policyDetailTemp.interestDays"
+                                        [ngClass]="{'ng-invalid ng-dirty' : submitted && !policyDetailTemp.interestDays}">
+                                    </p-inputNumber>
+                                </div>
+                            </div>
+                        </ng-container>
+                        <!--  -->
+                        <ng-container>
+                            <div class="col-12 md:col-12 title-group-input">
+                                <h6>Thông tin lợi tức </h6>
+                            </div>
+                            <div class="col-12 md:col-3">
+                                <div class="field">
+                                    <label htmlFor="interestType"> 
+                                        Kiểu trả lợi tức <span class="required-field"> * </span>
+                                    </label>
+                                    <p-dropdown 
+                                        optionLabel="name" optionValue="code" [autoDisplayFirst]="true"
+                                        appendTo="body" [options]="CompanySharePolicyDetailTemplateConst.interestType"
+                                        [(ngModel)]="policyDetailTemp.interestType"
+                                        (onChange)="changeInterestType($event.value)"
+                                        [ngClass]="{'ng-invalid ng-dirty' : submitted && !policyDetailTemp.interestType}">
+                                    </p-dropdown>
+                                </div>
+                            </div>
+                            <div class="col-12 md:col-3">
+                                <div class="field">
+                                    <label htmlFor="interestPeriodQuantity">Số kỳ lợi tức <span class="required-field" *ngIf="policyDetailTemp.interestType !== CompanySharePolicyDetailTemplateConst.INTEREST_RATE_TYPE_PERIOD_END"> * </span> </label>
+                                    <p-inputNumber 
+                                        id="interestPeriodQuantity" class="custom-input-disabled"
+                                        [disabled]="policyDetailTemp.interestType == CompanySharePolicyDetailTemplateConst.INTEREST_RATE_TYPE_PERIOD_END"
+                                        [(ngModel)]="policyDetailTemp.interestPeriodQuantity"
+                                        [ngClass]="{'ng-invalid ng-dirty' : submitted && !policyDetailTemp.interestPeriodQuantity}">
+                                    </p-inputNumber>
+                                </div>
+                            </div>
+                            <div class="col-12 md:col-6">
+                                <div class="field">
+                                    <label htmlFor="interestPeriodType"> Đơn vị <span class="required-field" *ngIf="policyDetailTemp.interestType !== CompanySharePolicyDetailTemplateConst.INTEREST_RATE_TYPE_PERIOD_END"> * </span> </label>
+                                    <p-dropdown 
+                                        optionLabel="name" optionValue="code" appendTo="body"
+                                        class="custom-input-disabled" [autoDisplayFirst]="false"
+                                        [disabled]="policyDetailTemp.interestType == CompanySharePolicyDetailTemplateConst.INTEREST_RATE_TYPE_PERIOD_END"
+                                        [options]="CompanySharePolicyDetailTemplateConst.interestPeriodType"
+                                        [(ngModel)]="policyDetailTemp.interestPeriodType"
+                                        [ngClass]="{'ng-invalid ng-dirty' : submitted && !policyDetailTemp.interestPeriodType}">
+                                    </p-dropdown>
+                                </div>
+                            </div>
+
+                        </ng-container>
+                    </div>
+                </div>
+            </ng-template>
+            <ng-template pTemplate="footer">
+                <button 
+                    pButton pRipple label="Hủy" icon="pi pi-times" class="p-button-text"
+                    (click)="hideDialog('modalDialogPolicyDetailTemplate')">
+                </button>
+                <!--  -->
+                <button 
+                    pButton pRipple label="Lưu" icon="pi pi-check" class="p-button-text"
+                    [disabled]="submitted || !validFormPolicyDetailTemplate()"
+                    (click)="!policyDetailTemp.unSave ? saveCompanySharePolicyDetailTemplate() : savePolicyDetail()">
+                </button>
+            </ng-template>
+        </p-dialog>
+
+        <!-- XOA KY HAN TRONG LIST-->
+        <p-dialog [(visible)]="deleteItemDialog" header="Xóa kỳ hạn" [modal]="true" [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                <span *ngIf="policyDetailTemp?.fakeId">Bạn có chắc chắn xóa kỳ hạn {{ policyDetailTemp?.name }}
+                    này?</span>
+            </div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="Hủy"
+                    (click)="deleteItemDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Đồng ý"
+                    (click)="confirmDeleteUnSave()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <!-- AP DUNG BAN THEO KY HAN -->
+        <p-dialog [(visible)]="modalDialogTermSalesApply" [style]="{width: '1050px'}" header="Áp dụng bán theo kỳ hạn" [modal]="true" class="p-fluid" styleClass="b-dialog policy-template">
+            <ng-template pTemplate="content">
+                <div class="card">
+                    <div class="grid formgrid">
+                        <div class="col-12 md:col-2">
+                            <div class="field">
+                                <label htmlFor="code">Mã chính sách <span class="required-field"> * </span> </label>
+                                <input type="text" id="code" name="code" pInputText maxlength="100" [(ngModel)]="policyTemplate.code"
+                                    [ngClass]="{'ng-invalid ng-dirty' : submitted && !policyTemplate.code}" [disabled] ="true"/>
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-3">
+                            <div class="field">
+                                <label htmlFor="update-name">Tên chính sách <span class="required-field"> * </span>
+                                </label>
+                                <input type="text" id="update-name" name="name" pInputText maxlength="256" [(ngModel)]="policyTemplate.name"
+                                    [ngClass]="{'ng-invalid ng-dirty' : submitted && !policyTemplate.name}" [disabled] ="true"/>
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-2">
+                            <div class="field">
+                                <label htmlFor="update-incomeTax">
+                                    Thuế lợi nhuận <span class="required-field"> * </span>
+                                </label>
+                                <input 
+                                    type="number" id="update-incomeTax" pInputText [pKeyFilter]="blockText" [disabled] ="true"
+                                    [(ngModel)]="policyTemplate.incomeTax"
+                                    [ngClass]="{'ng-invalid ng-dirty' : submitted && !policyTemplate.incomeTax}"
+                                />
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-2">
+                            <div class="field">
+                                <label htmlFor="update-transferTax">
+                                    Thuế chuyển nhượng <span class="required-field"> * </span>
+                                </label>
+                                <input 
+                                    type="number" id="update-transferTax" pInputText [pKeyFilter]="blockText" [disabled] ="true"
+                                    [(ngModel)]="policyTemplate.transferTax"
+                                    [ngClass]="{'ng-invalid ng-dirty' : submitted && !policyTemplate.transferTax}"
+                                />
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-3">
+                            <div class="field">
+                                <label htmlFor="update-isTransfer">
+                                    Cho phép chuyển nhượng <span class="required-field"> * </span>
+                                 </label>
+                                <p-dropdown 
+                                    appendToo="body" [options]="CompanySharePolicyTemplateConst.isTransfer" [disabled] ="true"
+                                    dataValue="code" optionValue="code" name="isTransfer" optionLabel="name"
+                                    [(ngModel)]="policyTemplate.isTransfer" required autofocus
+                                    [ngClass]="{'ng-invalid ng-dirty' : (submitted && !policyTemplate.isTransfer) || fieldErrors?.isTransfer }"
+                                    (click)="resetValid('isTransfer')">
+                                </p-dropdown>
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-2">
+                            <div class="field">
+                                <label htmlFor="update-investorType">
+                                    Loại nhà đầu tư <span class="required-field"> * </span>
+                                 </label>
+                                <p-dropdown 
+                                    appendToo="body" [options]="CompanySharePolicyTemplateConst.investorType" [disabled] ="true"
+                                    dataValue="code" optionValue="code" name="investorType" optionLabel="name"
+                                    [(ngModel)]="policyTemplate.investorType" required autofocus
+                                    [ngClass]="{'ng-invalid ng-dirty' : (submitted && !policyTemplate.investorType) || fieldErrors?.investorType }"
+                                    (click)="resetValid('investorType')">
+                                </p-dropdown>
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-3">
+                            <div class="field">
+                                <label htmlFor="type">Kiểu trả lãi <span class="required-field"> * </span></label>
+                                <p-dropdown 
+                                    appendToo="body" optionLabel="name" optionValue="code" [disabled] ="true"
+                                    [options]="CompanySharePolicyTemplateConst.type" [(ngModel)]="policyTemplate.type"
+                                    [ngClass]="{'ng-invalid ng-dirty' : submitted && !policyTemplate.type}">
+                                </p-dropdown>
+                            </div>
+
+                        </div>
+                        <div class="col-12 md:col-2">
+                            <div class="field">
+                                <label htmlFor="update-classify"> Phân loại <span class="required-field"> * </span>
+                                </label>
+                                <p-dropdown 
+                                    appendToo="body" [options]="CompanySharePolicyTemplateConst.classify" [disabled] ="true"
+                                    dataValue="code" optionValue="code" name="classify" optionLabel="name"
+                                    [(ngModel)]="policyTemplate.classify" required autofocus
+                                    [ngClass]="{'ng-invalid ng-dirty' : (submitted && !policyTemplate.classify) || fieldErrors?.classify }"
+                                    (click)="resetValid('classify')">
+                                </p-dropdown>
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-3">
+                            <div class="field">
+                                <label htmlFor="update-minMoney">
+                                    Số tiền đầu tư tối thiểu <span class="required-field"> * </span>
+                                </label>
+                                <p-inputNumber 
+                                    id="update-minMoney" [(ngModel)]="policyTemplate.minMoney" [disabled] ="true"
+                                    [ngClass]="{'ng-invalid ng-dirty' : submitted && !policyTemplate.minMoney}"
+                                    locale="de-DE">
+                                </p-inputNumber>
+                            </div>
+                        </div>
+
+                        <div class="col-12 md:col-2">
+                            <div class="field">
+                                <label htmlFor="">
+                                    Bán theo kỳ hạn<span class="required-field"> * </span>
+                                </label>
+                                <p-multiSelect (click)="resetValid('rowsListPolicy')"
+                                        id="rowsListPolicy" name="rowsListPolicy" 
+                                        [options]="rowsListPolicy " 
+                                        optionLabel="companyShareName" optionValue="companyShareSecondaryId" placeholder="" [(ngModel)]="policyTemplate.secondary" appendTo="body"></p-multiSelect>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                    <p-table 
+                        #policyDetailTempalteTable styleClass="custom-table-border-none" isLoading="isLoading"
+                        [value]="policyTemplate?.policyDetailTemp" [expandedRowKeys]="expandedRows"
+                        [scrollable]="true" scrollHeight="{{ policyTemplate.policyDetailTemp?.length > 5 ? '350px' : '200px'}}">
+                        <ng-template pTemplate="caption">
+                            <div class="flex justify-content-between flex-column sm:flex-row">
+                                <div class="">
+                                    <!-- <button pButton pRipple label="Thêm kỳ hạn" icon="pi pi-plus" *ngIf="isGranted(PermissionCompanyShareConst.CompanyShareCaiDat_CSM_ThemKyHan)"
+                                        class="p-button-success mr-2" (click)="createPolicyDetailTemplate(policyTemplate?.companySharePolicyTempId);this.getDetail(policyTemplate?.companySharePolicyTempId)"></button> -->
+                                </div>
+                            </div>
+                        </ng-template>
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th style="min-width: 5rem;"> STT </th>
+                                <th style="min-width: 5rem;"> Kỳ đầu tư </th>
+                                <th style="min-width: 5rem;"> Lợi tức </th>
+                                <th style="min-width: 5rem;"> Số ngày </th>
+                                <th style="min-width: 5rem;"> Kiểu trả lãi </th>
+                                <th style="min-width: 5rem;"> Kỳ lợi tức </th>
+                                <th style="min-width: 5rem;"> Trạng thái </th>
+                                <!-- <th style="min-width: 10rem; justify-content: center;"> Thao tác</th> -->
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-policyDetailTemp let-expanded="expanded" let-index="rowIndex" let-row let-rowIndex="rowIndex">
+                            <tr>
+
+                                <td style="min-width: 5rem;">{{ policyDetailTemp.stt }}</td>
+                                <td style="min-width: 5rem;">
+                                    {{ policyDetailTemp.periodQuantity }} 
+                                    {{ CompanySharePolicyDetailTemplateConst.getNameInterestPeriodType(policyDetailTemp.periodType) }}
+                                </td>
+                                <td style="min-width: 5rem;">{{ utils.transformPercent(policyDetailTemp.profit) }}</td>
+                                <td style="min-width: 5rem;">{{ utils.transformMoney(policyDetailTemp.interestDays) }}</td>
+                                <td style="min-width: 5rem;">{{
+                                    CompanySharePolicyDetailTemplateConst.getNameInterestType(policyDetailTemp.interestType)}}
+                                </td>
+                                <td style="min-width: 5rem;">
+                                    {{ policyDetailTemp?.interestPeriodQuantity ? policyDetailTemp?.interestPeriodQuantity : null }} 
+                                    {{ CompanySharePolicyDetailTemplateConst.getNameInterestPeriodType(policyDetailTemp.interestPeriodType) }}
+                                </td>
+
+                                <td style="min-width: 8rem;" pFrozenColumn alignFrozen="right" [frozen]="true">
+                                    <p-tag styleClass="p-tag-{{ CompanySharePolicyTemplateConst.getSeverityStatus(row.status) }}"
+                                        severity="{{ CompanySharePolicyTemplateConst.getSeverityStatus(row.status) }}"
+                                        value="{{ CompanySharePolicyTemplateConst.getNameStatus(row.status) }}"></p-tag>
+                                </td>
+
+                                <!-- <td style="min-width: 10rem; justify-content: center;" pFrozenColumn alignFrozen="right" class="b-table-actions">
+                                    <div class="flex">
+                                        <i class="pi pi-ellipsis-h" (click)="menu.toggle($event)"></i>
+                                        <p-menu #menu [popup]="true" class="button-actions" [model]="listActionTerm[rowIndex]"
+                                            appendTo="body">
+                                        </p-menu>
+                                    </div>
+                                </td> -->
+                                    
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+            </ng-template>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Hủy" icon="pi pi-times" class="p-button-text"
+                    (click)="hideDialog('modalDialogTermSalesApply')"></button>
+                <button pButton pRipple label="Áp dụng" icon="pi pi-check" class="p-button-text"
+                    [disabled]="!validFormListPolicy() || submitted" (click)="saveTermSalesApply()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <!-- XOA CHINH SACH MAU TRONG DB-->
+        <!-- <p-dialog [(visible)]="deleteCompanySharePolicyTemplateDialog" header="Xóa chính sách" [modal]="true"
+            [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                <span *ngIf="policyTemplate?.companySharePolicyTempId">Bạn có chắc chắn xóa chính sách {{ policyTemplate?.name }}
+                    này?</span>
+            </div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="Hủy"
+                    (click)="deleteCompanySharePolicyTemplateDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Đồng ý"
+                    (click)="confirmDeleteCompanySharePolicyTemplate()"></button>
+            </ng-template>
+        </p-dialog> -->
+
+        <!-- XOA KY HAN TRONG DB -->
+        <p-dialog [(visible)]="deleteCompanySharePolicyDetailTemplateDialog" header="Xóa kỳ hạn" [modal]="true"
+            [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                <span *ngIf="policyDetailTemplate?.policyDetailTempId">Bạn có chắc chắn xóa kỳ hạn {{
+                    policyDetailTemplate?.name }} này?</span>
+            </div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="Hủy"
+                    (click)="deleteCompanySharePolicyDetailTemplateDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Đồng ý"
+                    (click)="confirmDeleteCompanySharePolicyDetailTemplate()"></button>
+            </ng-template>
+        </p-dialog>
+    </div>
+</div>
+

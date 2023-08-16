@@ -1,0 +1,32 @@
+.wapper-images {
+    overflow-x: hidden;
+    .gallery {
+        // border: 1px dashed gray;
+        // padding: 0 10px;
+        text-align: center;
+        .p-image-preview-container {
+            width: 100%;
+        }
+        //
+        img {
+            width: 100%;
+            height: auto;
+        }
+        //
+        .icon-trash {
+            padding: 5px;
+            text-align: center;
+            cursor: pointer;
+            color: red;
+            width: 100%;
+            background-color: #eee;
+            border-radius: 3x;
+            i {
+                font-size: 15px;
+            }
+            &:hover {
+                background-color: #e4e4e4;
+            }
+        }
+    }
+}

@@ -1,0 +1,107 @@
+<p-toast [baseZIndex]="10000" key="contractPolicyTemp"></p-toast>
+<app-loading-page *ngIf="isLoadingPage"></app-loading-page>
+<p-confirmDialog
+[style]="{ width: '400px' }"
+[baseZIndex]="10000"
+></p-confirmDialog>
+<div class="grid p-fluid">
+    <ng-container>
+        <div class="col-12 md:col-12">
+            <div class="field mb-0">
+                <label htmlFor="description">Mô tả <span class="required-field"> * </span> </label>
+                <input 
+                    type="text" id="description" name="description" pInputText [disabled]="isView"
+                    [(ngModel)]="feature.description" maxlength="100" class="custom-input-disabled"
+                />
+            </div>
+        </div>
+        <div class="field col-9">
+            <span class="field mb-0">
+                <label htmlFor="path">Tệp tin icon <span class="required-field"> * </span> </label>
+                <input type="text" id="contractTempUrl" class="custom-input-disabled" name="contractTempUrl" disabled pInputText [value]="feature.iconUri || ''" required autofocus/>
+            </span>
+        </div>
+        <div class="col-12 md:col-3 flex">
+            <div class="field mb-0 upload-file-form">
+                <label htmlFor=""> </label>
+                <p-fileUpload 
+                    name="demo[]" accept="image/*" [customUpload]="true" class="custom-file-upload w-100"
+                    (uploadHandler)="onUpload($event)" [disabled]="isView"
+                    [auto]="true" chooseIcon="pi pi-cloud-upload"
+                    chooseLabel="Tải lên">
+                </p-fileUpload>
+            </div>
+            <div class="field mb-0 ml-1 button-delete ">
+                <label htmlFor=""> </label>
+                <p-image 
+                    src="{{baseUrl}}/{{ feature.iconUri }}"  
+                    alt="Image" [width]="50" [height]="34" 
+                    [imageStyle]="imageStyle" [preview]="true">
+                </p-image>  
+            </div>
+        </div>
+
+        <div class="col-12 md:col-3">
+            <div class="field mb-0">
+                <label htmlFor="">Chọn loại tệp tin <span class="required-field"> * </span></label>
+                <p-dropdown 
+                    optionLabel="name" optionValue="code" appendTo="body" [disabled]="isView"
+                    [autoDisplayFirst]="true" [options]="GeneralDescriptionConst.types" 
+                    [(ngModel)]="feature.type" class="custom-input-disabled"> 
+                </p-dropdown>
+            </div>
+        </div>
+
+        <div *ngIf="feature.type == GeneralDescriptionConst.LINK" class="col-12 md:col-9">
+            <div class="field mb-0">
+                <label htmlFor="fileUrl">Đường dẫn <span class="required-field"> * </span> </label>
+                <input 
+                    type="text" id="fileUrl" name="fileUrl" pInputText [disabled]="isView"
+                    [(ngModel)]="feature.fileUrl" maxlength="100" class="custom-input-disabled"
+                />
+            </div>
+        </div>
+
+
+        <div *ngIf="feature.type == GeneralDescriptionConst.FILE" class="col-12 md:col-6" >
+            <div class="field mb-0">
+                <label htmlFor="value">
+                    Tệp tin
+                    <span class="required-field"> * </span>
+                </label>
+                <input 
+                    [disabled]="true" class="custom-input-disabled"
+                    type="text" id="name" name="name" pInputText 
+                    [(ngModel)]="feature.fileUrl" maxlength="256" 
+                    placeholder="Tệp tin"
+                />
+            </div>
+        </div>
+
+        <div *ngIf="feature.type == GeneralDescriptionConst.FILE" class="col-12 md:col-3 flex">
+            <div class="field mb-0 upload-file-form">
+                <label htmlFor=""> </label>
+                <p-fileUpload 
+                    name="demo[]" accept="" [customUpload]="true" class="custom-file-upload w-100"
+                    (uploadHandler)="myUploader($event)"
+                    [auto]="true" chooseIcon="pi pi-cloud-upload"
+                    chooseLabel="Tải lên">
+                </p-fileUpload>
+            </div>
+            <div class="field mb-0 ml-1 button-delete ">
+                <label htmlFor=""> </label>
+                <button
+                    pButton pRipple label="Xóa" class="p-button-danger"
+                    (click)="deleteFile()">
+                </button>
+            </div>
+        </div>
+
+    </ng-container>
+</div>
+<div class="p-dialog-footer" style="width: 100%; position: fixed; left: 0; bottom: 0;">
+    <button pButton pRipple label="Hủy" icon="pi pi-times" class="p-button-text p-confirm-dialog-reject" (click)="close()"></button>
+    <button pButton pRipple label="Lưu" icon="pi pi-check" class="p-button-text p-confirm-dialog-approve" (click)="save()"></button>
+</div>
+
+         

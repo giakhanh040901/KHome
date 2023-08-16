@@ -1,0 +1,521 @@
+<app-loading-page *ngIf="isLoading"></app-loading-page>
+<p-toast></p-toast>
+<p-confirmDialog [style]="{width: 'auto'}" [baseZIndex]="10000"></p-confirmDialog>
+<div class="card b-page-detail" *ngIf="!isLoading">
+    <div class="p-fluid p-formgrid grid b-header">
+        <div class="card col-12 md:col-12 b-actions">
+            <div class="flex justify-content-between flex-wrap card-container purple-container">
+                <h4 class="title-info mb-0"> 
+                    {{ companyShareInfoDetail?.companyShareCode }}
+                </h4>
+                <div>
+                    <ng-container>
+
+                        <p-button *ngIf="companyShareInfoDetail.status == CompanyShareInfoConst.KHOI_TAO && isGranted([PermissionCompanyShareConst.CompanyShareMenuQLTP_LTP_TrinhDuyet])" styleClass="p-button-sm custom-button"
+                                            label="Trình duyệt" icon="pi pi-arrow-up"
+                                            (click)="request(companyShareInfoDetail)">
+                        </p-button>
+                        <p-button *ngIf="companyShareInfoDetail.status == CompanyShareInfoConst.CHO_DUYET && isGranted([PermissionCompanyShareConst.CompanyShareQLPD_PDLTP_PheDuyetOrHuy])" styleClass="p-button-sm custom-button"
+                                            label="Xử lý yêu cầu" icon="pi pi-check"
+                                            (click)="approveCompanyShare(companyShareInfoDetail)">
+                        </p-button>
+                   
+                        <ng-container *ngIf="!(activeIndex > 1)">
+                            <!-- <button *ngIf="actionsDisplay?.length && (companyShareInfoDetail.isCheck == null || companyShareInfoDetail.isCheck == 'N')"
+                                class="p-button-sm custom-button" type="button" pButton icon="pi pi-ellipsis-h"
+                                (click)="menu.toggle($event)"></button>
+                            <p-menu #menu [popup]="true" [model]="actionsDisplay" [appendTo]="body" styleClass="mr-0"></p-menu> -->
+                            <p-button 
+                                *ngIf="companyShareInfoDetail.status == CompanyShareInfoConst.KHOI_TAO && isGranted([PermissionCompanyShareConst.CompanyShare_LTP_TTC_CapNhat])"
+                                styleClass="p-button-sm custom-button" label="{{ labelButtonEdit }}"
+                                icon="pi {{ isEdit ? 'pi-save' : 'pi-pencil' }}" (click)="changeEdit()">
+                            </p-button>
+                        </ng-container>
+                    </ng-container>
+                    <p-button styleClass="p-button-sm custom-button b-button-back" (click)="this.location.back()"
+                        label="Quay lại" icon="pi pi-chevron-left">
+                    </p-button>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    <p-tabView styleClass="custom-tabview" [(activeIndex)]="activeIndex" (onChange)="changeTabview($event)">
+        <p-tabPanel *ngIf="isGranted([PermissionCompanyShareConst.CompanyShare_LTP_TTC])">
+            <ng-template pTemplate="header">
+                <span> Thông tin chung </span>
+            </ng-template>
+            <div *ngIf="isGranted([PermissionCompanyShareConst.CompanyShare_LTP_TTC_ChiTiet])" class="grid detail">
+                <div class="col-12">
+                    <div class="card pt-0 mb-0">
+                            <div class="text-center">
+                                <div>
+                                    <p-image 
+                                        [src]="companyShareInfoDetail.icon ? (AppConsts.remoteServiceBaseUrl + '/' + companyShareInfoDetail?.icon) : iconDefault"
+                                        [imageStyle]="{'max-height':'50px','width':'auto'}">
+                                    </p-image>
+                                </div>
+                                <div *ngIf="isEdit" class="mt-1">
+                                    <p-fileUpload
+                                        [disabled]="!isEdit"
+                                        name="demo[]" accept=".png,.jpeg,.jpg,.svg" 
+                                        chooseLabel="Chọn icon"
+                                        chooseIcon="pi pi-image"
+                                        class="custom-file-upload"
+                                        styleClass="b-upload-logo-companyShare-info"  
+                                        [customUpload]="true" 
+                                        (uploadHandler)="myUploader($event)"
+                                        [auto]="true" >
+                                    </p-fileUpload>
+                                </div>
+                                
+                            </div>
+                            <h5 class="title-info mb-2 mt-0">Tổ chức phát hành</h5>
+                            <div class="p-fluid p-formgrid grid">
+                                <div class="field col-12 md:col-3">
+                                    <label class="title-info">Mã tổ chức phát hành</label>
+                                    <input [disabled]="true" pInputText
+                                        value="{{ companyShareInfoDetail?.issuer?.businessCustomer?.code }}"
+                                        class="custom-input-disabled" />
+                                </div>
+                                <div class="field col-12 md:col-3">
+                                    <label class="title-info">Mã số thuế</label>
+                                    <input [disabled]="true" pInputText
+                                        value="{{ companyShareInfoDetail?.issuer?.businessCustomer?.taxCode }}"
+                                        class="custom-input-disabled" />
+                                </div>
+                                <div class="field col-12 md:col-6">
+                                    <label class="title-info">Tên tổ chức phát hành</label>
+                                    <input [disabled]="true" pInputText
+                                        value="{{ companyShareInfoDetail?.issuer?.businessCustomer?.name }}"
+                                        class="custom-input-disabled" />
+                                </div>
+                            </div>
+                            <!--  -->
+                            <!-- <h5 class="title-info mt-3 mb-2"> Đại lý lưu ký </h5>
+                            <div class="p-fluid p-formgrid grid">
+                                <div class="field col-12 md:col-3">
+                                    <label class="title-info">Mã đại lý lưu ký</label>
+                                    <input [disabled]="true" pInputText
+                                        value="{{ companyShareInfoDetail?.depositProvider?.businessCustomer?.code }}"
+                                        class="custom-input-disabled" />
+                                </div>
+                                <div class="field col-12 md:col-3">
+                                    <label class="title-info">Mã số thuế</label>
+                                    <input [disabled]="true" pInputText
+                                        value="{{ companyShareInfoDetail?.depositProvider?.businessCustomer?.taxCode }}"
+                                        class="custom-input-disabled" />
+                                </div>
+                                <div class="field col-12 md:col-6">
+                                    <label class="title-info">Tên đại lý lưu ký</label>
+                                    <input [disabled]="true" pInputText
+                                        value="{{ companyShareInfoDetail?.depositProvider?.businessCustomer?.name }}"
+                                        class="custom-input-disabled" />
+                                </div>
+                            </div> -->
+                        <!-- <div class="col-1">
+                            <div class="p-fluid p-formgrid grid">
+                                <div class="col-12">
+                                    <p-image 
+                                        src="assets/layout/images/logo.svg"
+                                        imageClass="b-w-100"
+                                        [imageStyle]="{'border-radius':'8px','max-height':'350px'}" 
+                                        [preview]="true">
+                                    </p-image>
+                                </div>
+                                <div class="col-12">
+                                    <p-fileUpload
+                                        [disabled]="!isEdit"
+                                        name="demo[]" accept=".png,.jpeg,.jpg" 
+                                        chooseLabel="Chọn ảnh đại diện"
+                                        chooseIcon="pi pi-image"
+                                        class="custom-file-upload mt-3"  
+                                        [customUpload]="true" 
+                                        (uploadHandler)="myUploader($event)"
+                                        [auto]="true" >
+                                    </p-fileUpload>
+                                </div>
+                            </div>
+                        </div> -->
+                    </div>
+                    <!--  -->
+                    <div class="card pt-0 mb-0">
+                        <h5 class="mt-3 mb-2"> Thông tin cổ phần </h5>
+                        <div class="p-fluid p-formgrid grid">
+                            <div class="col-12 md:col-2">
+                                <div class="field">
+                                    <label class="title-info" htmlFor="cpsCode"> Mã cổ phần (<span
+                                            class="required-field"> * </span>)</label>
+                                    <input [disabled]="true" type="text" id="cpsCode" name="cpsCode" pInputText
+                                        [(ngModel)]="companyShareInfoDetail.cpsCode"
+                                        [ngClass]="{'ng-invalid ng-dirty' : fieldErrors?.cpsCode} + ' custom-input-disabled'"
+                                        (click)="resetValid('cpsCode')" />
+                                </div>
+                            </div>
+                            <div class="col-12 md:col-4">
+                                <div class="field">
+                                    <label class="title-info {{ isEdit ? 'hightline-title' : '' }}" htmlFor="cpsName">
+                                        Tên cổ phần <span class="required-field"> * </span></label>
+                                    <input [disabled]="!isEdit" type="text" id="cpsName" name="cpsName" pInputText
+                                        [(ngModel)]="companyShareInfoDetail.cpsName"
+                                        [ngClass]="{'ng-invalid ng-dirty' : fieldErrors?.cpsName} + ' custom-input-disabled'"
+                                        (click)="resetValid('cpsName')" />
+                                </div>
+                            </div>
+                            <div class="col-12 md:col-2">
+                                <div class="field">
+                                    <label class="title-info {{ isEdit ? 'hightline-title' : '' }}"
+                                        htmlFor="period"> Số kỳ hạn </label>
+                                    <p-inputNumber min="0" max="999999" [disabled]="!isEdit" name="period"
+                                        [(ngModel)]="companyShareInfoDetail.period"
+                                        (onInput)="changePeriod($event, 'period')"
+                                        [ngClass]="{'ng-invalid ng-dirty' : fieldErrors?.period} + ' custom-input-disabled'"
+                                        (click)="resetValid('period')" locale="de-DE">
+                                    </p-inputNumber>
+
+                                </div>
+                            </div>
+                            <div class="col-12 md:col-2">
+                                <div class="field">
+                                    <label class="title-info {{ isEdit ? 'hightline-title' : '' }}"
+                                        htmlFor="companySharePeriodUnit"> Đơn vị </label>
+                                    <p-dropdown appendTo="body" ataValue="code" optionValue="code" name="companySharePeriodUnit"
+                                        optionLabel="name" [autoDisplayFirst]="true" [disabled]="!isEdit"
+                                        [options]="CompanyShareInfoConst.unitDates"
+                                        [(ngModel)]="companyShareInfoDetail.companySharePeriodUnit"
+                                        (onChange)="changePeriod(companySharePeriod, 'companySharePeriodUnit')"
+                                        [ngClass]="{'ng-invalid ng-dirty' : (submitted && !companyShareInfoDetail.companySharePeriodUnit) || fieldErrors?.companySharePeriodUnit } + ' custom-input-disabled'"
+                                        (click)="resetValid('companySharePeriodUnit')">
+                                    </p-dropdown>
+                                </div>
+                            </div>
+                            <div class="col-12 md:col-2">
+                                <div class="field">
+                                    <label class="title-info {{ isEdit ? 'hightline-title' : '' }}"
+                                        htmlFor="interestRate"> Trái tức (%/Năm) </label>
+                                    <p-inputNumber [disabled]="!isEdit" id="interestRate" min="0" max="100" suffix="%"
+                                        name="interestRate" [(ngModel)]="companyShareInfoDetail.interestRate"
+                                        [ngClass]="{'ng-invalid ng-dirty' : fieldErrors?.interestRate} + ' custom-input-disabled'"
+                                        (click)="resetValid('interestRate')" locale="de-DE" [minFractionDigits]="2">
+                                    </p-inputNumber>
+                                </div>
+                            </div>
+
+                            <div class="col-12 md:col-2">
+                                <div class="field">
+                                    <label class="title-info {{ isEdit ? 'hightline-title' : '' }}"
+                                        htmlFor="interestRateType"> Kiểu trả trái tức </label>
+                                    <p-dropdown appendTo="body" optionValue="code" name="interestRateType"
+                                        optionLabel="name" [autoDisplayFirst]="true" [disabled]="!isEdit"
+                                        [options]="CompanyShareInfoConst.interestRateTypes"
+                                        [(ngModel)]="companyShareInfoDetail.interestRateType"
+                                        [ngClass]="{'ng-invalid ng-dirty' : (submitted && !companyShareInfoDetail.interestRateType) || fieldErrors?.interestRateType } + ' custom-input-disabled'"
+                                        (onChange)="changeInterestRateType($event.value)"
+                                        (click)="resetValid('interestRateType')">
+                                    </p-dropdown>
+                                </div>
+                            </div>
+                            <div class="col-12 md:col-2">
+                                <div class="field">
+                                    <label class="title-info {{ isEdit ? 'hightline-title' : '' }}"
+                                        htmlFor="interestPeriod"> Số kỳ trả trái tức </label>
+                                    <!-- <p-inputNumber type="number" min="1" name="interestPeriod"
+                                        [(ngModel)]="companyShareInfoDetail.interestPeriod"
+                                        [ngClass]="{'ng-invalid ng-dirty' : fieldErrors?.interestPeriod} + 'custom-input-disabled'"
+                                        (click)="resetValid('interestPeriod')"
+                                        [maxlength]="15"
+                                        [disabled]="(companyShareInfoDetail.interestRateType !== CompanyShareInfoConst.INTEREST_RATE_TYPE_PERIODIC) || !isEdit" locale="de-DE">
+                                    </p-inputNumber> -->
+                                    <p-inputNumber [disabled]="!isEdit" id="interestPeriod" name="interestPeriod"
+                                        [(ngModel)]="companyShareInfoDetail.interestPeriod"
+                                        [ngClass]="{'ng-invalid ng-dirty' : fieldErrors?.interestPeriod} + ' custom-input-disabled'"
+                                        min="0" max="999999999999"
+                                        [disabled]="(companyShareInfoDetail.interestRateType !== CompanyShareInfoConst.INTEREST_RATE_TYPE_PERIODIC) || !isEdit"
+                                        (click)="resetValid('interestPeriod')" locale="de-DE">
+                                    </p-inputNumber>
+                                </div>
+                            </div>
+                            <div class="col-12 md:col-2">
+                                <div class="field">
+                                    <label class="title-info {{ isEdit ? 'hightline-title' : '' }}"
+                                        htmlFor="interestPeriodUnit"> Đơn vị </label>
+                                    <p-dropdown appendTo="body" [autoDisplayFirst]="false"
+                                        [disabled]="(companyShareInfoDetail.interestRateType !== CompanyShareInfoConst.INTEREST_RATE_TYPE_PERIODIC) || !isEdit"
+                                        [options]="CompanyShareInfoConst.unitDates" dataValue="code" optionValue="code"
+                                        name="interestPeriodUnit" optionLabel="name"
+                                        [(ngModel)]="companyShareInfoDetail.interestPeriodUnit"
+                                        [ngClass]="{'ng-invalid ng-dirty' : (submitted && !companyShareInfoDetail.interestPeriodUnit) || fieldErrors?.interestPeriodUnit } + ' custom-input-disabled'"
+                                        (click)="resetValid('interestPeriodUnit')">
+                                    </p-dropdown>
+                                </div>
+                            </div>
+                            <div class="col-12 md:col-2">
+                                <div class="field">
+                                    <label class="title-info {{ isEdit ? 'hightline-title' : '' }}"
+                                        htmlFor="numberClosePer"> Số ngày chốt quyền </label>
+                                    <p-inputNumber [disabled]="!isEdit" id="numberClosePer" name="numberClosePer"
+                                        [(ngModel)]="companyShareInfoDetail.numberClosePer" min="0" max="999999999"
+                                        [ngClass]="{'ng-invalid ng-dirty' : fieldErrors?.numberClosePer} + ' custom-input-disabled'"
+                                        (click)="resetValid('numberClosePer')" locale="de-DE">
+                                    </p-inputNumber>
+                                </div>
+                            </div>
+                            <div class="col-12 md:col-4">
+                                <div class="field">
+                                    <label class="title-info {{ isEdit ? 'hightline-title' : '' }}" htmlFor="countType">
+                                        Hình thức tính trái tức </label>
+                                    <p-dropdown appendTo="body" optionValue="code" name="countType" optionLabel="name"
+                                        [autoDisplayFirst]="true" [disabled]="!isEdit"
+                                        [options]="CompanyShareInfoConst.countType"
+                                        [(ngModel)]="companyShareInfoDetail.countType"
+                                        [ngClass]="{'ng-invalid ng-dirty' : (submitted && !companyShareInfoDetail.countType) || fieldErrors?.countType } + ' custom-input-disabled'"
+                                        (click)="resetValid('countType')">
+                                    </p-dropdown>
+                                </div>
+                            </div>
+
+                            <div class="col-12 md:col-2">
+                                <div class="field">
+                                    <label class="title-info {{ isEdit ? 'hightline-title' : '' }}" htmlFor="parValue">
+                                        Mệnh giá </label>
+                                    <p-inputNumber mode="decimal" name="parValue" [disabled]="!isEdit"
+                                        (onInput)="changePriceOrQuantity($event.value, 'quantity')"
+                                        [(ngModel)]="companyShareInfoDetail.parValue" min="0" max="999999999999999"
+                                        [ngClass]="{'ng-invalid ng-dirty' : fieldErrors?.parValue} + ' custom-input-disabled'"
+                                        (click)="resetValid('parValue')" locale="de-DE">
+                                    </p-inputNumber>
+                                </div>
+                            </div>
+                            <div class="col-12 md:col-2">
+                                <div class="field">
+                                    <label class="title-info {{ isEdit ? 'hightline-title' : '' }}" htmlFor="quantity">
+                                        Số lượng </label>
+                                    <p-inputNumber type="text" id="quantity" name="quantity" [disabled]="!isEdit"
+                                        (onInput)="changePriceOrQuantity($event.value, 'parValue')"
+                                        [(ngModel)]="companyShareInfoDetail.quantity" min="0" max="999999999999"
+                                        [ngClass]="{'ng-invalid ng-dirty' : fieldErrors?.quantity} + ' custom-input-disabled'"
+                                        (click)="resetValid('quantity')" locale="de-DE">
+                                    </p-inputNumber>
+                                </div>
+                            </div>
+                            <div class="col-12 md:col-2">
+                                <div class="field">
+                                    <label class="title-info {{ isEdit ? 'hightline-title' : '' }}" htmlFor="quantity">
+                                        SL còn lại 
+                                    </label>
+                                    <input 
+                                        pInputText [disabled]="true" class="custom-input-disabled"
+                                        value="{{ utils.transformMoney(companyShareInfoDetail?.soLuongConLai) }}" 
+                                    />
+                                </div>
+                            </div>
+                            <div class="col-12 md:col-2">
+                                <div class="field">
+                                    <label class="title-info {{ isEdit ? 'hightline-title' : '' }}"
+                                        htmlFor="totalValue"> Tổng giá trị </label>
+                                    <input
+                                        pInputText 
+                                        class="custom-input-disabled" [disabled]="!isEdit"
+                                        value="{{ utils.transformMoney(companyShareInfoDetail.parValue*companyShareInfoDetail.quantity) }}"
+                                    />
+                                </div>
+                            </div>
+                            <div class="col-12 md:col-4">
+                                <div class="grid formgrid">
+                                    <div class="col-12 md:col-6">
+                                        <div class="field">
+                                            <label class="title-info {{ isEdit ? 'hightline-title' : '' }}"
+                                                for="issueDate"> Ngày phát hành </label>
+                                            <p-calendar [disabled]="!isEdit" inputId="issueDate" dateFormat="dd/mm/yy"
+                                                locale="vi" appendTo="body" utc="true" placeholder="dd/mm/yyyy"
+                                                [(ngModel)]="companyShareInfoDetail.issueDate"
+                                                (onSelect)="changeCelldate()" (onInput)="changeCelldate()"
+                                                [ngClass]="{'ng-invalid ng-dirty' : fieldErrors?.issueDate} + ' custom-input-disabled'"
+                                                (click)="resetValid('issueDate')" [showIcon]="true">
+                                            </p-calendar>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 md:col-6">
+                                        <div class="field">
+                                            <label class="title-info {{ isEdit ? 'hightline-title' : '' }}"
+                                                for="dueDate"> Ngày đáo hạn </label>
+                                            <p-calendar [disabled]="!isEdit" inputId="dueDate" dateFormat="dd/mm/yy"
+                                                locale="vi" appendTo="body" utc="true" placeholder="dd/mm/yyyy"
+                                                [(ngModel)]="companyShareInfoDetail.dueDate"
+                                                [ngClass]="{'ng-invalid ng-dirty' : fieldErrors?.dueDate} + ' custom-input-disabled'"
+                                                (click)="resetValid('dueDate')" [showIcon]="true">
+                                            </p-calendar>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 md:col-2">
+                                <div class="field">
+                                    <label class="title-info {{ isEdit ? 'hightline-title' : '' }}"
+                                        htmlFor="numberInvestor"> Số KH tối đa </label>
+                                    <p-inputNumber [disabled]="!isEdit" id="maxInvestor" name="maxInvestor"
+                                        [(ngModel)]="companyShareInfoDetail.maxInvestor" min="0" max="9999999999"
+                                        [ngClass]="{'ng-invalid ng-dirty' : fieldErrors?.maxInvestor} + ' custom-input-disabled'"
+                                        (click)="resetValid('maxInvestor')" locale="de-DE">
+                                    </p-inputNumber>
+                                </div>
+                            </div>
+                            <div class="col-12 md:col-2">
+                                <div class="field">
+                                    <label class="title-info {{ isEdit ? 'hightline-title' : '' }}"
+                                        htmlFor="allowSbdDay" pTooltip="Số ngày nắm giữ tối thiểu được phép bán lại">
+                                        Số ngày nắm giữ ... <i class="pi pi-question-circle"></i>
+                                    </label>
+                                    <p-inputNumber [disabled]="!isEdit"
+                                        pTooltip="Số ngày nắm giữ tối thiểu được phép bán lại" id="allowSbdDay"
+                                        name="allowSbdDay" [(ngModel)]="companyShareInfoDetail.allowSbdDay" min="0"
+                                        max="999999999"
+                                        [ngClass]="{'ng-invalid ng-dirty' : fieldErrors?.allowSbdDay} + ' custom-input-disabled'"
+                                        (click)="resetValid('allowSbdDay')" locale="de-DE">
+                                    </p-inputNumber>
+                                </div>
+                            </div>
+                            <div class="col-12 md:col-2">
+                                <div class="field">
+                                    <label class="title-info {{ isEdit ? 'hightline-title' : '' }}"
+                                        htmlFor="isPaymentGuarantee"> Bảo lãnh thanh toán? </label>
+                                    <p-dropdown dataValue="code" optionValue="code" name="isPaymentGuarantee"
+                                        optionLabel="name" appendTo="body" [autoDisplayFirst]="true"
+                                        [disabled]="!isEdit" [options]="CompanyShareInfoConst.booleans"
+                                        [(ngModel)]="companyShareInfoDetail.isPaymentGuarantee"
+                                        [ngClass]="{'ng-invalid ng-dirty' : (submitted && !companyShareInfoDetail.isPaymentGuarantee) || fieldErrors?.isPaymentGuarantee } + ' custom-input-disabled'"
+                                        (click)="resetValid('isPaymentGuarantee')">
+                                    </p-dropdown>
+                                </div>
+                            </div>
+                            <div class="col-12 md:col-2">
+                                <div class="field">
+                                    <label class="title-info {{ isEdit ? 'hightline-title' : '' }}"
+                                        htmlFor="isCollateral"> Tài sản đảm bảo </label>
+                                    <p-dropdown appendTo="body" dataValue="isCollateral" optionValue="isCollateral"
+                                        name="isCollateral" optionLabel="name" [autoDisplayFirst]="true"
+                                        [disabled]="!isEdit" [options]="CompanyShareInfoConst.booleans"
+                                        [(ngModel)]="companyShareInfoDetail.isCollateral"
+                                        [ngClass]="{'ng-invalid ng-dirty' : (submitted && !companyShareInfoDetail.isCollateral) || fieldErrors?.isCollateral } + ' custom-input-disabled'"
+                                        (click)="resetValid('isCollateral')">
+                                    </p-dropdown>
+                                </div>
+                            </div>
+                            <div class="col-12 md:col-2">
+                                <div class="field">
+                                    <label class="title-info {{ isEdit ? 'hightline-title' : '' }}"
+                                        htmlFor="isCollateral"> Niêm yết </label>
+                                    <p-dropdown appendTo="body" dataValue="isCollateral" optionValue="isCollateral"
+                                        name="isCollateral" optionLabel="name" [autoDisplayFirst]="false"
+                                        [disabled]="!isEdit" [options]="CompanyShareInfoConst.booleans"
+                                        [(ngModel)]="companyShareInfoDetail.isCollateral"
+                                        [ngClass]="{'ng-invalid ng-dirty' : (submitted && !companyShareInfoDetail.isCollateral) || fieldErrors?.isCollateral } + ' custom-input-disabled'"
+                                        (click)="resetValid('isCollateral')">
+                                    </p-dropdown>
+                                </div>
+                            </div>
+                            <div class="col-12 md:col-2">
+                                <div class="field">
+                                    <label class="title-info {{ isEdit ? 'hightline-title' : '' }}" htmlFor="isAllowSbd">
+                                        Cho bán lại trước hạn?
+                                    </label>
+                                    <p-dropdown appendTo="body" dataValue="N" optionValue="code" name="isAllowSbd"
+                                        optionLabel="name" [autoDisplayFirst]="true"
+                                        [options]="CompanyShareInfoConst.booleans" [disabled]="!isEdit"
+                                        [(ngModel)]="companyShareInfoDetail.isAllowSbd"
+                                        [ngClass]="{'ng-invalid ng-dirty' : (submitted && !companyShareInfoDetail.isAllowSbd) || fieldErrors?.isAllowSbd } + ' custom-input-disabled'"
+                                        (click)="resetValid('isAllowSbd')">
+                                    </p-dropdown>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </p-tabPanel>
+        <p-tabPanel *ngIf="isGranted([PermissionCompanyShareConst.CompanyShare_LTP_TTC])">
+            <ng-template pTemplate="header">
+                <!-- <i class="pi pi-star mr-2"></i> -->
+                <span> Mô tả </span>
+            </ng-template>
+            <div class="grid detail">
+                <div class="col-12">
+                    <div class="card pt-0 mb-0">
+                        <div class="p-fluid p-formgrid grid">
+                            <div class="checkTextType" style="width: 100%;">
+                                <button  (click)="markdownType()" style="width: 50%;padding: 5px;" class="markdown-btn">MARKDOWN</button>
+                                <button  (click)="htmlType()" style="width: 50%;padding: 5px;" class="html-btn">HTML</button>
+                            </div>
+                            <div class="field col-12 md:col-6"> 
+                                
+                                <label class="title-info {{ isEdit ? 'hightline-title' : '' }}"> Mô tả loại cổ phần </label>
+                                <angular-editor *ngIf="checkHtmlType"
+                                    id="description"
+                                    [ngClass]="!isEdit ? 'b-disabled-click' : ''"
+                                    [disabled]="true"
+                                    [placeholder]="'Nhập nội dung...'" 
+                                    [(ngModel)]="companyShareInfoDetail.description"
+                                    [config]="editorConfig">
+                                </angular-editor>
+                                <!-- // markdown -->
+                                <div *ngIf="checkMarkdownType">
+                                    <textarea  [placeholder]="'Nhập nội dung...'" #myTextArea  pInputTextarea [rows]="11"  id="content"
+                                        class="custom-input"></textarea>
+                                </div>
+                            </div>
+                            <div class="field col-12 md:col-6">
+                                <label class="title-info {{ isEdit ? 'hightline-title' : '' }}">Giới thiệu</label>
+                                <angular-editor *ngIf="checkHtmlType"
+                                    id="content"
+                                    [ngClass]="!isEdit ? 'b-disabled-click' : ''" 
+                                    [placeholder]="'Nhập nội dung...'"
+                                    [(ngModel)]="companyShareInfoDetail.content" 
+                                    [config]="editorConfig">
+                                </angular-editor>
+                                <div *ngIf="checkMarkdownType">
+                                    <textarea  [placeholder]="'Nhập nội dung...'" #myTextArea  pInputTextarea [rows]="11"  id="content"
+                                        class="custom-input"></textarea>
+                                </div>
+                            </div>
+                            <div class="field col-12 md:col-12">
+                                <label class="title-info {{ isEdit ? 'hightline-title' : '' }}">Thanh toán gốc và lợi tức</label>
+                                <angular-editor *ngIf="checkHtmlType"
+                                    id="payment-content"
+                                    [ngClass]="!isEdit ? 'b-disabled-click' : ''" 
+                                    [placeholder]="'Nhập nội dung...'"
+                                    [(ngModel)]="companyShareInfoDetail.policyPaymentContent" 
+                                    [config]="editorConfig">
+                                </angular-editor>
+                                <div *ngIf="checkMarkdownType">
+                                    <textarea  [placeholder]="'Nhập nội dung...'" #myTextArea  pInputTextarea [rows]="11"  id="content"
+                                        class="custom-input"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </p-tabPanel>
+        <p-tabPanel [header]="'taiSanDamBao'" *ngIf="isGranted([PermissionCompanyShareConst.CompanyShare_LTP_TSDB])">
+            <ng-template pTemplate="header">
+                <!-- <i class="pi pi-star mr-2"></i> -->
+                <span> Tài sản đảm bảo</span>
+            </ng-template>
+            <app-company-share-info-collateral *ngIf="tabViewActive.taiSanDamBao && isGranted([PermissionCompanyShareConst.CompanyShare_LTP_TSDB])"></app-company-share-info-collateral>
+        </p-tabPanel>
+        <p-tabPanel [header]="'hoSoPhapLy'" *ngIf="isGranted([PermissionCompanyShareConst.CompanyShare_LTP_HSPL])">
+            <ng-template pTemplate="header">
+                <!-- <i class="pi pi-star mr-2"></i> -->
+                <span> Hồ sơ pháp lý</span>
+            </ng-template>
+            <app-company-share-info-file *ngIf="tabViewActive.hoSoPhapLy && isGranted([PermissionCompanyShareConst.CompanyShare_LTP_TTTT])"></app-company-share-info-file>
+        </p-tabPanel>
+        <p-tabPanel [header]="'thongTinTraiTuc'" *ngIf="isGranted([PermissionCompanyShareConst.CompanyShare_LTP_TTTT])">
+            <ng-template pTemplate="header">
+                <!-- <i class="pi pi-star mr-2"></i> -->
+                <span> Thông tin trái tức </span>
+            </ng-template>
+            <app-company-share-info-coupon *ngIf="tabViewActive.thongTinTraiTuc && isGranted([PermissionCompanyShareConst.CompanyShare_LTP_TTTT])"></app-company-share-info-coupon>
+        </p-tabPanel>
+    </p-tabView>
+</div>

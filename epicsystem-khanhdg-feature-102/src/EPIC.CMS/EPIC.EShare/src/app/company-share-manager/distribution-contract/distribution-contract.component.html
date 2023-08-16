@@ -1,0 +1,286 @@
+<div *ngIf="isGranted([PermissionCompanyShareConst.CompanyShareMenuQLTP_HDPP_DanhSach])" class="grid ml-0 mr-0 mt-0">
+    <div class="col-12">
+        <div class="card b-list">
+            <div class="p-fluid p-formgrid grid b-header">
+                <div class="col-12 md:col-7 b-title">
+                    <h4 style="display:inline"> Hợp đồng phân phối </h4>
+                </div>
+                <div class="col-12 md:col-5 b-action">
+                    <button *ngIf="isGranted([PermissionCompanyShareConst.CompanyShareMenuQLTP_HDPP_ThemMoi])" pButton pRipple label="Thêm mới" icon="pi pi-plus" class="p-button-success mr-2" (click)="create()"></button>
+                </div>
+            </div>
+            <p-toast></p-toast> 
+            <p-confirmDialog [style]="{width: 'auto'}" [baseZIndex]="10000"></p-confirmDialog>
+            <p-table 
+                #distributionContractTable 
+                [value]="rows" 
+                [columns]="_selectedColumns"
+                [loading]="isLoading" [rowHover]="true" [showCurrentPageReport]="true" [paginator]="false" 
+                (onPageChange)="setPage($event)" responsiveLayout="scroll" dataKey="code" 
+                [scrollable]="true" scrollHeight="{{(screenHeight*0.56) + 'px'}}" styleClass="custom-table">
+                <ng-template pTemplate="caption">
+					<div class="flex justify-content-between flex-column sm:flex-row">
+                        <div class="flex justify-content-between flex-column sm:flex-row">
+                            
+                            <span class="block mt-2 md:mt-0 p-input-icon-left">
+                                <i class="pi pi-search"></i>
+                                <input pInputText type="text" placeholder="Tìm kiếm..." [(ngModel)]="keyword"
+                                    (input)="changeKeyword($event)" />
+                            </span>
+                            <span class="p-float-label ml-1">
+                                <p-dropdown id="dropdownStatus" [style]="{'width':'12rem'}" [options]="statusSearch" optionLabel="name"
+                                optionValue="code" [(ngModel)]="status" class=" ml-2"
+                                (onChange)="changeStatus($event.value)">
+                                </p-dropdown>   
+                                <label class="font-normal" for="dropdownStatus">Trạng thái</label>
+                            </span>
+                        </div>
+					</div>
+                </ng-template>
+                <ng-template pTemplate="header" let-columns>
+					<tr>
+						<th style="max-width: 5rem; min-width: 5rem;" pFrozenColumn alignFrozen="left" class="b-border-frozen-left b-border-frozen-right"> #ID </th>
+                        <th *ngFor="let col of columns" [ngStyle]="{'max-width': !col.isPin ? col.width : '', 'min-width': col.width}" [ngClass]=" col.class ">
+                            {{ col.header }} 
+                        </th>
+                        <th style="max-width: 8rem; min-width: 8rem;" pFrozenColumn alignFrozen="right" [frozen]="true" class="b-border-frozen-right">Trạng thái </th>
+                        <th style="max-width: 5rem; min-width: 5rem; justify-content: center;" pFrozenColumn alignFrozen="right" [frozen]="true" class="b-table-actions"> 
+                            <i class="pi pi-cog" (click)="setColumn(cols, _selectedColumns)"></i>
+                        </th>
+					</tr>
+				</ng-template>
+                <ng-template pTemplate="body" let-row let-rowIndex="rowIndex" let-columns="columns">
+                    <tr>
+                        <td style="max-width: 5rem; min-width: 5rem; " pFrozenColumn alignFrozen="left" class="b-border-frozen-left b-border-frozen-right"> {{ row?.distributionContractId }} </td>
+                        
+                        <td *ngFor="let col of columns" [ngStyle]="{'max-width': !col.isPin ? col.width : '', 'min-width': col.width}" [ngClass]=" col.class ">
+                            <div [ngClass]="col.cutText" [title]="row[col.field]">
+                                {{ row[col.field] }}
+                            </div>
+                        </td>
+
+                        <td style="max-width: 8rem; min-width: 8rem;" pFrozenColumn alignFrozen="right" [frozen]="true" class="b-border-frozen-right"> 
+                            <p-tag styleClass="p-tag-{{ DistributionContractConst.getSeverityStatus(row.status) }}" severity="{{ DistributionContractConst.getSeverityStatus(row.status) }}" value="{{ DistributionContractConst.getNameStatus(row.status) }}"></p-tag> 
+                        </td>
+                        <td style="max-width: 5rem; min-width: 5rem;" pFrozenColumn alignFrozen="right" [frozen]="true" class="b-table-actions">
+                            <div class="flex">
+                                <i class="pi pi-ellipsis-h"  (click)="menu.toggle($event)"></i>
+                                <p-menu 
+                                    #menu [popup]="true" class="button-actions"
+                                    [model]="listAction[rowIndex]" appendTo="body"
+                                    >
+                                </p-menu>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+					<tr>
+						<td colspan="7">Không có dữ liệu.</td>
+					</tr>
+				</ng-template>
+				<ng-template pTemplate="loadingbody">
+					<tr>
+						<td colspan="7"> Đang tải dữ liệu ... </td>
+					</tr>
+				</ng-template>
+            </p-table>
+            <p-paginator 
+                [rows]="page.pageSize"
+                [totalRecords]="page.totalItems" 
+                [rowsPerPageOptions]="[25, 50, 100, 200]" 
+                currentPageReportTemplate="Tất cả {{ page.totalItems }} dòng" 
+                showCurrentPageReport="true"
+                (onPageChange)="setPage($event)">
+            </p-paginator>
+        </div>
+		<!-- THEM & SUA-->
+            <p-dialog [(visible)]="modalDialog" [style]="{width: '1000px'}" [header]="header()" [modal]="true" class="p-fluid" [maximizable]="true">
+                <ng-template pTemplate="content">
+                    <div class="card pt-0">
+                        <div class="grid formgrid">
+                            <!-- Lô cổ phần -->
+                            <ng-container>
+                                <div class="col-12 md:col-12 title-group-input">
+                                    <h6> Thông tin đại lý sơ cấp </h6>
+                                </div>
+                                <div class="col-12 md:col-5">
+                                    <div class="field">
+                                        <label htmlFor="companyShareId"> Đại lý sơ cấp </label>
+                                        <input [disabled]="true" pInputText value="{{ tradingProviderInfo?.name }}" class="custom-input-disabled"/>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-2">
+                                    <label htmlFor="search" class="mb-2"> &nbsp; </label> <br>
+                                    <div style="vertical-align: -webkit-baseline-middle; margin-top: 6px">
+                                        <p-button label="Tìm kiếm" icon="pi pi-search" styleClass="mr-2 mb-2" (onClick)="showTradingProvider()"></p-button>                                                                                  
+                                    </div>
+                                </div>
+
+                                <div class="col-12 md:col-2">
+                                    <div class="field">
+                                        <label htmlFor="companyShareId"> Số điện thoại </label>
+                                        <input [disabled]="true" pInputText value="{{ tradingProviderInfo?.phone }}" class="custom-input-disabled"/>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 md:col-3">
+                                    <div class="field">
+                                        <label htmlFor="companyShareId"> Email </label>
+                                        <input [disabled]="true" pInputText value="{{ tradingProviderInfo?.email }}" title="taikhoancuatoi1123@gmail.com" class="custom-input-disabled"/>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 md:col-12">
+                                    <div class="field">
+                                        <label htmlFor="companyShareId"> Địa chỉ </label>
+                                        <input [disabled]="true" pInputText value="{{ tradingProviderInfo?.address }}" title="taikhoancuatoi1123@gmail.com" class="custom-input-disabled"/>
+                                    </div>
+                                </div>
+                            </ng-container>
+                            <!-- Thông tin phát hành sơ cấp -->
+                            <ng-container>
+                                <div class="col-12 md:col-12 title-group-input">
+                                    <h6> Thông tin cổ phần </h6>
+                                </div>
+                                
+                                <div class="col-12 md:col-5">
+                                    <div class="field">
+                                        <label htmlFor="companySharePrimaryId"> Chọn cổ phần <span class="required-field"> * </span> </label>
+                                        <p-dropdown [filter]="true" [filterBy]="'companyShareName'" 
+                                            optionValue="companySharePrimaryId" name="companySharePrimaryId" optionLabel="companyShareName" appendTo="body"
+                                            [options]="companySharePrimarys" [autoDisplayFirst]="false"
+                                            [(ngModel)]="distributionContract.companySharePrimaryId" 
+                                            [ngClass]="{'ng-invalid ng-dirty' : (submitted && !distributionContract.companySharePrimaryId) || fieldErrors?.companySharePrimaryId }"
+                                            (onChange)="changeProductcompanySharePrimary($event)" 
+                                            (click)="resetValid('companySharePrimaryId')">
+                                        </p-dropdown>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-3">
+                                    <div class="field">
+                                        <label htmlFor="code"> Mã cổ phần </label>
+                                        <input pInputText value="{{ companySharePrimaryInfo?.companyShareInfo?.companyShareCode }}" [disabled]="true" class="custom-input-disabled"/>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-4">
+                                    <div class="field">
+                                        <label htmlFor="name"> Tên cổ phần </label>
+                                        <input pInputText value="{{ companySharePrimaryInfo?.companyShareInfo?.companyShareName }}" [disabled]="true" class="custom-input-disabled"/>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-3">
+                                    <div class="field">
+                                        <label htmlFor="name"> Ngày phát hành </label>
+                                        <input pInputText value="{{ formatDate(companySharePrimaryInfo?.openCellDate) }}" [disabled]="true" class="custom-input-disabled"/>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-3">
+                                    <div class="field">
+                                        <label htmlFor="name"> SL nắm giữ </label>
+                                        <input pInputText value="{{ utils.transformMoney(companySharePrimaryInfo?.soLuongTraiPhieuNamGiu)}}" [disabled]="true" class="custom-input-disabled"/>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-3">
+                                    <div class="field">
+                                        <label htmlFor="name"> SL còn lại </label>
+                                        <input pInputText value="{{ utils.transformMoney(companySharePrimaryInfo?.soLuongTraiPhieuConLai) }}" [disabled]="true" class="custom-input-disabled"/>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-3">
+                                    <div class="field">
+                                        <label htmlFor="name"> Tổng số CP </label>
+                                        <input pInputText value="{{ utils.transformMoney(companySharePrimaryInfo?.quantity) }}" [disabled]="true" class="custom-input-disabled"/>
+                                    </div>
+                                </div>
+                            </ng-container>
+                            <!-- Thông tin phát hành sơ cấp -->
+                            <ng-container>
+                                <div class="col-12 md:col-12 title-group-input">
+                                    <h6> Thông tin cần nhập </h6>
+                                </div>
+                                <div class="col-12 md:col-3">
+                                    <div class="field">
+                                        <label htmlFor="totalValue"> Tổng số tiền <span class="required-field"> * </span> </label>
+                                        <p-inputNumber 
+                                            id="totalValue" name="totalValue" mode="decimal"
+                                            (onInput)="countOrderPrice($event.value, 'quantity')"
+                                            [(ngModel)]="distributionContract.totalValue" 
+                                            [ngClass]="{'ng-invalid ng-dirty' : fieldErrors?.totalValue}" 
+                                            (click)="resetValid('totalValue')"
+                                            locale="de-DE">
+                                        </p-inputNumber>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-3">
+                                    <div class="field">
+                                        <label htmlFor="quantity"> Số lượng <span class="required-field"> * </span> </label>
+                                        <p-inputNumber
+                                            type="text" id="quantity" name="quantity" min="1"
+                                            (onInput)="countOrderPrice($event.value, 'totalValue')"
+                                            [max]="companySharePrimaryInfo?.soLuongTraiPhieuConLai || companySharePrimaryInfo?.quantity"
+                                            [(ngModel)]="distributionContract.quantity" 
+                                            [ngClass]="{'ng-invalid ng-dirty' :  fieldErrors?.quantity}" 
+                                            (click)="resetValid('quantity')"
+                                            locale="de-DE">
+                                        </p-inputNumber>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-3">
+                                    <div class="field">
+                                        <label htmlFor="menhGia"> Đơn giá </label>
+                                        <input 
+                                            id="menhGia" name="menhGia" pInputText [disabled]="true" class="custom-input-disabled"
+                                            [value]="distributionContract.orderPrice ? ( utils.transformMoney(distributionContract.orderPrice)) : null"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-3">
+                                    <div class="field">
+                                        <label htmlFor="priceType"> Ngày mua <span class="required-field"> * </span> </label>
+                                        <p-calendar
+                                            [minDate]="companySharePrimaryInfo?.openCellDate"
+                                            [maxDate]="companySharePrimaryInfo?.closeCellDate"
+                                            inputId="holdDate" dateFormat="dd/mm/yy" locale="vi" appendTo="body" utc="true" placeholder="dd/mm/yyyy"
+                                            [(ngModel)]="distributionContract.dateBuy" 
+                                            [ngClass]="{'ng-invalid ng-dirty' : fieldErrors?.dateBuy}" 
+                                            (click)="resetValid('openCellDate')"
+                                            [showIcon]="true">
+                                        </p-calendar>
+                                    </div>
+                                </div>
+                            </ng-container>
+                        </div>
+                    </div>
+                    
+                </ng-template>
+                <ng-template pTemplate="footer">
+                    <button pButton pRipple label="Hủy" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+                    <button pButton pRipple label="Lưu" icon="pi pi-check" class="p-button-text" [disabled]="!validForm() || submitted" (click)="save()"></button>
+                </ng-template>
+            </p-dialog>
+		<!-- XOA -->
+        <p-dialog [(visible)]="deleteItemDialog" header="Xóa phát hành sơ cấp" [modal]="true" [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                <span *ngIf="distributionContract">Bạn có chắc chắn xóa phát hành sơ cấp {{ distributionContract.name }} ?</span>
+            </div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="Không" (click)="deleteItemDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Có" (click)="confirmDelete()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="confirmRequestDialog" header="Gửi yêu cầu duyệt" [modal]="true" [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <span *ngIf="distributionContract">Bạn muốn gửi yêu cầu phê duyệt cho phát hành sơ cấp này ?</span>
+            </div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="Không" (click)="confirmRequestDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Có" (click)="confirmRequest()"></button>
+            </ng-template>
+        </p-dialog>
+    </div>
+</div>
+
+

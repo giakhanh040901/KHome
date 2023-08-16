@@ -1,0 +1,90 @@
+
+<div class="grid p-fluid">
+    <p-toast key="policyContract"></p-toast>
+    <ng-container>
+        <div class="col-12">
+         
+        </div>
+        <div class="col-12 md:col-12">
+            <div class="field mb-0">
+                <label htmlFor="code">Chọn ngân hàng<span class="required-field"> * </span>
+                </label>
+                <p-dropdown 
+                class="custom-input-disabled" appendTo="body"
+                optionValue="businessCustomerBankAccId" 
+                 optionLabel="labelName"
+                 placeholder="Chọn ngân hàng"
+                [options]="listBanks"  (onChange)="changeBank($event.value)"
+                [(ngModel)]="tradingBankAccId">
+                </p-dropdown>
+               
+            </div>
+        </div>
+        <div class="col-12 md:col-3">
+            <div class="field mb-0">
+                <label htmlFor=""> tranDate </label>
+                <p-calendar class="ml-2 pcalendarHome" placeholder="dd/mm/yyyy" appendTo="body" dateFormat="dd/mm/yy" 
+                                [(ngModel)]="giaLapMSB.tranDate" [readonlyInput]="true" 
+                                [showIcon]="true"
+                                locale="vi" ></p-calendar>
+            </div>
+        </div>
+        <div class="col-12 md:col-3">
+            <div class="field mb-0">
+                <label htmlFor=""> tranAmount </label>
+                <textarea name="description" [(ngModel)]="giaLapMSB.tranAmount" [rows]="1" pInputText></textarea>
+            </div>
+        </div>
+        <div class="col-12 md:col-6"></div>
+        <div class="col-12 md:col-3">
+            <button pRipple pButton label="Gọi thông báo" (click)="receiveNotification()"></button>
+        </div>
+        <div class="col-12">
+         
+        </div>
+        <!-- <div class="col-12 md:col-2">
+            <div class="field mb-0">
+                <label htmlFor=""> id </label>
+                <textarea name="description" [(ngModel)]="developer.id" [rows]="1" pInputText></textarea>
+            </div>
+        </div>
+        <div class="col-12 md:col-2">
+            <div class="field mb-0">
+                <label htmlFor=""> accessCode </label>
+                <textarea name="description" [(ngModel)]="developer.accessCode" [rows]="1" pInputText></textarea>
+            </div>
+        </div>
+        <div class="col-12 md:col-2">
+            <div class="field mb-0">
+                <label htmlFor=""> mId </label>
+                <textarea name="description" [(ngModel)]="developer.mId" [rows]="1" pInputText></textarea>
+            </div>
+        </div>
+        <div class="col-12 md:col-2">
+            <div class="field mb-0">
+                <label htmlFor=""> prefixMsb </label>
+                <textarea name="description" [(ngModel)]="developer.prefixMsb" [rows]="1" pInputText></textarea>
+            </div>
+        </div>
+        <div class="col-12 md:col-2">
+            <div class="field mb-0">
+                <label htmlFor=""> tId </label>
+                <textarea name="description" [(ngModel)]="developer.tId" [rows]="1" pInputText></textarea>
+            </div>
+        </div>
+        <div class="col-12 md:col-2">
+            <div class="field mb-0">
+                <label htmlFor=""> deleted </label>
+                <textarea name="description" [(ngModel)]="developer.deleted" [rows]="1" pInputText></textarea>
+            </div>
+        </div> -->
+
+
+    </ng-container>
+</div>
+<div class="p-dialog-footer e-custom-dialog-footer" >
+    <button pButton pRipple label="Hoàn thành" icon="pi pi-times" class="p-button-text p-confirm-dialog-reject" (click)="close()"></button>
+    <!-- || !validForm() -->
+</div>
+
+         

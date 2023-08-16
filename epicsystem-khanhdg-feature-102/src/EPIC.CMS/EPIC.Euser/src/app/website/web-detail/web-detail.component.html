@@ -1,0 +1,128 @@
+
+<!-- ConfirmService -->
+<p-confirmDialog [style]="{width: 'auto' }" [baseZIndex]="10000"></p-confirmDialog>
+<!--  -->
+<p-toast></p-toast> 
+
+<div class="grid ml-0 mr-0 mt-0">
+    <div class="col-12">
+        <div class="card b-list pt-0">
+            <div class="p-fluid p-formgrid grid b-header">
+                <div class="col-12 md:col-7 b-title">
+                    <h4 style="display:inline"> Danh sách vai trò {{ webInfo?.name }}</h4>
+                </div>
+                <div class="col-12 md:col-5 b-action">
+                    <button *ngIf="userLogin.user_type == UserTypes.EPIC_ROOT && isGranted([PermissionUserConst.UserPhanQuyen_Website_ThemVaiTro])"
+                        (click)="createDefaultRole()" label="Thêm vai trò mặc định" icon="pi pi-plus" class="p-button-success mr-2" pButton pRipple>
+                    </button>
+
+                    <button *ngIf="isGranted([PermissionUserConst.UserPhanQuyen_Website_ThemVaiTro])"
+                        (click)="createRole()" label="Thêm vai trò" icon="pi pi-plus" class="p-button-success mr-2" pButton pRipple>
+                    </button>
+                    
+                    <!-- <button
+                        *ngIf="userLogin.user_type == UserTypes.PARTNER_ROOT" 
+                        (click)="createRolePartner()" label="Thêm vai trò" icon="pi pi-plus" class="p-button-success mr-2" pButton pRipple>
+                    </button>
+                    <button
+                        *ngIf="userLogin.user_type == UserTypes.EPIC_ROOT" 
+                        (click)="createRoleEpic()" label="Thêm vai trò" icon="pi pi-plus" class="p-button-success mr-2" pButton pRipple>
+                    </button> -->
+                </div>
+            </div>
+            <p-table 
+                #webTable 
+                [value]="rows" 
+                [loading]="isLoading" [rowHover]="true"
+                responsiveLayout="scroll" dataKey="code"
+                [scrollable]="true" scrollHeight="{{ (screenHeight*0.65) + 'px' }}" styleClass="custom-table" >
+                <ng-template pTemplate="caption">
+                    <div class="flex">
+                        <div class="flex justify-content-between flex-column sm:flex-row">
+                            <span class="block mt-2 md:mt-0 p-input-icon-left">
+                                <i class="pi pi-search"></i>
+                                <input 
+                                    pInputText type="text" placeholder="Tìm kiếm..." style="min-width: 300px;"
+                                    [(ngModel)]="keyword" (keyup)="changeKeyword($event)"
+                                />
+                            </span>
+                        </div>
+                        <div class="flex justify-content-between flex-column sm:flex-row">
+                                
+                            <span class="p-float-label b-custom ml-2">
+                                <p-dropdown 
+                                [style]="{'width':'14rem'}" [options]="ActiveDeactiveConst.listStatus" optionLabel="name"
+                                optionValue="code" [(ngModel)]="status" class="ml-3" placeholder="Tất cả"
+                                (onChange)="changeStatusPage($event.value)" [showClear]="true" [autoDisplayFirst]="true">
+                                </p-dropdown>   
+                            </span>
+                        </div>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+					<tr>
+                        <th style="min-width: 5rem; max-width: 5rem;"> #ID </th>
+                        <th style="width: 12rem;"> Tên vai trò </th>
+                        <th style="width: 12rem;"> Vai trò </th>
+                        <!-- <th style="width: 12rem;"> Mô tả </th> -->
+                        <th style="min-width: 8rem; max-width: 8rem;"> SL sử dụng </th>
+                        <!-- <th style="width: 12rem;"> Admin </th> -->
+                        <!--  -->
+                        <th style="width: 7rem; max-width: 7rem;" pFrozenColumn alignFrozen="right" [frozen]="true" class="b-border-frozen-right"> Trạng thái </th>                
+                        <th style="min-width: 3rem; max-width: 3rem; justify-content: center;" pFrozenColumn alignFrozen="right" [frozen]="true"></th>
+					</tr>
+				</ng-template>
+                <ng-template pTemplate="body" let-row let-rowIndex="rowIndex">
+                    <tr>
+                        <td style="min-width: 5rem; max-width: 5rem;"> {{ row.id }} </td>
+                        <td style="width: 12rem;"> {{ row.name }} </td>
+                        <td style="width: 12rem;"> {{ row.roleType == RoleTypeConst.MAC_DINH ? "Vai trò mặc định" : "Vai trò cấu hình" }} </td>
+                        <!-- <td style="width: 12rem;"> {{ row.url }} </td> -->
+                        <!-- <td style="width: 12rem;"> {{ row.description }} </td> -->
+                        <td style="min-width: 8rem; max-width: 8rem;"> {{ row.totalUse }} </td>
+                        <!--  -->
+                        <td style="width: 7rem; max-width: 7rem;" pFrozenColumn alignFrozen="right" [frozen]="true" class="b-border-frozen-right">
+                            <p-tag 
+                                styleClass="p-tag-{{ ActiveDeactiveConst.getInfo(row.status, 'severity') }}" 
+                                severity="{{ ActiveDeactiveConst.getInfo(row.status, 'severity') }}" 
+                                value="{{ ActiveDeactiveConst.getInfo(row.status, 'name') }}">
+                            </p-tag> 
+                        </td>             
+                        <td style="min-width: 3rem; max-width: 3rem; justify-content: end; margin-right: 0 !important;" pFrozenColumn alignFrozen="right" [frozen]="true" class="flex b-table-actions">
+                            <div class="flex" style="flex: 1; justify-content: space-between;">
+                                <i class="pi pi-ellipsis-h"  (click)="menu.toggle($event)"></i>
+                                <p-menu 
+                                    #menu [popup]="true"class="button-actions"
+                                    [model]="listAction[rowIndex]" appendTo="body">
+                                </p-menu>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+					<tr>
+						<td colspan="7">Không có dữ liệu.</td>
+					</tr>
+				</ng-template>
+				<ng-template pTemplate="loadingbody">
+					<tr>
+						<td colspan="7"> Đang tải dữ liệu ... </td>
+					</tr>
+				</ng-template>
+            </p-table>
+            <!-- <p-paginator                 
+                [rows]="page.pageSize" 
+                [totalRecords]="page.totalItems" 
+                [rowsPerPageOptions]="[25, 50, 100, 200]" 
+                currentPageReportTemplate="Tất cả {{ page.totalItems }} dòng" 
+                showCurrentPageReport="true"
+                (onPageChange)="setPage($event)">
+            </p-paginator> -->
+        </div>
+		<!-- THEM & SUA-->
+        <app-create-or-update-role *ngIf="modalDialog" 
+            [webKey]="webKey" (onCloseDialog)="hideModal($event)" [modalDialog]="modalDialog" [permissionFull]="permissionFull" [roleInfo]="roleInfo" [isDefault]="isDefault">
+        </app-create-or-update-role>
+    </div>
+</div>
+

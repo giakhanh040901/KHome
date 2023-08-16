@@ -1,0 +1,94 @@
+#image: mcr.microsoft.com/dotnet/sdk:7.0
+variables:
+  # 1) Name of directory where restore and build objects are stored.
+  OBJECTS_DIRECTORY: 'src/*/obj'
+  # 2) Name of directory used for keeping restored dependencies.
+  NUGET_PACKAGES_DIRECTORY: '.nuget'
+  # 3) A relative path to the source code from project repository root.
+  # NOTE: Please edit this path so it matches the structure of your project!
+  SOURCE_CODE_PATH: ''
+  DOTNET_SOLUTION: 'EPICSystem.sln'
+  DOTNET_ENVIRONMENT: 'GitlabRunner'
+  #ASPNETCORE_ENVIRONMENT: 'Development'
+cache:
+  # Per-stage and per-branch caching.
+  key: "$CI_JOB_STAGE-$CI_COMMIT_REF_SLUG"
+  paths:
+    # 1) Main JSON file holding information about package dependency tree, packages versions,
+    # frameworks etc. It also holds information where to the dependencies were restored.
+    #- '$SOURCE_CODE_PATH$OBJECTS_DIRECTORY/project.assets.json'
+    # 2) Other NuGet and MSBuild related files. Also needed.
+    #- '$SOURCE_CODE_PATH$OBJECTS_DIRECTORY/*.csproj.nuget.*'
+    # 3) Path to the directory where restored dependencies are kept.
+    - '$NUGET_PACKAGES_DIRECTORY'
+  policy: pull-push
+before_script:
+  - 'pwd'
+build-be:
+  stage: build
+  image: mcr.microsoft.com/dotnet/sdk:5.0
+  rules:
+    - if: ($CI_PIPELINE_SOURCE == "push" && ($CI_COMMIT_REF_NAME == "develop" || $CI_COMMIT_REF_NAME == "staging" || $CI_COMMIT_REF_NAME == "main")) || ($CI_PIPELINE_SOURCE == "merge_request_event" && ($CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "staging" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"))
+      changes:
+        paths:
+          - '*'
+  script:
+    # - 'dotnet restore src/$DOTNET_SOLUTION --packages $NUGET_PACKAGES_DIRECTORY'
+    - 'dotnet build src/EPIC.APIGateway/EPIC.APIGateway'
+    - 'dotnet build src/EPIC.IdentityServer/EPIC.IdentityServer'
+    - 'dotnet build src/EPIC.BondService/EPIC.Trading'
+    - 'dotnet build src/EPIC.CoreService/EPIC.CoreAPI'
+    - 'dotnet build src/EPIC.InvestService/EPIC.InvestAPI'
+    - 'dotnet build src/EPIC.GarnerService/EPIC.GarnerAPI'
+    - 'dotnet build src/EPIC.RealEstateService/EPIC.RealEstateAPI'
+    - 'dotnet build src/EPIC.ImageService/EPIC.ImageAPI'
+    - 'dotnet build src/EPIC.LoyaltyService/EPIC.LoyaltyAPI'
+    - 'dotnet build src/EPIC.RocketchatService/EPIC.Rocketchat'
+    - 'dotnet build src/EPIC.SharedService/EPIC.SharedAPI'
+    - 'dotnet build src/EPIC.PaymentService/EPIC.PaymentAPI'
+    - 'dotnet build src/EPIC.EventService/EPIC.EventAPI'
+
+build-fe:
+  stage: build
+  #image: node:latest
+  rules:
+    - if: ($CI_PIPELINE_SOURCE == "push" && ($CI_COMMIT_REF_NAME == "develop" || $CI_COMMIT_REF_NAME == "staging" || $CI_COMMIT_REF_NAME == "main")) || ($CI_PIPELINE_SOURCE == "merge_request_event" && ($CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "staging" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"))
+      changes:
+        paths:
+          - 'src/EPIC.CMS/*'
+  script: 
+    - echo "Build FE"
+
+tests-be:
+  stage: test
+  image: mcr.microsoft.com/dotnet/sdk:5.0
+  rules:
+    - if: ($CI_PIPELINE_SOURCE == "push" && ($CI_COMMIT_REF_NAME == "develop" || $CI_COMMIT_REF_NAME == "staging" || $CI_COMMIT_REF_NAME == "main")) || ($CI_PIPELINE_SOURCE == "merge_request_event" && ($CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "staging" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"))
+      changes:
+        paths:
+          - 'src/EPIC.APIGateway/*'
+          - 'src/EPIC.ConnectThirdPart/*'
+          - 'src/EPIC.CoreService/*'
+          - 'src/EPIC.GarnerService/*'
+          - 'src/EPIC.IdentityServer/*'
+          - 'src/EPIC.ImageService/*'
+          - 'src/EPIC.InvestService/*'
+          - 'src/EPIC.Libraries/*'
+          - 'src/EPIC.NotificationService/*'
+          - 'src/EPIC.PaymentService/*'
+          - 'src/EPIC.RealEstateService/*'
+          - 'src/EPIC.RocketchatService/*'
+          - 'src/EPIC.SharedService/*'
+  services:
+    - name: redis:7.2-rc2
+  script:
+    - 'dotnet test src/EPIC.InvestService/EPIC.InvestUnitTest -v m' 
+    - 'dotnet test src/EPIC.GarnerService/EPIC.GarnerUnitTests -v m'
+    #- 'dotnet test src/EPIC.RealEstateService/EPIC.RealEstateUnitTest -v m'
+
+deploy-main:
+  stage: deploy
+  rules:
+    - if: ($CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "main")
+  script: echo "Define your deployment script!"
+  environment: DevTest

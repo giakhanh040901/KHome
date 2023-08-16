@@ -1,0 +1,43 @@
+<form class="form-horizontal" autocomplete="off" #createModal="ngForm" (ngSubmit)="save()" autocomplete="off" [busy]="isLoading">
+    <abp-modal-header [title]="title" (onCloseClick)="bsModalRef.hide()"></abp-modal-header>
+    <div class="modal-body">
+        <div  class="row">
+            <div class="form-group required col-md-6 pr-0">
+                <label for="displayName">Tên hiển thị</label>
+                <input type="text" class="form-control form-control-sm" name="displayName" id="displayName" required
+                    [(ngModel)]="user.displayName" #displayNameModel="ngModel" #displayNameEl />
+                <abp-validation-summary [control]="displayNameModel" [controlEl]="displayNameEl"></abp-validation-summary>
+            </div>
+            <div class="form-group required col-md-6">
+                <label for="userName">Tên đăng nhập</label>
+                <input type="text" class="form-control form-control-sm" name="userName" id="userName" required [disabled]="user.userId >=0" autocomplete="off"
+                    [(ngModel)]="user.userName" #userNameModel="ngModel" #userNameEl />
+                <abp-validation-summary [control]="userNameModel" [controlEl]="userNameEl"></abp-validation-summary>
+            </div>
+            <ng-container *ngIf="!(user.userId >= 0)">
+                <div class="form-group required col-md-6 pr-0">
+                    <label for="password"> Mật khẩu </label>
+                    <input type="password" class="form-control form-control-sm" name="password" id="password" required autocomplete="new-password"
+                            maxlength="32" validateEqual="confirmPassword" reverse="true" pattern="^.[^\s]{5,}$"
+                            [(ngModel)]="user.password" #passwordModel="ngModel" #passwordEl />
+                    <abp-validation-summary [control]="passwordModel" [controlEl]="passwordEl" [customValidationErrors]="passwordValidationErrors"></abp-validation-summary>
+                </div>
+                <div class="form-group required col-md-6">
+                    <label for="confirmPassword"> Nhập lại mật khẩu </label>
+                    <input type="password" class="form-control form-control-sm" name="confirmPassword" id="confirmPassword" required
+                            maxlength="32" validateEqual="password" reverse="false" ngModel
+                            #confirmPasswordModel="ngModel" #confirmPasswordEl />
+                    <abp-validation-summary [control]="confirmPasswordModel" [controlEl]="confirmPasswordEl" [customValidationErrors]="confirmPasswordValidationErrors"></abp-validation-summary>
+                </div>
+            </ng-container>
+            <div class="form-group required col-md-12">
+                <label for="email">Địa chỉ Email</label>
+                <input type="email" class="form-control form-control-sm" name="email" id="email" required
+                    [(ngModel)]="user.email" #emailModel="ngModel" #emailEl />
+                <abp-validation-summary [control]="emailModel" [controlEl]="emailEl"></abp-validation-summary>
+            </div>
+        </div>
+    </div>
+    <abp-modal-footer [cancelDisabled]="saving" [saveDisabled]="!createModal.form.valid || saving"
+        (onCancelClick)="bsModalRef.hide()"></abp-modal-footer>
+</form>

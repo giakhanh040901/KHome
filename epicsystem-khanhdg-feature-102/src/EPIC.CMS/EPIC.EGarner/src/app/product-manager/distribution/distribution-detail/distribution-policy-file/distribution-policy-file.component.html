@@ -1,0 +1,139 @@
+<div class="grid ml-0 mr-0 mt-0">
+    <div class="col-12">
+        <div class="card p-0">
+            <p-toast></p-toast>
+            <p-confirmDialog [style]="{width: 'auto'}" [baseZIndex]="10000"></p-confirmDialog>
+            <p-table #userTable selectionMode="multiple" responsiveLayout="scroll" scrollHeight="{{(screenHeight*0.56) + 'px'}}"
+                dataKey="id" styleClass="custom-table" [value]="rows" [rowHover]="true"
+                [paginator]="false" [scrollable]="true" editMode="row">
+                <ng-template pTemplate="caption">
+                    <div class="flex justify-content-between flex-column sm:flex-row">
+                        <div class="flex justify-content-between flex-column sm:flex-row"></div>
+                        <div class="">
+                            <button 
+                                *ngIf="isGranted([this.PermissionGarnerConst.GarnerPPSP_FileChinhSach_ThemMoi])"
+                                pButton pRipple label="Upload file chính sách" icon="pi pi-cloud-upload"
+                                class="p-button-success mr-2" (click)="create()">
+                            </button>
+                        </div>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="min-width:5rem; border-right: 1px solid #dee2e6 !important;" pFrozenColumn
+                            alignFrozen="left"> #ID </th>
+                    
+                        <th style="min-width:20rem;"> Tên chính sách </th>
+                        <th style="min-width:15rem;"> Ngày có hiệu lực </th>
+                        <th style="min-width:15rem;"> Ngày hết hiệu lực </th>
+                        <th style="min-width:20rem;"> Mô tả </th>
+                        <th style="min-width:15rem;"> </th>
+                        <th style="min-width:8rem;" pFrozenColumn alignFrozen="right"></th>
+                    </tr>
+                </ng-template>
+                
+                <ng-template pTemplate="body" let-row let-rowIndex="rowIndex" let-columns="columns">
+                    <tr>
+                        <td style="min-width:5rem; border-right: 1px solid #dee2e6 !important;" pFrozenColumn
+                            alignFrozen="left"> {{ row?.id }} </td>
+                        <td style="min-width:20rem;">{{row?.title}} </td>
+                        <td style="min-width:15rem;" > {{ row?.effectiveDate | dateview}} </td>
+                        <td style="min-width:15rem;" > {{ row?.expirationDate | dateview}} </td> 
+                        <td style="min-width:20rem;">{{row?.description}} </td>
+                        <td style="min-width:15rem;" ><span><i
+                            class="pi pi-download b-hover-pointer" (click)="downloadFile(row?.url)"
+                            style="cursor:pointer; margin-left: 0.5rem;"></i>
+                            <i class="pi pi-eye b-icon" style="margin-left: 0.5rem;" (click)="viewFile(row?.url)"></i></span></td> 
+                        <td style="min-width:8rem;" pFrozenColumn alignFrozen="right">
+                            <div class="flex">
+                                <i class="pi pi-ellipsis-h" style="cursor:pointer;" (click)="menu.toggle($event)"></i>
+                                <p-menu 
+                                    #menu [popup]="true"class="button-actions"
+                                    [model]="listAction[rowIndex]" appendTo="body"
+                                    
+                                    >
+                                </p-menu>
+
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+            <p-paginator 
+                [rows]="page.pageSize" 
+                [totalRecords]="page.totalItems" 
+                [rowsPerPageOptions]="page.perPageOptions" 
+                currentPageReportTemplate="Tất cả {{ page.totalItems }} dòng" 
+                showCurrentPageReport="true"
+                (onPageChange)="setPage($event)">
+            </p-paginator>
+        </div>
+        <!-- THEM & SUA-->
+        <p-dialog [(visible)]="modalDialog" [style]="{width: '600px'}" [header]="headerTitle" [modal]="true"
+            class="p-fluid">
+            <ng-template pTemplate="content">
+                <div class="grid formgrid">
+                    <div style="margin-bottom: 0;" class="field col-12">
+                        <div class="field">
+                            <label htmlFor="name">Tên chính sách (<span class="required-field"> * </span>) </label>
+                            <input type="text" id="name" name="name" pInputText [(ngModel)]="policyFile.title" maxlength="100"
+                                [ngClass]="{'ng-invalid ng-dirty' : submitted && !policyFile.title}"/>
+                        </div>
+                    </div>
+                    <div class="col-12 md:col-6">
+                        <div class="field">
+                            <label for="effectiveDate">Ngày có hiệu lực (<span class="required-field"> * </span>)</label>
+                            <p-calendar 
+                                inputId="effectiveDate" dateFormat="dd/mm/yy" locale="vi" appendTo="body" utc="true" placeholder="dd/mm/yyyy"
+                                [(ngModel)]="policyFile.effectiveDate"
+                                [showIcon]="true">
+                            </p-calendar>
+                        </div>
+                    </div>
+                    <div class="col-12 md:col-6">
+                        <div class="field">
+                            <label for="expirationDate"> Ngày hết hiệu lực (<span class="required-field"> * </span>)</label>
+                            <p-calendar 
+                                inputId="expirationDate" dateFormat="dd/mm/yy" locale="vi" appendTo="body" utc="true" placeholder="dd/mm/yyyy" 
+                                [(ngModel)]="policyFile.expirationDate"
+                                [minDate]="policyFile.effectiveDate" 
+                                [showIcon]="true">
+                            </p-calendar>
+                        </div>
+                    </div>
+                    <div class="field col-12">
+                        <p-fileUpload 
+                            name="demo[]" customUpload="true" class="wrapper-files-upload" accept=".pdf,.doc"
+                            (onSelect)="myUploader($event)" [showUploadButton]="false" [showCancelButton]="false"
+                            chooseLabel="Chọn file" maxFileSize="100000000">
+                        </p-fileUpload>
+                    </div>
+                    
+                    <div class="field col-12">
+                        <div class="field">
+                            <label for="url">Đường dẫn file</label>
+                            <input type="text" id="url" name="url" disabled pInputText [value]="policyFile.url || ''"
+                                required autofocus />
+                        </div>
+                    </div>
+                    <div  class="field col-12">
+                        <div class="field">
+                            <label htmlFor="name">Mô tả </label>
+                            <input type="text" id="name" name="name" pInputText [(ngModel)]="policyFile.description" maxlength="100"
+                                [ngClass]="{'ng-invalid ng-dirty' : submitted && !policyFile.description}"/>
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Hủy" icon="pi pi-times" class="p-button-text"
+                    (click)="hideDialog()"></button>
+                <button pButton pRipple label="Lưu" icon="pi pi-check" class="p-button-text"
+                    [disabled]="!validForm() || submitted" (click)="save()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <app-form-view-pdf-file (onClose)="hideDialog()" [modalDialogPDF]="modalDialogPDF" [urlfilePDF]="urlfilePDF"> </app-form-view-pdf-file>
+
+    </div>
+</div>

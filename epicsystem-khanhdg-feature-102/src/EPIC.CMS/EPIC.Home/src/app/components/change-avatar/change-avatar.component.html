@@ -1,0 +1,26 @@
+<div class="grid p-fluid">
+    <ng-container>
+        <div class="col-12 md:col-12 text-center mt-3">
+          <input #fileInput type="file" name="uploadfile" id="img" (change)="onFileChange($event)" style="display:none;" accept=".jpg,.jpeg,.png"/>
+          <label class="label-upload" for="img">Click để chọn ảnh đại diện</label>
+        </div>
+        <div class="col-12 md:col-12 flex justify-content-center">
+            <div class="cropper-container text-center">
+                <image-cropper 
+                    [imageChangedEvent]="imageInfo.imgChangeEvt" 
+                    [maintainAspectRatio]="true" 
+                    [aspectRatio]="1/1"
+                    [resizeToWidth]="256" 
+                    format="png" 
+                    (imageCropped)="cropImg($event)">
+                </image-cropper>
+            </div>
+        </div>
+    </ng-container>
+</div>
+<div class="p-dialog-footer e-custom-dialog-footer">
+    <button pButton pRipple label="Hủy" icon="pi pi-times" class="p-button-text p-confirm-dialog-reject"
+        (click)="close($event)"></button>
+    <button pButton pRipple label="Lưu" icon="pi pi-check" class="p-button-text p-confirm-dialog-approve"
+        (click)="save($event)"></button>
+</div>

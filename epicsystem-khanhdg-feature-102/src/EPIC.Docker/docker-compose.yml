@@ -1,0 +1,24 @@
+version: '3.4'
+
+services:
+  oracle:
+    environment:
+      - ORACLE_SID=XE
+      - ORACLE_PDB=ORCLPDB1
+      - ORACLE_PWD=chaien
+      - ORACLE_CHARACTERSET=AL32UTF8
+    image: ${DOCKER_REGISTRY-}oracledb
+    user: root
+    build:
+      context: .
+      dockerfile: OracleDb/Dockerfile
+    volumes:
+      - ./OracleDb:/opt/OracleDb
+      # - ./OracleDb/tnsnames.ora:/opt/oracle/product/21c/dbhomeXE/network/admin/tnsnames.ora
+    ports:
+      - 1521:1521
+    # healthcheck:
+    #   test: ["CMD", "sqlplus", "-L", "sys/chaien@//localhost:1521/XE as sysdba", "@healthcheck.sql"]
+    #   interval: 30s
+    #   timeout: 10s
+    #   retries: 5

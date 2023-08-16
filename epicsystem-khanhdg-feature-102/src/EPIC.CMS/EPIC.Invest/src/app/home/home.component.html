@@ -1,0 +1,192 @@
+<div class="grid layout-dashboard ml-0 mr-0" *ngIf="refreshTemplate">
+    <div class="col-9 xl:col-9 md:col-9" style="padding-left: 1rem">
+        <!-- Tổng quan -->
+        <div class="overall">
+            <div class="flex card-container blue-container">
+                <div class="flex-none flex align-items-center justify-content-center"><h4>Tổng quan</h4></div>
+                <div class="flex-grow-1 flex align-items-center justify-content-end ">
+                    <span class="p-float-label b-custom ml-1">
+                        <p-dropdown *ngIf="isPartner" id="dropdownStatus" [style]="{'width':'16rem', 'background':'rgba(0, 0, 0, 0.02)'}" 
+                            [options]="listTrading" optionLabel="name" optionValue="tradingProviderId" class=" ml-2"
+                            [autoDisplayFirst]="false" placeholder="Chọn đại lý" [showClear]="true"
+                            [(ngModel)]="dataFilter.tradingProviderId" (onChange)="changeTrading($event.value)">
+                        </p-dropdown>   
+                    </span>
+                </div>
+                <div class="flex-none flex align-items-center justify-content-end">
+                    <span class="p-float-label b-custom ml-1">
+                        <p-dropdown [disabled]="!dataFilter.tradingProviderId && isPartner"
+                            id="dropdownStatus" [style]="{'width':'14rem', 'background':'rgba(0, 0, 0, 0.02)'}" 
+                            [options]="listProduct" optionLabel="code" optionValue="id" class=" ml-2"
+                            [autoDisplayFirst]="false" placeholder="Chọn sản phẩm" [showClear]="true"
+                            [(ngModel)]="dataFilter.distributionId" (onChange)="changeDistribute($event.value)">
+                        </p-dropdown>   
+                    </span>
+                </div>
+            </div>
+        </div>
+        <!-- 3 thẻ hiển thị tiền -->
+        <div class="flex widget-board mt-6" style="padding-left: 0;">
+            <div class="flex-1 flex align-items-center justify-content-center col-12 xl:col-4 md:col-4">
+                <div class="grid grid-nogutter widget-overview-box overview-box-1" style="padding: 2.5rem 1rem">
+                    <div class="col-3 overview-box-icon">
+                        <img src="assets/layout/images/dashboard/icon-messages.svg" alt="mirage-layout" />
+                    </div>
+                    <div class="col-9 overview-box-text">
+                        <h5>Doanh số</h5>
+                        <span>Tổng doanh số tích lũy</span>
+                    </div>
+                    <div class="col-12 overview-box-text mt-2">
+                        <p class="overview-box-price">{{ cashInInfo?.tienVao?.luyKe ? utils.transformMoney(cashInInfo?.tienVao?.luyKe) : 0 }}</p>
+                    </div>
+                    <div class="col-4 overview-box-text mt-2">
+                        <p class="overview-box-accumulated-title">Hôm nay</p>
+                    </div>
+                    <div class="col-8 overview-box-text mt-2" style="text-align: right">
+                        <p class="overview-box-accumulated-price">{{cashInInfo?.tienVao?.tienVao ? utils.transformMoney(cashInInfo?.tienVao?.tienVao) : 0}}</p>
+                    </div>
+                </div>
+                
+            </div>
+            <div class="flex-1 flex align-items-center justify-content-center col-12 xl:col-4 md:col-4">
+                <div class="grid grid-nogutter widget-overview-box overview-box-2" style="padding: 2.5rem 1rem">
+                    <div class="col-3 overview-box-icon">
+                        <img src="assets/layout/images/dashboard/icon-messages.svg" alt="mirage-layout" />
+                    </div>
+                    <div class="col-9 overview-box-text">
+                        <h5>Tiền ra</h5>
+                        <span>Số tiền gốc chi trả</span>
+                    </div>
+                    <div class="col-12 overview-box-text mt-2">
+                        <p class="overview-box-price">{{ cashInInfo?.tienRa?.luyKe ? utils.transformMoney(cashInInfo?.tienRa?.luyKe) : 0 }}</p>
+                    </div>
+                    <div class="col-4 overview-box-text mt-2">
+                        <p class="overview-box-accumulated-title">Hôm nay</p>
+                    </div>
+                    <div class="col-8 overview-box-text mt-2" style="text-align: right">
+                        <p class="overview-box-accumulated-price">{{cashInInfo?.tienRa?.tienRa ? utils.transformMoney(cashInInfo?.tienRa?.tienRa) : 0}}</p>
+                    </div>
+                </div>
+                
+            </div>
+            <div class="flex-1 flex align-items-center justify-content-center col-12 xl:col-4 md:col-4">
+                <div class="grid grid-nogutter widget-overview-box overview-box-3" style="padding: 2.5rem 1rem">
+                    <div class="col-3 overview-box-icon">
+                        <img src="assets/layout/images/dashboard/icon-messages.svg" alt="mirage-layout" />
+                    </div>
+                    <div class="col-9 overview-box-text">
+                        <h5 style="color: #000;">Số dư</h5>
+                        <span>Số dư đầu tư hiện tại</span>
+                    </div>
+                    <div class="col-12 overview-box-text mt-2">
+                        <p class="overview-box-price">{{ cashInInfo?.soDu?.luyKe ? utils.transformMoney(cashInInfo?.soDu?.luyKe) : 0 }}</p>
+                    </div>
+                    <div class="col-4 overview-box-text mt-2">
+                        <p class="overview-box-accumulated-title">Hôm nay</p>
+                    </div>
+                    <div class="col-8 overview-box-text mt-2" style="text-align: right">
+                        <p class="overview-box-accumulated-price">{{cashInInfo?.soDu?.soDu ? utils.transformMoney(cashInInfo?.soDu?.soDu) : 0}}</p>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        
+        <!-- Chart dòng tiền theo ngày -->
+        <div class="col-12 xl:col-12 md:col-12 mt-4" style="padding-right: 1.5rem">
+            <div class="flex card-container blue-container">
+                <div class="flex-none flex align-items-center justify-content-center"><h3>Dòng tiền theo ngày</h3></div>
+                <div class="flex-grow-1 flex align-items-center justify-content-end ">
+                    <span class=" ml-2 p-float-label b-custom">
+                        <p-calendar 
+                            class="ml-2 pcalendarHome" placeholder="dd/mm/yyyy đến dd/mm/yyyy" appendTo="body" dateFormat="dd/mm/yy" 
+                            [(ngModel)]="rangeDates" [maxDate]="maxDate"  selectionMode="range" [readonlyInput]="true" inputId="tradingDate" 
+                            [showIcon]="true" [style]="{'width':'18rem', 'border':'none'}" 
+                            locale="vi" (onSelect)="SelectDays()">
+                        </p-calendar>
+                    </span>
+                </div>
+            </div>
+            <div id="cashFlow">
+                <p-chart type="bar" [data]="cashFlowByDay" [options]="cashFlowByDayOptions" width="{{widthCashFlow}}" height="300"></p-chart>
+            </div>
+        </div>
+        <!-- Chart DS theo kỳ hạn sản phẩm -->
+        <div  class="grid mt-4 col-12 xl:col-12 md:col-12">
+            <h3 style="width:60%"> DS theo kỳ hạn sản phẩm </h3> 
+            <div id="policyId" class=" xl:col-9 md:col-9" style="padding-left: 0.5rem; padding-right: 3rem;">
+                <p-chart type="bar" [data]="policy" width="{{widthPolicy}}" [options]="policyOptions"  height="300"></p-chart>
+            </div>
+            <div class=" xl:col-3 md:col-3 flex align-content-end div-rocket-img">
+                <img class="rocket-img" src="\assets\layout\images\dashboard\rocket-dashboard.png" alt="" style="width:100%">
+            </div>
+        </div>
+    </div>
+    <div class="col-3 xl:col-3 md:col-3 b-nav-right">
+        <div class="widget-dashboard-human">
+            <img src="\assets\layout\images\dashboard\dashboard-human.png" alt="">
+        </div>
+        <div class="widget-dashboard-calender">
+            <p-calendar [inline]="true" [showWeek]="true" styleClass="b-calendar-home"></p-calendar>
+        </div>
+        <div class="widget-dashboard-kpi">
+            <div class="kpi-title" style="margin-left: 1rem">
+                <h5 style="margin-top: 1.5rem">Hoạt động gần đây</h5>
+            </div>
+            <div class="card widget-team pt-0">
+                <ul>
+                    <li *ngFor="let item of listAction">
+                        <div class="grid member">
+                            <div class="col-11 team-box">
+                                <div class="profile-image">
+                                    <img *ngIf="item?.avatar" src="{{baseUrl}}/{{item.avatar}}"  alt="mirage-layout" />
+                                    <img *ngIf="!item?.avatar" src="assets/layout/images/topbar/anonymous-avatar.jpg" alt="mirage-layout" />
+                                </div>
+                                <div style="margin-top: auto; width: 100%">
+                                    <h6 class="team-member">{{ item.fullname }}</h6>
+                                    <div style="justify-content: space-between; display: flex;" class="mt-1">
+                                        <span class="team-member-deadline">{{DashboardConst.getActionInfo(item.action)}}</span>
+                                        <span class="team-member-deadline">{{ item.createdDate | datetimeview }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-1 icons" style="cursor: pointer;" (click)="checkNavi(item)">
+                                <button pButton icon="pi pi-chevron-right" style="background-color: #fff; color: #000; border: none;"></button>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- Báo cáo doanh số và số dư khu vực-->
+    <h3 *ngIf="isPartner" style="width: 100%;margin-left: 10px;"> Báo cáo doanh số và số dư của đại lý</h3> 
+    <h3 *ngIf="!isPartner" style="width: 100%;margin-left: 10px;"> Báo cáo doanh số và số dư khu vực</h3> 
+    <br>
+    <div class="notice">
+        <div class="notice1">
+            <div class="block_notice1"></div>
+            <p>Doanh số</p>
+        </div>
+        <div class="notice2">
+            <div class="block_notice2"></div>
+            <p>Số dư</p>
+        </div>
+    </div>
+        <div id="reportTradingProviderId" #reportTradingProviderChart class="col-12 xl:col-12 md:col-12 mt-3" >
+            <p-chart 
+                id="tradingOrDepartment" type="bar" [plugins]="reportTradingProviderPlugins" [data]="reportTradingProvider" 
+                [options]="reportTradingProviderOptions" width="{{widthReport}}" height="300">
+                <!-- <canvas id="myChart"></canvas> -->
+            </p-chart>
+        </div>
+    <!-- Báo cáo dự chi -->
+    <div class="col-12 xl:col-9 md:col-9 mt-6 mb-6" style="padding-left: 1.5rem; padding-right: 3rem">
+        <h3> Báo cáo thực chi </h3> 
+        <p-chart type="bar" [data]="reportThucChi" [options]="reportThucChiOptions" height="300"></p-chart>
+    </div>
+    <div class="col-12 xl:col-3 md:col-3 mt-6 mb-6 flex align-content-end " style="padding-right: 3rem">
+        <img src="\assets\layout\images\dashboard\house-dashboard.png" alt="" style="width: 100%;">
+    </div>
+    
+</div>

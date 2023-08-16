@@ -1,0 +1,19 @@
+{
+  "remoteServiceBaseUrl": "https://api-staging.epicpartner.vn",
+  "rocketchat": {
+		"api": "https://api-staging.epicpartner.vn",
+		"iframeSrc": "https://esupports-staging.epicpartner.vn"
+	},
+  "appBaseUrl": "https://home-staging.epicpartner.vn",
+  "baseUrlEcore": "https://ecore-staging.epicpartner.vn",
+  "baseUrlEbond": "https://ebond-staging.epicpartner.vn",
+  "baseUrlEinvest": "https://einvest-staging.epicpartner.vn",
+  "baseUrlEgarner": "https://egarner-staging.epicpartner.vn",
+  "baseUrlEuser": "https://euser-staging.epicpartner.vn",
+  "baseUrlRealEState": "https://ehomes-staging.epicpartner.vn",
+  "baseUrlEloyalty": "https://eloyalty-staging.epicpartner.vn",
+  "baseUrlEvents": "https://events-staging.epicpartner.vn",
+  
+  "clientId": "client1",
+  "clientSecret": "secret1"
+}

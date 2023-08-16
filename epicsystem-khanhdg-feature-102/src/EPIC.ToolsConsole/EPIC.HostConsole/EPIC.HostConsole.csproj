@@ -1,0 +1,44 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="appsettings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="6.0.0" />
+	<PackageReference Include="Oracle.EntityFrameworkCore" Version="5.21.61" />
+	<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.17" />
+	<PackageReference Include="AutoMapper" Version="11.0.1" />
+	<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
+	<PackageReference Include="Hangfire.AspNetCore" Version="1.7.31" />
+	<PackageReference Include="Hangfire.Core" Version="1.7.31" />
+	<PackageReference Include="Hangfire.InMemory" Version="0.3.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\EPIC.BondService\EPIC.DataAccess\EPIC.DataAccess.csproj" />
+    <ProjectReference Include="..\..\EPIC.ConnectThirdPart\EPIC.MSB\EPIC.MSB.csproj" />
+    <ProjectReference Include="..\..\EPIC.GarnerService\EPIC.GarnerDomain\EPIC.GarnerDomain.csproj" />
+    <ProjectReference Include="..\..\EPIC.SharedService\EPIC.Notification\EPIC.Notification.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+	<Folder Include="Scripts\" />
+  </ItemGroup>
+
+</Project>

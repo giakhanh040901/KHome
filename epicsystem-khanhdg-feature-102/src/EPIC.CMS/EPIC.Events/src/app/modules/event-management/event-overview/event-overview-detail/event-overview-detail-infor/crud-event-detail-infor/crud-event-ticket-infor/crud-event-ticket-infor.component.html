@@ -1,0 +1,164 @@
+<div class="w-full" style="padding-bottom: 70px">
+  <div class="card p-0 mb-0">
+    <h6 class="title-info">Thông tin vé</h6>
+    <div class="p-fluid p-formgrid grid">
+      <div class="flex w-full">
+        <div class="col-4">
+          <div class="flex w-full">
+            <form-input
+              class="mr-4"
+              [label]="'Tên loại vé'"
+              [isRequired]="true"
+              [(ngModelValue)]="crudDTO.name"
+              [placeholder]="'Nhập tên loại vé'"
+              [isDisabled]="isDisable"
+            ></form-input>
+            <form-checkbox
+              [label]="'Miễn phí'"
+              [(ngModelValue)]="crudDTO.isFree"
+              [isDisabled]="isDisable"
+              [inputId]="'isFree'"
+              [classCheckbox]="'w-full'"
+              (_onChange)="onChangeIsFree($event)"
+            ></form-checkbox>
+          </div>
+        </div>
+        <div class="col-2">
+          <form-input-number
+            [label]="'Giá vé (VND)'"
+            [isRequired]="true"
+            [(ngModelValue)]="crudDTO.price"
+            [isDisabled]="isDisable || crudDTO.isFree === true"
+          ></form-input-number>
+        </div>
+        <div class="col-2">
+          <form-input-number
+            [label]="'Số lượng vé'"
+            [isRequired]="true"
+            [(ngModelValue)]="crudDTO.total"
+            [isDisabled]="isDisable"
+          ></form-input-number>
+        </div>
+        <div class="col-2">
+          <form-input-number
+            [label]="'Mua tối thiểu trong 1 lần'"
+            [(ngModelValue)]="crudDTO.minimum"
+            [isDisabled]="isDisable"
+          ></form-input-number>
+        </div>
+        <div class="col-2">
+          <form-input-number
+            [label]="'Mua tối đa trong 1 lần'"
+            [(ngModelValue)]="crudDTO.maximum"
+            [isDisabled]="isDisable"
+          ></form-input-number>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card p-0 mb-0">
+    <h6 class="title-info">Thời gian áp dụng</h6>
+    <div class="p-fluid p-formgrid grid">
+      <div class="flex w-full">
+        <div class="col-3">
+          <form-input-calendar
+            [label]="'Thời gian bắt đầu bán'"
+            [isRequired]="true"
+            [(ngModelValue)]="crudDTO.startTime"
+            [isDisabled]="isDisable"
+            [showTime]="true"
+            [placeholder]="'dd/mm/yy hh:mm'"
+            [showIcon]="!isDisable"
+          ></form-input-calendar>
+        </div>
+        <div class="col-3">
+          <form-input-calendar
+            [label]="'Thời gian kết thúc bán'"
+            [isRequired]="true"
+            [(ngModelValue)]="crudDTO.endTime"
+            [isDisabled]="isDisable"
+            [showTime]="true"
+            [placeholder]="'dd/mm/yy hh:mm'"
+            [showIcon]="!isDisable"
+          ></form-input-calendar>
+        </div>
+      </div>
+      <div class="flex w-full">
+        <div class="col-12">
+          <form-input
+            [label]="'Mô tả ngắn về thông tin vé'"
+            [isRequired]="true"
+            [(ngModelValue)]="crudDTO.description"
+            [placeholder]="'Nhập nội dung mô tả ngắn, không quá 100 ký tự'"
+            [max]="100"
+            [isDisabled]="isDisable"
+          ></form-input>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card p-0 mb-0">
+    <h5 class="title-info">Mô tả chi tiết về vé</h5>
+    <p class="font-italic">Mô tả chi tiết về vé, Tài liệu mua vé, Tài liệu đổi trả nếu có.</p>
+    <div class="p-fluid p-formgrid grid">
+      <div class="flex w-full">
+        <div class="col-12">
+          <form-description-content
+            [showBtnInsertImage]="false"
+            [contentType]="crudDTO.contentType"
+            [content]="crudDTO.content"
+            [isDisabled]="isDisable"
+            (_onChangeData)="onChangeDescriptionContent($event)"
+          ></form-description-content>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card p-0 mb-0">
+    <h5 class="title-info">Hình ảnh</h5>
+    <p class="font-italic">Hình ảnh vé, vị trí chỗ ngồi của vé</p>
+    <div class="flex w-full">
+      <form-image
+        *ngFor="let image of crudDTO.listImage; let i = index"
+        class="ml-2"
+        [isDisabled]="isDisable"
+        [imageSource]="image"
+        [widthLimit]="140"
+        [heightLimit]="140"
+        [maxFileSize]="2500000"
+        [showBtnRemove]="getShowBtnRemove(image)"
+        (_onRemove)="onRemove($event, i, image)"
+        (_onChange)="onChangeImage($event, i)"
+      ></form-image>
+    </div>
+  </div>
+  <div class="card p-0 mb-0">
+    <h5 class="title-info">Cài đặt khác</h5>
+    <div>
+      <form-input-switch
+        [(ngModelValue)]="crudDTO.isShowApp"
+        [label]="'Hiển thị trên ứng dụng (Show app)'"
+        [classLabel]="'ml-4'"
+        [trueValue]="YES_NO.YES"
+        [falseValue]="YES_NO.NO"
+        [isDisabled]="isDisable"
+      ></form-input-switch>
+    </div>
+  </div>
+  <div *ngIf="!isDisable" class="p-dialog-footer" style="width: 100%; position: fixed; left: 0; bottom: 0">
+    <form-button
+      [isTypeRipple]="true"
+      [classButton]="'p-button-text p-confirm-dialog-reject'"
+      [label]="'Hủy'"
+      [icon]="'pi pi-times'"
+      (_onClick)="close($event)"
+    ></form-button>
+    <form-button
+      [isTypeRipple]="true"
+      [classButton]="'p-button-text p-confirm-dialog-approve'"
+      [label]="'Lưu'"
+      [icon]="'pi pi-check'"
+      (_onClick)="save($event)"
+    ></form-button>
+  </div>
+</div>

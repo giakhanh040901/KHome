@@ -1,0 +1,127 @@
+::ng-deep .b-trandate.p-datepicker {
+    .p-datepicker-group-container {
+        .p-datepicker-group {
+            .p-datepicker-header {
+                padding-top: 0px !important;
+                padding-bottom: 0px !important;
+            }
+
+            .p-datepicker-calendar-container {
+                table {
+                    // margin-top: 0px;
+                    margin-bottom: 0px;
+
+                    thead {
+                        tr {
+                            th {
+                                padding-top: 0px !important;
+                                padding-bottom: 5px !important;
+                            }
+                        }
+                    }
+
+                    tbody {
+                        tr {
+                            td {
+                                padding-top: 0px !important;
+                                padding-bottom: 0px !important;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .p-timepicker {
+        padding-top: 0px !important;
+        padding-bottom: 0px !important;
+    }
+
+
+
+
+}
+
+::ng-deep .b-count-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+::ng-deep {
+    .addPayment button {
+
+        width: 172px;
+        height: 40px;
+        background-color: #F6F6FE;
+        border: 1px solid #E6E6E6;
+        border-radius: 8px;
+
+    }
+
+    .addPayment button:hover {
+        background: #F6F6FE !important;
+        color: #ffffff;
+        border-color: #ccc !important;
+    }
+
+    .addPayment button:active {
+        background: #F6F6FE !important;
+        color: #ffffff;
+        border-color: #ccc !important;
+    }
+
+    .addPayment>button>.p-button-label {
+
+        color: #212633;
+        font-weight: 400;
+        line-height: 24px;
+
+        display: flex;
+        align-items: center;
+
+        /* Ink/500 */
+
+        color: #212633;
+    }
+
+    .addPayment>button>.p-button-icon-left {
+        color: #212633;
+
+    }
+}
+
+::ng-deep .custom-table.order-group {
+    table {
+
+        thead{}
+
+        tbody {
+            tr {
+                &.ng-star-inserted {
+                    background: white;
+                }
+                //
+                &.p-rowgroup-header {
+                    background: #F7F9FF;
+                }
+
+                td {
+                    span.b-withdraw-show-detail {
+                        &:hover {
+                            text-decoration: underline;
+                        }
+                    }
+                }
+            }
+
+        }
+    }
+}
+
+.b-bank {
+    background: white;
+    color: black;
+    //
+}

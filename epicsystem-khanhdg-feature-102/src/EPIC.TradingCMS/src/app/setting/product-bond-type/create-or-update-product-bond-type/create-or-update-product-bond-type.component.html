@@ -1,0 +1,59 @@
+<form class="form-horizontal" autocomplete="off" #createModal="ngForm" (ngSubmit)="save()" [busy]="isLoading">
+    <abp-modal-header [title]="title" (onCloseClick)="bsModalRef.hide()"></abp-modal-header>
+    <div class="grid-margin stretch-card mb-0">
+        <div class="card">
+          <div class="card-body">
+            <div class="row">
+                <div class="form-group required col-md-12">
+                    <label for="code">Mã loại sản phẩm trái phiếu (<span class="field-required"> * </span>) </label>
+                    <input type="text" class="form-control form-control-sm" name="code" id="code" #code required
+                        maxlength="10" placeholder="Mã loại sản phẩm trái phiếu" [(ngModel)]="productBondType.code" #codeModel="ngModel" #codeEl />
+                    <abp-validation-summary [control]="codeModel" [controlEl]="codeEl"></abp-validation-summary>
+                </div>
+
+                <div class="form-group required col-md-12">
+                    <label for="name" #nameValidation>Tên loại sản phẩm trái phiếu (<span class="field-required"> * </span>)</label>
+                    <input type="text" class="form-control form-control-sm" name="name" id="name" #name required
+                        maxlength="200" placeholder="Tên loại sản phẩm trái phiếu" [(ngModel)]="productBondType.name" #nameModel="ngModel" #nameEl />
+                    <abp-validation-summary [control]="nameModel" [controlEl]="nameEl"></abp-validation-summary>
+                </div>
+
+                
+                <div class="form-group required col-md-12">
+                    <label for="icon"> Icon </label>
+                    <input type="text" class="form-control form-control-sm" name="icon" id="icon" #icon maxlength="50"
+                    [(ngModel)]="productBondType.icon" placeholder="Icon"
+                    #iconModel="ngModel" #iconEl />
+                    <abp-validation-summary [control]="iconModel" [controlEl]="iconEl"></abp-validation-summary>
+                </div>
+
+                <div class="form-group required col-md-12"  *ngIf="productBondType.id">
+                    <label for="status"> Trạng thái </label>
+                    <ng-select type='text' name='status' id="status"[notFoundText]="'Không có dữ liệu'"
+                    [(ngModel)] ="productBondType.status"
+                    [multiple]="false"
+                    [clearable]="false"
+                    #statusModel="ngModel" #statusEl requried>
+                    <ng-option *ngFor="let item of ProductBondTypeConst " [value]="item.code">{{ item.name }}</ng-option>
+                    >
+                    <abp-validation-summary [control]="statusModel" [controlEl]="statusEl"></abp-validation-summary>           
+                    </ng-select>
+                </div>
+
+                <div class="form-group required col-md-12">
+                    <label for="description"> Mô tả </label>
+                    <textarea type="text" class="form-control form-control-sm" name="description" id="description" #description maxlength="50"
+                    [(ngModel)]="productBondType.description" rows="2" placeholder="Mô tả ..."
+                    #descriptionModel="ngModel" #descriptionEl ></textarea>
+                    <abp-validation-summary [control]="descriptionModel" [controlEl]="descriptionEl"></abp-validation-summary>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    <abp-modal-footer [cancelDisabled]="saving" [saveDisabled]="!createModal.form.valid || saving"
+        (onCancelClick)="bsModalRef.hide()"></abp-modal-footer>
+</form>
+

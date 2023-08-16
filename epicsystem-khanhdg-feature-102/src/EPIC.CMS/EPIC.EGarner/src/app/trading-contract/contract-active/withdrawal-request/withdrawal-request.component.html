@@ -1,0 +1,61 @@
+<app-loading-page *ngIf="isLoadingPage"></app-loading-page>
+<div class="card b-page-detail {{ isLoadingPage ? 'b-loading' : '' }}" *ngIf="!isLoadingPage">
+    <div class="grid detail">
+        <div class="col-12">
+            <div class="card pt-0 pb-0 mb-0">
+                <div class="p-fluid p-formgrid grid">
+                    <div class="field col-12 md:col-6">
+                        <label class="title-info"> Số tiền rút <span class="required-field"> * </span> </label>
+                        <p-inputNumber 
+                            class="custom-input-disabled" mode="decimal"
+                            (onInput)="($event.value)"
+                            [(ngModel)]="drawdownRequest.amount"
+                            locale="de-DE">
+                        </p-inputNumber>
+                    </div>
+                    <!--  -->
+                    <div class="field col-12 md:col-6">
+                        <label class="title-info"> Ngày rút vốn <span class="required-field"> * </span></label>
+                        <p-calendar 
+                            class="ml-2" showIcon="true"
+                            dateFormat="dd/mm/yy" locale="vi" appendTo="body"
+                            [(ngModel)]="drawdownRequest.withdrawDate" [placeholder]="'dd/mm/yyyy'">
+                        </p-calendar>
+                    </div>
+                </div>
+                <!--  -->
+                <div class="p-fluid p-formgrid grid mt-1">
+                    <div class="field col-12 md:col-6">
+                        <label class="title-info"> Người yêu cầu <span class="required-field"> * </span> </label>
+                        <input [value]="userLogin?.username" type="text" [disabled]="true" pInputText class="b-disabled"/>
+                    </div>
+                    <div class="field col-12 md:col-6">
+                        <label class="title-info"> Ngày yêu cầu <span class="required-field"> * </span> </label>
+                        <p-calendar 
+                            class="ml-2 b-disabled" [showIcon]="false" [disabled]="true"
+                            dateFormat="dd/mm/yy" [(ngModel)]="today">
+                        </p-calendar>
+                    </div>
+                </div>
+                <!--  -->
+                <div class="p-fluid p-formgrid grid mt-1">
+                    <div class="col-12 md:col-12">
+                        <div class="field">
+                            <label htmlFor="renewalsType">Tài khoản thụ hưởng<span class="required-field"> * </span>
+                            </label>
+                            <p-dropdown 
+                                appendTo="body" [options]="banks"
+                                dataValue="id" optionValue="id" name="renewalsType" optionLabel="label"
+                                [(ngModel)]="drawdownRequest.bankAccountId">
+                            </p-dropdown>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="p-dialog-footer" style="width: 100%; position: fixed; left: 0; bottom: 0; border: none;">
+        <button pButton pRipple label="Hủy" icon="pi pi-times" class="p-button-text p-confirm-dialog-reject" (click)="cancel()"></button>
+        <button pButton pRipple label="Lưu" icon="pi pi-check" class="p-button-text p-confirm-dialog-approve" [disabled]="submitted" (click)="save()"></button>
+    </div>
+</div>

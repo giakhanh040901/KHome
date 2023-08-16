@@ -1,0 +1,482 @@
+<app-loading-page *ngIf="isLoadingPage"></app-loading-page>
+
+<div class="grid ml-0 mr-0 mt-0">
+    <div class="col-12">
+        <div class="card b-list">
+            <div class="p-fluid p-formgrid grid b-header">
+                <div class="col-12 md:col-7 b-title">
+                    <h4 style="display:inline"> Lô trái phiếu </h4>
+                </div>
+                <div class="col-12 md:col-5 b-action">
+                    <button *ngIf="isGranted([PermissionBondConst.BondMenuQLTP_LTP_ThemMoi])" pButton pRipple label="Thêm mới" icon="pi pi-plus" class="p-button-success mr-2"
+                        (click)="create()"></button>
+                </div>
+            </div>
+            <p-toast></p-toast>
+            <p-confirmDialog [style]="{width: 'auto'}" [baseZIndex]="10000"></p-confirmDialog>
+            <p-table 
+                #productBondInfoTable 
+                [value]="rows" 
+                [columns]="_selectedColumns"
+                [loading]="isLoading" [rowHover]="true" [showCurrentPageReport]="true" [paginator]="false" 
+                (onPageChange)="setPage($event)" responsiveLayout="scroll" dataKey="code"
+                [resizableColumns]="false" [scrollable]="true" scrollHeight="{{(screenHeight*0.65) + 'px'}}" styleClass="custom-table" >
+                <ng-template pTemplate="caption">
+                    <div class="flex justify-content-between flex-column sm:flex-row">
+                        <div class="flex justify-content-between flex-column sm:flex-row">
+                            <span class="block mt-2 md:mt-0 p-input-icon-left">
+                                <i class="pi pi-search"></i>
+                                <input pInputText type="text" placeholder="Tìm kiếm..." [(ngModel)]="keyword"
+                                    (input)="changeKeyword($event)" />
+                            </span>
+
+                            <span class="p-float-label b-custom ml-2">
+                                <p-dropdown 
+                                    id="dropdownStatus" [style]="{'width':'12rem'}" [options]="statusSearch" optionLabel="name"
+                                    optionValue="code" placeholder="Chọn trạng thái" [(ngModel)]="status" class="ml-2"
+                                    (onChange)="changeStatus($event.value)">
+                                </p-dropdown>   
+                                <label class="font-normal" for="dropdownStatus">Trạng thái</label>
+                            </span>
+                            
+                            <span class="p-float-label b-custom ml-2">
+                                <!-- <p-dropdown inputId="dropdown" [autoDisplayFirst]="false" [options]="cities" [(ngModel)]="value8" optionLabel="name"></p-dropdown> -->
+                                <p-dropdown
+                                    class="ml-2" 
+                                    [style]="{'width':'12rem'}" 
+                                    [options]="isCheckSearch" optionLabel="name"
+                                    optionValue="code" [(ngModel)]="isCheck" 
+                                    (onChange)="changeIsCheck($event.value)">
+                                </p-dropdown>
+                                <label class="font-normal" for="dropdownStatus">Kiểm tra</label>
+                            </span>
+                            
+                            <span class="p-float-label b-custom ml-2">
+                                <p-calendar
+                                    class="ml-2" 
+                                    inputId="issuerDate" showButtonBar="true"  
+                                    [style]="{'width':'11.5rem'}" dateFormat="dd/mm/yy" locale="vi" appendTo="body"
+                                    [(ngModel)]="issueDate"  
+                                    readonlyInput="true" 
+                                    [placeholder]="'dd/mm/yyyy'" 
+                                    showIcon="true" 
+                                    (onClearClick)="changeIssueDate()" 
+                                    (onSelect)="changeIssueDate()">
+                                </p-calendar >
+                                <label class="p-top-label" style=" font-weight: 400;">Ngày phát hành</label>
+                            </span>
+                            <span class="p-float-label b-custom ml-2">
+                                <p-calendar
+                                    class="ml-2" 
+                                    inputId="issuerDate" showButtonBar="true" [placeholder]="'dd/mm/yyyy'"  
+                                    [style]="{'width':'11.5rem'}" dateFormat="dd/mm/yy" locale="vi" appendTo="body"
+                                    [(ngModel)]="dueDate" 
+                                    readonlyInput="true" showIcon="true" 
+                                    (onClearClick)="changeDueDate()" (onSelect)="changeDueDate()">
+                                </p-calendar >
+                                <label for="issuerDate" style="font-weight: 400;">Ngày đáo hạn</label>
+                            </span>
+                        </div>
+                       
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header" let-columns>
+                    <tr>
+                        <th style="max-width: 5rem; min-width: 5rem;" pFrozenColumn alignFrozen="left" class="b-border-frozen-left b-border-frozen-right"> #ID </th>
+                        <th *ngFor="let col of columns" [ngStyle]="{'max-width': !col.isPin ? col.width : '', 'min-width': col.width}" [ngClass]="col.class">
+                            {{ col.header }}
+                        </th> 
+                        <th style="max-width: 7rem; min-width: 7rem;" pFrozenColumn alignFrozen="right" [frozen]="true"
+                            class="b-border-frozen-right"> Trạng thái </th>
+                        <th style="max-width: 3rem; min-width: 3rem; justify-content: center;" pFrozenColumn alignFrozen="right" [frozen]="true" class=" b-table-actions">
+                            <i class="pi pi-cog" (click)="setColumn(cols, _selectedColumns)"></i>
+                        </th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-row let-rowIndex="rowIndex" let-columns="columns">
+                    <tr>
+                        <td style="max-width: 5rem; min-width: 5rem;" pFrozenColumn alignFrozen="left" class="b-border-frozen-left b-border-frozen-right">
+                            {{row.productBondId}}
+                        </td>
+                        <td *ngFor="let col of columns" [ngStyle]="{'max-width': !col.isPin ? col.width : '', 'min-width': col.width}" [ngClass]="col.class">
+                            <div *ngIf="col.field === 'isCheck'">
+                                <p-checkbox [(ngModel)]="row.isCheck" [binary]="true" inputId="binary" [readonly]="true"></p-checkbox>
+                            </div>
+                            <div *ngIf="col.field !== 'isCheck'" [ngClass]="col.cutText" [title]="row[col.field]">
+                                {{ row[col.field]}}
+                            </div>
+                        </td>
+                        <td style="max-width: 7rem; min-width: 7rem;" pFrozenColumn alignFrozen="right" [frozen]="true" class="b-border-frozen-right">
+                            <p-tag styleClass="p-tag-{{ProductBondInfoConst.getStatusSeverity(row?.status)}}"
+                                severity="{{ ProductBondInfoConst.getStatusSeverity(row?.status) }}"
+                                value="{{ ProductBondInfoConst.getStatusName(row.status) }}"></p-tag>
+                        </td>
+                        <td style="max-width: 3rem; min-width: 3rem;" pFrozenColumn alignFrozen="right" [frozen]="true" class="b-table-actions">
+                            <div class="flex">
+                                <i class="pi pi-ellipsis-h" (click)="menu.toggle($event)"></i>
+                                <p-menu #menu [popup]="true" class="button-actions" [model]="listAction[rowIndex]"
+                                    appendTo="body">
+                                </p-menu>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td colspan="7">Không có dữ liệu.</td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="loadingbody">
+                    <tr>
+                        <td colspan="7"> Đang tải dữ liệu ... </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+            <p-paginator 
+                [rows]="page.pageSize" 
+                [totalRecords]="page.totalItems" 
+                [rowsPerPageOptions]="[25, 50, 100, 200]" 
+                currentPageReportTemplate="Tất cả {{ page.totalItems }} dòng" 
+                showCurrentPageReport="true"
+                (onPageChange)="setPage($event)">
+            </p-paginator>
+        </div>
+        <!-- THEM & SUA-->
+        <p-dialog [(visible)]="modalDialog" [style]="{width: '1100px'}" [header]="header()" [modal]="true"
+            class="p-fluid">
+            <ng-template pTemplate="content">
+                <div class="card pt-0">
+                    <div class="grid formgrid">
+                        <div class="col-12 md:col-12 title-group-input">
+                            <h6> Tổ chức phát hành </h6>
+                        </div>
+                        <div class="col-12 md:col-6">
+                            <div class="field">
+                                <label htmlFor="issuerId"> Tổ chức phát hành 
+                                    <span class="required-field"> * </span>
+                                </label>
+                                <p-dropdown appendTo="body" dataValue="issuerId" optionValue="issuerId" name="issuerId"
+                                    optionLabel="name" [autoDisplayFirst]="false" [options]="issuers"
+                                    [(ngModel)]="productBondInfo.issuerId"
+                                    [ngClass]="{'ng-invalid ng-dirty' : (submitted && !productBondInfo.issuerId) || fieldErrors?.issuerId }"
+                                    (onChange)="changeIssuer($event.value)" (click)="resetValid('issuerId')">
+                                </p-dropdown>
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-3">
+                            <div class="field">
+                                <label htmlFor="issuerId"> Tên viết tắt 
+                                    <span class="required-field"> * </span>
+                                </label>
+                                <input [value]="issuer?.businessCustomer?.shortName ?? null" [disabled]="true"
+                                    pInputText class="custom-input-disabled" />
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-3">
+                            <div class="field">
+                                <label htmlFor="issuerId"> Người đại diện 
+                                    <span class="required-field"> * </span>
+                                </label>
+                                <input [value]="issuer?.businessCustomer?.repName ?? null" [disabled]="true" pInputText
+                                    class="custom-input-disabled" />
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-12 title-group-input">
+                            <h6> Đại lý lưu ký </h6>
+                        </div>
+                        <div class="col-12 md:col-6">
+                            <div class="field">
+                                <label htmlFor="depositProviderId"> Đại lý lưu ký 
+                                    <span class="required-field"> * </span>
+                                </label>
+                                <p-dropdown appendTo="body" dataValue="depositProviderId"
+                                    optionValue="depositProviderId" name="depositProviderId" optionLabel="name"
+                                    [autoDisplayFirst]="false" [options]="depositProviders"
+                                    [(ngModel)]="productBondInfo.depositProviderId"
+                                    [ngClass]="{'ng-invalid ng-dirty' : (submitted && !productBondInfo.depositProviderId) || fieldErrors?.depositProviderId }"
+                                    (onChange)="changeDepositProvider($event.value)"
+                                    (click)="resetValid('depositProviderId')">
+                                </p-dropdown>
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-3">
+                            <div class="field">
+                                <label htmlFor="issuerId"> Tên viết tắt 
+                                    <span class="required-field"> * </span>
+                                </label>
+                                <input [value]="depositProvider?.businessCustomer?.shortName ?? null" [disabled]="true"
+                                    pInputText class="custom-input-disabled" />
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-3">
+                            <div class="field">
+                                <label htmlFor="issuerId"> Người đại diện 
+                                    <span class="required-field"> * </span>
+                                </label>
+                                <input [value]="depositProvider?.businessCustomer?.repName ?? null" [disabled]="true"
+                                    pInputText class="custom-input-disabled" />
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-12 title-group-input">
+                            <h6> Thông tin trái phiếu </h6>
+                        </div>
+                        <div class="col-12 md:col-3">
+                            <div class="field">
+                                <label htmlFor="bondCode"> Mã trái phiếu 
+                                    <span class="required-field"> * </span>
+                                </label>
+                                <input type="text" id="bondCode" name="bondCode" pInputText maxlength="50"
+                                    [(ngModel)]="productBondInfo.bondCode"
+                                    [ngClass]="{'ng-invalid ng-dirty' : fieldErrors?.bondCode} + ' custom-input-disabled'"
+                                    (click)="resetValid('bondCode')" />
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-3">
+                            <div class="field">
+                                <label htmlFor="bondName"> Tên trái phiếu 
+                                    <span class="required-field"> * </span>
+                                </label>
+                                <input type="text" id="bondName" name="bondName" pInputText maxlength="256"
+                                    [(ngModel)]="productBondInfo.bondName"
+                                    [ngClass]="{'ng-invalid ng-dirty' : fieldErrors?.bondName} + ' custom-input-disabled'"
+                                    (click)="resetValid('bondName')" />
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-2">
+                            <div class="field">
+                                <label htmlFor="bondPeriod"> Số kỳ hạn <span class="required-field"> * </span></label>
+                                <p-inputNumber max="999" name="bondPeriod" [(ngModel)]="productBondInfo.bondPeriod"
+                                    [ngClass]="{'ng-invalid ng-dirty' : fieldErrors?.bondPeriod} + ' custom-input-disabled'"
+                                    (onInput)="changePeriod($event, 'bondPeriod')" (click)="resetValid('bondPeriod')"
+                                    locale="de-DE">
+                                </p-inputNumber>
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-2">
+                            <div class="field">
+                                <label htmlFor="bondPeriodUnit"> Đơn vị 
+                                    <span class="required-field"> * </span>
+                                </label>
+                                <p-dropdown appendTo="body" dataValue="code" optionValue="code" name="bondPeriodUnit"
+                                    optionLabel="name" [autoDisplayFirst]="true"
+                                    [options]="productBondInfoConst.unitDates"
+                                    [(ngModel)]="productBondInfo.bondPeriodUnit"
+                                    (onChange)="changePeriod(bondPeriod, 'bondPeriodUnit')"
+                                    [ngClass]="{'ng-invalid ng-dirty' : (submitted && !productBondInfo.bondPeriodUnit) || fieldErrors?.bondPeriodUnit } + ' custom-input-disabled'"
+                                    (click)="resetValid('bondPeriodUnit')">
+                                </p-dropdown>
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-2">
+                            <div class="field">
+                                <label htmlFor="interestRate"> Trái tức (%/Năm) 
+                                    <span class="required-field"> * </span>
+                                </label>
+                                <p-inputNumber id="interestRate" min="0" max="100" suffix="%" name="interestRate"
+                                    [(ngModel)]="productBondInfo.interestRate"
+                                    [ngClass]="{'ng-invalid ng-dirty' : fieldErrors?.interestRate} + ' custom-input-disabled'"
+                                    locale="de-DE" [minFractionDigits]="2">
+                                </p-inputNumber>
+                            </div>
+                        </div>
+
+                        <div class="col-12 md:col-2">
+                            <div class="field">
+                                <label htmlFor="interestRateType"> Kiểu trả trái tức </label>
+                                <p-dropdown appendTo="body" optionValue="code" name="interestRateType"
+                                    optionLabel="name" [autoDisplayFirst]="true"
+                                    [options]="productBondInfoConst.interestRateTypes"
+                                    [(ngModel)]="productBondInfo.interestRateType"
+                                    [ngClass]="{'ng-invalid ng-dirty' : (submitted && !productBondInfo.interestRateType) || fieldErrors?.interestRateType } + ' custom-input-disabled'"
+                                    (onChange)="changeInterestRateType($event.value)"
+                                    (click)="resetValid('interestRateType')">
+                                </p-dropdown>
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-2">
+                            <div class="field">
+                                <label htmlFor="interestPeriod"> Số kỳ trả trái tức <span class="required-field" *ngIf="productBondInfo.interestRateType !== ProductBondPolicyDetailTemplateConst.INTEREST_RATE_TYPE_PERIOD_END"> * </span> </label>
+                                <p-inputNumber type="number" min="1" name="interestPeriod"
+                                    [(ngModel)]="productBondInfo.interestPeriod" min="0"
+                                    [ngClass]="{'ng-invalid ng-dirty' : fieldErrors?.interestPeriod} + ' custom-input-disabled'"
+                                    (click)="resetValid('interestPeriod')"
+                                    [disabled]="productBondInfo.interestRateType !== productBondInfoConst.INTEREST_RATE_TYPE_PERIODIC"
+                                    locale="de-DE">
+                                </p-inputNumber>
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-2">
+                            <div class="field">
+                                <label htmlFor="interestPeriodUnit"> Đơn vị </label>
+                                <p-dropdown appendTo="body" dataValue="code" optionValue="code"
+                                    name="interestPeriodUnit" optionLabel="name" [autoDisplayFirst]="false"
+                                    [disabled]="productBondInfo.interestRateType !== productBondInfoConst.INTEREST_RATE_TYPE_PERIODIC"
+                                    [options]="productBondInfoConst.unitDates"
+                                    [(ngModel)]="productBondInfo.interestPeriodUnit"
+                                    [ngClass]="{'ng-invalid ng-dirty' : (submitted && !productBondInfo.interestPeriodUnit) || fieldErrors?.interestPeriodUnit } + ' custom-input-disabled'"
+                                    (click)="resetValid('interestPeriodUnit')">
+                                </p-dropdown>
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-2">
+                            <div class="field">
+                                <label htmlFor="numberClosePer"> Số ngày chốt quyền <span class="required-field"> * </span> </label>
+                                <p-inputNumber id="numberClosePer" name="numberClosePer" min="0" max="999999999"
+                                    [(ngModel)]="productBondInfo.numberClosePer"
+                                    [ngClass]="{'ng-invalid ng-dirty' : fieldErrors?.numberClosePer}"
+                                    (click)="resetValid('numberClosePer')" locale="de-DE">
+                                </p-inputNumber>
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-4">
+                            <div class="field">
+                                <label htmlFor="countType"> Hình thức tính trái tức </label>
+                                <p-dropdown appendTo="body" optionValue="code" name="countType" optionLabel="name"
+                                    [autoDisplayFirst]="true" [options]="productBondInfoConst.countType"
+                                    [(ngModel)]="productBondInfo.countType"
+                                    [ngClass]="{'ng-invalid ng-dirty' : (submitted && !productBondInfo.countType) || fieldErrors?.countType }"
+                                    (click)="resetValid('countType')">
+                                </p-dropdown>
+                            </div>
+                        </div>
+
+                        <div class="col-12 md:col-2">
+                            <div class="field">
+                                <label htmlFor="parValue"> Mệnh giá <span class="required-field"> * </span> </label>
+                                <p-inputNumber mode="decimal" name="parValue" min="0" max="999999999999"
+                                    (onInput)="changePriceOrQuantity($event.value, 'quantity')"
+                                    [(ngModel)]="productBondInfo.parValue"
+                                    [ngClass]="{'ng-invalid ng-dirty' : fieldErrors?.parValue}"
+                                    (click)="resetValid('parValue')" locale="de-DE">
+                                </p-inputNumber>
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-2">
+                            <div class="field">
+                                <label htmlFor="quantity"> Số lượng <span class="required-field"> * </span> </label>
+                                <p-inputNumber type="text" id="quantity" name="quantity" min="0" max="999999999"
+                                    (onInput)="changePriceOrQuantity($event.value, 'parValue')"
+                                    [(ngModel)]="productBondInfo.quantity"
+                                    [ngClass]="{'ng-invalid ng-dirty' : fieldErrors?.quantity}"
+                                    (click)="resetValid('quantity')" locale="de-DE">
+                                </p-inputNumber>
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-4">
+                            <div class="field">
+                                <label htmlFor="totalValue"> Tổng giá trị </label>
+                                <p-inputNumber mode="decimal" locale="de-DE" name="totalValue"
+                                    class="custom-input-disabled" [disabled]="true"
+                                    [(ngModel)]="productBondInfo.totalValue">
+                                </p-inputNumber>
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-4">
+                            <div class="grid formgrid">
+                                <div class="col-12 md:col-6">
+                                    <div class="field">
+                                        <label for="issueDate"> Ngày phát hành <span class="required-field"> * </span>
+                                        </label>
+                                        <p-calendar inputId="issueDate" dateFormat="dd/mm/yy" locale="vi" [utc]="true"
+                                            appendTo="body" utc="true" placeholder="dd/mm/yyyy"
+                                            [(ngModel)]="productBondInfo.issueDate"
+                                            [ngClass]="{'ng-invalid ng-dirty' : fieldErrors?.issueDate}"
+                                            (click)="resetValid('issueDate')" (onSelect)="changeCelldate()"
+                                            (onInput)="changeCelldate()" [showIcon]="true">
+                                        </p-calendar>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-6">
+                                    <div class="field">
+                                        <label for="dueDate"> Ngày đáo hạn </label>
+                                        <p-calendar inputId="dueDate" dateFormat="dd/mm/yy" locale="vi" appendTo="body"
+                                            utc="true" placeholder="dd/mm/yyyy" 
+                                            [(ngModel)]="productBondInfo.dueDate"
+                                            [ngClass]="{'ng-invalid ng-dirty' : fieldErrors?.dueDate}"
+                                            (click)="resetValid('dueDate')"
+                                            [showIcon]="true">
+                                        </p-calendar>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-2">
+                            <div class="field">
+                                <label htmlFor="maxInvestor"> Số KH tối đa </label>
+                                <p-inputNumber id="maxInvestor" name="maxInvestor" [max]="maxInvestor"
+                                    [(ngModel)]="productBondInfo.maxInvestor" min="0" max="999999999"
+                                    [ngClass]="{'ng-invalid ng-dirty' : fieldErrors?.maxInvestor}"
+                                    (click)="resetValid('maxInvestor')" locale="de-DE">
+                                </p-inputNumber>
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-2">
+                            <div class="field">
+                                <label htmlFor="allowSbdMonth" pTooltip="Số ngày nắm giữ tối thiểu được phép bán lại">
+                                    Số ngày nắm gi... <i class="pi pi-question-circle"></i>
+                                </label>
+                                <p-inputNumber pTooltip="Số ngày nắm giữ tối thiểu được phép bán lại" id="allowSbdMonth"
+                                    name="allowSbdMonth" min="0" max="999999"
+                                    [(ngModel)]="productBondInfo.allowSbdMonth"
+                                    [ngClass]="{'ng-invalid ng-dirty' : fieldErrors?.allowSbdMonth}"
+                                    (click)="resetValid('allowSbdMonth')" locale="de-DE">
+                                </p-inputNumber>
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-2">
+                            <div class="field">
+                                <label htmlFor="isPaymentGuarantee"> Bảo lãnh TT? </label>
+                                <p-dropdown dataValue="code" optionValue="code" name="isPaymentGuarantee"
+                                    optionLabel="name" appendTo="body" [autoDisplayFirst]="true"
+                                    [options]="productBondInfoConst.booleans"
+                                    [(ngModel)]="productBondInfo.isPaymentGuarantee"
+                                    [ngClass]="{'ng-invalid ng-dirty' : (submitted && !productBondInfo.isPaymentGuarantee) || fieldErrors?.isPaymentGuarantee }"
+                                    (click)="resetValid('isPaymentGuarantee')">
+                                </p-dropdown>
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-2">
+                            <div class="field">
+                                <label htmlFor="isCollateral"> Tài sản đảm bảo </label>
+                                <p-dropdown appendTo="body" dataValue="isCollateral" optionValue="isCollateral"
+                                    name="isCollateral" optionLabel="name" [autoDisplayFirst]="true"
+                                    [options]="productBondInfoConst.booleans" [(ngModel)]="productBondInfo.isCollateral"
+                                    [ngClass]="{'ng-invalid ng-dirty' : (submitted && !productBondInfo.isCollateral) || fieldErrors?.isCollateral }"
+                                    (click)="resetValid('isCollateral')">
+                                </p-dropdown>
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-2">
+                            <div class="field">
+                                <label htmlFor="isCollateral"> Niêm yết </label>
+                                <p-dropdown appendTo="body" dataValue="isCollateral" optionValue="isCollateral"
+                                    name="isCollateral" optionLabel="name" [autoDisplayFirst]="false"
+                                    [options]="productBondInfoConst.booleans" [(ngModel)]="productBondInfo.isCollateral"
+                                    [ngClass]="{'ng-invalid ng-dirty' : (submitted && !productBondInfo.isCollateral) || fieldErrors?.isCollateral }"
+                                    (click)="resetValid('isCollateral')">
+                                </p-dropdown>
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-2">
+                            <div class="field">
+                                <label htmlFor="allowSbd">Cho bán lại trước hạn? </label>
+                                <p-dropdown appendTo="body" dataValue="N" optionValue="code" name="allowSbd"
+                                    optionLabel="name" [autoDisplayFirst]="true"
+                                    [options]="productBondInfoConst.booleans" [(ngModel)]="productBondInfo.allowSbd"
+                                    [ngClass]="{'ng-invalid ng-dirty' : (submitted && !productBondInfo.allowSbd) || fieldErrors?.allowSbd }"
+                                    (click)="resetValid('allowSbd')">
+                                </p-dropdown>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Hủy" icon="pi pi-times" class="p-button-text"
+                    (click)="hideDialog()"></button>
+                <button pButton pRipple label="Lưu" icon="pi pi-check" class="p-button-text"
+                    [disabled]="!validForm() ||submitted" (click)="save()"></button>
+            </ng-template>
+        </p-dialog>
+    </div>
+</div>

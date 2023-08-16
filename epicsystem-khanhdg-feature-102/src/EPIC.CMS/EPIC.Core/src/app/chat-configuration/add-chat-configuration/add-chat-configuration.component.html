@@ -1,0 +1,29 @@
+<div class="grid p-fluid" >
+    <div class="col-12 md:col-12" *ngIf="!UserTypes.TYPE_TRADING_PROVIDERS.includes(this.userLogin.user_type)">
+        <div class="field mb-0">
+            <label htmlFor=""> Đại lý <span class="required-field"> * </span></label>
+            <p-dropdown 
+                name="tradingProviderId" [disabled]="view || configureSystem.isUpdate" class="b-disabled"
+                optionLabel="name" optionValue="tradingProviderId" 
+                [options]="checkKey" appendTo="body"
+                [(ngModel)]="configureSystem.tradingProviderId">
+            </p-dropdown>
+        </div>
+    </div>
+    <div class="col-12 md:col-12">
+        <div class="field mb-0">
+            <label htmlFor=""> Cấu hình chat <span class="required-field"> * </span></label>
+            <input [(ngModel)]="configureSystem.message" pInputText class="b-disabled"/>
+        </div>
+    </div>   
+</div>
+<div class="p-dialog-footer" style="width: 100%; position: fixed; left: 0; bottom: 0;">
+    <button *ngIf="view != true" pButton pRipple label="Hủy" icon="pi pi-times" class="p-button-text p-confirm-dialog-reject" (click)="close()"></button>
+    <button *ngIf="view == true" pButton pRipple label="Thoát" icon="pi pi-times" class="p-button-text p-confirm-dialog-reject" (click)="close()"></button>
+    <button 
+    *ngIf="view != true"
+        pButton pRipple label="Lưu" icon="pi pi-check" class="p-button-text p-confirm-dialog-approve" [disabled]="!validForm() || submitted" (click)="save()">
+    </button>
+</div>
+
+         

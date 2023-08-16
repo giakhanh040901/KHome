@@ -1,0 +1,31 @@
+
+::ng-deep .dialog-setcolumn {
+    .p-dialog-header {
+        display: none;
+    } 
+    
+    .title-list {
+        width: 100%;
+        .check-all {
+            padding-top: 1rem;
+            padding-bottom: 1.5rem;
+            //
+            .p-checkbox-label {
+                font-size: 18px;
+                font-weight: bold;
+            }
+        }
+        .checkbox {
+            .p-checkbox-label {
+                margin-left: 1rem;
+            }
+        }
+    }
+} 
+
+// .wrapper-setting-column {
+//     overflow-y: auto;
+//     .list-column {
+//         overflow: auto !important;
+//     }
+// }

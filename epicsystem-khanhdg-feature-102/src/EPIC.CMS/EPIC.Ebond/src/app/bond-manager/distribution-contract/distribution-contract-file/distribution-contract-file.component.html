@@ -1,0 +1,116 @@
+<div *ngIf="isGranted([PermissionBondConst.Bond_HDPP_DMHSKHK_DanhSach])" class="grid ml-0 mr-0 mt-0">
+    <div class="col-12">
+        <div class="card p-0">
+            <p-toast></p-toast>
+            <p-confirmDialog [style]="{width: 'auto'}" [baseZIndex]="10000"></p-confirmDialog>
+            <p-table 
+                #userTable [value]="rows" 
+                [loading]="isLoading" [rowHover]="true" 
+                (onPageChange)="setPage($event)" responsiveLayout="scroll" dataKey="code" [resizableColumns]="false"
+                [scrollable]="true" styleClass="custom-table">
+                <ng-template pTemplate="caption">
+					<div class="flex justify-content-between flex-column sm:flex-row">
+                        <div class="flex justify-content-between flex-column sm:flex-row">
+                        </div>
+                        <div class="">
+							<button *ngIf="isGranted([PermissionBondConst.Bond_HDPP_DMHSKHK_ThemMoi])" pButton pRipple label="Upload file hồ sơ" icon="pi pi-cloud-upload" class="p-button-success mr-2" (click)="create()"></button>
+						</div>
+					</div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="max-width:5rem; min-width:5rem; border-right: 1px solid #dee2e6 !important;" pFrozenColumn alignFrozen="left"> # </th>
+                        <th style="min-width:20rem;"> Tên hồ sơ </th>
+                        <th style="max-width:12rem; min-width:12rem;"> Tải xuống </th>
+                        <th style="max-width:12rem; min-width:12rem;"> Trạng thái </th>
+                        <th style="max-width:12rem; min-width:12rem;"> Người duyệt</th>
+                        <th style="max-width:12rem; min-width:12rem;"> Người hủy</th>
+                        <th style="max-width:10rem; min-width:10rem;" pFrozenColumn alignFrozen="right">Thao tác</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-row let-rowIndex="rowIndex" let-columns="columns">
+                    <tr>
+                        <td style="max-width:5rem; min-width:5rem; border-right: 1px solid #dee2e6 !important;" pFrozenColumn alignFrozen="left"> {{ row.fileId }} </td>
+                        <td style="min-width:20rem;"> {{ row.title }} </td>
+                        <td style="max-width:10rem; min-width:10rem;" pFrozenColumn alignFrozen="right">
+                            <i class="pi pi-download mr-4" (click)="downloadFile(row.fileUrl)" style="cursor:pointer;" pTooltip="Tải file"></i>
+                        </td>
+                        <td style="max-width:12rem; min-width:12rem;">
+                             <p-tag styleClass="p-tag-{{ DistributionContractConst.getSeverityFileStatus(row.status) }}" severity="{{ DistributionContractConst.getSeverityFileStatus(row.status) }}" value="{{ DistributionContractConst.getNameFileStatus(row.status) }}"></p-tag> 
+                        </td>
+                        <td style="max-width:12rem; min-width:12rem;" class="flex-column align-items-start"> 
+                            <strong>{{ row.approveBy }}</strong>
+                            <p>{{ row.approveDate | datetimeview }}</p>
+                        </td>
+                        <td style="max-width:12rem; min-width:12rem;"  class="flex-column align-items-start"> 
+                            <strong>{{ row.cancelBy }}</strong>
+                            <p>{{ row.cancelDate | datetimeview }}</p>
+                        </td>
+                        <td style="max-width:10rem; min-width:10rem;" pFrozenColumn alignFrozen="right">
+                            <div class="flex">
+                                <!-- <p-splitButton class="button-actions" (onDropdownClick)="clickDropdown(row)" [model]="actionsDisplay" appendTo="body" *ngIf="row.status != DistributionContractConst.FILE_CANCEL">
+                                </p-splitButton> -->
+                                <i class="pi pi-ellipsis-h" style="cursor:pointer;" (click)="menu.toggle($event)" *ngIf="row.status != DistributionContractConst.FILE_CANCEL"></i>
+                                <p-menu 
+                                    #menu [popup]="true"class="button-actions"
+                                    [model]="listAction[rowIndex]" appendTo="body"
+                                    
+                                    >
+                                </p-menu>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+            <!-- <p-paginator styleClass="at-paginator-sm" [totalRecords]="page.totalItems" [rows]="page.pageSize" (onPageChange)="setPage($event)"></p-paginator> -->
+        </div>
+		<!-- THEM & SUA-->
+            <p-dialog [(visible)]="modalDialog" [style]="{width: '600px'}" header="Thêm hồ sơ" [modal]="true" class="p-fluid">
+                <ng-template pTemplate="content">
+                    <div class="grid formgrid">
+                        <div class="field col-12">
+                            <span style="margin-top: 1rem;"  class="p-float-label">
+                                <input 
+                                    type="text" id="title" name="title" pInputText maxlength="512"
+                                    [(ngModel)]="contractFile.title" [ngClass]="{'ng-invalid ng-dirty' : submitted && !contractTemplate?.title}"
+                                />
+                                <label for="title">Tên hồ sơ <span class="required-field"> * </span> </label>
+                            </span>
+                        </div>
+                        <div class="field col-12">
+                            <p-fileUpload 
+                                name="demo[]" customUpload="true" class="wrapper-files-upload"
+                                accept=".pdf,.doc"
+                                (onSelect)="myUploader($event)" 
+                                [showUploadButton]="false"
+                                [showCancelButton]="false"
+                                chooseLabel="Chọn"
+                                maxFileSize="100000000">
+                                
+                            </p-fileUpload>
+                        </div>
+                        <div class="field col-12" style="display: none;">
+                            <input placeholder="Đường dẫn file" type="text" id="fileUrl" name="fileUrl" disabled pInputText [value]="contractFile.fileUrl || ''" required autofocus/>
+                            <!-- <label for="fileUrl">Đường dẫn file</label> -->
+                        </div>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="footer">
+                    <button pButton pRipple label="Hủy" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+                    <button pButton pRipple label="Lưu" icon="pi pi-check" class="p-button-text" [disabled]="!validForm() || submitted" (click)="save()"></button>
+                </ng-template>
+            </p-dialog>
+
+		<!-- XOA -->
+        <p-dialog [(visible)]="deleteItemDialog" header="Xóa tài khoản" [modal]="true" [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                <span *ngIf="contractFile">Bạn có chắc chắn xóa mẫu hợp đồng {{ contractFile.title }} ?</span>
+            </div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No" (click)="deleteItemDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes" (click)="confirmDelete()"></button>
+            </ng-template>
+        </p-dialog>
+    </div>
+</div>

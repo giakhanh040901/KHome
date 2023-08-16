@@ -1,0 +1,45 @@
+<div class="w-full p-3">
+    <div class="flex justify-content-between">
+        <div class="b-title">
+            <h4>Người quản lý</h4>
+        </div>
+        <div class="flex b-action" *ngIf="isGranted(this.PermissionEventConst.TongQuanSuKien_ChiTiet_QuanLy_CapNhat)">
+            <form-button *ngIf="!isEdit" [icon]="'pi pi-pencil'" [label]="'Chỉnh sửa'"
+                (_onClick)="edit($event)"></form-button>
+            <form-button *ngIf="isEdit" [icon]="'pi pi-save'" [label]="'Lưu lại'"
+                (_onClick)="save($event)"></form-button>
+        </div>
+    </div>
+    <div class="card relative">
+        <div class="flex b-w-100">
+            <div class="custom-input-search pr-3">
+                <form-input-search [disabled]="!isEdit" [placeholder]="'Tìm kiếm'" [(keyword)]="keyword" (_onChange)="getInfoCustomer()">
+                </form-input-search>
+            </div>
+            <form-button [isDisabled]="isDisable" [icon]="'pi pi-search'" [label]="'Tìm kiếm'" (_onClick)="getInfoCustomer()"></form-button>
+        </div>
+    </div>
+    <div class="card">
+        <div class="p-fluid p-formgrid grid" *ngIf="dataSource.length">
+            <ng-container *ngFor="let data of dataSource; let i= index">
+                <div class="flex w-full">
+                    <div class="col-5">
+                       
+                        <form-input [label]="'Tên khách hàng'" [(ngModelValue)]="data.fullName"
+                            [isDisabled]="true"></form-input>
+                    </div>
+                    <div class="col-5">
+                        <form-input [label]="'Số điện thoại'" [(ngModelValue)]="data.phone"
+                            [isDisabled]="true"></form-input>
+                    </div>
+                    <div class="col-2">
+                        <span *ngIf="isEdit">
+                            ( <i class="pi pi-trash b-icon-trash"
+                                (click)="removeElement(i,data)" title="Xóa nguời người quản lý"></i> )
+                        </span>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+</div>

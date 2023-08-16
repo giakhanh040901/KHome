@@ -1,0 +1,27 @@
+
+<div [style.height.px]="contentHeight" [style.overflow-y]="'auto'" class="pr-3">
+    <div>
+        <h5> Dòng tiền dự tính </h5>
+        <e-table
+            [rows]="expectedCashFlows"
+            [(page)]="page"
+            [columns]="columnExpecteds"
+            [isLoading]="isLoading"
+            [isShowPaginator]="false"
+            [isHeightAuto]="true"
+            [columnCacheName]="'DongTienDuTinh'">
+        </e-table>
+    </div>
+    <div class="mt-5">
+        <h5> Dòng tiền thực tế </h5>
+        <e-table
+            [rows]="actualCashFlows"
+            [(page)]="page"
+            [columns]="columnActuals"
+            [isLoading]="isLoading"
+            [isShowPaginator]="false"
+            [isHeightAuto]="true"
+            [columnCacheName]="'DongTienThucTe'">
+        </e-table>
+    </div>
+</div>

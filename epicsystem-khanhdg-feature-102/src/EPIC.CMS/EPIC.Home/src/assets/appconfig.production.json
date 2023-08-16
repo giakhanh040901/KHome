@@ -1,0 +1,19 @@
+{
+	"remoteServiceBaseUrl": "https://api.epicpartner.vn",
+	"rocketchat": {
+		"api": "https://api.epicpartner.vn",
+		"iframeSrc": "https://esupports.epicpartner.vn"
+	},
+	"appBaseUrl": "https://home.epicpartner.vn",
+	"baseUrlEcore": "https://ecore.epicpartner.vn",
+	"baseUrlEbond": "https://ebond.epicpartner.vn",
+	"baseUrlEinvest": "https://einvest.epicpartner.vn",
+	"baseUrlEgarner": "https://egarner.epicpartner.vn",
+	"baseUrlEuser": "https://euser.epicpartner.vn",
+	"baseUrlRealEState": "https://ehomes.epicpartner.vn",
+	"baseUrlEloyalty": "https://eloyalty.epicpartner.vn",
+	"baseUrlEvents": "https://events.epicpartner.vn",
+	
+	"clientId": "client1",
+	"clientSecret": "secret1"
+  }

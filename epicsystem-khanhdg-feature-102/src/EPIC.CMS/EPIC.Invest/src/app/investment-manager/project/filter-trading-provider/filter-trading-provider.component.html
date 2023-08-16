@@ -1,0 +1,33 @@
+<div class="grid form-layout p-fluid">
+    <ng-container>
+            <div class="field col-12">
+                <label> Đại lý sơ cấp  (<span class="required-field"> * </span>)</label>
+                <p-dropdown 
+                    appendTo="body" class="b-disabled"
+                    [options]="tradingProviders" optionLabel="name" optionValue="tradingProviderId"
+                    [autoDisplayFirst]="false" 
+                    [(ngModel)]="tradingProvider.tradingProviderId" placeholder="Chọn đại lý sơ cấp"
+                    [disabled]="!!(tradingProvider?.id)"
+                    (onChange)="changeTradingProvider($event.value)">
+                </p-dropdown>
+            </div>
+
+            <div class="field col-12" *ngIf="hasTotalInvestmentSub == true">
+                <label> Hạn mức đầu tư (<span class="required-field"> * </span>)</label>
+                <p-inputNumber 
+                    id="totalInvestmentSub" name="totalInvestmentSub" [maxFractionDigits]="3"
+                    [(ngModel)]="tradingProvider.totalInvestmentSub" locale="de-DE" 
+                    (onInput)="tradingProvider.totalInvestmentSub=$event.value">
+                </p-inputNumber>
+            </div>
+    </ng-container>
+</div>
+
+<div class="p-dialog-footer e-custom-dialog-footer" >
+    <button type="button" pButton pRipple label="Hủy" icon="pi pi-times" class="p-button-text p-confirm-dialog-reject" (click)="cancel()"></button> 
+    <button 
+        type="submit" pButton pRipple label="Đồng ý" icon="pi pi-check" class="p-button-text p-confirm-dialog-approve" 
+        [disabled]="!validForm() || submitted" 
+        (click)="save()">
+    </button>
+</div>

@@ -1,0 +1,18 @@
+::ng-deep {
+    .e-preview-image {
+        .p-image-mask.p-component-overlay {
+            .p-image-toolbar {
+                z-index: 1103;
+            }
+            .ng-trigger {
+                // zoom: 0.85;
+            }
+        }
+        
+    }
+    .content-mark-down {
+        img {
+            max-width: 100%;
+        }
+    }
+}

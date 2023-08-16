@@ -1,0 +1,126 @@
+<div  class="card">
+    <div class="card-body">
+        <div class="grid wrapper-header">
+            <div class="col-4 text-left">
+                <h3 class="mb-0 pr-3" style="color: #172b4d;"> Quản lý ngày nghỉ lễ</h3>
+            </div>
+            <div class="col-4 text-center">
+                <h3 class="mb-0"> {{ this.year }} </h3>
+            </div>
+            <div class="col-4 text-right"
+                style="padding-right: 15px !important;">
+                <label class="mb-0 mr-2"> <b> Chọn <i class="fas fa-hand-point-right"></i> </b> </label>
+                <p-dropdown [options]="years" (onChange)="changeYear()" [(ngModel)]="year" required autofocus
+                    [ngClass]="{'ng-invalid ng-dirty' : submitted && !calendar.workingYear}"></p-dropdown>
+            </div>
+        </div>
+
+        <div class="row wrapper-body">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                <table id="calendar" class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <ng-container *ngFor="let item of headers">
+                                <th [ngStyle]="{backgroundColor:'var(--green-500)', color:'white'}"> {{ item.vi }} </th>
+                            </ng-container>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <ng-container *ngFor="let month of months">
+                            <tr>
+                                <td> {{ 'T' + month.value }} </td>
+                                <ng-container *ngFor="let item of headers; let i = index">
+                                    <td
+                                        *ngIf="i < month?.data[0]?.dayDate || i >= (month?.data[0]?.dayDate + month?.data?.length)">
+                                        {{ '-' }} </td>
+                                    <ng-container *ngIf="month?.data[0]?.dayDate == item.stt">
+                                        <ng-container *ngFor="let dayInfo of month.data">
+                                            <td [title]="dayInfo.datetime" (click)="edit(dayInfo)">
+                                                <span
+                                                    [class]="dayInfo.isDayOff == YesNoConst.STATUS_YES ? 'tick' : ''">
+                                                    {{ +dayInfo.day }} 
+                                                </span>
+                                            </td>
+                                        </ng-container>
+                                    </ng-container>
+                                </ng-container>
+                            </tr>
+                        </ng-container>
+                    </tbody>
+                </table>
+                </div>
+            </div>
+        </div>
+
+        <p-dialog *ngIf="isGranted([PermissionBondConst.BondCaiDat_CHNNL_CapNhat])" [(visible)]="modalDialog" [style]="{width: '500px'}" header="Cập nhật ngày làm việc" [modal]="true"
+            class="p-fluid">
+            <ng-template pTemplate="content">
+                <div class="card">
+                    <div class="grid formgrid">
+                        <div class="col-12 md:col-6">
+                            <div class="field">
+                                <label htmlFor="isDayOff">Là ngày nghỉ?</label>
+                                <p-dropdown [options]="statusYesNo" dataValue="code" optionValue="code" name="isDayOff"
+                                    optionLabel="name" [(ngModel)]="calendar.isDayOff" required autofocus
+                                    [ngClass]="{'ng-invalid ng-dirty' : (submitted && !calendar.isDayOff) || fieldErrors?.isDayOff }"
+                                    (click)="resetValid('isDayOff')"></p-dropdown>
+                            </div>
+                            <!-- <small class="ng-dirty ng-invalid" *ngIf="submitted && !issuer.type"> => Nhập tên hiển thị!</small> -->
+                        </div>
+
+                        <div class="col-12 md:col-6">
+                            <div class="field">
+                                <label htmlFor="workingDate">Ngày làm việc</label>
+                                <p-calendar inputId="workingDate" dateFormat="dd/mm/yy" locale="vi" appendTo="body"
+                                    utc="true" [(ngModel)]="calendar.workingDate"
+                                    [ngClass]="{'ng-invalid ng-dirty' : fieldErrors?.workingDate}"
+                                    (click)="resetValid('workingDate')" [showIcon]="true">
+                                </p-calendar>
+                            </div>
+                            <!-- <small class="ng-dirty ng-invalid" *ngIf="submitted && !issuer.name"> => Nhập tên hiển thị!</small> -->
+                        </div>
+
+                        <div class="col-12 md:col-6">
+                            <div class="field">
+                                <label htmlFor="workingYear">Năm tài chính</label>
+                                <input type="text" id="workingYear" name="workingYear" pInputText
+                                    [(ngModel)]="calendar.workingYear" disabled="true" required autofocus
+                                    [ngClass]="{'ng-invalid ng-dirty' : submitted && !calendar.workingYear}" />
+                            </div>
+                            <!-- <small class="ng-dirty ng-invalid" *ngIf="submitted && !issuer.code"> => Nhập tên hiển thị!</small> -->
+                        </div>
+
+                        <div class="col-12 md:col-6">
+                            <div class="field">
+                                <label htmlFor="busDate">Ngày hạch toán</label>
+                                <p-calendar inputId="busDate" dateFormat="dd/mm/yy" locale="vi" appendTo="body"
+                                    utc="true" [(ngModel)]="calendar.busDate"
+                                    [ngClass]="{'ng-invalid ng-dirty' : fieldErrors?.busDate}"
+                                    (click)="resetValid('busDate')" [showIcon]="true">
+                                </p-calendar>
+                            </div>
+                            <!-- <small class="ng-dirty ng-invalid" *ngIf="submitted && !issuer.shortName"> => Nhập tên hiển thị!</small> -->
+                        </div>
+                    </div>
+                </div>
+
+            </ng-template>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Hủy" icon="pi pi-times" class="p-button-text"
+                    (click)="hideDialog()"></button>
+                <!-- <button pButton pRipple label="Lưu" icon="pi pi-check" class="p-button-text" [disabled]="!validForm() || submitted" (click)="save()"></button> -->
+                <button pButton pRipple label="Lưu" icon="pi pi-check" class="p-button-text" [disabled]="submitted"
+                    (click)="save()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <ng-template pTemplate="header">
+            <p-button type="button" class="mr-2" (click)="previous()" icon="pi pi-arrow-left"></p-button>
+            <p-button type="button" class="mr-2" (click)="refresh()" icon="pi pi-refresh"></p-button>
+            <p-button type="button" class="mr-2" (click)="next()" icon="pi pi-arrow-right"></p-button>
+        </ng-template>
+
+    </div>
+</div>

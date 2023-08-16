@@ -1,0 +1,207 @@
+<div *ngIf="isGranted([PermissionCompanyShareConst.CompanyShare_LTP_TSDB_DanhSach])" class="grid ml-0 mr-0 mt-0">
+    <div class="col-12">
+        <div class="card p-0">
+            <p-toast></p-toast>
+            <p-confirmDialog [style]="{width: 'auto'}" [baseZIndex]="10000"></p-confirmDialog>
+            <p-table 
+                #userTable 
+                selectionMode="multiple" responsiveLayout="scroll" dataKey="id"
+                styleClass="p-datatable-gridlines custom-table" [value]="rows" [rowHover]="true"
+                (onPageChange)="setPage($event)" [scrollable]="true">
+                <ng-template pTemplate="caption">
+                    <div class="flex justify-content-between flex-column sm:flex-row">
+                        <div class="flex justify-content-between flex-column sm:flex-row">
+                        </div>
+                        <div class="">
+                            <button *ngIf="isGranted([PermissionCompanyShareConst.CompanyShare_LTP_TSDB_Them])" pButton pRipple label="Thêm tài sản đảm bảo" icon="pi pi-plus-circle"
+                                class="p-button-success mr-2" (click)="create()"></button>
+                        </div>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <!-- <th style="min-width:10rem;"> # </th> -->
+                        <th style="max-width:10rem; min-width:10rem;"> Mã </th>
+                        <th style="max-width:10rem; min-width:10rem;"> Giá trị </th>
+                        <th style="min-width:20rem;"> Mô tả </th>
+                        <!-- <th style="min-width:10rem;"> Danh sách file</th> -->
+                        <th style="max-width:10rem; min-width:10rem;"> Danh sách file </th>
+                        <th style="max-width:8rem; min-width:8rem;" pFrozenColumn alignFrozen="right"> Thao tác </th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-row let-rowIndex="rowIndex">
+                    <tr>
+                        <td style="max-width:10rem; min-width:10rem;"> {{ row?.code }} </td>
+                        <td style="max-width:10rem;min-width:10rem;"> {{  this.utils.transformMoney(row?.assetValue) }} </td>
+                        <td style="min-width:20rem;">
+                            <div [innerHTML]="row?.descriptionAsset"></div>
+                        </td>
+                        <!-- <td style="min-width:10rem;">
+                            <div class="flex">
+                                <p-splitButton class="button-actions" (onDropdownClick)="clickDropdown(row)"
+                                    [model]="actionsDisplay" appendTo="body">
+                                </p-splitButton>
+                            </div>
+                        </td> -->
+                        <td style="max-width:10rem; min-width:10rem;">
+                            <div class="flex">
+                                <p-splitButton class="button-actions" [model]="listFilesAction[rowIndex]"
+                                    appendTo="body">
+                                </p-splitButton>
+                            </div>
+                        </td>
+                        <!-- <td style="min-width:10rem;" pFrozenColumn alignFrozen="right">
+                            <div class="flex">
+                                <p-splitButton #menu class="button-actions" [model]="listAction[rowIndex]"
+                                    appendTo="body">
+                                </p-splitButton>
+                            </div>
+                        </td> -->
+                        <td style="max-width:8rem; min-width:8rem;" pFrozenColumn alignFrozen="right" [frozen]="true"
+                            class="b-table-actions">
+                            <div class="flex">
+                                <!-- <button type="button" pButton icon="pi pi-ellipsis-h" (click)="menu.toggle($event)"></button> -->
+                                <i class="pi pi-ellipsis-h" (click)="menu.toggle($event)"></i>
+                                <p-menu #menu [popup]="true" class="button-actions" [model]="listAction[rowIndex]"
+                                    appendTo="body">
+                                </p-menu>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+            <!-- <p-paginator styleClass="at-paginator-sm" [totalRecords]="page.totalItems" [rows]="page.pageSize"
+                (onPageChange)="setPage($event)"></p-paginator> -->
+        </div>
+        <!-- THEM & SUA-->
+        <p-dialog [(visible)]="modalDialog" [style]="{width: '600px'}" header="Thêm tài sản đảm bảo" [modal]="true"
+            class="p-fluid">
+            <ng-template pTemplate="content">
+                <div class="grid formgrid">
+                    <ng-container>
+                        <div class="col-12 md:col-6">
+                            <div class="field">
+                                <label htmlFor="companyShareId"> Mã </label>
+                                <input pInputText [(ngModel)]="collateral.code" class="custom-input-disabled" />
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-6">
+                            <div class="field">
+                                <label htmlFor="companyShareId"> Tiền tệ </label>
+                                <p-inputNumber class="custom-input-disabled" 
+                                min="0"
+                                max="999999999999999"
+                                maxlength="19"
+                                [(ngModel)]="collateral.assetValue" mode="decimal" 
+                                locale="de-DE" [maxFractionDigits]="3">
+                                </p-inputNumber>
+                            </div>
+                        </div>
+
+                        <div class="col-12 md:col-12">
+                            <div class="field">
+                                <label htmlFor="companyShareId"> Mô tả </label>
+                                <angular-editor id="description" class="custom-input-disabled"
+                                    [placeholder]="'Nhập mô tả...'" [(ngModel)]="collateral.descriptionAsset"
+                                    [config]="editorConfig">
+                                </angular-editor>
+                            </div>
+                        </div>
+                    </ng-container>
+                    <div style="margin-top: 1rem;" class="field col-8">
+                        <span class="p-float-label">
+                            <input type="text" id="title" name="title" pInputText
+                                (input)="changeTitleFile($event.target.value)" [(ngModel)]="title" />
+                            <label for="title">Tiêu đề file <span class="required-field"> * </span> </label>
+                        </span>
+                    </div>
+                    <div style="margin-top: 1rem;" class="field col-4">
+                        <p-fileUpload name="demo[]" accept=".pdf,.doc" [customUpload]="true" class="custom-file-upload"
+                            chooseIcon="pi pi-cloud-upload" [disabled]="!isUpload" (uploadHandler)="myUploader($event)"
+                            [auto]="true" chooseLabel="Chọn file upload">
+                        </p-fileUpload>
+                    </div>
+                    <div class="col-12 md:col-12 title-group-input">
+                        <h6> Danh sách file </h6>
+                    </div>
+
+                    <p-table [value]="collateral.guaranteeFiles" dataKey="fileUrl" editMode="row"
+                        responsiveLayout="scroll">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th style="width:3rem">#</th>
+                                <th style="width:100%">Tiêu đề file</th>
+                                <th style="width:3rem"></th>
+                                <th style="width:3rem"></th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-file let-editing="editing" let-ri="rowIndex">
+                            <tr [pEditableRow]="file">
+                                <td style="width:3rem"> <i class="pi pi-download" (click)="downloadFile(file)"></i>
+                                </td>
+                                <td style="width:100%">
+                                    <p-cellEditor>
+                                        <ng-template pTemplate="input">
+                                            <input pInputText type="text" [(ngModel)]="file.title" required>
+                                        </ng-template>
+                                        <ng-template pTemplate="output">
+                                            {{ file.title }}
+                                        </ng-template>
+                                    </p-cellEditor>
+                                </td>
+
+                                <td style="text-align:center;width:3rem">
+                                    <button *ngIf="!editing" pButton pRipple type="button" pInitEditableRow
+                                        icon="pi pi-pencil" class="p-button-rounded p-button-text"></button>
+                                    <button *ngIf="editing" pButton pRipple type="button" pSaveEditableRow
+                                        icon="pi pi-check" (click)="onRowEditSave(file)"
+                                        class="p-button-rounded p-button-text p-button-success mr-2 custom-button-save-row-table">
+                                    </button>
+                                </td>
+                                <td style="text-align:center;width:3rem">
+                                    <button pButton pRipple type="button" (click)="deleteFile(ri)" icon="pi pi-trash"
+                                        class="p-button-rounded p-button-text"></button>
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+
+                    <!-- <ng-container *ngFor="let field of collateral.fields; let i=index">
+                            <div class="col-12 md:col-8 mb-3" >
+                                <span class="p-float-label">
+                                    <input 
+                                        pInputText type="text" class="custom-input-disabled"
+                                        [(ngModel)]="field.title" 
+                                        [name]="'titleFile'+i" [id]="'titleFile'+i" 
+                                        (input)="customTitle()"
+                                    />
+                                    <label htmlFor="companyShareId"> Tiêu đề file </label>
+                                </span>
+                            </div>
+                            <div class="col-12 md:col-4 mb-3" >
+                                <input pInputText [value]="field.url" class="custom-input-disabled" [disabled]="true"/>
+                            </div>
+                        </ng-container> -->
+                </div>
+            </ng-template>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Hủy" icon="pi pi-times" class="p-button-text"
+                    (click)="hideDialog()"></button>
+                <button pButton pRipple label="Lưu" icon="pi pi-check" class="p-button-text"
+                    [disabled]="!validForm() || submitted" (click)="save()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <!-- XOA -->
+        <!-- <p-dialog [(visible)]="deleteItemDialog" header="Xóa tài khoản" [modal]="true" [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                <span *ngIf="contractFile">Bạn có chắc chắn xóa mẫu hợp đồng {{ contractFile.title }} ?</span>
+            </div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No" (click)="deleteItemDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes" (click)="confirmDelete()"></button>
+            </ng-template>
+        </p-dialog> -->
+    </div>
+</div>

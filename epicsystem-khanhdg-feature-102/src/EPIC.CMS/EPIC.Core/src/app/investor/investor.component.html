@@ -1,0 +1,137 @@
+<div class="grid ml-0 mr-0 mt-0">
+    <div class="col-12">
+		<p-toast></p-toast>
+		<p-confirmDialog [style]="{width: 'auto'}" [baseZIndex]="10000"></p-confirmDialog>
+        <div class="card b-list">
+            <div class="p-fluid p-formgrid grid b-header">
+                <div class="col-12 md:col-7 b-title">
+                    <h4 style="display:inline"> Danh sách khách hàng</h4>
+                </div>
+            </div>
+            <p-toast></p-toast> 
+            <p-table 
+                #productBondInfoTable 
+                [value]="rows"
+                [columns]="_selectedColumns"
+                [loading]="isLoading" [rowHover]="true" [showCurrentPageReport]="true" [paginator]="false" 
+                (onPageChange)="setPage($event)" responsiveLayout="scroll" dataKey="code"
+                [resizableColumns]="false" [scrollable]="true" scrollHeight="{{ (screenHeight*0.65) + 'px' }}" 
+                sortMode="multiple" (onSort)="onSort($event)" [customSort]="true"
+                styleClass="custom-table">
+                <ng-template pTemplate="caption">
+                    <div class="flex justify-content-between flex-column sm:flex-row">
+                        <div class="flex justify-content-between flex-column sm:flex-row" >
+							<span class="block mt-2 md:mt-0 p-input-icon-left mr-1">
+								<i class="pi pi-search"></i>
+								<input 
+									pInputText type="text" placeholder="{{ InvestorConst.getInfoFieldFilter(dataFilter.fieldSearch, 'placeholder') }}" [(ngModel)]="keyword"
+									style="min-width: 300px" (keyup)="changeKeyword($event)" 
+								/>
+							</span>
+							<span class="p-float-label b-custom ml-2 mr-1">
+								<p-dropdown 
+									id="fieldSearch" [style]="{'width':'14rem'}" [options]="InvestorConst.fieldFilters"
+									name="fieldSearch" optionLabel="name" optionValue="field"
+									[(ngModel)]="dataFilter.fieldSearch" [autoDisplayFirst]="true" (onChange)="changeFieldSearch()">
+								</p-dropdown>
+								<label class="font-normal" for="fieldSearch">Tìm kiếm theo</label>
+							</span>
+                            <span class="p-float-label b-custom ml-2">
+                                <p-dropdown
+                                    [style]="{'min-width':'12rem'}" placeholder="Tất cả"
+                                    [autoDisplayFirst]="false" [showClear]="true"
+                                    [options]="InvestorConst.isCheckConst" optionLabel="name" optionValue="code" 
+                                    [(ngModel)]="dataFilter.isCheck" 
+                                    (onChange)="changeStatus($event.value)">
+                                </p-dropdown>
+                                <label class="font-normal" for="dropdownStatus">Kiểm tra</label>
+                            </span>
+                            <span class="p-float-label b-custom ml-2">
+                                <p-dropdown
+                                    [style]="{'min-width':'12rem'}" placeholder="Tất cả"
+                                    [autoDisplayFirst]="false" [showClear]="true"
+                                    [options]="InvestorConst.statusApproved" optionLabel="name" optionValue="code" 
+                                    [(ngModel)]="dataFilter.status" 
+                                    (onChange)="changeStatus($event.value)">
+                                </p-dropdown>
+                                <label class="font-normal" for="dropdownStatus">Trạng thái</label>
+                            </span>
+                        </div>
+					</div>
+                </ng-template>
+                <ng-template pTemplate="header" let-columns>
+					<tr>
+						<th pSortableColumn="investorId" style="min-width: 5rem; max-width: 5rem;" pFrozenColumn alignFrozen="left" class="b-border-frozen-left"> #ID <p-sortIcon field="investorId"></p-sortIcon> </th>
+                        <ng-container *ngFor="let col of columns">
+                            <th  *ngIf="col.isSort" pSortableColumn="{{col.field}}"  [ngStyle]="{'max-width': !col?.isResize ? col?.width : '', 'min-width': col?.width}" [ngClass]="col.class">
+                                {{ col.header }} <p-sortIcon *ngIf="col.field" field="{{col.field}}"></p-sortIcon>
+                            </th>
+                            <th *ngIf="!col.isSort" [ngStyle]="{'max-width': !col?.isResize ? col?.width : '', 'min-width': col?.width}" [ngClass]="col.class">
+                                {{ col.header }}
+                            </th>
+                        </ng-container>
+                        <th style="max-width: 7rem; min-width: 7rem;" pFrozenColumn alignFrozen="right" [frozen]="true" class="b-border-frozen-right justify-content-end">Trạng thái</th>
+                        <th style="max-width: 3rem; min-width: 3rem; justify-content: center;" pFrozenColumn alignFrozen="right" [frozen]="true">
+                            <i class="pi pi-cog" (click)="setColumn(cols, _selectedColumns)"></i>
+                        </th>
+					</tr>
+				</ng-template>
+                <ng-template pTemplate="body" let-row let-rowIndex="rowIndex" let-columns="columns">
+                    <tr>
+                        <td style="min-width: 5rem; max-width: 5rem;" pFrozenColumn alignFrozen="left" class="b-border-frozen-left"> {{ row.investorId }} </td>
+                        <td *ngFor="let col of columns; let indexRow = index" [ngStyle]="{'max-width': !col?.isResize ? col?.width : '', 'min-width': col?.width}" [ngClass]=" col?.class">
+                            <div *ngIf="col?.field === 'isCheck'">
+                                <p-checkbox [(ngModel)]="row._isChecked" [binary]="true" inputId="binary" [readonly]="true"></p-checkbox>
+                            </div>
+                            <div *ngIf="col?.field === '_isProf'">
+                                <p-checkbox [(ngModel)]="row._isProf" [binary]="true" inputId="binary" [readonly]="true"></p-checkbox>
+                            </div>
+                            <div *ngIf="col?.field !== 'isCheck' && col?.field !== '_isProf'" [ngClass]="col?.cutText" [title]="row[col?.field]">
+                                {{ row[col?.field]}}
+                            </div>
+                        </td>
+                        <td style="max-width: 7rem; min-width: 7rem; justify-content: right;" pFrozenColumn alignFrozen="right" [frozen]="true" class="b-border-frozen-right">
+                            <p-tag 
+                                styleClass="p-tag-{{ InvestorConst.getInfoStatusApproved(row?.status, 'severity') }}" 
+                                severity="{{ InvestorConst.getInfoStatusApproved(row?.status, 'severity') }}" 
+                                value="{{ InvestorConst.getInfoStatusApproved(row?.status, 'name') }}">
+                            </p-tag> 
+                        </td>
+                        <td style="max-width: 3rem; min-width: 3rem;" pFrozenColumn alignFrozen="right" [frozen]="true" class="b-table-actions">
+                            <div class="flex">
+                                <div class="flex">
+                                    <!-- <button type="button" pButton icon="pi pi-ellipsis-h" (click)="menu.toggle($event)"></button> -->
+                                    <i class="pi pi-ellipsis-h"  (click)="menu.toggle($event)"></i>
+                                    <p-menu 
+                                        #menu [popup]="true"class="button-actions"
+                                        [model]="listAction[rowIndex]" appendTo="body"
+                                        >
+                                    </p-menu>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+					<tr>
+						<td colspan="7">Không có dữ liệu.</td>
+					</tr>
+				</ng-template>
+				<ng-template pTemplate="loadingbody">
+					<tr>
+						<td colspan="7"> Đang tải dữ liệu ... </td>
+					</tr>
+				</ng-template>
+            </p-table>
+            <p-paginator 
+                [rows]="page.pageSize" 
+                [totalRecords]="page.totalItems" 
+                [rowsPerPageOptions]="[25, 50, 100, 200,{showAll:'Tất cả'}]" 
+                currentPageReportTemplate="Tất cả {{ page.totalItems }} dòng" 
+                showCurrentPageReport="true"
+                (onPageChange)="setPage($event)">
+            </p-paginator>
+        </div>
+    </div>
+</div>
+

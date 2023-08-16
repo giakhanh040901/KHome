@@ -1,0 +1,144 @@
+<div *ngIf="isGranted([PermissionCompanyShareConst.CompanyShareHDPP_SoLenh_TTCT_HSKHDangKy_DanhSach])" class="grid ml-0 mr-0 mt-0">
+    <div class="col-12">
+        <div class="card pt-0">
+            <p-toast></p-toast>
+            <p-confirmDialog [style]="{width: 'auto'}" [baseZIndex]="10000"></p-confirmDialog>
+            <p-table 
+                #contractTable 
+                selectionMode="multiple" [loading]="isLoading" responsiveLayout="scroll" dataKey="id" styleClass="custom-table"
+                [value]="rows" [rowHover]="true" 
+                (onPageChange)="setPage($event)" [scrollable]="true">
+                <ng-template pTemplate="caption">
+					<div class="flex justify-content-between flex-column sm:flex-row">
+                        <div class="flex justify-content-between flex-column sm:flex-row">
+                            <!-- <span class="block mt-2 md:mt-0 ml-3 p-input-icon-left">
+                                <i class="pi pi-search"></i>
+                                <input pInputText type="text" placeholder="Tìm kiếm..."
+                                    [(ngModel)]="keyword" (input)="changeKeyword($event)"/>
+                            </span> -->
+                        </div>
+                        <div class="col-12 md:col-12 text-right b-actions b-order-contract">
+                            <ng-container>
+                                <p-button
+                                    *ngIf="orderDetail.source == OrderConst.SOURCE_OFFLINE && isGranted([PermissionCompanyShareConst.CompanyShareHDPP_SoLenh_TTCT_HSKHDangKy_ChuyenOnline])" 
+                                    styleClass="p-button-sm custom-button"
+                                    label="Chuyển online" 
+                                    (click)="activeOnline()">
+                                </p-button> 
+                                <p-button
+                                    *ngIf="isGranted([PermissionCompanyShareConst.CompanyShareHDPP_SoLenh_TTCT_HSKHDangKy_CapNhatHS])" 
+                                    styleClass="p-button-sm custom-button"
+                                    label="Cập nhật hồ sơ" 
+                                    (click)="updateOrderContract()">
+                                </p-button> 
+                                <p-button
+                                    *ngIf="orderDetail.source == OrderConst.SOURCE_ONLINE && (orderDetail.status == OrderConst.DANG_DAU_TU || orderDetail.status == OrderConst.CHO_DUYET_HOP_DONG) && isGranted([PermissionCompanyShareConst.CompanyShareHDPP_SoLenh_TTCT_HSKHDangKy_KyDienTu])"
+                                    styleClass="p-button-sm custom-button"
+                                    label="Ký điện tử" 
+                                    (click)="signOrderContract()">
+                                </p-button>
+                                <p-button
+                                    *ngIf="orderDetail.status == OrderConst.DANG_DAU_TU && isGranted([PermissionCompanyShareConst.CompanyShareHDPP_SoLenh_TTCT_HSKHDangKy_GuiThongBao])" 
+                                    label="Gửi thông báo" 
+                                    styleClass="p-button-sm custom-button" 
+                                    (click)="resentNotify()">
+                                </p-button>
+                                <p-button
+                                    *ngIf="orderDetail.status == OrderConst.DANG_DAU_TU && isGranted([PermissionCompanyShareConst.CompanyShareHDPP_SoLenh_TTCT_HSKHDangKy_DuyetHoSoOrHuy])"
+                                    styleClass="p-button-sm custom-button"
+                                    label="Hủy duyệt" 
+                                    (click)="cancel()">
+                                </p-button>
+                                <p-button
+                                    *ngIf="orderDetail.status == OrderConst.CHO_DUYET_HOP_DONG && isSignAll && isGranted([PermissionCompanyShareConst.CompanyShareHDPP_SoLenh_TTCT_HSKHDangKy_DuyetHoSoOrHuy])"
+                                    styleClass="p-button-sm custom-button"
+                                    label="Duyệt hồ sơ" 
+                                    (click)="approve()">
+                                </p-button> 
+                            </ng-container> 
+                        </div>
+					</div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th pFrozenColumn alignFrozen="left">#</th>
+                        <th style="min-width:25rem;" pFrozenColumn alignFrozen="left">Tên hợp đồng</th>
+                        <th class="justify-content-center"> Lưu trữ </th>
+                        <th class="justify-content-center"> Đã ký </th>
+                        <th *ngIf="isGranted([PermissionCompanyShareConst.CompanyShareHDPP_SoLenh_TTCT_HSKHDangKy_TaiHSM])" 
+                            style="min-width:15rem;" class="justify-content-center">Tải hồ sơ mẫu</th>
+                        <th *ngIf="isGranted([PermissionCompanyShareConst.CompanyShareHDPP_SoLenh_TTCT_HSKHDangKy_TaiHSCKDT])"
+                            style="min-width:15rem;" class="justify-content-center">Tải hồ sơ chữ ký điện tử</th>
+                        <th *ngIf="isGranted([PermissionCompanyShareConst.CompanyShareHDPP_SoLenh_TTCT_HSKHDangKy_TaiLenHS])" 
+                            class="justify-content-center">Tải lên hồ sơ</th>
+                        <th *ngIf="isGranted([PermissionCompanyShareConst.CompanyShareHDPP_SoLenh_TTCT_HSKHDangKy_XemHSTaiLen])" 
+                            class="justify-content-center" pFrozenColumn alignFrozen="right">Xem hồ sơ tải lên</th>
+                        <!-- <th pFrozenColumn alignFrozen="right"></th> -->
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-row>
+                    <tr>
+                        <td pFrozenColumn alignFrozen="left"> {{ row.id }} </td>
+                        <td style="min-width:25rem;" pFrozenColumn alignFrozen="left"> {{ row.name }} </td>
+                        <td class="justify-content-center"> 
+                            <p-checkbox [(ngModel)]="row.isFileUrl" [binary]="true" inputId="binary" [readonly]="true"></p-checkbox>
+                        </td>
+                        <td class="justify-content-center"> 
+                            <p-checkbox [(ngModel)]="row.isSign" [binary]="true" inputId="binary" [readonly]="true"></p-checkbox>
+                        </td>
+                        <td *ngIf="isGranted([PermissionCompanyShareConst.CompanyShareHDPP_SoLenh_TTCT_HSKHDangKy_TaiHSM])" style="min-width:15rem;" class="justify-content-center">
+                            <i class="pi pi-download b-icon" (click)="downloadFileTempContract(row)"></i>
+                        </td>
+                        <td *ngIf="isGranted([PermissionCompanyShareConst.CompanyShareHDPP_SoLenh_TTCT_HSKHDangKy_TaiHSCKDT])" 
+                            style="min-width:15rem;" class="justify-content-center">
+                            <i class="pi pi-download b-icon" (click)="downloadFileSignatureContract(row)"></i>
+                        </td>
+                        <td *ngIf="isGranted([PermissionCompanyShareConst.CompanyShareHDPP_SoLenh_TTCT_HSKHDangKy_TaiLenHS])" class="justify-content-center">
+                            <i class="pi pi-upload b-icon" (click)="saveFile(row)"></i>
+                        </td>
+                        <td *ngIf="isGranted([PermissionCompanyShareConst.CompanyShareHDPP_SoLenh_TTCT_HSKHDangKy_XemHSTaiLen])" class="justify-content-center">
+                            <i class="pi pi-eye b-icon" (click)="viewFile(row.fileScanUrl)"></i>
+                        </td>
+                        <!-- <td style="width: 5rem; justify-content: center;" pFrozenColumn alignFrozen="right">
+                            <div class="flex">
+                                <p-splitButton class="button-actions" appendTo="body" iconPos="pi pi-ellipsis-v"
+                                    icon="pi pi-ellipsis-v" (onDropdownClick)="clickDropdown(row)"
+                                    [model]="actionsDisplay">
+                                </p-splitButton>
+                            </div>
+                        </td> -->
+                    </tr>
+                </ng-template>
+            </p-table>
+            <!-- <p-paginator styleClass="at-paginator-sm" [totalRecords]="page.totalItems" [rows]="page.pageSize" (onPageChange)="setPage($event)"></p-paginator> -->
+        </div>
+        <!-- THEM & SUA-->
+        <p-dialog [(visible)]="modalDialog" [style]="{width: '40%'}" header="Lưu trữ hợp đồng" [modal]="true" class="p-fluid">
+            <ng-template pTemplate="content">
+                <div class="grid formgrid">
+                    <div class="field col-12">
+                        <p-fileUpload 
+                            name="demo[]" accept=".pdf" [customUpload]="true" class="custom-file-upload"
+                            chooseIcon="pi pi-cloud-upload" 
+                            (uploadHandler)="myUploader($event)"
+                            [auto]="true"
+                            chooseLabel="Chọn file upload">
+                        </p-fileUpload>
+                    </div>
+                    <div class="field col-12">
+                            <input placeholder="Đường dẫn file" type="text" id="fileScanUrl" name="fileScanUrl" disabled pInputText [value]="orderContractFile.fileScanUrl || ''" required autofocus/>
+                            <!-- <label for="fileScanUrl">Đường dẫn file</label> -->
+                    </div>
+                </div>
+            </ng-template>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Hủy" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+                <button pButton pRipple label="Lưu" icon="pi pi-check" class="p-button-text" [disabled]="!validForm() || submitted" (click)="saveOrderContractFile()"></button>
+            </ng-template>
+        </p-dialog>
+
+       <!-- Xem file pdf -->
+       <app-form-view-pdf-file (onClose)="hideDialog()" [modalDialogPDF]="modalDialogPDF" [urlfilePDF]="urlfilePDF"> </app-form-view-pdf-file>
+    </div>
+</div>
+

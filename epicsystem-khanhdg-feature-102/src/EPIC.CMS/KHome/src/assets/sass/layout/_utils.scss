@@ -1,0 +1,67 @@
+/* Utils */
+.clearfix:after {
+    content: " ";
+    display: block;
+    clear: both;
+}
+
+.card {
+    @include border-radius($borderRadius);
+    background: $contentBgColor;
+    padding: 0px 18px;
+    margin-bottom: 2rem;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+
+    .card-header {
+        @include flex();
+        @include flex-align-center();
+        @include flex-justify-between();
+    }
+
+    .card-subtitle {
+        color: $textSecondaryColor;
+        font-weight: 600;
+        margin: -1rem 0 1rem 0;
+    }
+}
+
+.p-toast {
+    &.p-toast-top-right,
+    &.p-toast-top-left,
+    &.p-toast-top-center {
+        top: 70px;
+    }
+}
+
+.p-tag-purple-fade {
+  background: #f7f0fa;
+  color: #55008c;
+}
+
+.p-tag-green-fade {
+  background: #f4fcf9;
+  color: #0fb579;
+}
+
+.p-tag-blue-fade {
+  background: #eaebfa;
+  color: #4c95eb;
+}
+
+.p-tag-silver-fade {
+  background: #f7f7f7 !important;
+  color: #716f6e !important;
+}
+
+.p-tag-orange-fade {
+  background: #fef9f5;
+  color: #f08f35;
+}
+
+.p-tag-red-fade {
+  background: #fef5f8;
+  color: #eb4c60;
+}

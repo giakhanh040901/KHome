@@ -1,0 +1,53 @@
+
+<div *ngIf="isGranted([PermissionBondConst.BondHDPP_XLHD_DanhSach])" class="grid m-0">
+    <div class="col-12">
+        <div class="card p-0">
+            <p-table
+                #productBondInfoTable [value]="rows" 
+                [loading]="isLoading" [rowHover]="true" [paginator]="false" responsiveLayout="scroll" dataKey="code"
+                [scrollable]="true" scrollHeight="{{(screenHeight*0.56) + 'px'}}" styleClass="">
+                <ng-template pTemplate="header">
+					<tr>
+					    <th style="min-width: 5rem; max-width: 5rem; justify-content: center;" pFrozenColumn alignFrozen="left"> STT </th>
+                        <th style="min-width: 10rem;"> Kỳ nhận </th>
+                        <th style="min-width: 8rem;" class="justify-content-end"> Trái tức </th>
+                        <th style="min-width: 10rem;"> Ngày chốt quyền </th>
+                        <th style="min-width: 8rem; max-width: 8rem;"> Ngày trả </th>
+                        <th style="min-width: 10rem;" class="justify-content-end"> Lợi nhuận </th>
+                        <th style="min-width: 8rem;" class="justify-content-end"> Thuế TN </th>
+                        <th style="min-width: 12rem;" class="justify-content-end"> Tiền thực nhận </th>
+                        <th style="min-width: 10rem;" pFrozenColumn alignFrozen="right" [frozen]="true" class="b-border-frozen-right"> Trạng thái </th>
+					</tr>
+				</ng-template>
+                <ng-template pTemplate="body" let-row let-index="rowIndex">
+                    <tr>
+                        <td style="min-width: 5rem; max-width: 5rem; justify-content: center;" pFrozenColumn alignFrozen="left"> {{ index + 1 }} </td>
+                        <td style="min-width: 10rem;"> {{ 'Trái tức kỳ ' + (index+1) }} </td>
+                        <td style="min-width: 8rem;" class="justify-content-end"> {{ utils.transformPercent(row?.couponRate*100) + '%' }} </td>
+                        <td style="min-width: 10rem;"> {{ row?.closePerDate | dateview }} </td>
+                        <td style="min-width: 8rem; max-width: 8rem;"> {{ row?.payDate | dateview }} </td>
+                        <td style="min-width: 10rem;" class="justify-content-end"> {{ utils.transformMoney(row?.coupon) }} </td>
+                        <td style="min-width: 8rem;" class="justify-content-end"> {{ utils.transformMoney(row?.tax)  }} </td>
+                        <td style="min-width: 12rem;" class="justify-content-end"> {{ utils.transformMoney(row?.actuallyCoupon)  }} </td>
+                        <td style="min-width: 10rem;" pFrozenColumn alignFrozen="right" [frozen]="true" class="b-border-frozen-right"> 
+                            {{ StatusCoupon.getName(row?.status) }}
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+					<tr>
+						<td colspan="7">Không có dữ liệu.</td>
+					</tr>
+				</ng-template>
+				<ng-template pTemplate="loadingbody">
+					<tr>
+						<td colspan="7"> Đang tải dữ liệu ... </td>
+					</tr>
+				</ng-template>
+            </p-table>
+        </div>
+		<!-- THEM & SUA-->
+    </div>
+</div>
+
+

@@ -1,0 +1,28 @@
+<div class="grid pt-0">
+    <div class="col-12">
+        <div class="card pt-0">
+            <div class="mb-3 mt-3">
+                <input-search
+                    [placeholder]="'Tìm kiếm...'"
+                    [width]="300"
+                    [(keyword)]="page.keyword"
+                    (_onChange)="setPage()">
+                </input-search>
+            </div>
+            <e-table
+                [rows]="rows"
+                [(page)]="page"
+                [columns]="columns"
+                [isLoading]="isLoading"
+                [columnCacheName]="constructor.name"
+                [scrollHeightConst]="250"
+                [isShowIconFilter]="false"
+                [isShowPaginator]="false"
+                (_onPageChange)="setPage($event)"
+                >
+            </e-table>
+        </div>
+    </div>
+</div>
+
+

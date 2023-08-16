@@ -1,0 +1,58 @@
+<div class="w-full" style="padding-bottom: 70px">
+  <div class="card p-0 mb-0">
+    <div class="p-fluid p-formgrid grid">
+      <div class="flex w-full">
+        <div class="col-12">
+          <form-dropdown
+            [label]="dto.labelReason"
+            [autoDisplayFirst]="true"
+            [options]="dto.listReason"
+            [(ngModelValue)]="dto.reason"
+          ></form-dropdown>
+        </div>
+      </div>
+      <div class="flex w-full">
+        <div class="col-12">
+          <form-input [label]="'Nhập nội dung'" [(ngModelValue)]="dto.content"></form-input>
+        </div>
+      </div>
+      <div class="flex w-full" *ngIf="!!dto.isShowTime">
+        <div class="col-6">
+          <form-input-mask
+            [label]="'Thời gian'"
+            [(ngModelValue)]="dto.time"
+            [isDisabled]="isDisable"
+            [showDescription]="true"
+            [description]="'(Giờ:phút)'"
+            [placeholder]="'hh:mm'"
+            [inputMask]="'99:99'"
+          ></form-input-mask>
+        </div>
+      </div>
+      <div class="flex w-full">
+        <div class="col-6">
+          <form-input [label]="'Người tạo yêu cầu'" [(ngModelValue)]="dto.createUser" [isDisabled]="true"></form-input>
+        </div>
+        <div class="col-6">
+          <form-input [label]="'Ngày tạo yêu cầu'" [(ngModelValue)]="dto.createDate" [isDisabled]="true"></form-input>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="p-dialog-footer" style="width: 100%; position: fixed; left: 0; bottom: 0">
+    <form-button
+      [isTypeRipple]="true"
+      [classButton]="'p-button-text p-confirm-dialog-reject'"
+      [label]="'Đóng'"
+      [icon]="'pi pi-times'"
+      (_onClick)="close($event)"
+    ></form-button>
+    <form-button
+      [isTypeRipple]="true"
+      [classButton]="'p-button-text p-confirm-dialog-approve'"
+      [label]="'Lưu'"
+      [icon]="'pi pi-check'"
+      (_onClick)="save($event)"
+    ></form-button>
+  </div>
+</div>

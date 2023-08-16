@@ -1,0 +1,18 @@
+<div class="card b-page-detail">
+  <div class="p-fluid p-formgrid grid b-header">
+    <div class="w-full flex b-header justify-content-between px-2">
+      <div class="b-title">
+        <h5 class="m-0">Chi tiết vé bán</h5>
+      </div>
+      <div class="flex b-action">
+        <form-button 
+          *ngIf="showBtnApprove && isGranted(PermissionEventConst.XuLyGiaoDich_PheDuyetMuaVe)" 
+          class="mr-2" [icon]="'pi pi-check-circle'" [label]="'Phê duyệt mua vé'" 
+          (_onClick)="approve($event)">
+        </form-button>
+        <form-button [icon]="'pi pi-chevron-left'" [label]="'Quay lại'" (_onClick)="back($event)"></form-button>
+      </div>
+    </div>
+  </div>
+  <form-tab-view [(activeIndex)]="activeIndex" [listTabPanel]="listTabPanel"></form-tab-view>
+</div>

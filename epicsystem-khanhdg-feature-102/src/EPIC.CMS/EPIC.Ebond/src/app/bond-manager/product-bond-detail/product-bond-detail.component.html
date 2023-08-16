@@ -1,0 +1,272 @@
+<div class="grid ml-0 mr-0 mt-0">
+    <div class="col-12">
+        <div class="card">
+            <h5 class="mb-0"> Phân phối sơ cấp </h5>
+            <p-toast></p-toast>
+            <p-table #productBondDetailTable selectionMode="multiple" responsiveLayout="scroll" scrollHeight="{{(screenHeight*0.56) + 'px'}}"
+                dataKey="id" styleClass="mt-3" [value]="rows" [rowHover]="true" [paginator]="false" [scrollable]="true">
+                <ng-template pTemplate="caption">
+                    <div class="flex justify-content-between flex-column sm:flex-row">
+                        <div class="">
+                            <button pButton pRipple label="Thêm mới" icon="pi pi-plus" class="p-button-success mr-2"
+                                (click)="create()"></button>
+                        </div>
+
+                        <span class="block mt-2 md:mt-0 p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" placeholder="Tìm kiếm..." [(ngModel)]="keyword"
+                                (keyup)="changeKeyword()" (input)="setPage($event)" />
+                        </span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th pFrozenColumn alignFrozen="left"> Mã sản phẩm trái phiếu </th>
+                        <th pFrozenColumn alignFrozen="left"> Mã đại lý sơ cấp </th>
+                        <th pFrozenColumn alignFrozen="left"> Mã gói trái phiếu </th>
+                        <th> Tên gói trái phiếu </th>
+                        <th> Trạng thái </th>
+                        <th pFrozenColumn alignFrozen="right"></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-row>
+                    <tr>
+                        <!-- <td>
+                            <p-tableCheckbox [value]="productBondDetail"></p-tableCheckbox>
+                        </td> -->
+                        <td pFrozenColumn alignFrozen="left"> {{ row.productBondId }} </td>
+                        <td pFrozenColumn alignFrozen="left"> {{ row.tradingProviderId }} </td>
+                        <td pFrozenColumn alignFrozen="left"> {{ row.code }} </td>
+                        <td pFrozenColumn alignFrozen="left"> {{ productBondDetailConst.getNameType(row.type) }} </td>
+                        <td> {{ row.shortName }} </td>
+                        <td> {{ row.email }} </td>
+                        <td pFrozenColumn alignFrozen="right">
+                            <div class="flex">
+                                <button pButton pRipple icon="pi pi-pencil"
+                                    class="p-button-rounded p-button-success mr-2" (click)="edit(row)"></button>
+                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
+                                    (click)="delete(row)"></button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+            <p-paginator styleClass="at-paginator-sm" [totalRecords]="page.totalItems" [rows]="page.pageSize"
+                (onPageChange)="setPage($event)"></p-paginator>
+        </div>
+        <!-- THEM & SUA-->
+        <p-dialog [(visible)]="modalDialog" [style]="{width: '1000px'}" header="Thêm phát hành sơ cấp" [modal]="true"
+            class="p-fluid">
+            <ng-template pTemplate="content">
+                <div class="card">
+                    <div class="grid formgrid">
+                        <div class="col-12 md:col-3">
+                            <div class="field">
+                                <label htmlFor="productBondId"> Mã sản phẩm trái phiếu <span class="required-field"> *
+                                    </span></label>
+                                <input type="text" id="productBondId" name="productBondId" pInputText
+                                    [(ngModel)]="productBondDetail.productBondId" required autofocus
+                                    [ngClass]="{'ng-invalid ng-dirty' : submitted && !productBondDetail.productBondId}" />
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-3">
+                            <div class="field">
+                                <label htmlFor="tradingProviderId"> Mã đại lý sơ cấp <span class="required-field"> *
+                                    </span></label>
+                                <input type="text" id="tradingProviderId" name="tradingProviderId" pInputText
+                                    [(ngModel)]="productBondDetail.tradingProviderId" required autofocus
+                                    [ngClass]="{'ng-invalid ng-dirty' : submitted && !productBondDetail.tradingProviderId}" />
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-3">
+                            <div class="field">
+                                <label htmlFor="code"> Mã gói trái phiếu <span class="required-field"> *
+                                    </span></label>
+                                <input type="text" id="code" name="code" pInputText [(ngModel)]="productBondDetail.code"
+                                    required autofocus
+                                    [ngClass]="{'ng-invalid ng-dirty' : submitted && !productBondDetail.code}" />
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-3">
+                            <div class="field">
+                                <label htmlFor="name"> Tên gói trái phiếu <span class="required-field"> *
+                                    </span></label>
+                                <input type="text" id="name" name="name" pInputText [(ngModel)]="productBondDetail.name"
+                                    required autofocus
+                                    [ngClass]="{'ng-invalid ng-dirty' : submitted && !productBondDetail.name}" />
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-3">
+                            <div class="field">
+                                <label htmlFor="market"> Thị trường </label>
+                                <p-dropdown [options]="ProductBondDetailConst.markets" optionLabel="name"
+                                    [(ngModel)]="productBondDetail.market" required autofocus
+                                    [ngClass]="{'ng-invalid ng-dirty' : submitted && !productBondDetail.market}">
+                                </p-dropdown>
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-3">
+                            <div class="field">
+                                <label htmlFor="period"> Kỳ hạn </label>
+                                <input type="text" id="period" name="period" pInputText
+                                    [(ngModel)]="productBondDetail.period" required autofocus
+                                    [ngClass]="{'ng-invalid ng-dirty' : submitted && !productBondDetail.period}" />
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-3">
+                            <div class="field">
+                                <label htmlFor="periodUnit"> Đơn vị kỳ hạn </label>
+                                <p-dropdown [options]="ProductBondDetailConst.dateUnits" optionLabel="name"
+                                    [(ngModel)]="productBondDetail.periodUnit" required autofocus
+                                    [ngClass]="{'ng-invalid ng-dirty' : submitted && !productBondDetail.periodUnit}">
+                                </p-dropdown>
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-3">
+                            <div class="field">
+                                <label htmlFor="interestRate"> Lãi suất </label>
+                                <input type="text" id="interestRate" name="interestRate" pInputText
+                                    [(ngModel)]="productBondDetail.interestRate" required autofocus
+                                    [ngClass]="{'ng-invalid ng-dirty' : submitted && !productBondDetail.interestRate}" />
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-3">
+                            <div class="field">
+                                <label htmlFor="interestPeriod"> Kỳ hạn trả lãi </label>
+                                <input type="text" id="interestPeriod" name="interestPeriod" pInputText
+                                    [(ngModel)]="productBondDetail.interestPeriod" required autofocus
+                                    [ngClass]="{'ng-invalid ng-dirty' : submitted && !productBondDetail.interestPeriod}" />
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-3">
+                            <div class="field">
+                                <label htmlFor="interestPeriodUnit"> Đơn vị kỳ hạn trả lãi </label>
+                                <p-dropdown [options]="ProductBondDetailConst.dateUnits" optionLabel="name"
+                                    [(ngModel)]="productBondDetail.interestPeriodUnit" required autofocus
+                                    [ngClass]="{'ng-invalid ng-dirty' : submitted && !productBondDetail.interestPeriodUnit}">
+                                </p-dropdown>
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-3">
+                            <div class="field">
+                                <label for="issueDate"> Ngày phát hành </label>
+                                <p-calendar placeholder="dd/mm/yyyy" inputId="issueDate" dateFormat="dd/mm/yy"
+                                    [(ngModel)]="productBondDetail.issueDate"
+                                    [ngClass]="{'ng-invalid ng-dirty' : submitted && !productBondDetail.issueDate}"
+                                    [showIcon]="true"></p-calendar>
+                            </div>
+                            <!-- <small class="ng-dirty ng-invalid" *ngIf="submitted && !issuer.foundationDate"> => Nhập tên hiển thị!</small> -->
+                        </div>
+
+                        <div class="col-12 md:col-3">
+                            <div class="field">
+                                <label for="openDate"> Ngày mở bán </label>
+                                <p-calendar placeholder="dd/mm/yyyy" inputId="openDate" dateFormat="dd/mm/yy"
+                                    [(ngModel)]="productBondDetail.openDate"
+                                    [ngClass]="{'ng-invalid ng-dirty' : submitted && !productBondDetail.openDate}"
+                                    [showIcon]="true"></p-calendar>
+                            </div>
+                            <!-- <small class="ng-dirty ng-invalid" *ngIf="submitted && !issuer.foundationDate"> => Nhập tên hiển thị!</small> -->
+                        </div>
+                        <div class="col-12 md:col-3">
+                            <div class="field">
+                                <label for="dueDate"> Ngày đáo hạn </label>
+                                <p-calendar placeholder="dd/mm/yyyy" inputId="dueDate" dateFormat="dd/mm/yy"
+                                    [(ngModel)]="productBondDetail.dueDate"
+                                    [ngClass]="{'ng-invalid ng-dirty' : submitted && !productBondDetail.dueDate}"
+                                    [showIcon]="true"></p-calendar>
+                            </div>
+                            <!-- <small class="ng-dirty ng-invalid" *ngIf="submitted && !issuer.foundationDate"> => Nhập tên hiển thị!</small> -->
+                        </div>
+
+                        <div class="col-12 md:col-3">
+                            <div class="field">
+                                <label for="lastOrderDate"> Ngày cuối cùng được đặt mua </label>
+                                <p-calendar placeholder="dd/mm/yyyy" inputId="lastOrderDate" dateFormat="dd/mm/yy"
+                                    [(ngModel)]="productBondDetail.lastOrderDate"
+                                    [ngClass]="{'ng-invalid ng-dirty' : submitted && !productBondDetail.lastOrderDate}"
+                                    [showIcon]="true"></p-calendar>
+                            </div>
+                            <!-- <small class="ng-dirty ng-invalid" *ngIf="submitted && !issuer.foundationDate"> => Nhập tên hiển thị!</small> -->
+                        </div>
+
+                        <!-- <div class="col-12 md:col-3">
+                                <div class="field">
+                                    <label for="calendar">Ngày đăng ký CP</label>
+                                    <p-calendar inputId="calendar" dateFormat="dd/mm/yy" [(ngModel)]="issuer.foundationDate" [ngClass]="{'ng-invalid ng-dirty' : submitted && !issuer.foundationDate}" [showIcon]="true"></p-calendar>
+                                </div>
+                            </div> -->
+                        <div class="col-12 md:col-3">
+                            <div class="field">
+                                <label htmlFor="parValue"> Mệnh giá </label>
+                                <input type="text" id="parValue" name="parValue" pInputText
+                                    [(ngModel)]="productBondDetail.parValue" required autofocus
+                                    [ngClass]="{'ng-invalid ng-dirty' : submitted && !productBondDetail.parValue}" />
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-3">
+                            <div class="field">
+                                <label htmlFor="totalValue"> Tổng giá trị </label>
+                                <input type="text" id="totalValue" name="totalValue" pInputText
+                                    [(ngModel)]="productBondDetail.totalValue" required autofocus
+                                    [ngClass]="{'ng-invalid ng-dirty' : submitted && !productBondDetail.totalValue}" />
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-3">
+                            <div class="field">
+                                <label htmlFor="totalNumber"> Số lượng TP chia cho ĐLSC bán </label>
+                                <input type="text" id="totalNumber" name="totalNumber" pInputText
+                                    [(ngModel)]="productBondDetail.totalNumber" required autofocus
+                                    [ngClass]="{'ng-invalid ng-dirty' : submitted && !productBondDetail.totalNumber}" />
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-3">
+                            <div class="field">
+                                <label htmlFor="remainingNumber"> Số lượng còn lại </label>
+                                <input type="text" id="remainingNumber" name="remainingNumber" pInputText
+                                    [(ngModel)]="productBondDetail.remainingNumber" required autofocus
+                                    [ngClass]="{'ng-invalid ng-dirty' : submitted && !productBondDetail.remainingNumber}" />
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-3">
+                            <div class="field">
+                                <label htmlFor="allowOnlineTrading"> Cho phép giao dịch Online không? </label>
+                                <input type="text" id="allowOnlineTrading" name="allowOnlineTrading" pInputText
+                                    [(ngModel)]="productBondDetail.allowOnlineTrading" required autofocus
+                                    [ngClass]="{'ng-invalid ng-dirty' : submitted && !productBondDetail.allowOnlineTrading}" />
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-3" *ngIf="productBondDetail.bondDetailId">
+                            <div class="field">
+                                <label htmlFor="status"> Trạng thái </label>
+                                <input type="text" id="status" name="status" pInputText
+                                    [(ngModel)]="productBondDetail.status" required autofocus
+                                    [ngClass]="{'ng-invalid ng-dirty' : submitted && !productBondDetail.status}" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Hủy" icon="pi pi-times" class="p-button-text"
+                    (click)="hideDialog()"></button>
+                <button pButton pRipple label="Lưu" icon="pi pi-check" class="p-button-text"
+                    [disabled]="!validForm() || submitted" (click)="save()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <!-- XOA -->
+        <p-dialog [(visible)]="deleteItemDialog" header="Xóa tài khoản" [modal]="true" [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                <span *ngIf="productBondDetail">Bạn có chắc chắn xóa thông phát hành sơ cấp này ?</span>
+            </div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"
+                    (click)="deleteItemDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes"
+                    (click)="confirmDelete()"></button>
+            </ng-template>
+        </p-dialog>
+    </div>
+</div>

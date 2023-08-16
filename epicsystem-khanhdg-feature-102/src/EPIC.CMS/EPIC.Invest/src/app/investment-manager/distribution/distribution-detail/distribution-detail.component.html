@@ -1,0 +1,503 @@
+<p-toast></p-toast>
+<p-confirmDialog [style]="{width: 'auto'}" [baseZIndex]="10000"></p-confirmDialog>
+<e-loading *ngIf="isLoading"></e-loading>
+<wrapper-page-detail (_contentHeights)="contentHeights=$event">
+    <div class="e-page page-detail {{ isLoading ? 'b-loading' : '' }}">
+        <div class="wrapper-page-header" id="page-header">
+            <div class="b-header"> 
+                <div class="grid">
+                    <div class="col-12 md:col-5 b-title">
+                    <h4> Phân phối đầu tư</h4>
+                    </div>
+                    <div class="col-12 md:col-7 b-actions">
+                        <ng-container *ngIf="openThongTinChung">
+                            <p-button 
+                                *ngIf=" isGranted([PermissionInvestConst.InvestPDSPDT_PheDuyetOrHuy]) && distribution.status == this.ProductSecondaryConst.STATUS.TRINH_DUYET"
+                                styleClass="p-button-sm custom-button" 
+                                label="Xử lý yêu cầu" icon="pi pi-check"
+                                (click)="approveSharing(distribution)">
+                            </p-button>
+                            <p-button
+                                *ngIf=" isGranted([PermissionInvestConst.InvestPPDT_BatTatShowApp])"
+                                styleClass="p-button-sm custom-button" [label]="distribution.isShowApp == YesNoConst.NO ? 'Bật show app' : 'Tắt show app'" [icon]="distribution.isShowApp == YesNoConst.NO ? 'pi pi-eye' : 'pi pi-eye-slash'"
+                                (click)="toggleIsShowApp(distribution.id)">
+                            </p-button>
+                            <p-button
+                                *ngIf=" isGranted([PermissionInvestConst.InvestPPDT_DongTam])"
+                                styleClass="p-button-sm custom-button" [label]="distribution.isClose == YesNoConst.NO ? 'Đóng tạm' : 'Mở'" [icon]="distribution.isClose == YesNoConst.NO ? 'pi pi-lock' : 'pi pi-lock-open'"
+                                (click)="toggleClosed(distribution.id)">
+                            </p-button>
+                            <ng-container>
+                                <p-button
+                                    *ngIf=" isGranted([PermissionInvestConst.InvestPPDT_TrinhDuyet]) && (distribution.status == this.ProductSecondaryConst.STATUS.NHAP)"
+                                    styleClass="p-button-sm custom-button" label="Trình duyệt" icon="pi pi-arrow-up"
+                                    (click)="request(distribution.id)">
+                                </p-button>
+                            </ng-container>
+                            <ng-container>
+                                <p-button 
+                                    *ngIf="isGranted([PermissionInvestConst.InvestPPDT_CapNhat])"
+                                    styleClass="p-button-sm custom-button" [label]="isEdit ? 'Lưu lại' : 'Chỉnh sửa'"
+                                    icon="pi {{ isEdit ? 'pi-save' : 'pi-pencil' }}" (click)="changeEdit()">
+                                </p-button>
+                            </ng-container>
+                        </ng-container>
+                        
+                        <p-button styleClass="p-button-sm custom-button  b-button-back"
+                            [routerLink]="'/invest-manager/distribution'" label="Quay lại" icon="pi pi-chevron-left">
+                        </p-button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <p-tabView styleClass="custom-tabview" [(activeIndex)]="activeIndex" (onChange)="changeTabview($event)">
+            <!-- THÔNG TIN CHUNG -->
+            <p-tabPanel [header]="'thongTinChung'" [ngClass]="'tab-scroll'">
+                <ng-template pTemplate="header">
+                    <span> Thông tin chung </span>
+                </ng-template>
+                    <div *ngIf="!isLoading" class="grid mt-0 form-detail" [style.height.px]="contentHeights[activeIndex]" [style.overflow-y]="'scroll'">
+                        <div class="col-12 pb-0 pt-0">
+                            <div class="card pt-0 mb-0">  
+                                 <h5>Thông tin phân phối đầu tư </h5>
+                                 <div class="p-fluid p-formgrid grid">
+                                    <div class="col-10">
+                                        <div class="grid p-0">
+                                            <div class="field md:col-3">
+                                                <label class="b-title-info {{ isEdit ? 'b-hightline-title' : '' }}" htmlFor="code">
+                                                    Ngày bắt đầu
+                                                </label>
+                                                <p-calendar class="custom-input-disabled" inputId="closeCellDate" dateFormat="dd/mm/yy"
+                                                    locale="vi" appendTo="body" utc="true"
+                                                    [(ngModel)]="distribution.openCellDate"
+                                                    (onSelect)="onChangeOpenCellDate($event)"
+                                                    [ngClass]="{ 'ng-invalid ng-dirty': fieldErrors?.closeCellDate }" [showIcon]="true"
+                                                    [readonlyInput]="true" [minDate]="minDate" [maxDate]="maxDate"
+                                                    [disabled]="!isEdit">
+                                                </p-calendar>
+                                            </div>
+                                            <div class="field md:col-3">
+                                                <label class="b-title-info {{ isEdit ? 'b-hightline-title' : '' }}" htmlFor="code">
+                                                    Ngày kết thúc bán
+                                                </label>
+                                                <p-calendar class="custom-input-disabled" inputId="closeCellDate" dateFormat="dd/mm/yy"
+                                                    locale="vi" appendTo="body" utc="true"
+                                                    [(ngModel)]="distribution.closeCellDate"
+                                                    [ngClass]="{ 'ng-invalid ng-dirty': fieldErrors?.closeCellDate }" [showIcon]="true"
+                                                    [readonlyInput]="true" [minDate]="distribution.openCellDate"
+                                                    [maxDate]="maxDate" [disabled]="!isEdit">
+                                                </p-calendar>
+                                            </div>
+                                            <div class="field col-12 md:col-6">
+                                                <label htmlFor="quantity">
+                                                    Hình thức chi trả lợi tức, đáo hạn <span class="required-field"> * </span>
+                                                </label>
+                                                 <p-dropdown 
+                                                     class="custom-input-disabled" emptyMessage="Không có dữ liệu" [disabled]="!isEdit"
+                                                     [options]="DistributionConst.methodInterests" optionLabel="name" optionValue="code"
+                                                     [autoDisplayFirst]="false" placeholder="Chọn hình thức chi trả"
+                                                     [(ngModel)]="distribution.methodInterest">
+                                                 </p-dropdown>
+                                            </div>
+                                            <div class="field col-12 md:col-12">
+                                                <label htmlFor="quantity">
+                                                    Tài khoản thụ hưởng<span class="required-field"> * </span>
+                                                </label>
+                                                <p-multiSelect
+                                                    class="custom-input-disabled" 
+                                                    name="businessCustomerBankAccId"  
+                                                    [options]="listBanks" [disabled]="!isEdit"
+                                                    optionLabel="labelName" optionValue="businessCustomerBankAccId"
+                                                    defaultLabel="Chọn tài khoản"
+                                                    [(ngModel)]="distribution.tradingBankAcc" appendTo="body">
+                                                    <!--  -->
+                                                    <ng-template let-value pTemplate="selectedItems">
+                                                        <ng-container *ngIf="distribution.tradingBankAcc?.length">
+                                                            <span class="country-item country-item-value" *ngFor="let businessCustomerBankId of distribution.tradingBankAcc; let index = index">
+                                                                <span>
+                                                                    {{ getDisplayNameBank(businessCustomerBankId) + (index == distribution.tradingBankAcc?.length ? '' : ',&nbsp;') }}
+                                                                </span>
+                
+                                                            </span>
+                                                        </ng-container>
+                                                        <ng-container *ngIf="!distribution.tradingBankAcc?.length">
+                                                            <span style="opacity: 0.8;"> Chọn tài khoản </span>
+                                                        </ng-container>
+                                                    </ng-template>
+                                               </p-multiSelect>
+                                            </div>
+                                            <div class="field col-12 md:col-12">
+                                                <label htmlFor="quantity">
+                                                    Tài khoản chi tiền <span class="required-field"> * </span>
+                                                </label>
+                                                <p-multiSelect
+                                                    class="custom-input-disabled" 
+                                                    name="businessCustomerBankAccId"  
+                                                    [options]="listBanks" [disabled]="!isEdit"
+                                                    optionLabel="labelName" optionValue="businessCustomerBankAccId" placeholder="" 
+                                                    [(ngModel)]="distribution.tradingBankAccPays" appendTo="body">
+                                                    <!--  -->
+                                                    <ng-template let-value pTemplate="selectedItems">
+                                                        <ng-container *ngIf="distribution.tradingBankAccPays?.length">
+                                                            <span class="country-item country-item-value" *ngFor="let businessCustomerBankId of distribution.tradingBankAccPays; let index = index">
+                                                                <span>
+                                                                    {{ getDisplayNameBank(businessCustomerBankId) + (index == distribution.tradingBankAccPays?.length ? '' : ',&nbsp;') }}
+                                                                </span>
+                                                            </span>
+                                                        </ng-container>
+                                                        <ng-container *ngIf="!distribution.tradingBankAccPays?.length">
+                                                            <span style="opacity: 0.8;"> Chọn tài khoản </span>
+                                                        </ng-container>
+                                                    </ng-template>
+                                               </p-multiSelect>
+                                            </div>
+                                            <div class="field col-12 md:col-12"> 
+                                                <h5 class="mb-0">Thông tin dự án</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-2 p-0">
+                                        <div class=" field col-12 text-center" style="margin-top: 1.5rem">
+                                            <p-image
+                                                [src]="distribution?.image ? (AppConsts.remoteServiceBaseUrl + '/' + distribution?.image) : imageDefault" 
+                                                imageClass="b-w-100"
+                                                [imageStyle]="{'border-radius':'8px','max-height':'160px'}" 
+                                                [preview]="true"
+                                                >
+                                            </p-image>
+                                        </div>
+                                        <div class="field col-12 text-center">
+                                            <p-fileUpload
+                                                [disabled]="!isEdit"
+                                                name="demo[]" accept=".png,.jpeg,.jpg" 
+                                                chooseLabel="Chọn ảnh"
+                                                chooseIcon="pi pi-image"
+                                                class="custom-file-upload mt-5"  
+                                                [customUpload]="true" 
+                                                (uploadHandler)="myUploader($event)"
+                                                [auto]="true" >
+                                            </p-fileUpload>
+                                        </div>
+                                        
+                                        <!-- <div class=" field col-12 pt-0 ">
+                                            <label class="title-info"> &nbsp; </label>
+                                            <input [disabled]="!isEdit" style="padding-bottom: 140px;" type="text" id="image" name="image" pInputText
+                                            value="Vị trí" class="custom-input-disabled"/>
+                                        </div> -->
+                                        
+                                    </div>
+                                    
+                                 </div>
+                                <!-- PRIMARY -->
+                                <div class="p-fluid p-formgrid grid">
+                                    <div class="field b-field col-12 md:col-2">
+                                        <label class="b-title-info" htmlFor="code"> Mã dự án </label>
+                                        <input 
+                                            pInputText [disabled]="true"
+                                            value="{{ distribution?.project?.invCode }}"
+                                            class="custom-input-disabled" 
+                                        />
+                                    </div>
+                                    <div class="field b-field col-12 md:col-4">
+                                        <label class="b-title-info" htmlFor="code"> Tên dự án </label>
+                                        <input 
+                                            pInputText [disabled]="true"
+                                            value="{{ distribution?.project?.invName }}"
+                                            class="custom-input-disabled" />
+                                    </div>
+                                    <div class="field b-field col-12 md:col-6">
+                                        <label class="b-title-info" htmlFor="code"> Tổ chức đảm bảo </label>
+                                        
+                                        <input 
+                                            pInputText [disabled]="true"
+                                            value="{{ distribution?.project?.guaranteeOrganization }}"
+                                            class="custom-input-disabled" />
+                                    </div>
+                                    <div class="field b-field col-12 md:col-2">
+                                        <label class="b-title-info" htmlFor="code"> Ngày mở bán </label>
+                                        <input 
+                                            pInputText [disabled]="true"
+                                            value="{{ formatDate(distribution?.project?.startDate) }}"
+                                            class="custom-input-disabled"
+                                        />
+                                    </div>
+                                    <div class="field b-field col-12 md:col-2">
+                                        <label class="b-title-info" htmlFor="code"> Ngày kết thúc </label>
+                                        <input 
+                                            pInputText [disabled]="true"
+                                            value="{{ formatDate(distribution?.project?.endDate) }}"
+                                            class="custom-input-disabled" 
+                                        />
+                                    </div>
+                                    <div class="field b-field col-12 md:col-2">
+                                        <label class="b-title-info" htmlFor="code"> Diện tích </label>
+                                        <input 
+                                            pInputText [disabled]="true"
+                                            value="{{ distribution?.project?.area }}"
+                                            class="custom-input-disabled" 
+                                        />
+                                    </div>
+                                    
+                                    <div class="field b-field col-12 md:col-3">
+                                        <label class="b-title-info" htmlFor="code"> Tiến độ dự án </label>
+                                        <input 
+                                            pInputText [disabled]="true"
+                                            value="{{ distribution?.project?.projectProgress }}"
+                                            class="custom-input-disabled" 
+                                        />
+                                    </div>
+                                    <div class="field b-field col-12 md:col-3">
+                                        <label class="b-title-info" htmlFor="code"> Tổng mức đầu tư </label>
+                                        <input 
+                                            pInputText [disabled]="true"
+                                            value="{{ utils.transformMoney(distribution?.project?.totalInvestmentDisplay) }}"
+                                            class="custom-input-disabled" 
+                                        />
+                                    </div>
+                                    <div class="field b-field col-12 md:col-4">
+                                        <label class="b-title-info" htmlFor="code"> Loại dự án </label>
+                                        <input [value]="distribution?.project?.typeNames" class="custom-input-disabled" [disabled]="true" [title]="distribution?.project?.typeNames" pInputText/>
+        
+                                    </div>
+                                    <div class="field b-field col-12 md:col-8">
+                                        <label class="b-title-info" htmlFor="code"> Mô tả vị trí </label>
+                                        <input 
+                                            pInputText [disabled]="true"
+                                            value="{{ distribution?.project?.locationDescription }}"
+                                            class="custom-input-disabled" 
+                                        />
+                                    </div>
+                                </div>
+                                <h5>Thông tin chủ đầu tư</h5>
+                                <div class="p-fluid p-formgrid grid">
+                                    <div class="field b-field col-12 md:col-2">
+                                        <label class="b-title-info" htmlFor="code"> Mã chủ đầu tư </label>
+                                        <input 
+                                            pInputText [disabled]="true"
+                                            value="{{ distribution?.project?.owner?.businessCustomer?.code }}"
+                                            class="custom-input-disabled" 
+                                        />
+                                    </div>
+                                    <div class="field b-field col-12 md:col-4">
+                                        <label class="b-title-info" htmlFor="code"> Tên chủ đầu tư </label>
+                                        <input 
+                                            pInputText [disabled]="true"
+                                            value="{{ distribution?.project?.owner?.businessCustomer?.name }}"
+                                            class="custom-input-disabled" />
+                                    </div>
+                                    <div class="field b-field col-12 md:col-3">
+                                        <label class="b-title-info" htmlFor="code"> Doanh thu kinh doanh </label>
+                                        <input 
+                                            pInputText [disabled]="true"
+                                            value="{{ utils.transformMoney(distribution?.project?.owner?.businessTurnover) }}"
+                                            class="custom-input-disabled" 
+                                        />
+                                    </div>
+                                    <div class="field b-field col-12 md:col-3">
+                                        <label class="b-title-info" htmlFor="code"> Lợi nhuận kinh doanh </label>
+                                        <input 
+                                            pInputText [disabled]="true"
+                                            value="{{ utils.transformMoney(distribution?.project?.owner?.businessProfit)  }}"
+                                            class="custom-input-disabled" 
+                                        />
+                                    </div>
+                                    <div class="field b-field col-12 md:col-12">
+                                        <label class="b-title-info" htmlFor="code"> Địa chỉ </label>
+                                        <input 
+                                            pInputText [disabled]="true"
+                                            value="{{ distribution?.project?.owner?.businessCustomer?.address}}"
+                                            class="custom-input-disabled" 
+                                        />
+                                    </div>
+                                    <div class="field b-field col-12 md:col-2">
+                                        <label class="b-title-info"> ROA </label>
+                                        <input  
+                                            class="custom-input-disabled"
+                                            [disabled]="true"    
+                                            type="number"
+                                            id="roa" 
+                                            pInputText
+                                            [pKeyFilter]="blockText"
+                                            value="{{ distribution?.project?.owner?.roa }}"
+                                        />
+                                    </div>
+                                    <div class="field b-field col-12 md:col-2">
+                                        <label class="b-title-info"> ROE </label>
+                                        <input  
+                                            class="custom-input-disabled"
+                                            [disabled]="true"    
+                                            type="number"
+                                            id="roe" 
+                                            pInputText
+                                            [pKeyFilter]="blockText"
+                                            value="{{ distribution?.project?.owner?.roe }}"
+                                        />
+                                    </div>
+                                    <div class="field b-field col-12 md:col-2">
+                                        <label class="b-title-info" htmlFor="code"> Hotline </label>
+                                        <input 
+                                            pInputText [disabled]="true"
+                                            value="{{ distribution?.project?.owner?.hotline  }}"
+                                            class="custom-input-disabled" 
+                                        />
+                                    </div>
+                                    <div class="field b-field col-12 md:col-6">
+                                        <label class="b-title-info" htmlFor="code"> Fanpage </label>
+                                        <input 
+                                            pInputText [disabled]="true"
+                                            value="{{ distribution?.project?.owner?.fanpage }}"
+                                            class="custom-input-disabled" 
+                                        />
+                                    </div>
+        
+                                </div>
+                                <h5>Thông tin tổng thầu</h5>
+                                <div class="p-fluid p-formgrid grid">
+                                    <div class="field b-field col-12 md:col-2">
+                                        <label class="b-title-info" htmlFor="code"> Mã tổng thầu </label>
+                                        <input 
+                                            pInputText [disabled]="true"
+                                            value="{{ distribution?.project?.generalContractor?.businessCustomer?.code }}"
+                                            class="custom-input-disabled" 
+                                        />
+                                    </div>
+                                    <div class="field b-field col-12 md:col-8">
+                                        <label class="b-title-info" htmlFor="code"> Tên tổng thầu </label>
+                                        <input 
+                                            pInputText [disabled]="true"
+                                            value="{{ distribution?.project?.generalContractor?.businessCustomer?.name }}"
+                                            class="custom-input-disabled" />
+                                    </div>
+                                    <div class="field b-field col-12 md:col-2">
+                                        <label class="b-title-info" htmlFor="code"> Tên viết tắt </label>
+                                        <input 
+                                            pInputText [disabled]="true"
+                                            value="{{ distribution?.project?.generalContractor?.businessCustomer?.shortName  }}"
+                                            class="custom-input-disabled" 
+                                        />
+                                    </div>
+                                    <div class="field b-field col-12 md:col-12">
+                                        <label class="b-title-info" htmlFor="code"> Địa chỉ </label>
+                                        <input 
+                                            pInputText [disabled]="true"
+                                            value="{{ distribution?.project?.generalContractor?.businessCustomer?.address }}"
+                                            class="custom-input-disabled" />
+                                    </div>
+                                    <div class="field b-field col-12 md:col-3">
+                                        <label class="b-title-info" htmlFor="code"> Email </label>
+                                        <input 
+                                            pInputText [disabled]="true"
+                                            value="{{ distribution?.project?.generalContractor?.businessCustomer?.email }}"
+                                            class="custom-input-disabled"
+                                        />
+                                    </div>
+                                    <div class="field b-field col-12 md:col-2">
+                                        <label class="b-title-info" htmlFor="code"> Quốc gia </label>
+                                        <input 
+                                            pInputText [disabled]="true"
+                                            value="{{ NationalityConst.getNameNation(distribution?.project?.generalContractor?.businessCustomer?.nation) }}"
+                                            class="custom-input-disabled" 
+                                        />
+                                    </div>
+                                    <div class="field b-field col-12 md:col-2">
+                                        <label class="b-title-info" htmlFor="code"> Số điện thoại </label>
+                                        <input 
+                                            pInputText [disabled]="true"
+                                            value="{{ distribution?.project?.generalContractor?.businessCustomer?.phone }}"
+                                            class="custom-input-disabled" 
+                                        />
+                                    </div>
+        
+                                    <div class="field b-field col-12 md:col-2">
+                                        <label class="b-title-info" htmlFor="code"> Người đại diện </label>
+                                        <input 
+                                            pInputText [disabled]="true"
+                                            value="{{ distribution?.project?.generalContractor?.businessCustomer?.repName }}"
+                                            class="custom-input-disabled" 
+                                        />
+                                    </div>
+                                    <div class="field b-field col-12 md:col-3">
+                                        <label class="b-title-info" htmlFor="code"> Vị trí </label>
+                                        <input 
+                                            pInputText [disabled]="true"
+                                            value="{{ distribution?.project?.generalContractor?.businessCustomer?.repPosition }}"
+                                            class="custom-input-disabled" 
+                                        />
+                                    </div>
+                                    <div class="field b-field col-12 md:col-12 pb-0">
+                                        <label class="b-title-info" htmlFor="code"> Địa chỉ giao dịch </label>
+                                        <input 
+                                            pInputText [disabled]="true"
+                                            value="{{ distribution?.project?.generalContractor?.businessCustomer?.tradingAddress}}"
+                                            class="custom-input-disabled" 
+                                        />
+                                    </div>
+                                </div>
+                               
+                            </div>
+                        </div>
+                </div>
+            </p-tabPanel>
+            <!-- TỔNG QUAN -->
+            <p-tabPanel [header]="'tongQuan'" *ngIf="isGranted([PermissionInvestConst.InvestPPDT_TongQuan])">
+                <ng-template pTemplate="header">
+                    <span> Tổng quan </span>
+                </ng-template>
+                <app-distribution-over-view 
+                    *ngIf="tabViewActive.tongQuan"
+                    [contentHeight]="contentHeights[activeIndex]">
+                </app-distribution-over-view>
+            </p-tabPanel>
+            <!-- CHÍNH SÁCH -->
+            <p-tabPanel [header]="'chinhSach'" [ngClass]="'table'" *ngIf="isGranted([PermissionInvestConst.InvestPPDT_ChinhSach])">
+                <ng-template pTemplate="header" >
+                    <span> Chính sách </span>
+                </ng-template>
+                <app-distribution-policy
+                    *ngIf="tabViewActive.chinhSach" 
+                    [distributionId]="distributionId" 
+                    [contentHeight]="contentHeights[activeIndex]">
+                </app-distribution-policy>
+            </p-tabPanel>
+            <p-tabPanel [header]="'fileChinhSach'" [ngClass]="'table'" *ngIf="isGranted([PermissionInvestConst.InvestPPDT_FileChinhSach])">
+                <ng-template pTemplate="header">
+                    <span> File chính sách </span>
+                </ng-template>
+                <app-distribution-file 
+                    *ngIf="tabViewActive.fileChinhSach"
+                    [contentHeight]="contentHeights[activeIndex]">
+                </app-distribution-file>
+            </p-tabPanel>
+            <p-tabPanel [header]="'mauHopDong'" [ngClass]="'table'" *ngIf="isGranted([PermissionInvestConst.InvestPPDT_MauHopDong])">
+                <ng-template pTemplate="header">
+                    <span> Mẫu hợp đồng </span>
+                </ng-template>
+                    <app-distribution-contract-template
+                        *ngIf="tabViewActive.mauHopDong" 
+                        [distributionId]="distributionId" 
+                        [contentHeight]="contentHeights[activeIndex]">
+                    </app-distribution-contract-template>
+            </p-tabPanel>
+            <p-tabPanel [header]="'hopDongPhanPhoi'" [ngClass]="'table'" *ngIf="isGranted([PermissionInvestConst.InvestPPDT_HopDongPhanPhoi])">
+                <ng-template pTemplate="header">
+                    <span> Hợp đồng phân phối </span>
+                </ng-template> 
+                <app-distribution-file-template
+                    *ngIf="tabViewActive.hopDongPhanPhoi" 
+                    [distributionId]="distributionId" 
+                    [contentHeight]="contentHeights[activeIndex]">
+                </app-distribution-file-template>
+            </p-tabPanel>
+            <p-tabPanel [header]="'mauGiaoNhanHD'" [ngClass]="'table'" *ngIf="isGranted([PermissionInvestConst.InvestPPDT_MauGiaoNhanHD])">
+                <ng-template pTemplate="header">
+                    <span> Mẫu giao nhận HĐ </span>
+                </ng-template> 
+                <app-receive-contract-template
+                    *ngIf="tabViewActive.mauGiaoNhanHD" 
+                    [distributionId]="distributionId"  
+                    [contentHeight]="contentHeights[activeIndex]">
+                </app-receive-contract-template>
+            </p-tabPanel>
+        </p-tabView>
+    </div>
+</wrapper-page-detail>

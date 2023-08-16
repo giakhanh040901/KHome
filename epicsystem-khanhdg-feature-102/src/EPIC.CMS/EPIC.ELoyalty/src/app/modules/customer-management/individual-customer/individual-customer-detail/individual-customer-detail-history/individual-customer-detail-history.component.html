@@ -1,0 +1,46 @@
+<div *ngIf="this.isGranted([this.PermissionLoyaltyConst.Loyalty_KhachHangCaNhan_LichSuThamGia_DanhSach])" class="grid mx-0 mt-2">
+  <div class="col-12">
+    <div>
+      <h5 class="title-info">Thông tin</h5>
+    </div>
+    <form-table
+      [columns]="headerColumns"
+      [dataSource]="dataSource"
+      [isLoading]="isLoading"
+      [scrollHeight]="screenHeight * 0.5 + 'px'"
+      [page]="page"
+      (_changePage)="setPage($event)"
+    >
+      <ng-container filter>
+        <div class="flex flex-column sm:flex-row w-full">
+           <form-dropdown
+            class="col-2"
+            [floatLabel]="true"
+            [options]="listProgram"
+            [(ngModelValue)]="filter.program"
+            [label]="'Tên chương trình'"
+            (_onChange)="changeFilter($event)"
+          ></form-dropdown>
+          <form-dropdown
+            class="col-2"
+            [floatLabel]="true"
+            [options]="listStatus"
+            [(ngModelValue)]="filter.status"
+            [label]="'Trạng thái trúng thưởng'"
+            (_onChange)="changeFilter($event)"
+          ></form-dropdown>
+          <form-input-calendar
+            class="col-2"
+            [floatLabel]="true"
+            [showButtonBar]="true"
+            [(ngModelValue)]="filter.date"
+            [readonlyInput]="true"
+            [placeholder]="'dd/mm/yyyy'"
+            [label]="'Ngày tham gia'"
+            (_onChange)="changeFilter($event)"
+          ></form-input-calendar>
+        </div>
+      </ng-container>
+    </form-table>
+  </div>
+</div>

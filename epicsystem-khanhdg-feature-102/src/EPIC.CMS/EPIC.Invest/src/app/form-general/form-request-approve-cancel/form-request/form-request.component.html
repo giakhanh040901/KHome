@@ -1,0 +1,24 @@
+<div class="grid p-fluid">
+    <!-- <div class="col-12 md:col-12">
+        <div class="field">
+            <label> Nội dung trình duyệt </label>
+            <input pInputTextarea [(ngModel)]="dataRequest.summary" [title]="dataRequest?.summary" [disabled]="true" class="custom-input-disabled"/>         
+        </div>
+    </div> -->
+    <div class="col-12 md:col-12">
+        <div class="field mb-0">
+            <label> Chọn người phê duyệt </label>
+            <p-dropdown [options]="[]" [(ngModel)]="dataRequest.userApproveId" optionLabel="name" optionValue="name"></p-dropdown>         
+        </div>
+    </div>
+    <div class="col-12 md:col-12">
+        <div class="field">
+            <label> Ghi chú </label>
+            <textarea pInputTextarea [(ngModel)]="dataRequest.requestNote"></textarea>         
+        </div>
+    </div>
+</div>
+<div class="p-dialog-footer e-custom-dialog-footer" >
+    <button pButton pRipple label="Hủy" icon="pi pi-times" class="p-button-text p-confirm-dialog-reject" (click)="cancel()"></button>
+    <button pButton pRipple label="Đồng ý" icon="pi pi-check" class="p-button-text p-confirm-dialog-approve" [disabled]="submitted" (click)="accept()"></button>
+</div>

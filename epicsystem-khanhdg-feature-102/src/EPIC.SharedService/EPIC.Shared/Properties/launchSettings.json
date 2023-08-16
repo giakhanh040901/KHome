@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "EPIC.Shared": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:57175;http://localhost:57176"
+    }
+  }
+}

@@ -1,0 +1,92 @@
+
+<div class="card">
+    <div class="p-fluid p-formgrid grid">
+        <div class="field col-4">
+            <label class="title-info">Page Id</label>
+            <input [(ngModel)]="posts.pageId" pInputText id="code" type="text" />
+        </div>
+        <div class="field col-8">
+            <label class="title-info">Tên trang</label>
+            <input [(ngModel)]="posts.pageName" pInputText id="title" type="text" />
+        </div>  
+        <div class="col-12 field">
+            <label htmlFor="mainImg">Hình ảnh trang</label>
+            <div class="grid">
+                <div class="col-3">
+                    <div class="img-zone mt-1">
+                        <img *ngIf="posts.pageImage " class="col-12 "  src="{{baseUrl}}/{{ posts.pageImage }}"  object-fit: cover/>
+                    </div>
+                </div>
+                <div class="col-6 mt-2">
+                    <button (click)="selectImg('PAGE_IMAGE')" pButton type="button" label="Chọn ảnh"
+                        class="p-button-primary mb-1">
+                    </button>
+                  
+                    <p-message *ngIf="!posts?.pageImage" severity="error" text="Chưa chọn ảnh hoặc chưa tải ảnh">
+                    </p-message>
+                    <p-message *ngIf="posts?.pageImage" severity="success" text="Đã chọn ảnh"></p-message>
+
+                </div> 
+            </div>
+        </div> 
+
+        <div class="field col-12">
+            <label class="title-info" htmlFor="content">Nội dung bài viết </label>
+            <textarea [(ngModel)]="posts.message" pInputTextarea [rows]="5" id="appNotificationDesc" class="custom-input"> </textarea>
+        </div>
+        
+        <div class="col-5">
+            <div>
+                <label class="title-info" htmlFor="pageImage">Hình ảnh bài viết</label> 
+            </div>
+            <div *ngIf="posts.full_picture" class="gallery-media">
+                <div class="gallery-image" style="background: url({{baseUrl}}/{{posts.full_picture}});" >
+                </div>
+                <div class="desc" >
+                    <i (click)="removeFile(img)" class="remove-img pi pi-trash"></i>
+                </div>
+            </div>
+            <div *ngIf="!posts.full_picture || posts.full_picture.length == 0" class="grid"> 
+                <div class="col-12 mt-2">
+                    <button (click)="selectImg('FULL_PICTURE')" pButton type="button" label="Thêm ảnh"
+                        class="p-button-primary mb-1">
+                    </button> 
+                </div> 
+            </div>
+        </div>
+        <div class="field col-7">
+            <label class="title-info" htmlFor="content">Link Facebook</label>
+            <input  [(ngModel)]="posts.permalink_url" pInputTextarea cols="5"  id="actionView" class="custom-input" />
+            
+            <label class="title-info mt-3">Ngày đăng </label>
+            <p-calendar
+                dateFormat="dd/mm/yy"
+                locale="vi"
+                appendTo="body"
+                utc="true"
+                [(ngModel)]="posts.created_time"
+                [showIcon]="true"
+                placeholder="dd/mm/yy"
+            >
+            </p-calendar>
+
+            <label class="title-info mt-3">Thời gian cập nhật </label>
+            <p-calendar
+                dateFormat="dd/mm/yy"
+                locale="vi"
+                appendTo="body"
+                utc="true"
+                [(ngModel)]="posts.updated_time"
+                [showIcon]="true"
+                placeholder="dd/mm/yy"
+            >
+            </p-calendar>
+            
+        </div> 
+    </div>
+</div> 
+<p-confirmDialog header="Xác nhận" icon="pi pi-exclamation-triangle"></p-confirmDialog>
+<div class="p-dialog-footer" style="width: 100%; position: fixed; left: 0; bottom: 0;">
+    <button type="reset" pButton pRipple label="Hủy" icon="pi pi-times" class="p-button-text mr-2" (click)="close()"></button>
+    <button type="submit" pButton pRipple label="Lưu lại" icon="pi pi-save" (click)="onSubmit()"></button>
+</div>

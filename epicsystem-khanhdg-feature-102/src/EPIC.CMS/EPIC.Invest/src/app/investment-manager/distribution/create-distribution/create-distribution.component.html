@@ -1,0 +1,161 @@
+<e-loading *ngIf="isLoading"></e-loading>
+<p-toast></p-toast>
+<div  class="grid p-fluid">
+    <ng-container>
+        <div class="col-12 md:col-3">
+            <div class="field mb-0">
+                <label htmlFor="code">Mã dự án </label>
+                <input pInputText [disabled]="true" value="{{ projectInfo?.invCode }}" class="custom-input-disabled"/>
+            </div>
+        </div>
+        <div class="col-12 md:col-7">
+            <div class="field mb-0">
+                <label htmlFor="code">Tên dự án </label>
+                <input pInputText [disabled]="true" value="{{ projectInfo?.invName }}" class="custom-input-disabled"/>
+            </div>
+        </div>
+        <div class="col-12 md:col-2">
+            <div class="field mb-0">
+                <label htmlFor="code" style="opacity: 0"> Chọn dự án  </label>
+                <p-button label="Tìm kiếm dự án" icon="pi pi-search" (onClick)="filterProject()"></p-button>
+            </div>
+        </div>
+        <div class="col-12 md:col-3">
+            <div class="field mb-0">
+                <label htmlFor="code"> Ngày bắt đầu </label>
+                <input pInputText [disabled]="true" value="{{ projectInfo?.startDate | dateview }}" class="custom-input-disabled"/>			
+            </div>
+        </div>
+        <div class="col-12 md:col-3">
+            <div class="field mb-0">
+                <label htmlFor="code">Ngày kết thúc </label>
+                <input pInputText [disabled]="true" value="{{ projectInfo?.endDate | dateview }}" class="custom-input-disabled"/>
+            </div>
+        </div>
+        <div class="col-12 md:col-6">
+            <div class="field mb-0">
+                <label htmlFor="code"> Tổ chức bảo lãnh </label>
+                <input pInputText [disabled]="true" value="{{ projectInfo?.guaranteeOrganization }}" class="custom-input-disabled"/>
+            </div>
+        </div>
+        <div class="col-12 md:col-3">
+            <div class="field mb-0">
+                <label htmlFor="code"> Diện tích </label>
+                <input pInputText [disabled]="true" value="{{ projectInfo?.area }}" class="custom-input-disabled"/>
+            </div>
+        </div>
+        <div class="col-12 md:col-3">
+            <div class="field mb-0">
+                <label htmlFor="code">Tổng mức đầu tư </label>
+                <input pInputText [disabled]="true" value="{{ utils.transformMoney(projectInfo?.totalInvestmentDisplay) }}" class="custom-input-disabled"/>
+            </div>
+        </div>
+        <div class="col-12 md:col-6">
+            <div class="field mb-0">
+                <label htmlFor="code"> Vị trí </label>
+                <input pInputText [disabled]="true" value="{{ projectInfo?.locationDescription  }}" class="custom-input-disabled"/>
+            </div>
+        </div>
+        <div class="col-12 md:col-12">
+            <h6 class="mb-2 mt-0">Thông tin chủ đầu tư </h6>
+            <hr class="m-0">
+        </div>
+        <div class="col-12 md:col-3">
+            <div class="field mb-0">
+                <label htmlFor="code"> Tên viết tắt </label>
+                <input pInputText [disabled]="true" value="{{ projectInfo?.owner?.businessCustomer?.shortName }}" class="custom-input-disabled"/>
+            </div>
+        </div>
+        <div class="col-12 md:col-9">
+            <div class="field mb-0">
+                <label htmlFor="code"> Tên chủ đầu tư </label>
+                <input pInputText [disabled]="true" value="{{ projectInfo?.owner?.businessCustomer?.name }}" class="custom-input-disabled"/>
+            </div>
+        </div>
+        <div class="col-12 md:col-12">
+            <h6 class="mb-2 mt-0">Thông tin tổng thầu </h6>
+            <hr class="m-0">
+        </div>
+        <div class="col-12 md:col-3">
+            <div class="field mb-0">
+                <label htmlFor="code"> Tên viết tắt </label>
+                <input pInputText [disabled]="true" value="{{ projectInfo?.generalContractor?.businessCustomer?.shortName }}" class="custom-input-disabled"/>
+            </div>
+        </div>
+        <div class="col-12 md:col-9">
+            <div class="field mb-0">
+                <label htmlFor="code"> Tên tổng thầu </label>
+                <input pInputText [disabled]="true" value="{{ projectInfo?.generalContractor?.businessCustomer?.name }}" class="custom-input-disabled"/>
+            </div>
+        </div>
+        <div class="col-12 md:col-12">
+            <h6 class="mb-2 mt-0">Thông tin phân phối </h6>
+            <hr class="m-0">
+        </div>
+        <div class="col-12 md:col-3">
+            <div class="field mb-0">
+                <label htmlFor="openCellDate">Ngày mở bán <span class="required-field"> * </span> </label>
+                <p-calendar inputId="openCellDate" dateFormat="dd/mm/yy" locale="vi" 
+                    appendTo="body" utc="true" 
+                    [(ngModel)]="distribution.openCellDate" 
+                    (onSelect)="onChangeOpenCellDate($event)"
+                    [ngClass]="{'ng-invalid ng-dirty' : fieldErrors?.openCellDate}"
+                    [minDate]="minDate"
+                    [maxDate]="maxDate"
+                    [showIcon]="true">
+                </p-calendar>
+            </div>
+        </div>
+        <div class="col-12 md:col-3">
+            <div class="field mb-0">
+                <label htmlFor="closeCellDate">Ngày kết thúc<span class="required-field"> * </span> </label>
+                <p-calendar inputId="closeCellDate" dateFormat="dd/mm/yy" locale="vi" 
+                    appendTo="body" utc="true" 
+                    [(ngModel)]="distribution.closeCellDate" 
+                    [ngClass]="{'ng-invalid ng-dirty' : fieldErrors?.closeCellDate}"
+                    [showIcon]="true" 
+                    [readonlyInput]="true"
+                    [minDate]="distribution.openCellDate"
+                    [maxDate]="maxDate">
+                </p-calendar>
+            </div>
+        </div>
+        <div class="col-12 md:col-3">
+            <div class="field mb-0">
+                <label htmlFor=""> Hình thức chi trả lợi tức, đáo hạn <span class="required-field"> * </span></label>
+                <p-dropdown 
+                    class="custom-input-disabled"
+                    optionLabel="name" optionValue="code"
+                    [options]="DistributionConst.methodInterests" 
+                    [(ngModel)]="distribution.methodInterest">
+                </p-dropdown>
+            </div>
+        </div>
+        <div class="col-12 md:col-6">
+            <div class="field mb-0">
+                <label htmlFor=""> Tài khoản thụ hưởng <span class="required-field"> * </span></label>
+                <p-multiSelect 
+                    name="businessCustomerBankAccId" 
+                    [options]="listBanks" 
+                    optionLabel="labelName" optionValue="businessCustomerBankAccId" placeholder="" [(ngModel)]="distribution.tradingBankAcc" appendTo="body">
+                </p-multiSelect>
+            </div>
+        </div>
+        <div class="col-12 md:col-6">
+            <div class="field mb-0">
+                <label htmlFor=""> Tài khoản chi tiền </label>
+                <p-multiSelect 
+                    name="tradingBankAccountPays" appendTo="body"
+                    [options]="listBanks" optionLabel="labelName" optionValue="businessCustomerBankAccId"
+                    [(ngModel)]="distribution.tradingBankAccPays">
+                </p-multiSelect>
+            </div>
+        </div> 
+    </ng-container>
+</div>
+<div class="p-dialog-footer e-custom-dialog-footer" >
+    <button pButton pRipple label="Hủy" icon="pi pi-times" class="p-button-text p-confirm-dialog-reject" (click)="close()"></button>
+    <button pButton pRipple label="Lưu" icon="pi pi-check" class="p-button-text p-confirm-dialog-approve" [disabled]="!validForm() || submitted" (click)="save()"></button>
+</div>
+
+         

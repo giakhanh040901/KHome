@@ -1,0 +1,194 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card pt-0 pb-0 mb-0 ">
+            <!-- <div class="col-9"> -->
+                <div class="p-fluid p-formgrid grid mt-2">
+                    <div class="col-3 text-center mt-0">
+                        <div class="p-fluid p-formgrid grid">
+                            <div class="col-12 wrapper-avatar-issuer">
+                                <p-image
+                                    [src]="productDetail?.icon ? (AppConsts.remoteServiceBaseUrl + '/' + productDetail?.icon) : imageDefault" 
+                                    imageClass="b-w-90"
+                                    [imageStyle]="{'border-radius':'8px','max-height':'250px', 'width': '100%'}" 
+                                    [preview]="true">
+                                </p-image>
+                            </div>
+                            <div class="col-12">
+                                <p-fileUpload
+                                    [disabled]="!isEdit"
+                                    name="demo[]" accept=".png,.jpeg,.jpg" 
+                                    chooseLabel="Chọn ảnh"
+                                    chooseIcon="pi pi-image"
+                                    class="custom-file-upload mt-3"  
+                                    [customUpload]="true" 
+                                    (uploadHandler)="myUploader($event)"
+                                    [auto]="true" >
+                                </p-fileUpload>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-9">
+                        <div class="field col-12">
+                            <h6 class="mb-0 e-title-group"> 
+                                Chủ đầu tư 
+                            </h6>
+                        </div>
+                        <div class="col-12 flex">
+                            <div class="field col-2 ">
+                                <label class="title-info"> Mã số thuế </label>
+                                <input [disabled]="!isEdit" [value]="productDetail?.invOwner?.taxCode" pInputText class="custom-input-disabled"/>
+                            </div>
+                            <div class="field col-10">
+                                <label class="title-info"> Tổ chức phát hành </label>
+                                <input [disabled]="!isEdit" [value]="productDetail?.invOwner?.name" pInputText  class="custom-input-disabled"/>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <h6 class="mb-0 e-title-group"> 
+                                Tổng thầu thi công 
+                            </h6>
+                        </div>
+                        <div class="col-12 flex">
+                            <div class="field mb-0 col-12 md:col-2">
+                                <label class="title-info"> Mã số thuế </label>
+                                <input [disabled]="!isEdit" [value]="productDetail?.invGeneralContractor?.taxCode" pInputText class="custom-input-disabled"/>
+                            </div>
+                            <div class="field mb-0 col-12 md:col-10">
+                                <label class="title-info"> Đại lý lưu ký </label>
+                                <input [disabled]="!isEdit" [value]="productDetail?.invGeneralContractor?.name" pInputText  class="custom-input-disabled"/>
+                            </div>
+                        </div>
+                    </div>
+                   
+                </div>
+
+                
+            <!-- </div> -->
+            
+            <ng-container>
+                <h5 class="title-info mb-2 mt-3">Thông tin dự án </h5>
+                <!-- <hr class="mt-0" style="border-width: 2px 0 0"> -->
+                <!-- Dòng 1 -->
+                <div class="p-fluid p-formgrid grid">
+                    <div class="field mb-2 col-12 md:col-2">
+                        <label class="title-info"> Mã dự án </label>
+                        <input [disabled]="!isEdit" [(ngModel)]="productDetail.code" pInputText class="custom-input-disabled"/>
+                    </div>
+                    <div class="field mb-2 col-12 md:col-6">
+                        <label class="title-info"> Tên dự án </label>
+                        <input [disabled]="!isEdit" [(ngModel)]="productDetail.name" pInputText  class="custom-input-disabled"/>
+                    </div>
+                    <div class="field mb-2 col-12 md:col-2">
+                        <label class="title-info"> Tổng mức đầu tư </label>
+                        <p-inputNumber [disabled]="!isEdit" [(ngModel)]="productDetail.invTotalInvestmentDisplay" locale="de-DE" class="custom-input-disabled"> </p-inputNumber>
+                    </div>
+                    <div class="field mb-2 col-12 md:col-2">
+                        <label class="title-info"> Hạn mức đầu tư </label>
+                        <p-inputNumber [disabled]="!isEdit" [(ngModel)]="productDetail.invTotalInvestment" locale="de-DE" class="custom-input-disabled"> </p-inputNumber>
+                    </div>
+                </div>
+                <!-- Dòng 2 -->
+                <div class="p-fluid p-formgrid grid">
+                    <div class="field mb-2 col-12 md:col-8">
+                        <label class="title-info"> Tổ chức đảm bảo </label>
+                        <input [disabled]="!isEdit" [(ngModel)]="productDetail.guaranteeOrganization" pInputText class="custom-input-disabled"/>
+                    </div>
+                    <div class="field mb-2 col-12 md:col-2">
+                        <label class="title-info"> Ngày bắt đầu </label>
+                        <p-calendar
+                            [disabled]="!isEdit" 
+                            class="custom-input-disabled" 
+                            dateFormat="dd/mm/yy" locale="vi" appendTo="body"
+                            [(ngModel)]="productDetail.startDate" [placeholder]="'dd/mm/yyyy'"
+                            [showIcon]="false">
+                        </p-calendar>
+                    </div>
+                    <div class="field mb-2 col-12 md:col-2">
+                        <label class="title-info"> Ngày kết thúc</label>
+                        <p-calendar 
+                            [disabled]="!isEdit"
+                            class="custom-input-disabled"
+                            dateFormat="dd/mm/yy" locale="vi" appendTo="body"
+                            [(ngModel)]="productDetail.endDate" [placeholder]="'dd/mm/yyyy'"
+                            [showIcon]="false">
+                            <!-- (onSelect)="changeRequestDate()"> -->
+                        </p-calendar>
+                    </div>
+                </div>
+                <!-- Dòng 3 -->
+                <div class="p-fluid p-formgrid grid">
+                    <div class="field mb-2 col-12 md:col-2">
+                        <label class="title-info"> Diện tích </label>
+                        <input [disabled]="!isEdit" [(ngModel)]="productDetail.invArea" pInputText class="custom-input-disabled"/>
+                    </div>
+                    <div class="field mb-2 col-12 md:col-6">
+                        <label class="title-info"> Loại hình dự án </label>
+                        <p-multiSelect
+                            [disabled]="!isEdit" 
+                            class="custom-input-disabled" appendTo="body" 
+                            [pTooltip]="ProductConst.getInvestTypeNames(productDetail.invProductTypes)" tooltipPosition="top"
+                            [options]="InvestTypes" optionLabel="name" optionValue="code"
+                            [(ngModel)]="productDetail.invProductTypes">
+                        </p-multiSelect>
+                    </div>
+                    <div class="field mb-2 col-12 md:col-2">
+                        <label class="title-info"> Kinh độ </label>
+                        <input [disabled]="!isEdit" [(ngModel)]="productDetail.invLatitude" pInputText class="custom-input-disabled"/>
+                    </div>
+                    <div class="field mb-2 col-12 md:col-2">
+                        <label class="title-info"> Vĩ độ </label>
+                        <input [disabled]="!isEdit" [(ngModel)]="productDetail.invLongitude" pInputText class="custom-input-disabled"/>
+                    </div>
+                </div>
+                <div class="p-fluid p-formgrid grid">
+                    <div class="field mb-2 col-12 md:col-12">
+                        <label class="title-info"> Mô tả vị trí</label>
+                        <input [disabled]="!isEdit" [(ngModel)]="productDetail.invLocationDescription" pInputText class="custom-input-disabled"/>
+                    </div>
+                </div>
+                <!-- Dòng 3 -->
+                <div class="p-fluid p-formgrid grid">
+                    <div class="field mb-2 col-12 md:col-2">
+                        <label class="title-info"> Số KH tối đa</label>
+                        <p-inputNumber [disabled]="!isEdit"  [(ngModel)]="productDetail.maxInvestor" locale="de-DE" class="custom-input-disabled"></p-inputNumber>
+                    </div>
+                    <div class="field mb-2 col-12 md:col-3">
+                        <label class="title-info"> Hình thức tính lãi của TCPH </label>
+                        <p-dropdown
+                            [disabled]="!isEdit" 
+                            class="custom-input-disabled" emptyMessage="Dữ liệu trống" appendTo="body" 
+                            [pTooltip]="ProductConst.getCountType(productDetail.countType)" tooltipPosition="top"
+                            [options]="CountTypes" optionLabel="name" optionValue="code"
+                            [(ngModel)]="productDetail.countType"
+                            [autoDisplayFirst]="true">
+                        </p-dropdown>
+                    </div>
+                    <div class="field mb-2 col-12 md:col-3">
+                        <label class="title-info"> Số ngày đầu tư tối thiểu</label>
+                        <p-inputNumber [disabled]="!isEdit" [(ngModel)]="productDetail.minInvestDay" locale="de-DE" class="custom-input-disabled"> </p-inputNumber>
+                    </div>
+                    <div class="field mb-2 col-12 md:col-2">
+                        <label class="title-info"> Bảo lãnh thanh toán</label>
+                        <p-dropdown
+                            [disabled]="!isEdit" 
+                            class="custom-input-disabled" emptyMessage="Không có dữ liệu"
+                            [options]="YesNoList" optionLabel="name" optionValue="code" appendTo="body"
+                            [(ngModel)]="productDetail.isPaymentGurantee"
+                            [autoDisplayFirst]="true">
+                        </p-dropdown>
+                    </div>
+                    <div class="field mb-2 col-12 md:col-2">
+                        <label class="title-info"> Tài sản đảm bảo </label>
+                        <p-dropdown
+                            [disabled]="!isEdit" 
+                            class="custom-input-disabled" emptyMessage="Không có dữ liệu"
+                            [options]="YesNoList" optionLabel="name" optionValue="code" appendTo="body"
+                            [(ngModel)]="productDetail.isCollateral"
+                            [autoDisplayFirst]="true">
+                        </p-dropdown>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+</div>

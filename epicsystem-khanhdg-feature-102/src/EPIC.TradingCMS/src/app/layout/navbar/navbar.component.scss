@@ -1,0 +1,13 @@
+#navbar-search-input {
+    color: white !important;
+}
+.dropdown-menu.navbar-dropdown {
+    min-width: 12rem;
+    border-radius: 5px;
+    padding: 0;
+    .dropdown-item{
+        padding: 8px 15px !important;
+        border-top: 1px solid #80808042;
+
+    }
+}

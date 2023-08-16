@@ -1,0 +1,257 @@
+<form class="form-horizontal" autocomplete="off" #createModal="ngForm" (ngSubmit)="save()" [busy]="isLoading">
+    <abp-modal-header [title]="title" (onCloseClick)="bsModalRef.hide()"></abp-modal-header>
+    <div class="grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body" #wrapperForm>
+                <ul role="tablist" class="justify-content-start nav nav-pills">
+                    <li class="nav-item">
+                        <a href="javascript:void(0)" role="tab" class="nav-link active" id="ngb-tab-0"
+                            (click)="showTab('tab1','contentTab1')" #tab1>
+                            1.Thông tin lô trái phiếu
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="javascript:void(0)" role="tab" class="nav-link" id="ngb-tab-1"
+                            (click)="showTab('tab2','contentTab2')" #tab2>
+                            2.Thông tin phát hành, kỳ hạn, lãi suất
+                        </a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-body active" #contentTab1>
+                        <div class="row">
+                            <div class="form-group required col-md-3">
+                                <label for="bondCode"> Mã trái phiếu ( <span class="field-required">*</span> )</label>
+                                <input type="text" class="form-control form-control-sm" name="bondCode" id="bondCode" #bondCode required
+                                    maxlength="50" [(ngModel)]="productBondInfo.bondCode" #bondCodeModel="ngModel" #bondCodeEl placeholder="Mã trái phiếu"/>
+                                <abp-validation-summary [control]="bondCodeModel" [controlEl]="bondCodeEl"></abp-validation-summary>
+                            </div>
+                            <div class="form-group required col-md-3">
+                                <label for="bondName"> Tên trái phiếu ( <span class="field-required">*</span> )</label>
+                                <input type="text" class="form-control form-control-sm" name="bondName" id="bondName" #bondName required
+                                    maxlength="256" [(ngModel)]="productBondInfo.bondName" #bondNameModel="ngModel" #bondNameEl placeholder="Tên trái phiếu"/>
+                                <abp-validation-summary [control]="bondNameModel" [controlEl]="bondNameEl"></abp-validation-summary>
+                            </div>
+                            <div class="col-md-6"></div>
+                            <div class="form-group required col-md-3">
+                                <label for="issuerId"> Tổ chức phát hành ( <span class="field-required">*</span> ) </label>
+                                <ng-select type="number" name="issuerId" id="issuerId" required
+                                    [notFoundText]="'Không có dữ liệu'" maxlength="22" #issuerId
+                                    placeholder="Tổ chức phát hành" [(ngModel)]="productBondInfo.issuerId"
+                                    [multiple]="false" [clearable]="false" #issuerIdModel="ngModel" #issuerIdEl>
+                                    <ng-option *ngFor="let item of issuers" [value]="item.issuerId" [title]="item.name">{{ item.name }}</ng-option>
+                                </ng-select>
+                                <abp-validation-summary [control]="issuerIdModel" [controlEl]="issuerIdEl"></abp-validation-summary>
+                            </div>
+                            <div class="form-group required col-md-3">
+                                <label for="tradingProviderId"> Đại lý sơ cấp ( <span class="field-required">*</span> ) </label>
+                                <ng-select type="number" name="tradingProviderId" id="tradingProviderId" required
+                                    [notFoundText]="'Không có dữ liệu'" maxlength="22" #tradingProviderId
+                                    placeholder="Đại lý sơ cấp" [(ngModel)]="productBondInfo.tradingProviderId"
+                                    [multiple]="false" [clearable]="false" #tradingProviderIdModel="ngModel" #tradingProviderIdEl>
+                                    <ng-option *ngFor="let item of tradingProviders" [value]="item.tradingProviderId" [title]="item.name">{{ item.name }}</ng-option>
+                                </ng-select>
+                                <abp-validation-summary [control]="tradingProviderIdModel" [controlEl]="tradingProviderIdEl"></abp-validation-summary>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label for="bondTypeId"> Loại trái phiếu</label>
+                                <ng-select type="number" name="bondTypeId" id="bondTypeId" 
+                                    [notFoundText]="'Không có dữ liệu'" maxlength="22" #bondTypeId
+                                    placeholder="Loại trái phiếu" [(ngModel)]="productBondInfo.bondTypeId"
+                                    [multiple]="false" [clearable]="false" #bondTypeIdModel="ngModel" #bondTypeIdEl>
+                                    <ng-option *ngFor="let item of bondTypes" [value]="item.id" [title]="item.name">{{ item.name }} </ng-option>
+                                </ng-select>
+                                <abp-validation-summary [control]="bondTypeIdModel" [controlEl]="bondTypeIdEl"></abp-validation-summary>
+                            </div>
+                            <div class="col-md-3"></div>
+
+
+                            <div class="form-group col-md-6">
+                                <label for="description"> Mô tả </label>
+                                <textarea type="text" class="form-control form-control-sm" name="description" id="description" #description rows="2"
+                                    maxlength="1024" placeholder="Mô tả" [(ngModel)]="productBondInfo.description" #descriptionModel="ngModel" #descriptionEl></textarea>
+                                <abp-validation-summary [control]="descriptionModel" [controlEl]="descriptionEl"></abp-validation-summary>
+                            </div>
+
+                            <div class="form-group col-md-6">
+                                <label for="content"> Nội dung </label>
+                                <textarea type="text" class="form-control form-control-sm" name="content" id="content" #content rows="2"
+                                    maxlength="4000" placeholder="Nội dung" [(ngModel)]="productBondInfo.content" #contentModel="ngModel" #contentEl></textarea>
+                                <abp-validation-summary [control]="contentModel" [controlEl]="contentEl"></abp-validation-summary>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-body" #contentTab2>
+                        <div class="row">
+                            <div class="form-group col-lg-3 p-0">
+                                <div class="form-group col-md-12">
+                                    <label for="issueDate"> Ngày phát hành </label>
+                                    <input type="text" placeholder="Ngày phát hành trái phiếu" class="form-control form-control-sm" #issueDate
+                                        bsDatepicker name="issueDate" maxlength="10"
+                                        (keypress)="numberOnly($event)"
+                                        (bsValueChange)="changeDatePicker('issueDate', $event)"
+                                        [(ngModel)]="productBondInfoDateDisplays.issueDate"
+                                        [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY' }"
+                                        #issueDateModel="ngModel" #issueDateEl >
+                                    <abp-validation-summary [control]="issueDateModel" [controlEl]="issueDateEl"></abp-validation-summary>
+                                </div>
+
+                                <div class="form-group col-md-12">
+                                    <label for="dueDate"> Ngày đáo hạn </label>
+                                    <input type="text" placeholder="Ngày đáo hạn trái phiếu" class="form-control form-control-sm" #dueDate
+                                        bsDatepicker name="dueDate" maxlength="10"
+                                        (keypress)="disableKeypress($event)"
+                                        (bsValueChange)="changeDatePicker('dueDate', $event)"
+                                        [(ngModel)]="productBondInfoDateDisplays.dueDate"
+                                        [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY' }"
+                                        #dueDateModel="ngModel" #dueDateEl >
+                                    <abp-validation-summary [control]="dueDateModel" [controlEl]="dueDateEl"></abp-validation-summary>
+                                </div>
+
+                                <div class="form-group col-md-12">
+                                    <label for="parValue"> Mệnh giá </label>
+                                    <input type="text" class="form-control form-control-sm" name="parValue" id="parValue" #parValue
+                                        (keyup)="changeCurrentcy('parValue', $event.target.value)" maxlength="22"
+                                        [(ngModel)]="productBondInfoCurrentcyDisplays.parValue" #parValueModel="ngModel"
+                                        #parValueEl (keypress)="numberOnly($event)" placeholder="Mệnh giá" />
+                                    <abp-validation-summary [control]="parValueModel" [controlEl]="parValueEl"></abp-validation-summary>
+                                </div>
+
+                                <div class="form-group col-md-12">
+                                    <label for="totalValue"> Tổng giá trị phát hành </label>
+                                    <input type="text" class="form-control form-control-sm" name="totalValue" id="totalValue" #totalValue
+                                        (keyup)="changeCurrentcy('totalValue', $event.target.value)" maxlength="22"
+                                        [(ngModel)]="productBondInfoCurrentcyDisplays.totalValue" #totalValueModel="ngModel"
+                                        #totalValueEl (keypress)="numberOnly($event)" placeholder="Tổng giá trị phát hành" />
+                                    <abp-validation-summary [control]="totalValueModel" [controlEl]="totalValueEl"></abp-validation-summary>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-lg-3 p-0">
+                                <div class="form-group col-md-12">
+                                    <label for="bondPeriod"> Kỳ hạn </label>
+                                    <input type="text" class="form-control form-control-sm" name="bondPeriod" id="bondPeriod" #bondPeriod
+                                        placeholder="Kỳ hạn" maxlength="22" [(ngModel)]="productBondInfo.bondPeriod" #bondPeriodModel="ngModel" #bondPeriodEl/>
+                                    <abp-validation-summary [control]="bondPeriodModel" [controlEl]="bondPeriodEl"></abp-validation-summary>
+                                </div>
+
+                                <div class="form-group col-md-12">
+                                    <label for="bondPeriodUnit"> Đơn vị kỳ hạn </label>
+                                    <ng-select name="bondPeriodUnit" id="bondPeriodUnit" 
+                                        [notFoundText]="'Không có dữ liệu'" #bondPeriodUnit placeholder="Đơn vị kỳ hạn"
+                                        [(ngModel)]="productBondInfo.bondPeriodUnit" [clearable]="false" [multiple]="false"
+                                        #bondPeriodUnitModel="ngModel" #bondPeriodUnitEl>
+                                        <ng-option *ngFor="let item of bondPeriodUnits" [value]="item.code" [title]="item.name">{{ item.name }}</ng-option>
+                                    </ng-select>
+                                    <abp-validation-summary [control]="bondPeriodUnitModel" [controlEl]="bondPeriodUnitEl"></abp-validation-summary>
+                                </div>
+
+                                <div class="form-group col-md-12">
+                                    <label for="interestPeriod"> Kỳ hạn trả lãi </label>
+                                    <input type="text" class="form-control form-control-sm" name="interestPeriod" id="interestPeriod" #interestPeriod
+                                        placeholder="Kỳ hạn trả lãi" maxlength="22" [(ngModel)]="productBondInfo.interestPeriod" #interestPeriodModel="ngModel" #interestPeriodEl/>
+                                    <abp-validation-summary [control]="interestPeriodModel" [controlEl]="interestPeriodEl"></abp-validation-summary>
+                                </div>
+
+                                <div class="form-group col-md-12">
+                                    <label for="interestPeriodUnit"> Đơn vị kỳ hạn trả lãi </label>
+                                    <ng-select name="interestPeriodUnit" id="interestPeriodUnit" 
+                                        [notFoundText]="'Không có dữ liệu'" #interestPeriodUnit placeholder="Đơn vị kỳ hạn trả lãi"
+                                        [(ngModel)]="productBondInfo.interestPeriodUnit" [clearable]="false" [multiple]="false"
+                                        #interestPeriodUnitModel="ngModel" #interestPeriodUnitEl>
+                                        <ng-option *ngFor="let item of interestPeriodUnits" [value]="item.code">{{ item.name }}</ng-option>
+                                    </ng-select>
+                                    <abp-validation-summary [control]="interestPeriodUnitModel" [controlEl]="interestPeriodUnitEl"></abp-validation-summary>
+                                </div>
+
+                            </div>
+                            <div class="form-group col-lg-3 p-0">
+                                <div class="form-group col-md-12">
+                                    <label for="interestRate"> Lãi suất (%) </label>
+                                    <input type="text" class="form-control form-control-sm" name="interestRate" id="interestRate" #interestRate
+                                        placeholder="Lãi suất" maxlength="22" [(ngModel)]="productBondInfo.interestRate" #interestRateModel="ngModel" #interestRateEl/>
+                                    <abp-validation-summary [control]="interestRateModel" [controlEl]="interestRateEl"></abp-validation-summary>
+                                </div>
+
+                                <div class="form-group col-md-12">
+                                    <label for="interestRateType"> Kiểu lãi suất  </label>
+                                    <ng-select name="interestRateType" id="interestRateType" 
+                                        [notFoundText]="'Không có dữ liệu'" #interestRateType placeholder="Kiểu lãi suất"
+                                        [(ngModel)]="productBondInfo.interestRateType" [clearable]="false" [multiple]="false"
+                                        #interestRateTypeModel="ngModel" #interestRateTypeEl>
+                                        <ng-option *ngFor="let item of interestRateTypes" [value]="item.code">{{ item.name }}</ng-option>
+                                    </ng-select>
+                                    <abp-validation-summary [control]="interestRateTypeModel" [controlEl]="interestRateTypeEl"></abp-validation-summary>
+                                </div>
+
+                                <div class="form-group col-md-12">
+                                    <label for="interestCouponType"> Kiểu lãi theo Coupon </label>
+                                    <ng-select name="interestCouponType" id="interestCouponType"
+                                        [notFoundText]="'Không có dữ liệu'" #interestCouponType placeholder="Kiểu lãi theo Coupon"
+                                        [(ngModel)]="productBondInfo.interestCouponType" [clearable]="false" [multiple]="false"
+                                        #interestCouponTypeModel="ngModel" #interestCouponTypeEl>
+                                        <ng-option *ngFor="let item of interestCouponTypes" [value]="item.code">{{ item.name }}</ng-option>
+                                    </ng-select>
+                                    <abp-validation-summary [control]="interestCouponTypeModel" [controlEl]="interestCouponTypeEl"></abp-validation-summary>
+                                </div>
+
+                                <div class="form-group col-md-12">
+                                    <label for="couponBondType"> Loại Coupon </label>
+                                    <ng-select name="couponBondType" id="couponBondType"
+                                        [notFoundText]="'Không có dữ liệu'" #couponBondType placeholder="Loại Coupon"
+                                        [(ngModel)]="productBondInfo.couponBondType" [clearable]="false" [multiple]="false"
+                                        #couponBondTypeModel="ngModel" #couponBondTypeEl>
+                                        <ng-option *ngFor="let item of couponBondTypes" [value]="item.code">{{ item.name }}</ng-option>
+                                    </ng-select>
+                                    <abp-validation-summary [control]="couponBondTypeModel" [controlEl]="couponBondTypeEl"></abp-validation-summary>
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-3 p-0">
+                                <div class="form-group col-md-12">
+                                    <label for="interestType"> Loại lợi tức </label>
+                                    <ng-select name="interestType" id="interestType" 
+                                        [notFoundText]="'Không có dữ liệu'" #interestType  placeholder="Loại lợi tức"
+                                        [(ngModel)]="productBondInfo.interestType"  [clearable]="false" [multiple]="false"
+                                        #interestTypeModel="ngModel" #interestTypeEl>
+                                        <ng-option *ngFor="let item of interestTypes" [value]="item.code">{{ item.name }}</ng-option>
+                                    </ng-select>
+                                    <abp-validation-summary [control]="interestTypeModel" [controlEl]="interestTypeEl"></abp-validation-summary>
+                                </div>
+                                <div class="form-group col-md-12">
+                                    <label for="isPaymentGuarantee"> Có bảo lãnh thanh toán không? </label>
+                                    <ng-select type="number" name="isPaymentGuarantee" id="isPaymentGuarantee" 
+                                        [notFoundText]="'Không có dữ liệu'" #isPaymentGuarantee placeholder="Có hoặc Không"
+                                        [(ngModel)]="productBondInfo.isPaymentGuarantee" [clearable]="false"
+                                        #isPaymentGuaranteemodel="ngModel" #isPaymentGuaranteeEl>
+                                        <ng-option *ngFor="let item of isPaymentGuarantees" [value]="item.code">{{ item.name }}</ng-option>
+                                    </ng-select>
+                                    <abp-validation-summary [control]="isPaymentGuaranteemodel" [controlEl]="isPaymentGuaranteeEl"></abp-validation-summary>
+                                </div>
+
+                                <div class="form-group col-md-12">
+                                    <label for="allowSbd"> Có cho phép bán lại trước hạn ? </label>
+                                    <ng-select type="number" name="allowSbd" id="allowSbd"
+                                        [notFoundText]="'Không có dữ liệu'" #allowSbd placeholder="Có hoặc Không"
+                                        [(ngModel)]="productBondInfo.allowSbd" [clearable]="false" [multiple]="false"
+                                        #allowSbdModel="ngModel" #allowSbdEl>
+                                        <ng-option *ngFor="let item of allowSbds" [value]="item.code">{{ item.name }}</ng-option>
+                                    </ng-select>
+                                    <abp-validation-summary [control]="allowSbdModel" [controlEl]="allowSbdEl"></abp-validation-summary>
+                                </div>
+                                <div class="form-group col-md-12">
+                                    <label for="allowSbdMonth"> Số ngày nắm giữ tối thiểu </label>
+                                    <input type="number" class="form-control form-control-sm" name="allowSbdMonth" id="allowSbdMonth" #allowSbdMonth
+                                        placeholder="Số ngày nắm giữ tối thiểu" maxlength="22" [(ngModel)]="productBondInfo.allowSbdMonth"
+                                        #allowSbdMonthModel="ngModel" #allowSbdMonthEl/>
+                                    <abp-validation-summary [control]="allowSbdMonthModel" [controlEl]="allowSbdMonthEl"></abp-validation-summary>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <abp-modal-footer [cancelDisabled]="saving" [saveDisabled]="!createModal.form.valid || saving"
+        (onCancelClick)="bsModalRef.hide()"></abp-modal-footer>
+</form>

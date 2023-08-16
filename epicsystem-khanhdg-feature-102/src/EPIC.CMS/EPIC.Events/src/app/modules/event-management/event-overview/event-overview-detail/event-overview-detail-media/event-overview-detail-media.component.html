@@ -1,0 +1,50 @@
+<div class="w-full p-4">
+  <div class="card">
+    <h6 class="title-info">{{ labelAvatar }}</h6>
+    <div class="p-fluid p-formgrid grid">
+      <div class="w-full">
+        <form-image
+          [imageSource]="dataSource.avatar"
+          [widthLimit]="140"
+          [heightLimit]="140"
+          [maxFileSize]="2500000"
+          (_onChange)="onChangeImage($event, KEY_AVATAR)"
+        ></form-image>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <h6 class="title-info">{{ labelBanner }}</h6>
+    <p class="font-italic">Banner giới thiệu tổng quan thông tin sự kiện</p>
+    <div class="p-fluid p-formgrid grid">
+      <div class="w-full">
+        <form-image
+          [imageSource]="dataSource.banner"
+          [widthLimit]="280"
+          [heightLimit]="140"
+          [maxFileSize]="2500000"
+          (_onChange)="onChangeImage($event, KEY_BANNER)"
+        ></form-image>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <h6 class="title-info">{{ labelSlide }}</h6>
+    <p class="font-italic">Các hình ảnh giới thiệu chi tiết về sự kiện, các hoạt động diễn ra trong sự kiện khi xem chi tiết 1 sự kiện</p>
+    <div class="p-fluid p-formgrid grid">
+      <div class="flex w-full">
+        <form-image
+          *ngFor="let image of dataSource.slide; let i = index"
+          class="ml-2"
+          [imageSource]="image"
+          [widthLimit]="140"
+          [heightLimit]="140"
+          [maxFileSize]="2500000"
+          [showBtnRemove]="getShowBtnRemove(image)"
+          (_onRemove)="onRemove($event, i, image)"
+          (_onChange)="onChangeSlide($event, i)"
+        ></form-image>
+      </div>
+    </div>
+  </div>
+</div>

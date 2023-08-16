@@ -1,0 +1,52 @@
+<div>
+  <h5 [ngClass]="'title-info' + classTitle" class="title-info">{{ title }}</h5>
+  <div class="p-fluid p-formgrid grid">
+    <div class="flex b-w-100">
+      <div class="col">
+        <form-select-button
+          [options]="htmlMarkdownOptions"
+          [(ngModelValue)]="contentType"
+          [isDisabled]="isDisabled"
+          (_onChange)="onChangeContentType($event)"
+        ></form-select-button>
+      </div>
+    </div>
+    <div class="flex b-w-100">
+      <ng-container *ngIf="contentType === MARKDOWN_OPTIONS.MARKDOWN">
+        <div class="col-6">
+          <form-textarea
+            [label]="'Nhập thông tin'"
+            [rows]="11"
+            [(ngModelValue)]="content"
+            [placeholder]="'Nhập nội dung mô tả'"
+            [isDisabled]="isDisabled"
+            (_onClick)="getCaretPos($event)"
+            (_onChangeKeyup)="getCaretPos($event)"
+            (_onChangeInput)="handleInput($event)"
+          ></form-textarea>
+          <form-button
+            [classButton]="'p-button-outlined p-button-info w-150px'"
+            [label]="'Chèn ảnh'"
+            [icon]="'pi pi-image'"
+            [isDisabled]="isDisabled"
+            (_onClick)="insertImageContent($event)"
+          ></form-button>
+        </div>
+        <div class="col-6">
+          <form-markdown [label]="'Hiển thị'" [data]="displayContent"></form-markdown>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="contentType === MARKDOWN_OPTIONS.HTML">
+        <div class="col-12">
+          <form-editor
+            [(ngModelValue)]="content"
+            [placeholder]="'Nhập nội dung'"
+            [isDisabled]="isDisabled"
+            [label]="'Nhập thông tin'"
+            (_onChange)="handleInput($event)"
+          ></form-editor>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>

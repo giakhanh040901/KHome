@@ -1,0 +1,36 @@
+::ng-deep {
+    &.p-paginator {
+        &.show-option-all {
+            p-dropdown {
+                .p-paginator-rpp-options {
+                    .ng-trigger-overlayAnimation{
+                        &.p-dropdown-panel {
+                            .p-dropdown-items-wrapper {
+                                ul {
+                                    .p-element:last-child {
+                                        li {
+                                            span {
+                                                display: none !important;
+                                            }
+                                            &::after {
+                                                content: "Tất cả" !important;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+        }
+    }
+    &.wrapper-e-table {
+        overflow: auto;
+        .p-datatable-scrollable .p-datatable-wrapper {
+            overflow: unset;
+        }
+    }
+}
+

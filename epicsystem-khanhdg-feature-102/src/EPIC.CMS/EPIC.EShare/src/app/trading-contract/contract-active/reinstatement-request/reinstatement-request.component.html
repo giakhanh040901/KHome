@@ -1,0 +1,65 @@
+
+<app-loading-page *ngIf="isLoadingPage"></app-loading-page>
+<div class="card b-page-detail {{ isLoadingPage ? 'b-loading' : '' }}">
+    <div class="grid detail">
+        <div class="col-12">
+            <div class="card pt-0 mb-0">
+                <div class="p-fluid p-formgrid grid">
+                    <div class="field col-12 md:col-12">
+                        <label class="title-info">Loại tái tục <span class="required-field"> * </span></label>
+                        <p-dropdown 
+                            class="custom-input-disabled"
+                            [options]="OrderConst.REINSTATEMENT_TYPES" optionLabel="name" optionValue="code"
+                            [autoDisplayFirst]="true"
+                            [(ngModel)]="body.settlementMethod">
+                        </p-dropdown>
+                    </div>
+                </div>
+                <!--  -->
+                <div class="p-fluid p-formgrid grid mt-1">
+                    <div class="field col-12 md:col-12">
+                        <label class="title-info">Chính sách <span class="required-field"> * </span> </label>
+                        <p-dropdown
+                            class="custom-input-disabled" appendTo="body"
+                            optionLabel="name" optionValue="companySharePolicyId" emptyMessage="Không có dữ liệu"
+                            [options]="policies" 
+                            [autoDisplayFirst]="false"
+                            [(ngModel)]="orderDetail.companySharePolicyId"
+                            (onChange)="changePolicy($event.value)">
+                        </p-dropdown>
+                    </div>
+                </div>
+                    <!--  -->
+                <div class="p-fluid p-formgrid grid mt-1">
+                    <div class="field col-12 md:col-6">
+                        <label class="title-info"> Kỳ hạn <span class="required-field"> * </span> </label>
+                        <p-dropdown 
+                            class="custom-input-disabled" appendTo="body"
+                            optionLabel="name" optionValue="companySharePolicyDetailId" emptyMessage="Không có dữ liệu"
+                            [options]="policyDetails" 
+                            [autoDisplayFirst]="false"
+                            placeholder="Chọn kỳ hạn"
+                            (onChange)="changePolicyDetail($event.value)"
+                            [(ngModel)]="body.renewarsPolicyDetailId" [autoDisplayFirst]="true">
+                        </p-dropdown>
+                    </div>
+                    <div class="field col-12 md:col-6">
+                        <label class="title-info">Lợi tức</label>
+                        <input pInputText value="{{ profit ?  utils.transformPercent(profit) + '%' : ''  }}" [disabled]="true"
+                            class="custom-input-disabled" />
+                    </div>
+                </div>
+                <div class="p-fluid p-formgrid grid">
+                    <div class="field col-12 md:col-12">
+                        <label class="title-info">Ghi chú </label>
+                        <textarea pInputTextarea [(ngModel)]="body.requestNote" class="custom-input-disabled"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="p-dialog-footer" style="width: 100%; position: fixed; left: 0; bottom: 0; border: none;">
+        <button pButton pRipple label="Hủy" icon="pi pi-times" class="p-button-text p-confirm-dialog-reject" (click)="cancel()"></button>
+        <button pButton pRipple label="Lưu" icon="pi pi-check" class="p-button-text p-confirm-dialog-approve" [disabled]="submitted" (click)="save()"></button>
+    </div>
+</div>

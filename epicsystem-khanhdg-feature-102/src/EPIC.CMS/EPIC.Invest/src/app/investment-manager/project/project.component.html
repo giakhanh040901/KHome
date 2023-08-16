@@ -1,0 +1,318 @@
+<div class="e-page">
+    <p-toast></p-toast> 
+    <p-confirmDialog [style]="{width: 'auto'}" [baseZIndex]="10000"></p-confirmDialog>
+    <!-- GIỮ CẤU TRÚC PAGE VÀ CÁC CLASS, ID -->
+        <!-- PAGE HEADER CONTENT -->
+        <!-- TABLE -->
+    <!--  -->
+    <div class="wrapper-page-header" id="page-header">
+        <div class="b-header"> 
+            <div class="grid">
+                <div class="col-12 md:col-7 b-title">
+                    <h4 style="display:inline"> Sản phẩm đầu tư </h4>
+                </div>
+                <div class="col-12 md:col-5 b-actions">
+                    <p-button 
+                        *ngIf="isGranted([PermissionInvestConst.InvestSPDT_ThemMoi])" 
+                        label="Thêm mới" icon="pi pi-plus" styleClass="p-button-success ml-2" 
+                        (click)="create()">
+                    </p-button>
+                </div>
+            </div>
+        </div>
+        <div id="filter-table">
+            <ng-container *ngIf="dataTableEmit?.isShowFilter">
+                <div class="flex wrapper-line-filter">
+                    <div class="b-wr-20 wrapper-filter">
+                        <input-search
+                            [placeholder]="'Tìm kiếm...'"
+                            [(keyword)]="dataFilter.keyword"
+                            (_onChange)="setPage()">
+                        </input-search>
+                    </div>
+
+                    <div class="b-wr-12 wrapper-filter">
+                        <span class="p-float-label">
+                            <p-dropdown
+                                styleClass="input-filter" emptyMessage="Không có dữ liệu"
+                                [showClear]="true" placeholder="Tất cả"
+                                [options]="ProjectConst.statusConst" optionLabel="name" optionValue="code"
+                                [(ngModel)]="dataFilter.status"
+                                (onChange)="setPage()">
+                                </p-dropdown>   
+                            <label class="font-normal" for="dropdownStatus"> Trạng thái </label>
+                        </span>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+    <e-table
+        [rows]="rows"
+        [(page)]="page"
+        [columns]="columnProjects"
+        [isLoading]="isLoading"
+        [listAction]="listAction"
+        [columnCacheName]="constructor.name"
+        [(isShowFilter)]="dataTableEmit.isShowFilter"
+        (_onPageChange)="setPage($event)"
+        (_onSort)="onSort($event)">
+    </e-table>
+
+    <p-dialog [(visible)]="modalDialog" [style]="{width: '1000px'}" header="Thêm mới sản phẩm đầu tư" [modal]="true" class="p-fluid" [maximizable]="true">
+        <ng-template pTemplate="content">
+            <div class="card pt-0">
+                <div class="grid formgrid">
+                    <ng-container>
+                        <div class="col-12 md:col-12 title-group-input">
+                            <h6> Thông tin dự án</h6>
+                        </div>
+                        <div class="col-12 md:col-4">
+                        </div>
+                        <div class="col-12">
+                            <div class="flex">
+                                <div class="field col">
+                                    <label> Tên dự án (<span class="required-field"> * </span>)</label>
+                                    <input 
+                                        type="text" id="invName" name="invName" pInputText maxlength="256"
+                                        [(ngModel)]="project.invName"
+                                    />
+                                </div>
+                                <div class="field col-4">
+                                    <label> Mã dự án (<span class="required-field"> * </span>)</label>
+                                    <input  
+                                        type="text" id="invCode" name="invCode" pInputText maxlength="256"
+                                        [(ngModel)]="project.invCode"/>
+                                </div>
+                            </div>
+                            <div class="field col">
+                                <label > Tổ chức bảo đảm (<span class="required-field"> * </span>)</label>
+                                <input 
+                                    type="text" id="guaranteeOrganization" name="guaranteeOrganization" pInputText maxlength="256"
+                                    [(ngModel)]="project.guaranteeOrganization"
+                                />
+                            </div>
+                            <div class="flex px-0">
+                                <div class="field col-4">
+                                    <label > Ngày bắt đầu (<span class="required-field"> * </span>)</label>
+                                    <p-calendar 
+                                        inputId="startDate" dateFormat="dd/mm/yy" locale="vi" appendTo="body"
+                                        utc="true" placeholder="dd/mm/yyyy" [(ngModel)]="project.startDate"
+                                        [showIcon]="true">
+                                    </p-calendar>
+                                </div>
+                                <div class="field col-4">
+                                    <label > Ngày kết thúc (<span class="required-field"> * </span>)</label>
+                                    <p-calendar 
+                                        inputId="endDate" dateFormat="dd/mm/yy" locale="vi" appendTo="body"
+                                        utc="true" placeholder="dd/mm/yyyy" [(ngModel)]="project.endDate"
+                                        [showIcon]="true">
+                                    </p-calendar>
+                                </div>
+                                <div class="field col-4">
+                                    <label >Có bảo đảm tài sản không? (<span class="required-field"> * </span>)</label>
+                                    <p-dropdown 
+                                        id="isPaymentGuarantee" name="isPaymentGuarantee" 
+                                        [options]="YesNoConst.list"
+                                        optionLabel="name" optionValue="code" placeholder="" [(ngModel)]="project.isPaymentGuarantee" appendTo="body">
+                                    </p-dropdown>
+                                </div>
+                            </div>
+                            <div class="flex px-0">
+                                <div class="field col-4">
+                                    <label > Diện tích </label>
+                                    <input 
+                                        type="text" id="area" name="area" pInputText
+                                        [(ngModel)]="project.area"
+                                    />
+                                </div>
+                                <div class="field col-4">
+                                    <label > Kinh độ </label>
+                                    <input type="text" pInputText [(ngModel)]="project.longitude"> 
+                                </div>
+                                <div class="field col-4">
+                                    <label > Vĩ độ </label>
+                                    <input type="text" pInputText [(ngModel)]="project.latitude">
+                                </div>
+                            </div>   
+                            <div class="flex px-0">
+                                <div class="field col-12">
+                                    <label > Mô tả vị trí </label>
+                                    <input 
+                                        type="text" id="locationDescription" name="locationDescription" pInputText maxlength="512"
+                                        [(ngModel)]="project.locationDescription"
+                                    />
+                                </div>
+                            </div>    
+                            <div class="flex px-0">
+                                <div class="field col-3">
+                                    <label> Loại hình dự án (<span class="required-field"> * </span>)</label>
+                                    <p-multiSelect 
+                                        (click)="resetValid('projectTypes')"
+                                        id="projectTypes" name="projectTypes" 
+                                        [options]="ProjectTypes" 
+                                        optionLabel="name" optionValue="type" placeholder="" [(ngModel)]="project.projectTypes" appendTo="body">
+                                    </p-multiSelect>
+                                </div>
+                                <div class="field col-3">
+                                    <label> Tiến độ dự án </label>
+                                    <input 
+                                        type="text" id="projectProgress" name="projectProgress" pInputText
+                                        [(ngModel)]="project.projectProgress" maxlength="256"
+                                    />
+                                </div>
+                                <div class="field col-3">
+                                    <label> Hạn mức đầu tư (<span class="required-field"> * </span>)</label>
+                                    <p-inputNumber 
+                                        id="totalInvestment" name="totalInvestment" [maxFractionDigits]="3"
+                                        [(ngModel)]="project.totalInvestment" 
+                                        locale="de-DE">
+                                    </p-inputNumber>
+                                </div>
+                                <div class="field col-3">
+                                    <label> Tổng mức đầu tư (<span class="required-field"> * </span>)</label>
+                                    <p-inputNumber 
+                                        id="totalInvestmentDisplay" name="totalInvestmentDisplay" [maxFractionDigits]="3"
+                                        [(ngModel)]="project.totalInvestmentDisplay" 
+                                        locale="de-DE">
+                                    </p-inputNumber>
+                                </div>
+                                
+                            </div>
+
+                            <div class="flex px-0 mb-3 mt-2">  
+                                <div class="field col-6 mb-0 align-items-end flex">
+                                    <h6 class="mb-0"> Danh sách đại lý sơ cấp </h6> 
+                                </div>
+                                <div class="field col-3 mb-0 align-items-end flex">
+                                    <label class="mr-3"> Hạn mức đại lý </label> <br>
+                                    <p-inputSwitch [(ngModel)]="hasTotalInvestmentSub"></p-inputSwitch>
+                                </div>
+                                <div class="field col-3 mb-0">
+                                    <p-button 
+                                        label="Thêm đại lý" icon="pi pi-plus"  
+                                        (onClick)="showTrading()" class="custom-input-disabled">
+                                    </p-button>
+                                </div>
+                            </div>    
+                        </div>                               
+                        <div class="card">
+                            <e-table
+                                [rows]="listTradingProvider"
+                                [(page)]="page"
+                                [columns]="columnTradingProviders"
+                                [isLoading]="isLoading"
+                                [isShowIConFilter]="false"
+                                [isShowPaginator]="false"
+                                [isHeightAuto]="true"
+                                >
+                            </e-table>
+                        </div>
+                        <div class="col-12 md:col-12 title-group-input">
+                            <h6> Chủ đầu tư </h6>
+                        </div>
+                        <div class="field col-3">
+                            <label> Tên chủ đầu tư </label>
+                            <input pInputText value="{{ owner?.businessCustomer?.name }}" [disabled]="true" class="custom-input-disabled"/>
+                        </div>
+                        <div class="field col-3">
+                            <label> Mã chủ đầu tư </label>
+                            <input pInputText value="{{ owner?.businessCustomer?.code }}" [disabled]="true" class="custom-input-disabled"/>
+                        </div>
+                        <div class="field col-3">
+                            <label> Tên viết tắt </label>
+                            <input pInputText value="{{ owner?.businessCustomer?.shortName}}" [disabled]="true" class="custom-input-disabled"/>
+                        </div>
+                        <div class="field col-3">
+                            <label> &nbsp; </label>
+                            <p-button 
+                                label="Tìm kiếm chủ đầu tư" icon="pi pi-search"  
+                                (onClick)="showOwner()" class="custom-input-disabled">
+                            </p-button>                                                                                      
+                        </div>
+                        <div class="field col-4">
+                            <label > Hotline </label>
+                            <input pInputText [disabled]="true" value="{{ owner?.hotline }}" class="custom-input-disabled"/>
+                        </div>
+                        <div class="field col-8">
+                            <label > Website </label>
+                            <input pInputText [disabled]="true"  value="{{ owner?.website }}" class="custom-input-disabled"/>
+                        </div>
+                        <div class="field col-12">
+                            <label > Đường dẫn fanpage </label>
+                            <input pInputText [disabled]="true" value="{{ owner?.fanpage}}" class="custom-input-disabled"/>
+                        </div>
+                      
+                        <div class="field col-3">
+                            <label> Doanh thu </label>
+                            <input [disabled]="true" pInputText value="{{ utils.transformMoney(owner?.businessTurnover) }}" class="custom-input-disabled"/>
+                        </div>
+                        <div class="field col-3">
+                            <label for="dateModified">Lợi nhuận sau thuế</label>
+                            <input [disabled]="true" value="{{ utils.transformMoney(owner?.businessProfit) }}" pInputText class="custom-input-disabled"/>
+                        </div>
+                        <div class="field col-3">
+                            <label for="dateModified">Chỉ số ROA</label>
+                            <input [disabled]="true" value="{{ owner?.roa }}" pInputText class="custom-input-disabled"/>
+                        </div>
+                        <div class="field col-3">
+                            <label for="dateModified">Chỉ số ROE</label>
+                            <input [disabled]="true" value="{{ owner?.roe }}" pInputText class="custom-input-disabled"/>
+                        </div>
+                    
+                        <div class="col-12 md:col-12 title-group-input">
+                            <h6> Tổng thầu </h6>
+                        </div>
+                        <div class="col-12 md:col-3">
+                            <div class="field">
+                                <label htmlFor="repName">Tên tổng thầu</label>
+                                <input [disabled]="true" pInputText value="{{ generalContractor?.name }}" class="custom-input-disabled"/>
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-3">
+                            <div class="field">
+                                <label for="decisionDate">Người đại diện</label>
+                                <input [disabled]="true" pInputText value="{{ generalContractor?.repName}}" class="custom-input-disabled"/>
+                            </div>
+                        </div><div class="col-12 md:col-3">
+                            <div class="field">
+                                <label for="decisionDate">Tên viết tắt</label>
+                                <input [disabled]="true" pInputText value="{{ generalContractor?.shortName}}" class="custom-input-disabled"/>
+                            </div>
+                        </div>
+                        
+                        <div class="field col-3">
+                            <label>  &nbsp; </label>
+                            <p-button 
+                                label="Tìm kiếm đơn vị tổng thầu" icon="pi pi-search"  
+                                (onClick)="showGeneralContractor()" class="custom-input-disabled">
+                            </p-button>                                                                                  
+                        </div>
+                        <div class="col-12 md:col-3">
+                            <div class="field">
+                                <label htmlFor="repPosition"> Mã tổng thầu </label>
+                                <input [disabled]="true" pInputText value="{{ generalContractor?.code }}" class="custom-input-disabled"/>
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-3">
+                            <div class="field">
+                                <label htmlFor="decisionNo"> Mã số thuế</label>
+                                <input [disabled]="true" pInputText value="{{ generalContractor?.taxCode }}" class="custom-input-disabled"/>
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-6">
+                            <div class="field">
+                                <label for="decisionDate">Địa chỉ giao dịch</label>
+                                <input [disabled]="true" pInputText value="{{ generalContractor?.businessCustomer?.tradingAddress}}" class="custom-input-disabled"/>
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="footer">
+            <button pButton pRipple label="Hủy" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+            <button pButton pRipple label="Lưu" icon="pi pi-check" class="p-button-text" [disabled]="!validForm() || submitted" (click)="save()"></button>
+        </ng-template>
+    </p-dialog>
+</div>

@@ -1,0 +1,37 @@
+<div [ngClass]="'flex w-100 ' + classContainer">
+  <div class="col-5">
+    <form-dropdown
+      [label]="'Chọn voucher'"
+      [options]="listVoucher"
+      [isRequired]="true"
+      [(ngModelValue)]="dataSource.voucherId"
+      [isDisabled]="isDisabled"
+      [isFilter]="true"
+      (_onChange)="onChange($event, 'voucher')"
+    ></form-dropdown>
+  </div>
+  <div class="col-2">
+    <form-input [label]="'Điểm quy đổi'" [(ngModelValue)]="dataSource.changePoint" [isDisabled]="true"></form-input>
+  </div>
+  <div class="col-2">
+    <form-input
+      [label]="'Số lượng yêu cầu'"
+      [type]="'number'"
+      [isRequired]="true"
+      [(ngModelValue)]="dataSource.changeQuantity"
+      [isDisabled]="isDisabled"
+      (_onChange)="onChange($event)"
+    ></form-input>
+  </div>
+  <div class="col-2">
+    <form-input
+      [label]="'Tổng điểm đổi'"
+      [type]="'number'"
+      [(ngModelValue)]="dataSource.totalPoint"
+      [isDisabled]="true"
+    ></form-input>
+  </div>
+  <div class="col-1" [style.paddingTop.px]="32" *ngIf="!isDisabled">
+    <form-button [styleClassButton]="'p-button-danger'" [label]="'Xóa'" (_onClick)="delete($event)"></form-button>
+  </div>
+</div>

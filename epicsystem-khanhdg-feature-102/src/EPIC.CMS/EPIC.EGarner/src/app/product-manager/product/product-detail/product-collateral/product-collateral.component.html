@@ -1,0 +1,100 @@
+<div class="grid ml-0 mr-0 mt-0">
+    <div class="col-12">
+        <div class="card p-0">
+            <p-toast></p-toast>
+            <p-table #userTable selectionMode="multiple" responsiveLayout="scroll" scrollHeight="{{(screenHeight*0.56) + 'px'}}" dataKey="id"
+                styleClass="custom-table" [value]="rows" [rowHover]="true" [showCurrentPageReport]="true" [paginator]="false" [rows]="page.pageSize" totalRecords="{{ page.totalItems }}" currentPageReportTemplate="Tất cả {totalRecords} dòng" [rowsPerPageOptions]="page.perPageOptions"
+                (onPageChange)="setPage($event)"
+                [scrollable]="true">
+                <ng-template pTemplate="caption">
+                    <div class="flex justify-content-between flex-column sm:flex-row">
+                       
+                        <div class="">
+                            <button pButton pRipple label="Upload file hồ sơ" icon="pi pi-cloud-upload"
+                            *ngIf="isGranted([PermissionGarnerConst.GarnerSPDT_TSDB_ThemMoi])"
+                                class="p-button-success mr-2" (click)="create()"></button>
+                        </div>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="min-width:5rem;"> #ID </th>
+                        <th style="min-width:20rem;"> Tiêu đề </th>
+                        <th style="min-width:30rem;"> Giá trị </th>
+                        <th style="min-width:25rem;"> Mô tả </th>
+                        <th style="min-width:8rem;" pFrozenColumn alignFrozen="right"></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-row let-rowIndex="rowIndex">
+                    <tr>
+                        <td style="min-width:5rem;"> {{ row.id }} </td>
+                        <td style="min-width:20rem;"> {{ row.title }} </td>
+                        <td style="min-width:30rem;"> {{ formatCurrency(row.totalValue) }} </td>
+                        <td style="min-width:25rem;"> {{ row.description }} </td>
+                        <td style="min-width:8rem;" pFrozenColumn alignFrozen="right">
+                            <div class="flex">
+                                <i class="pi pi-ellipsis-h" style="cursor:pointer;" (click)="menu.toggle($event)"></i>
+                                <p-menu #menu [popup]="true" class="button-actions" [model]="listAction[rowIndex]" appendTo="body"></p-menu>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+        <!-- THEM & SUA-->
+        <p-dialog [(visible)]="modalDialog" [style]="{width: '600px'}" [header]="headerTitle" [modal]="true"
+            class="p-fluid">
+            <ng-template pTemplate="content">
+                <div class="grid formgrid">
+                    <ng-container>
+                        <div class="col-12 md:col-12">
+                            <div class="field">
+                                <label htmlFor="productBondId"> Giá trị </label>
+                                <p-inputNumber class="custom-input-disabled" 
+                                min="0"
+                                max="999999999999999"
+                                maxlength="19"
+                                [(ngModel)]="productFile.totalValue" mode="decimal" 
+                                locale="de-DE" [maxFractionDigits]="3">
+                                </p-inputNumber>
+                            </div>
+                        </div>
+
+                        <div class="col-12 md:col-12">
+                            <div class="field">
+                                <label htmlFor="productBondId"> Mô tả </label>
+                                <angular-editor id="description" class="custom-input-disabled"
+                                    [placeholder]="'Nhập mô tả...'" [(ngModel)]="productFile.description"
+                                    [config]="editorConfig">
+                                </angular-editor>
+                            </div>
+                        </div>
+                    </ng-container>
+                    <div class="col-12 md:col-12">
+                        <div class="field">
+                            <label htmlFor="productBondId"> Tiêu đề file <span class="required-field"> * </span></label>
+                            <input type="text" id="title" name="title" pInputText class="custom-input-disabled" 
+                                (input)="changeTitleFile($event.target.value)" [(ngModel)]="productFile.title" />
+                        </div>
+                    </div>
+                    <div class="field col-12">
+                        <p-fileUpload name="demo[]" customUpload="true" class="wrapper-files-upload" accept=".pdf,.doc,.docx"
+                            (onSelect)="myUploader($event)" [showUploadButton]="false" [showCancelButton]="false"
+                            chooseLabel="Chọn" invalidFileSizeMessageDetail="Kích thước file tối đa 100MB"
+                            maxFileSize="100000000">
+
+                        </p-fileUpload>
+                    </div>
+                </div>
+            </ng-template>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Hủy" icon="pi pi-times" class="p-button-text"
+                    (click)="hideDialog()"></button>
+                <button pButton pRipple label="Lưu" icon="pi pi-check" class="p-button-text"
+                    [disabled]="!validForm()" (click)="save()"></button>
+            </ng-template>
+        </p-dialog>
+        <app-form-view-pdf-file (onClose)="hideDialog()" [modalDialogPDF]="modalDialogPDF" [urlfilePDF]="urlfilePDF"> </app-form-view-pdf-file>
+
+    </div>
+</div>

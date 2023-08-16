@@ -1,0 +1,21 @@
+<div class="grid">
+  <div class="w-full p-4">
+    <div class="flex justify-content-between">
+      <div class="b-title">
+        <h4>Mẫu vé</h4>
+      </div>
+      <div class="flex b-action" *ngIf="isGranted(this.PermissionEventConst.TongQuanSuKien_ChiTiet_MauVe_ThemMoi)">
+        <form-button [icon]="'pi pi-plus'" [label]="'Thêm mới'" (_onClick)="create($event)"></form-button>
+      </div>
+    </div>
+    <form-table
+      [columns]="headerColumns"
+      [dataSource]="dataSource"
+      [isLoading]="isLoading"
+      [listAction]="listAction"
+      [scrollHeight]="screenHeight * 0.5 + 'px'"
+      [showPaginator]="false"
+    >
+    </form-table>
+  </div>
+</div>

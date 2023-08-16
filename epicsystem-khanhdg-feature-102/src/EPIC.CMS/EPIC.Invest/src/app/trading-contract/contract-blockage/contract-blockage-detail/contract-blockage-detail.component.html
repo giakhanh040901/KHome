@@ -1,0 +1,71 @@
+
+<div class="">
+    <div class="p-fluid p-formgrid" style="padding-bottom: 3rem;">
+        <div>
+            <h6 class="mb-2">Thông tin phong tỏa</h6>
+            <hr class="mt-0">
+            <div class="grid formgrid">
+                <div class="field col-4">
+                    <label for="code">Loại phong toả</label>
+                    <p-dropdown id="blockageType" name="blockageType" [options]="BlockageLiberationConst.blockageTypes"
+                        optionLabel="name" [(ngModel)]="blockageLiberation.type" optionValue="code" appendTo="body">
+                    </p-dropdown>
+                </div>
+                <div class="field col-4">
+                    <label> Ngày yêu cầu </label>
+                    <p-calendar showButtonBar="true" dateFormat="dd/mm/yy" locale="vi" appendTo="body" readonlyInput="true"
+                        [(ngModel)]="blockageLiberation.blockadeDate" [placeholder]="'dd/mm/yyyy'" showIcon="true">
+                    </p-calendar>
+                </div>
+                <div class="col-4">
+                    <div class="field">
+                        <label> Số tiền </label>
+                        <input type="text" [disabled]="true" [value]="blockageLiberation.totalValue" pInputText
+                            class="custom-input-disabled">
+                    </div>
+                </div>
+                <div class="field col-12">
+                    <label> Nội dung phong tỏa </label>
+                    <textarea [(ngModel)]="blockageLiberation.blockadeDescription" pInputTextarea></textarea>
+                </div>
+            </div>
+
+        </div>
+
+        <div *ngIf="blockageLiberation.status == 2">
+
+            <h6 class="mb-2">Thông tin giải tỏa</h6>
+            <hr class="mt-0">
+            <div class="grid formgrid">
+                <!-- <div class="field col-4">
+                    <label for="code">Loại giải tỏa</label>
+                    <p-dropdown id="blockageType" name="blockageType" [options]="BlockageLiberationConst.blockageTypes"
+                        optionLabel="name" [(ngModel)]="blockageLiberation.type" optionValue="code" appendTo="body">
+                    </p-dropdown>
+                </div> -->
+                <div class="field col-4">
+                    <label> Ngày yêu cầu </label>
+                    <p-calendar showButtonBar="true" dateFormat="dd/mm/yy" locale="vi" appendTo="body" readonlyInput="true"
+                        [(ngModel)]="blockageLiberation.liberationDate" [placeholder]="'dd/mm/yyyy'" showIcon="true">
+                    </p-calendar>
+                </div>
+                <!-- <div class="col-4">
+                    <div class="field">
+                        <label> Số tiền </label>
+                        <input type="text" [disabled]="true" [value]="blockageLiberation.totalValue" pInputText
+                            class="custom-input-disabled">
+                    </div>
+                </div> -->
+                <div class="field col-12">
+                    <label> Nội dung giải tỏa </label>
+                    <textarea [(ngModel)]="blockageLiberation.liberationDescription" pInputTextarea></textarea>
+                </div>
+                
+            </div>
+        </div>
+    </div> 
+
+    <div class="p-dialog-footer e-custom-dialog-footer" >
+        <button pButton pRipple label="Đóng" icon="pi pi-times" class="p-button-text" (click)="cancel()"></button>
+    </div>
+</div>

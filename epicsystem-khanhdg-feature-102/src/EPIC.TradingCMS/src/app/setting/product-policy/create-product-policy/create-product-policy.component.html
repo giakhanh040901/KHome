@@ -1,0 +1,136 @@
+<form class="form-horizontal" autocomplete="off" #createModal="ngForm" [busy]="isLoading">
+    <abp-modal-header [title]="title" (onCloseClick)="bsModalRef.hide()"></abp-modal-header>
+    <div class="grid-margin stretch-card mb-0">
+        <div class="card">
+          <div class="card-body" #wrapperForm>
+            <div class="media-body">
+                <div class="row">
+                    <div class="form-group required col-lg-3 pr-1">
+                        <label for="policyCode">Mã chính sách (<span class="field-required">*</span>)</label>
+                        <input type="text" class="form-control form-control-sm" name="policyCode" id="policyCode" placeholder="Mã chính sách" maxlength="50"
+                            #policyCode required
+                            [(ngModel)]="productPolicy.policyCode"
+                            #policyCodeModel="ngModel" #policyCodeEl />
+                        <abp-validation-summary [control]="policyCodeModel" [controlEl]="policyCodeEl"></abp-validation-summary>
+                    </div>
+
+                    <div class="form-group required col-lg-3 pr-1">
+                        <label for="policyType"> Loại chính sách </label>
+                        <ng-select type="number" name="policyType" id="policyType" maxlength="22" placeholder="Loại chính sách"
+                            #policyType
+                            [(ngModel)]="productPolicy.policyType"
+                            (click)="disableWarningSelect('policyType')"
+                            [notFoundText]="'Không có dữ liệu'" [closeOnSelect]="true" [multiple]="false" [clearable]="false"
+                            #policyTypeModel="ngModel" #policyTypeEl>
+                            <ng-option *ngFor="let item of ProductPolicyConst.types" [value]="item.code" [title]="item.name">{{ item.name }}</ng-option>
+                        </ng-select>
+                        <abp-validation-summary [control]="policyTypeModel" [controlEl]="policyTypeEl"></abp-validation-summary>
+                    </div>
+
+                    <div class="form-group required col-lg-6">
+                        <label for="policyName"> Tên chính sách (<span class="field-required">*</span>)</label>
+                        <input type="text" class="form-control form-control-sm" name="policyName" id="policyName" placeholder="Tên chính sách" maxlength="256"
+                            #policyName required
+                            [(ngModel)]="productPolicy.policyName"
+                            #policyNameModel="ngModel" #policyNameEl>
+                        <abp-validation-summary [control]="policyNameModel" [controlEl]="policyNameEl"></abp-validation-summary>
+                    </div>
+
+
+                    <div class="form-group required col-lg-3 pr-1">
+                        <label for="market"> Thị trường </label>
+                        <ng-select type="number" name="market" id="market" maxlength="22" placeholder="Thị trường"
+                            #market 
+                            [(ngModel)]="productPolicy.market"
+                            (click)="disableWarningSelect('market')"
+                            [notFoundText]="'Không có dữ liệu'" [closeOnSelect]="true" [multiple]="false" [clearable]="false"
+                             #marketModel="ngModel" #marketEl>
+                            <ng-option *ngFor="let item of ProductPolicyConst.markets" [value]="item.code" [title]="item.name">{{ item.name }}</ng-option>
+                        </ng-select>
+                        <abp-validation-summary [control]="marketModel" [controlEl]="marketEl"></abp-validation-summary>
+                    </div>
+
+                    <div class="form-group required col-lg-3 pr-1">
+                        <label for="allowTransfer"> Cho phép chuyển nhượng? </label>
+                        <ng-select name="allowTransfer" id="allowTransfer" placeholder="Có hoặc không"
+                            #allowTransfer
+                            [(ngModel)]="productPolicy.allowTransfer"
+                            (click)="disableWarningSelect('allowTransfer')"
+                            [clearable]="false" [notFoundText]="'Không có dữ liệu'">
+                            <ng-option *ngFor="let item of YesNoConst.list" [value]="item.code"> {{ item.name }} </ng-option>
+                        </ng-select>
+                    </div>
+
+                    <div class="form-group required col-lg-3 pr-1">
+                        <label for="transferTaxRate"> Thuế chuyển nhượng (<span class="field-required">*</span>)</label>
+                        <input type="text" name="transferTaxRate" class="form-control form-control-sm" id="transferTaxRate"  placeholder="Thuế chuyển nhượng" maxlength="22"
+                            #transferTaxRate required
+                            (keypress)="numberOnly($event)"
+                            (keyup)="changeCurrency('transferTaxRate',$event.target.value)"
+                            [(ngModel)]="fieldCurrencyDisplays.transferTaxRate"
+                            #transferTaxRateModel="ngModel" #transferTaxRateEl />
+                        <abp-validation-summary [control]="transferTaxRateModel" [controlEl]="transferTaxRateEl"></abp-validation-summary>
+                    </div>
+
+                    <div class="form-group required col-lg-3">
+                        <label for="callDay"> Số ngày chốt phát hành (<span class="field-required">*</span>)</label>
+                        <input type="number" name="callDay" class="form-control form-control-sm" id="callDay" placeholder="Số ngày chốt" maxlength="22"
+                            #callDay required
+                            (keypress)="numberOnly($event)"
+                            [(ngModel)]="productPolicy.callDay"
+                            #callDayModel="ngModel" #callDayEl />
+                        <abp-validation-summary [control]="callDayModel" [controlEl]="callDayEl"></abp-validation-summary>
+                    </div>
+
+                    <div class="form-group required col-lg-3 pr-1">
+                        <label for="minValue">Giá trị đầu tư tối thiểu (<span class="field-required">*</span>)</label>
+                        <input type="text" class="form-control form-control-sm" name="minValue" id="minValue" placeholder="Giá trị đầu tư tối thiểu" maxlength="22"
+                            #minValue required
+                            (keypress)="numberOnly($event)"
+                            (keyup)="changeCurrency('minValue',$event.target.value)"
+                            [(ngModel)]="fieldCurrencyDisplays.minValue"
+                            #minValueModel="ngModel" #minValueEl />
+                        <abp-validation-summary [control]="minValueModel" [controlEl]="minValueEl"></abp-validation-summary>
+                    </div>
+
+                    <div class="form-group required col-lg-3 pr-1">
+                        <label for="custType">Loại khách hàng </label>
+                        <ng-select name="custType" id="custType" placeholder="Loại khách hàng"
+                            #custType
+                            [(ngModel)]="productPolicy.custType"
+                            (click)="disableWarningSelect('custType')"
+                            [clearable]="false" [notFoundText]="'Không có dữ liệu'">
+                            <ng-option *ngFor="let item of ProductPolicyConst.customerTypes" [value]="item.code"> {{ item.name }} </ng-option>
+                        </ng-select>
+                    </div>
+
+                    <div class="form-group required col-lg-3 pr-1" *ngIf="productPolicy.bondPolicyId">
+                        <label for="status"> Trạng thái </label>
+                        <ng-select name="status" id="status" placeholder="Trạng thái"
+                            #status
+                            [(ngModel)]="productPolicy.status"
+                            (click)="disableWarningSelect('status')"
+                            [clearable]="false" [notFoundText]="'Không có dữ liệu'">
+                            <ng-option *ngFor="let item of ProductPolicyConst.statusList" [value]="item.code"> {{ item.name }} </ng-option>
+                        </ng-select>
+                    </div>
+
+                    <div class="form-group required col-lg-12">
+                        <label for="policyDesc"> Mô tả </label>
+                        <textarea type="text" name="policyDesc" class="form-control form-control-sm" id="policyDesc" placeholder="Tổng giá trị" maxlength="256" rows="2"
+                            #policyDesc
+                            [(ngModel)]="productPolicy.policyDesc">
+                        </textarea>
+                    </div>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    <!-- <abp-modal-footer [cancelDisabled]="saving" [saveDisabled]="!createModal.form.valid || saving"
+        (onCancelClick)="bsModalRef.hide()"></abp-modal-footer> -->
+        <div class="modal-footer justify-content-between">
+            <button type="button" class="btn btn-sm btn-default"> Huỷ </button>
+            <button type="submit" class="btn btn-sm btn-primary" [disabled]="saving" (click)="save(createModal.form.valid)"> Lưu </button>
+        </div>
+</form>

@@ -1,0 +1,13 @@
+<ng-container>
+  <p-fileUpload
+    [customUpload]="true"
+    [ngClass]="'custom-file-upload ' + classFileUpload"
+    name="demo[]"
+    [accept]="type"
+    [chooseIcon]="icon"
+    (uploadHandler)="handleUpload($event)"
+    [auto]="true"
+    [chooseLabel]="label"
+  >
+  </p-fileUpload>
+</ng-container>

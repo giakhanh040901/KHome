@@ -1,0 +1,192 @@
+<div class="w-full">
+  <div class="card">
+    <div class="flex justify-content-between align-items-center">
+      <h5 class="title-info">Thông tin khách hàng</h5>
+      <div class="flex">
+        <ng-container *ngIf="!showListButtonRequest">
+          <form-button
+            *ngIf="showButtonRemove && isGranted(this.PermissionEventConst.SoLenh_Xoa)"
+            class="mr-2"
+            [icon]="'pi pi-trash'"
+            [label]="'Xóa lệnh'"
+            [styleClassButton]="'p-button-danger'"
+            (_onClick)="delete($event)"
+          ></form-button>
+          <ng-container *ngIf="isGranted([PermissionEventConst.SoLenh_ChiTiet_ThongTinChung_CapNhat, PermissionEventConst.XuLyGiaoDich_ChiTiet_ThongTinChung_CapNhat])">
+            <form-button
+              *ngIf="!isEdit"
+              [icon]="'pi pi-pencil'"
+              [label]="'Chỉnh sửa'"
+              (_onClick)="edit($event)"
+            ></form-button>
+            <form-button *ngIf="isEdit" [icon]="'pi pi-save'" [label]="'Lưu lại'" (_onClick)="save($event)"></form-button>
+          </ng-container>
+        </ng-container>
+        <ng-container *ngIf="showListButtonRequest">
+          <form-button
+            class="mr-2"
+            [label]="'Yêu cầu hóa đơn'"
+            (_onClick)="requestBill($event)"
+            [isDisabled]="!!dto.isRequestBill"
+          ></form-button>
+          <form-button
+            class="mr-2"
+            [label]="'Yêu cầu vé cứng'"
+            (_onClick)="requestTicket($event)"
+            [isDisabled]="!!dto.isHardTicket"
+          ></form-button>
+          <form-button [label]="'Đổi mã giới thiệu'" (_onClick)="changeReferralCode($event)"></form-button>
+        </ng-container>
+      </div>
+    </div>
+    <div class="p-fluid p-formgrid grid">
+      <div class="flex w-full">
+        <div class="col-3">
+          <form-input [label]="'Tên khách hàng'" [(ngModelValue)]="dto.customerName" [isDisabled]="true"></form-input>
+        </div>
+        <div class="col-3">
+          <form-input [label]="'Số điện thoại'" [(ngModelValue)]="dto.customerPhone" [isDisabled]="true"></form-input>
+        </div>
+        <div class="col-3">
+          <form-input [label]="'Email'" [(ngModelValue)]="dto.customerEmail" [isDisabled]="true"></form-input>
+        </div>
+        <div class="col-3">
+          <form-input [label]="'Số giấy tờ'" [(ngModelValue)]="dto.customerIdNo" [isDisabled]="true"></form-input>
+        </div>
+      </div>
+      <div class="flex w-full">
+        <div class="col-12">
+          <form-input
+            [label]="'Địa chỉ liên hệ'"
+            [(ngModelValue)]="dto.customerAddress"
+            [isDisabled]="true"
+          ></form-input>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <h5 class="title-info">Thông tin sự kiện</h5>
+    <div class="p-fluid p-formgrid grid">
+      <div class="flex w-full">
+        <div class="col-4">
+          <form-input [label]="'Lựa chọn sự kiện'" [(ngModelValue)]="dto.eventName" [isDisabled]="true"></form-input>
+        </div>
+        <div class="col-4">
+          <form-input [label]="'Đơn vị tổ chức'" [(ngModelValue)]="dto.eventOrganize" [isDisabled]="true"></form-input>
+        </div>
+        <div class="col-4">
+          <form-input [label]="'Loại hình sự kiện'" [(ngModelValue)]="dto.eventType" [isDisabled]="true"></form-input>
+        </div>
+      </div>
+      <div class="flex w-full">
+        <div class="col-4">
+          <form-input [label]="'Địa điểm tổ chức'" [(ngModelValue)]="dto.eventPlace" [isDisabled]="true"></form-input>
+        </div>
+        <div class="col-4">
+          <form-input [label]="'Tỉnh/ Thành phố'" [(ngModelValue)]="dto.eventProvince" [isDisabled]="true"></form-input>
+        </div>
+        <div class="col-4">
+          <form-input [label]="'Địa chỉ'" [(ngModelValue)]="dto.eventAddress" [isDisabled]="true"></form-input>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <h5 class="title-info">Thông tin vé</h5>
+    <div class="p-fluid p-formgrid grid">
+      <div class="flex w-full">
+        <div class="col-4">
+          <form-input [label]="'Thời gian tổ chức'" [(ngModelValue)]="dto.ticketTime" [isDisabled]="true"></form-input>
+        </div>
+        <div class="col-2">
+          <form-input [label]="'Mã yêu cầu'" [(ngModelValue)]="dto.orderRequestCode" [isDisabled]="true"></form-input>
+        </div>
+        <div class="col-2">
+          <form-input [label]="'Ngày đặt lệnh'" [(ngModelValue)]="dto.orderCreateDate" [isDisabled]="true"></form-input>
+        </div>
+        <div class="col-2">
+          <form-input
+            [label]="'Ngày phê duyệt'"
+            [(ngModelValue)]="dto.orderApproveDate"
+            [isDisabled]="true"
+          ></form-input>
+        </div>
+      </div>
+      <div class="w-full">
+        <sale-ticket-order-item
+          *ngFor="let item of dto.ticketInfor; let i = index"
+          [dto]="item"
+          [isDisableOrderQuantity]="isDisable"
+          (_onChangeOrderQuantity)="onChangeOrderQuantity($event, i)"
+        ></sale-ticket-order-item>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <h5 class="title-info">Yêu cầu khác</h5>
+    <div class="p-fluid p-formgrid grid">
+      <div class="flex w-full">
+        <div class="col-12">
+          <form-input-switch
+            [(ngModelValue)]="dto.isHardTicket"
+            [label]="'Nhận vé bản cứng'"
+            [classLabel]="'ml-4'"
+            [isDisabled]="isDisable"
+          ></form-input-switch>
+        </div>
+      </div>
+      <div class="flex w-full">
+        <div class="col-12">
+          <form-input-switch
+            [(ngModelValue)]="dto.isRequestBill"
+            [label]="'Yêu cầu nhận hóa đơn'"
+            [classLabel]="'ml-4'"
+            [isDisabled]="isDisable"
+          ></form-input-switch>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <h5 class="title-info">Tư vấn viên</h5>
+    <div class="p-fluid p-formgrid grid">
+      <div class="flex w-full">
+        <div class="col-3 relative">
+          <form-input [label]="'Mã giới thiệu'" [(ngModelValue)]="dto.saleCode" [isDisabled]="true"></form-input>
+          <form-button
+            class="btn-choose-sale"
+            [label]="'Chọn'"
+            (_onClick)="onClickChooseSearchSale($event)"
+            [isDisabled]="isDisable"
+          ></form-button>
+        </div>
+        <div class="col-3">
+          <form-input [label]="'Tên tư vấn viên'" [(ngModelValue)]="dto.saleName" [isDisabled]="true"></form-input>
+        </div>
+        <div class="col-3">
+          <form-input [label]="'Số điện thoại'" [(ngModelValue)]="dto.salePhone" [isDisabled]="true"></form-input>
+        </div>
+        <div class="col-3">
+          <form-input [label]="'Email'" [(ngModelValue)]="dto.saleEmail" [isDisabled]="true"></form-input>
+        </div>
+      </div>
+      <div class="flex w-full">
+        <div class="col-6">
+          <form-input
+            [label]="'Phòng giao dịch'"
+            [(ngModelValue)]="dto.transactionRoom"
+            [isDisabled]="true"
+          ></form-input>
+        </div>
+        <div class="col-6">
+          <form-input
+            [label]="'Phòng giao dịch quản lý lệnh'"
+            [(ngModelValue)]="dto.transactionRoomCommand"
+            [isDisabled]="true"
+          ></form-input>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

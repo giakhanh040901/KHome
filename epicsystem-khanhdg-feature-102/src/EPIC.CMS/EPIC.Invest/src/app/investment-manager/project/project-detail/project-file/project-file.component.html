@@ -1,0 +1,78 @@
+<ng-container>
+    <div [id]="idHeader"> 
+        <div class="grid tabview-table-header">
+            <div class="col-12 md:col-6">
+                <div class="flex">
+                    <span class="p-float-label b-custom filter">
+                        <!--  -->
+                    </span>
+                </div>
+            </div>
+            <div class="col-12 md:col-6 flex justify-content-end flex-column sm:flex-row">
+                <button 
+                    pButton pRipple label="Upload file hồ sơ" icon="pi pi-cloud-upload"
+                    *ngIf="isGranted([PermissionInvestConst.InvestSPDT_HSPL_ThemMoi])"
+                    class="p-button-success" (click)="create()">
+                </button>
+            </div>
+        </div>
+    </div>
+    <e-table
+        [rows]="rows"
+        [(page)]="page"
+        [columns]="columns"
+        [isLoading]="isLoading"
+        [tabContentHeight]="contentHeight"
+        [idHeader]="idHeader"
+        [columnCacheName]="constructor.name"
+        [isShowIconFilter]="false"
+        (_onPageChange)="setPage($event)">
+    </e-table>
+</ng-container>
+
+<!-- THEM & SUA-->
+<p-dialog [(visible)]="modalDialog" [style]="{width: '600px'}" [header]="header()" [modal]="true" class="p-fluid">
+    <ng-template pTemplate="content">
+        <div class="grid formgrid">
+            <div style="margin-top:0.5rem" class="field col-12">
+                <span class="p-float-label">
+                    <input type="text" id="nameFile" pInputText [(ngModel)]="contractFile.name"
+                        [ngClass]="{'ng-invalid ng-dirty' : submitted && !contractFile.name}"/>
+
+                    <label for="nameFile">Tên hồ sơ <span class="required-field"> * </span> </label>
+                </span>
+            </div>
+            <div class="field col-12">
+                <p-fileUpload 
+                    name="demo[]" customUpload="true" class="wrapper-files-upload" accept=".pdf,.doc,.docx"
+                    (onSelect)="myUploader($event)" [showUploadButton]="false" [showCancelButton]="false"
+                    chooseLabel="Chọn" invalidFileSizeMessageDetail="Kích thước file tối đa 100MB"
+                    maxFileSize="100000000">
+                </p-fileUpload>
+            </div>
+            <div *ngIf="contractFile.id" class="field col-12" >
+                <span class="p-float-label">
+                    <input type="text" id="url" name="url" disabled pInputText [value]="contractFile.url || ''"
+                        required autofocus />
+                    <label for="url">Đường dẫn file</label>
+                </span>
+            </div>
+        </div>
+    </ng-template>
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Hủy" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+        <button pButton pRipple label="Lưu" icon="pi pi-check" class="p-button-text" [disabled]="!validForm() || submitted" (click)="save()"></button>
+    </ng-template>
+</p-dialog>
+<!-- XOA -->
+<p-dialog [(visible)]="deleteItemDialog" header="Xóa tài khoản" [modal]="true" [style]="{width:'450px'}">
+    <div class="flex align-items-center justify-content-center">
+        <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+        <span *ngIf="contractFile">Bạn có chắc chắn xóa mẫu hợp đồng {{ contractFile.name }} ?</span>
+    </div>
+    <ng-template pTemplate="footer">
+        <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No" (click)="deleteItemDialog = false"></button>
+        <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes" (click)="confirmDelete()"></button>
+    </ng-template>
+</p-dialog>
+<app-form-view-pdf-file (onClose)="hideDialog()" [modalDialogPDF]="modalDialogPDF" [urlfilePDF]="urlfilePDF"> </app-form-view-pdf-file>

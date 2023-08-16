@@ -1,0 +1,260 @@
+<app-loading-page *ngIf="isLoadingPage"></app-loading-page>
+<p-card>
+    <ng-template pTemplate="content">
+        <div *ngIf="!isLoading" class="{{ isLoadingPage ? 'b-loading' : '' }}">
+            <ng-container>
+                <h5 class="title-info mb-2">Thông tin khách hàng {{ activeIndex == 0 ? 'doanh nghiệp' : (activeIndex == 1 ? 'cá nhân' : 'được giới thiệu') }}</h5>
+                <hr class="mt-0" style="border-width: 2px 0 0">
+                <div class="p-fluid p-formgrid grid">
+                    <div class="pb-0 field col-12 md:col-4">
+                        <label class="title-info">Tên khách hàng</label>
+                        <input [disabled]="true" pInputText [value]="(customerInformation?.customerInfo?.name || customerInformation?.customerInfo?.defaultIdentification?.fullname) ?? null" class="custom-input-disabled"/>
+                    </div>
+                    <div class="pb-0 field col-12 md:col-2">
+                        <label class="title-info">Số điện thoại</label>
+                        <input [disabled]="true" pInputText [value]="customerInformation?.customerInfo?.phone ?? null" class="custom-input-disabled"/>
+                    </div>
+                    <div class="pb-0 field col-12 md:col-6">
+                        <label class="title-info">Email</label>
+                        <input [disabled]="true" pInputText [value]="customerInformation?.customerInfo?.email ?? null" class="custom-input-disabled"/>
+                    </div>
+                    <div *ngIf="!customerInformation.customerInfo.listAddress" class="pb-0 field col-12 md:col-6">
+                        <label class="title-info">Địa chỉ</label>
+                        <textarea [disabled]="true" pInputText [value]="(customerInformation?.customerInfo?.address ?? customerInformation?.customerInfo?.defaultIdentification?.placeOfResidence) ?? null" class="custom-input-disabled" [rows]="2"></textarea>
+                    </div>
+                    <div class="field mb-0 col-12 md:col-6" *ngIf="customerInformation.customerInfo.listAddress">
+                        <label class="title-info">Địa chỉ liên hệ</label>
+                        <p-dropdown 
+                            class="custom-input-disabled" emptyMessage="Không có dữ liệu"
+                            [options]="customerInformation.customerInfo.listAddress" optionLabel="contactAddress" optionValue="contactAddressId"
+                            [autoDisplayFirst]="true"
+                            (onChange)="changeContractAddress($event.value)"
+                            [(ngModel)]="customerInformation.customerInfo.contractAddressId">
+                        </p-dropdown>
+                    </div>
+                    <div class="pb-0 field col-12 md:col-6">
+                        <label class="title-info">Tài khoản thụ hưởng</label>
+                        <p-dropdown 
+                            class="custom-input-disabled" emptyMessage="Không có dữ liệu"
+                            [options]="listBank" optionLabel="labelName" optionValue="investorBankAccId"
+                            [autoDisplayFirst]="true"
+                            [(ngModel)]="customerInformation.customerInfo.investorBankAccId">
+                        </p-dropdown>
+                    </div>
+                </div>
+            </ng-container>
+            <ng-container>
+                <h5 class="title-info mb-2 mt-0">Thông tin cổ phần</h5>
+                <hr class="mt-0" style="border-width: 2px 0 0">
+                <div class="p-fluid p-formgrid grid">
+                    <div class="pb-0 field col-12 md:col-6">
+                        <label class="title-info">Cổ phần</label>
+                        <p-dropdown 
+                            [options]="companyShareSecondarys" optionLabel="companyShareName" optionValue="companyShareSecondaryId"
+                            [autoDisplayFirst]="false" 
+                            [(ngModel)]="companyShareSecondaryInformation.companyShareSecondaryId" 
+                            (onChange)="changeCompanyShareSecondary($event.value)">
+                        </p-dropdown>
+                    </div>
+                    <div class="pb-0 field col-12 md:col-3">
+                        <label class="title-info">Tên cổ phần</label>
+                        <input [disabled]="true" pInputText [value]="companyShareSecondaryInformation?.companyShareInfo?.companyShareCode ?? null" class="custom-input-disabled"/>
+                    </div>
+                    <div class="pb-0 field col-12 md:col-3">
+                        <label class="title-info">Mã cổ phần</label>
+                        <input [disabled]="true" pInputText [value]="companyShareSecondaryInformation?.companyShareInfo?.companyShareName ?? null" class="custom-input-disabled"/>
+                    </div>
+                    <div class="pb-0 field col-12 md:col-3">
+                        <label class="title-info">Ngày phát hành</label>
+                        <input [disabled]="true" pInputText [value]="formatDate(companyShareSecondaryInformation?.openCellDate)" class="custom-input-disabled"/>
+                    </div>
+                    <div class="pb-0 field col-12 md:col-3">
+                        <label class="title-info">Số lượng nắm giữ</label>
+                        <input [disabled]="true" pInputText value="{{ utils.transformMoney(companyShareSecondaryInformation?.quantity) }}" class="custom-input-disabled"/>
+                    </div>
+                    <div class="pb-0 field col-12 md:col-3">
+                        <label class="title-info">Số lượng còn lại</label>
+                        <input [disabled]="true" pInputText [value]="companyShareSecondaryInformation?.soLuongConLai ? utils.transformMoney(companyShareSecondaryInformation?.soLuongConLai) : null " class="custom-input-disabled"/>
+                    </div>
+                    <div class="pb-0 field col-12 md:col-3">
+                        <label class="title-info">Tổng giá trị</label>
+                        <input [disabled]="true" pInputText [value]="utils.transformMoney(companyShareSecondaryInformation?.soLuongTraiPhieuNamGiu * companyShareSecondaryInformation?.companyShareInfo?.parValue) ?? null ?? null" class="custom-input-disabled"/>
+                    </div>
+                </div>
+                <!--  -->
+                <h5 class="title-info mb-2 mt-0">Chính sách lãi</h5>
+                <hr class="mt-0" style="border-width: 2px 0 0">
+                <div class="p-fluid p-formgrid grid">
+                    <div class="pb-0 field col-12 md:col-4">
+                        <label class="title-info">Chọn chính sách</label>
+                        <p-dropdown
+                            class="custom-input-disabled"
+                            optionLabel="name" optionValue="companySharePolicyId" emptyMessage="Không có dữ liệu"
+                            [options]="policies" 
+                            [autoDisplayFirst]="false" [disabled]="!companyShareSecondaryInformation.companyShareSecondaryId"
+                            [(ngModel)]="companyShareSecondaryInformation.companySharePolicyId" 
+                            (onChange)="changePolicy($event.value)">
+                        </p-dropdown>
+                    </div>
+                    <div class="pb-0 field col-12 md:col-2">
+                        <label class="title-info">Mã chính sách</label>
+                        <input pInputText value="{{ companyShareSecondaryInformation?.policyInfo?.code }}" [disabled]="true" class="custom-input-disabled"/>
+                    </div>
+                    <div class="pb-0 field col-12 md:col-2">
+                        <label class="title-info">Loại</label>
+                        <input pInputText value="{{ ProductPolicyConst.getTypeName(companyShareSecondaryInformation?.policyInfo?.type) }}" [disabled]="true" class="custom-input-disabled"/>
+                    </div>
+                    <div class="pb-0 field col-12 md:col-2">
+                        <label class="title-info">Số ngày được bán lại</label>
+                        <input pInputText value="{{ companyShareSecondaryInformation?.policyInfo?.soNgayDuocBanLai }}" [disabled]="true" class="custom-input-disabled"/>
+                    </div>
+                    <div class="pb-0 field col-12 md:col-2">
+                        <label class="title-info">Kỳ hạn (Ngày)</label>
+                        <input pInputText value="{{ companyShareSecondaryInformation?.policyInfo?.kyHan }}" [disabled]="true" class="custom-input-disabled"/>
+                    </div>
+                </div>
+                <!--  -->
+                <h5 class="title-info mb-2 mt-0"> Kỳ hạn </h5>
+                <div class="p-fluid p-formgrid grid">
+                    <div class="pb-0 field col-12 md:col-4">
+                        <p-dropdown
+                            class="custom-input-disabled"
+                            optionLabel="name" optionValue="companySharePolicyDetailId" emptyMessage="Không có dữ liệu"
+                            [options]="policyDetails" 
+                            [autoDisplayFirst]="false" 
+                            [disabled]="!companyShareSecondaryInformation.companySharePolicyId"
+                            (onChange)="setDueDate($event.value)"
+                            [(ngModel)]="companyShareSecondaryInformation.companySharePolicyDetailId">
+                        </p-dropdown>
+                    </div>
+                  
+                </div>
+                <!--  -->
+                <h5 class="title-info mb-2 mt-0"> Thông tin cần nhập </h5>
+                <hr class="mt-0" style="border-width: 2px 0 0">
+                <div class="p-fluid p-formgrid grid">
+                        <div class="pb-0 field col-12 md:col-2">
+                            <label class="title-info">Tổng số tiền <span class="required-field"> * </span> </label>
+                            <p-inputNumber 
+                                mode="decimal" (onInput)="countQuantity($event.value)"
+                                [(ngModel)]="companyShareSecondaryInformation.totalValue"
+                                locale="de-DE">
+                            </p-inputNumber>
+                        </div>
+                        <div class="pb-0 field col-12 md:col-2">
+                            <label class="title-info">Ngày đặt lệnh </label>
+                            <p-calendar
+                                inputId="buyDate" dateFormat="dd/mm/yy" locale="vi" appendTo="body" utc="true" placeholder="dd/mm/yy" class="custom-input-disabled"
+                                [(ngModel)]="companyShareSecondaryInformation.buyDate" [disabled]="true"
+                                [ngClass]="{'ng-invalid ng-dirty' : fieldErrors?.buyDate}" 
+                                (click)="resetValid('buyDate')"
+                                [showIcon]="true">
+                            </p-calendar>
+                        </div>
+                        <div class="pb-0 field col-12 md:col-2">
+                            <label class="title-info">Chi trả trái tức <span class="required-field"> * </span></label>
+                            <p-selectButton
+                                class="p-custom-select-button"
+                                optionLabel="name" optionValue="code" 
+                                [options]="OrderConst.interestTypes" 
+                                [(ngModel)]="companyShareSecondaryInformation.isInterest" >
+                            </p-selectButton>
+                        </div>
+                        <div class="pb-0 field col-12 md:col-6">
+                            
+                        </div>
+                        <div class="pb-0 field col-12 md:col-2">
+                            <label class="title-info"> Số lượng </label>
+                            <p-inputNumber 
+                                [disabled]="true" class="custom-input-disabled" mode="decimal" locale="de-DE" 
+                                [(ngModel)]="companyShareSecondaryInformation.orderQuantity">
+                            </p-inputNumber>
+                        </div>
+                        <div class="pb-0 field col-12 md:col-2">
+                            <label class="title-info">Đơn giá </label>
+                            <p-inputNumber
+                                [disabled]="true" class="custom-input-disabled" mode="decimal" locale="de-DE"
+                                [(ngModel)]="companyShareSecondaryInformation.orderPrice" [minFractionDigits]="3">
+                            </p-inputNumber>
+                        </div>
+                        
+                        <div class="pb-0 field col-12 md:col-2">
+                            <label class="title-info">Ngày đầu tư </label>
+                            <p-calendar
+                                class="custom-input-disabled"
+                                inputId="buyDate" dateFormat="dd/mm/yy" locale="vi" appendTo="body" utc="true" placeholder="dd/mm/yy"
+                                [(ngModel)]="companyShareSecondaryInformation.investDate" [disabled]="true"
+                                [ngClass]="{'ng-invalid ng-dirty' : fieldErrors?.buyDate}" 
+                                (click)="resetValid('buyDate')"
+                                [showIcon]="false">
+                            </p-calendar>
+                        </div>
+                        <!-- <div class="pb-0 field col-12 md:col-2">
+                            <label class="title-info">Ngày ký HĐ </label>
+                            <p-calendar
+                                class="custom-input-disabled"
+                                inputId="buyDate" dateFormat="dd/mm/yy" locale="vi" appendTo="body" utc="true" placeholder="dd/mm/yy"
+                                [(ngModel)]="companyShareSecondaryInformation.signContractDate" [disabled]="true"
+                                [ngClass]="{'ng-invalid ng-dirty' : fieldErrors?.buyDate}" 
+                                (click)="resetValid('buyDate')"
+                                [showIcon]="false">
+                            </p-calendar>
+                        </div> -->
+                        <div class="pb-0 field col-12 md:col-2">
+                            <label class="title-info">Ngày đáo hạn </label>
+                            <p-calendar
+                                class="custom-input-disabled"
+                                inputId="buyDate" dateFormat="dd/mm/yy" locale="vi" appendTo="body" utc="true" placeholder="dd/mm/yy" class="custom-input-disabled"
+                                [(ngModel)]="companyShareSecondaryInformation.dueDate" [disabled]="true"
+                                [ngClass]="{'ng-invalid ng-dirty' : fieldErrors?.buyDate}" 
+                                (click)="resetValid('buyDate')"
+                                [showIcon]="false">
+                            </p-calendar>
+                        </div>
+                    </div>
+                <!--  -->
+                <h5 class="title-info mb-2 mt-2">Mã giới thiệu</h5>
+                <hr class="mt-0" style="border-width: 2px 0 0">
+                <div class="p-fluid p-formgrid grid">
+                    <div class="pb-0 field col-12 mb-0 md:col-2">
+                        <label class="title-info">Mã giới thiệu</label>
+                        <div class="p-inputgroup">
+                            <input  [disabled]="true" readonly class="custom-input-disabled" [(ngModel)]="sale.referralCode" type="text" pInputText placeholder="Bấm đề tìm kiếm">   
+                            <button (click)="showSale()" class="title-info" type="button" pButton pRipple icon="pi pi-search" styleClass="p-button-warn"></button>      
+                        </div>
+                    </div>
+                    <div class="pb-0 field col-12 mb-0 md:col-4">
+                        <label class="title-info">Tên người giới thiệu / Tên doanh nghiệp </label>
+                        <input 
+                            pInputText [disabled]="true" class="custom-input-disabled"
+                            value="{{ sale?.investor?.investorIdentification.fullname ?? sale?.businessCustomer?.name }}" 
+                            title="{{ sale?.investor?.investorIdentification.fullname ?? sale?.businessCustomer?.name }}"
+                        />
+                    </div> 
+                    <div class="pb-0 field col-12 mb-0 md:col-3">
+                        <label class="title-info">Số điện thoại</label>
+                        <input pInputText [disabled]="true" value="{{ sale?.investor?.phone ?? sale?.businessCustomer?.phone }}" class="custom-input-disabled"/>
+                    </div>
+                    <div class="pb-0 field col-12 mb-0 md:col-3">
+                        <label class="title-info">Email</label>
+                        <input pInputText [disabled]="true" value="{{ investorSale?.email ?? sale?.businessCustomer?.phone}}" class="custom-input-disabled"/>
+                    </div>
+                    <div class="pb-0 field col-12 mb-0 md:col-6">
+                        <label class="title-info">Phòng GD quản lý </label>
+                        <input pInputText [disabled]="true" value="{{ sale?.departmentName }}" class="custom-input-disabled"/>
+                    </div>
+                    <div class="pb-0 field col-12 mb-0 md:col-6">
+                        <label class="title-info">Phòng GD QL hợp đồng</label>
+                        <input pInputText [disabled]="true" value="{{ sale?.departmentName }}" class="custom-input-disabled"/>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </ng-template>
+    <ng-template pTemplate="footer">
+        <div class="grid grid-nogutter justify-content-between">
+            <p-button label="Quay lại" (onClick)="prevPage()" icon="pi pi-angle-left"></p-button>
+            <p-button label="Hoàn thành" (onClick)="complete()" [disabled]="" icon="pi pi-angle-right" iconPos="right" styleClass="p-button-success"></p-button>
+        </div>
+    </ng-template>
+</p-card>

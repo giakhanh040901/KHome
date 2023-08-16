@@ -1,0 +1,17 @@
+<div class="flex flex-column align-items-center">
+  <img
+    src="assets/layout/images/dashboard/create-account-chart-ellipse.png"
+    alt="Create Account Chart Ellipse"
+    [style.marginBottom.px]="12"
+  />
+  <create-account-chart-element
+    [style.marginBottom.px]="12"
+    *ngFor="let element of listElement"
+    [width]="element.width"
+    [height]="element.height"
+    [backgroundColor]="element.backgroundColor"
+    [label]="element.label"
+    [classLabel]="element.classLabel"
+    [value]="element.value"
+  ></create-account-chart-element>
+</div>

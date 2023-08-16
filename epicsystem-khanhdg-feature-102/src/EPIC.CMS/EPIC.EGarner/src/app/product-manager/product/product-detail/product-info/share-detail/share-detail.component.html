@@ -1,0 +1,230 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card pt-0 pb-0 mb-0">
+            <div class="p-fluid p-formgrid grid mt-2">
+                <div class="col-3 text-center mt-0">
+                    <div class="p-fluid p-formgrid grid">
+                        <div class="col-12 wrapper-avatar-issuer">
+                            <p-image
+                                [src]="productDetail?.icon ? (AppConsts.remoteServiceBaseUrl + '/' + productDetail?.icon) : imageDefault" 
+                                imageClass="b-w-90"
+                                [imageStyle]="{'border-radius':'8px','max-height':'250px', 'width': '100%'}" 
+                                [preview]="true">
+                            </p-image>
+                        </div>
+                        <div class="col-12">
+                            <p-fileUpload
+                                [disabled]="!isEdit"
+                                name="demo[]" accept=".png,.jpeg,.jpg" 
+                                chooseLabel="Chọn ảnh"
+                                chooseIcon="pi pi-image"
+                                class="custom-file-upload mt-3"  
+                                [customUpload]="true" 
+                                (uploadHandler)="myUploader($event)"
+                                [auto]="true" >
+                            </p-fileUpload>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-9">
+
+                    <div class="col-12">
+                        <h6 class="mb-0 e-title-group"> 
+                            Tổ chức phát hành 
+                        </h6>
+                    </div>
+                    <div class="col-12 flex">
+                        <div class="field mb-0 col-12 md:col-2">
+                            <label class="title-info"> Mã số thuế </label>
+                            <input [disabled]="true" [value]="productDetail?.cpsIssuer?.taxCode" pInputText class="custom-input-disabled"/>
+                        </div>
+                        <div class="field mb-0 col-12 md:col-10">
+                            <label class="title-info"> Tổ chức phát hành </label>
+                            <input [disabled]="true" [value]="productDetail?.cpsIssuer?.name" pInputText  class="custom-input-disabled"/>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <h6 class="mb-0 e-title-group"> 
+                            Đại lý lưu ký 
+                        </h6>
+                    </div>
+                    <div class="col-12 flex">
+                        <div class="field mb-0 col-12 md:col-2">
+                            <label class="title-info"> Mã số thuế </label>
+                            <input [disabled]="true" [value]="productDetail?.cpsDepositProvider?.taxCode" pInputText class="custom-input-disabled"/>
+                        </div>
+                        <div class="field mb-0 col-12 md:col-10">
+                            <label class="title-info"> Đại lý lưu ký </label>
+                            <input [disabled]="true" [value]="productDetail?.cpsDepositProvider?.name" pInputText  class="custom-input-disabled"/>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <ng-container>
+                <h5 class="title-info mt-3">Thông tin cổ phần </h5>
+                <!-- Dòng 1 -->
+                <div class="p-fluid p-formgrid grid">
+                    <div class="field mb-2 col-12 md:col-2">
+                        <label class="title-info"> Mã cổ phần </label>
+                        <input [disabled]="!isEdit" [(ngModel)]="productDetail.code" pInputText class="custom-input-disabled"/>
+                    </div>
+                    <div class="field mb-2 col-12 md:col-6">
+                        <label class="title-info"> Tên cổ phần</label>
+                        <input [disabled]="!isEdit" [(ngModel)]="productDetail.name" pInputText  class="custom-input-disabled"/>
+                    </div>
+                    <div class="field mb-2 col-12 md:col-2">
+                        <label class="title-info">Số kỳ hạn</label>
+                        <p-inputNumber [disabled]="!isEdit" [(ngModel)]="productDetail.cpsPeriod" locale="de-DE" class="custom-input-disabled"> </p-inputNumber>
+                    </div>
+                    <div class="field mb-2 col-12 md:col-2">
+                        <label class="title-info"> Đơn vị</label>
+                        <p-dropdown 
+                            [disabled]="!isEdit"
+                            class="custom-input-disabled" emptyMessage="Dữ liệu trống"
+                            [options]="UnitDates" optionLabel="name" optionValue="code"
+                            [(ngModel)]="productDetail.cpsPeriodUnit"
+                            [autoDisplayFirst]="true">
+                        </p-dropdown>
+                    </div>
+                </div>
+                <!-- Dòng 2 -->
+                <div class="p-fluid p-formgrid grid">
+                    <div class="field mb-2 col-12 md:col-2">
+                        <label class="title-info"> Cổ tức (%/năm) </label>
+                        <p-inputNumber [disabled]="!isEdit" [(ngModel)]="productDetail.cpsInterestRate" locale="de-DE" class="custom-input-disabled"></p-inputNumber>
+                    </div>
+                    <div class="field mb-2 col-12 md:col-2">
+                        <label class="title-info"> Kiểu trả cổ tức</label>
+                        <p-dropdown
+                            [disabled]="!isEdit" 
+                            class="custom-input-disabled" emptyMessage="Dữ liệu trống"
+                            [options]="CpsInterestRateTypes" optionLabel="name" optionValue="code"
+                            [(ngModel)]="productDetail.cpsInterestRateType"
+                            [autoDisplayFirst]="true">
+                        </p-dropdown>
+                    </div>
+                    <div class="field mb-2 col-12 md:col-2">
+                        <label class="title-info">Số kỳ trả cổ tức</label>
+                        <p-inputNumber [disabled]="!isEdit" [(ngModel)]="productDetail.cpsInterestPeriod" locale="de-DE" class="custom-input-disabled"></p-inputNumber>
+                    </div>
+                    <div class="field mb-2 col-12 md:col-2">
+                        <label class="title-info"> Đơn vị</label>
+                        <p-dropdown 
+                            [disabled]="!isEdit"
+                            class="custom-input-disabled" emptyMessage="Dữ liệu trống"
+                            [options]="UnitDates" optionLabel="name" optionValue="code"
+                            [(ngModel)]="productDetail.cpsInterestPeriodUnit"
+                            [autoDisplayFirst]="true">
+                        </p-dropdown>
+                    </div>
+                    <div class="field mb-2 col-12 md:col-2">
+                        <label class="title-info"> Số ngày chốt quyền</label>
+                        <p-inputNumber [disabled]="!isEdit" [(ngModel)]="productDetail.cpsNumberClosePer" locale="de-DE" class="custom-input-disabled"></p-inputNumber>
+                    </div>
+                    <div class="field mb-2 col-12 md:col-2">
+                        <label class="title-info"> Hình thức trả cổ tức </label>
+                        <p-dropdown 
+                            [disabled]="!isEdit"
+                            class="custom-input-disabled" emptyMessage="Dữ liệu trống" appendTo="body" 
+                            [pTooltip]="ProductConst.getCountType(productDetail.countType)" tooltipPosition="top"
+                            [options]="CountTypes" optionLabel="name" optionValue="code"
+                            [(ngModel)]="productDetail.countType"
+                            [autoDisplayFirst]="true">
+                        </p-dropdown>
+                    </div>
+                </div>
+                <!-- Dòng 3 -->
+                <div class="p-fluid p-formgrid grid">
+                    <div class="field mb-2 col-12 md:col-2">
+                        <label class="title-info"> Mệnh giá </label>
+                        <p-inputNumber [disabled]="!isEdit" [(ngModel)]="productDetail.cpsParValue" locale="de-DE" class="custom-input-disabled"></p-inputNumber>
+                    </div>
+                    <div class="field mb-2 col-12 md:col-2">
+                        <label class="title-info"> Số lượng cổ phần </label>
+                        <p-inputNumber [disabled]="!isEdit" [(ngModel)]="productDetail.cpsQuantity" locale="de-DE" class="custom-input-disabled"></p-inputNumber>
+                    </div>
+                    <div class="field mb-2 col-12 md:col-4">
+                        <label class="title-info"> Tổng giá trị</label>
+                        <p-inputNumber 
+                            [(ngModel)]="productDetail.cpsParValue * productDetail.cpsQuantity" locale="de-DE" [disabled]="true" class="custom-input-disabled"> 
+                        </p-inputNumber>
+                    </div>
+                    <div class="field mb-2 col-12 md:col-2">
+                        <label class="title-info"> Ngày phát hành </label>
+                        <p-calendar 
+                            [disabled]="!isEdit"
+                            class="custom-input-disabled"
+                            dateFormat="dd/mm/yy" locale="vi" appendTo="body"
+                            [(ngModel)]="productDetail.startDate" [placeholder]="'dd/mm/yyyy'"
+                            [showIcon]="false">
+                        </p-calendar>
+                    </div>
+                    <div class="field mb-2 col-12 md:col-2">
+                        <label class="title-info"> Ngày đáo hạn </label>
+                        <p-calendar
+                            [disabled]="!isEdit" 
+                            class="custom-input-disabled"
+                            dateFormat="dd/mm/yy" locale="vi" appendTo="body"
+                            [(ngModel)]="productDetail.endDate" [placeholder]="'dd/mm/yyyy'"
+                            [showIcon]="false">
+                            <!-- (onSelect)="changeRequestDate()"> -->
+                        </p-calendar>
+                    </div>
+                   
+                </div>
+                <!-- Dòng 3 -->
+                <div class="p-fluid p-formgrid grid">
+                    <div class="field mb-2 col-12 md:col-2">
+                        <label class="title-info"> Số KH tối đa </label>
+                        <p-inputNumber [disabled]="!isEdit" [(ngModel)]="productDetail.maxInvestor" locale="de-DE" class="custom-input-disabled"> </p-inputNumber>
+                    </div>
+                    <div class="field mb-2 col-12 md:col-2">
+                        <label class="title-info" pTooltip="Số ngày nắm giữ tối thiểu"> Số ngày nắm giữ...</label>
+                        <p-inputNumber [disabled]="!isEdit" [(ngModel)]="productDetail.minInvestDay" locale="de-DE" class="custom-input-disabled"> </p-inputNumber>
+                    </div>
+                    <div class="field mb-2 col-12 md:col-2">
+                        <label class="title-info">Bảo lãnh thanh toán</label>
+                        <p-dropdown 
+                            [disabled]="!isEdit" 
+                            class="custom-input-disabled" emptyMessage="Dữ liệu trống"
+                            [options]="YesNoList" optionLabel="name" optionValue="code" appendTo="body"
+                            [(ngModel)]="productDetail.isPaymentGurantee"
+                            [autoDisplayFirst]="true">
+                        </p-dropdown>
+                    </div>
+                    <div class="field mb-2 col-12 md:col-2">
+                        <label class="title-info"> Tài sản đảm bảo</label>
+                        <p-dropdown 
+                            [disabled]="!isEdit" 
+                            class="custom-input-disabled" emptyMessage="Dữ liệu trống" appendTo="body"
+                            [options]="YesNoList" optionLabel="name" optionValue="code"
+                            [(ngModel)]="productDetail.isCollateral"
+                            [autoDisplayFirst]="true">
+                        </p-dropdown>
+                    </div>
+                    <div class="field mb-2 col-12 md:col-2">
+                        <label class="title-info"> Niêm yết </label>
+                        <p-dropdown 
+                            [disabled]="!isEdit" 
+                            class="custom-input-disabled" emptyMessage="Dữ liệu trống" appendTo="body"
+                            [options]="YesNoList" optionLabel="name" optionValue="code"
+                            [(ngModel)]="productDetail.cpsIsListing"
+                            [autoDisplayFirst]="true">
+                        </p-dropdown>
+                    </div>
+                    <div class="field mb-2 col-12 md:col-2">
+                        <label class="title-info"> Cho bán lại trước hạn </label>
+                        <p-dropdown 
+                            [disabled]="!isEdit" 
+                            class="custom-input-disabled" emptyMessage="Dữ liệu trống" appendTo="body"
+                            [options]="YesNoList" optionLabel="name" optionValue="code"
+                            [(ngModel)]="productDetail.cpsIsAllowSBD"
+                            [autoDisplayFirst]="true">
+                        </p-dropdown>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+</div>

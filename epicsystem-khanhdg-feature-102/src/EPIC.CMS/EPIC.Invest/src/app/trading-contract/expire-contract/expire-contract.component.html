@@ -1,0 +1,213 @@
+<div class="e-page">
+    <p-toast></p-toast> 
+    <p-confirmDialog [style]="{width: 'auto'}" [baseZIndex]="10000"></p-confirmDialog>
+    <e-loading *ngIf="isLoading"></e-loading>
+    <!-- GIỮ CẤU TRÚC PAGE VÀ CÁC CLASS, ID -->
+        <!-- PAGE HEADER CONTENT -->
+        <!-- TABLE -->
+    <!--  -->
+    <div class="wrapper-page-header" id="page-header">
+        <div class="b-header">
+            <div class="grid">
+                <div class="col-12 md:col-5 b-title">
+                    <h4 style="display:inline"> Danh sách lệnh đến hạn chi trả </h4>
+                </div>
+                <div class="col-12 md:col-7 b-actions">
+                    <p-button
+                        *ngIf="isGranted([PermissionInvestConst.InvestHDPP_HDDH_ExportExcel])"
+                        (onClick)="exportExcel()" class="b-hover-pointer"
+                        label="Xuất Excel" icon="pi pi-download" iconPos="right">
+                    </p-button>
+                    <!--  -->
+                    <p-button
+                        *ngIf="dataFilter.status == InterestPaymentConst.STATUS_DUEDATE && isGranted([PermissionInvestConst.InvestHDPP_HDDH_LapDSChiTra])"
+                        label="Lập danh sách" icon="pi pi-book" iconPos="right"
+                        [disabled]="(selectedContracts?.length == 0 || submitted)" 
+                        (onClick)="createList()">
+                    </p-button>
+                    <!--  -->
+                    <ng-container *ngIf="dataFilter.settlementMethod == InterestPaymentConst.EXPIRE_DONE || !dataFilter.settlementMethod">
+                        <p-button
+                            *ngIf="dataFilter.methodInterest == DistributionConst.CO_CHI_TIEN && dataFilter.status == InterestPaymentConst.STATUS_CREATED_LIST && isGranted([PermissionInvestConst.InvestHDPP_HDDH_DuyetChiTuDong])"
+                            label="Chi tiền tự động" icon="pi pi-book" iconPos="right"
+                            [disabled]="(selectedContracts?.length == 0 || dataFilter.settlementMethod !== InterestPaymentConst.EXPIRE_DONE)" 
+                            (onClick)="approveExpireOnline()">
+                        </p-button>
+                        <!--  -->
+                        <p-button
+                            *ngIf="dataFilter.status == InterestPaymentConst.STATUS_CREATED_LIST && isGranted([PermissionInvestConst.InvestHDPP_HDDH_DuyetChiThuCong])"
+                            label="Chi tiền thủ công" icon="pi pi-book" iconPos="right"
+                            [disabled]="(selectedContracts?.length == 0 || dataFilter.settlementMethod !== InterestPaymentConst.EXPIRE_DONE || submitted)" 
+                            (onClick)="approveExpireOffline()">
+                        </p-button>
+                    </ng-container>
+                    <!--  -->
+                    <p-button
+                        *ngIf="dataFilter.status == InterestPaymentConst.STATUS_CREATED_LIST && isGranted([PermissionInvestConst.InvestHDPP_HDDH_DuyetTaiTuc]) && (dataFilter.settlementMethod == InterestPaymentConst.EXPIRE_RENEWAL_PROFIT || !dataFilter.settlementMethod)"
+                        label="Duyệt tái tục" icon="pi pi-book" iconPos="right"
+                        [disabled]="(selectedContracts?.length == 0 || dataFilter.settlementMethod == InterestPaymentConst.EXPIRE_DONE || submitted)" 
+                        (onClick)="approveRenewalOffline()">
+                    </p-button>
+                    <!--  -->
+                    <ng-container *ngIf="dataFilter.settlementMethod == InterestPaymentConst.EXPIRE_RENEWAL_ORIGINAL">
+                        <p-button
+                            *ngIf="dataFilter.status == InterestPaymentConst.STATUS_CREATED_LIST && isGranted([PermissionInvestConst.InvestHDPP_HDDH_DuyetTaiTuc])"
+                            label="Duyệt tái tục chi tự động" icon="pi pi-book" iconPos="right"
+                            [disabled]="!selectedContracts?.length"
+                            (onClick)="approveRenewalOnline()">
+                        </p-button>
+                        <p-button
+                            *ngIf="dataFilter.status == InterestPaymentConst.STATUS_CREATED_LIST && isGranted([PermissionInvestConst.InvestHDPP_HDDH_DuyetTaiTuc])"
+                            label="Duyệt tái tục chi thủ công" icon="pi pi-book" iconPos="right"
+                            [disabled]="!selectedContracts?.length" 
+                            (onClick)="approveRenewalOffline()">
+                        </p-button>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+        <!--  -->
+        <div id="filter-table">
+            <ng-container *ngIf="dataTableEmit.isShowFilter">
+                <ng-container #step>
+                    <div class="mb-5" style="padding: 0px 15% 20px 15%; pointer-events: none;">
+                        <div style="padding: 10px 50px 10px 30px;">
+                            <div class="b-step-check">
+                                <span class="b-handle-check-step {{ loadingStep == 0 ? 'step-one' : 'step-one-check' }}"></span>
+                                <span class="b-handle-check-step {{ loadingStep == 0 ? 'step-two' : 'step-two-check' }}" *ngIf="loadingStep !== 50"> {{ loadingStep == 0 ? '2' : null }} </span>
+                                <span class="b-handle-check-step step-two" style="opacity: 0;" *ngIf="loadingStep == 50"> 2 </span>
+                                <span class="b-handle-check-step {{ loadingStep !== 100 ? 'step-three' : '' }}" *ngIf="loadingStep !== 100"> {{ loadingStep !== 100 ? '3' : null }} </span>
+                            </div>
+                            <p-slider [(ngModel)]="loadingStep" [min]="0" [max]="100" [disabled]="false" styleClass="b-silder"></p-slider>
+                        </div>
+                        <div class="flex justify-content-between flex-wrap card-container purple-container b-step-handle">
+                            <span> Danh sách </span>
+                            <span> Đã lập chưa chi trả </span>
+                            <span> Đã lập đã chi trả </span>
+                        </div>
+                    </div>
+                    <div class="flex justify-content-start flex-wrap" *ngIf="dataFilter.status == InterestPaymentConst.STATUS_CREATED_LIST && !dataFilter.settlementMethod">
+                        <div class="b-guide"> Vui lòng chọn Loại hình trước khi Duyệt chi tiền hoặc Duyệt tái tục </div>
+                    </div>
+                </ng-container>
+                <!--  -->
+                <div class="flex wrapper-line-filter">
+                    <div class="b-wr-18 wrapper-filter">
+                        <input-search
+                            [class]="'input-filter'"
+                            [placeholder]="OrderConst.getInfoFieldFilter(dataFilter.searchField, 'placeholder')"
+                            [(keyword)]="dataFilter.keyword"
+                            (_onChange)="setPage()">
+                        </input-search>
+                    </div>
+                    <div class="b-wr-12 wrapper-filter">
+                        <span class="p-float-label">
+                            <p-dropdown
+                                styleClass="input-filter" emptyMessage="Không có dữ liệu"
+                                [options]="OrderConst.fieldFilters" name="searchField" optionLabel="name" optionValue="field"
+                                [(ngModel)]="dataFilter.searchField" 
+                                (onChange)="dataFilter.keyword?.trim() && setPage()">
+                            </p-dropdown>
+                            <label class="font-normal" for="searchField">Tìm kiếm theo</label>
+                        </span>
+                    </div>
+                    <div class="b-wr-12 wrapper-filter">
+                        <span class="p-float-label">
+                            <p-dropdown
+                                styleClass="input-filter" 
+                                [options]="InterestPaymentConst.statusInterests" optionLabel="name" optionValue="code"
+                                [(ngModel)]="dataFilter.status" 
+                                (onChange)="changeStatusInterest($event.value)">
+                            </p-dropdown>   
+                            <label class="font-normal" for="status"> Trạng thái </label>
+                        </span>
+                    </div>
+                    <div class="b-wr-12 wrapper-filter">
+                        <span class="p-float-label">
+                            <p-dropdown
+                                styleClass="input-filter"
+                                [showClear]="true" placeholder="Tất cả"
+                                [options]="DistributionConst.methodInterests" optionLabel="name" optionValue="code" 
+                                [(ngModel)]="dataFilter.methodInterest" 
+                                (onChange)="setPage()">
+                                </p-dropdown>   
+                            <label class="font-normal"> Loại chi trả </label>
+                        </span>
+                    </div>
+                    <div class="b-wr-14 wrapper-filter">
+                        <span class="p-float-label">
+                            <p-dropdown
+                                styleClass="input-filter"
+                                [showClear]="true" placeholder="Tất cả"
+                                [options]="InterestPaymentConst.statusExpires" optionLabel="name" optionValue="code" 
+                                [(ngModel)]="dataFilter.settlementMethod" 
+                                (onChange)="setPage()">
+                                </p-dropdown>   
+                            <label class="font-normal"> Loại hình </label>
+                        </span>
+                    </div>
+                </div>
+                <div class="flex wrapper-line-filter">
+                    <div class="b-wr-18 wrapper-filter">
+                        <span class="p-float-label">
+                            <p-dropdown
+                                styleClass="input-filter"
+                                [showClear]="true" placeholder="Tất cả"
+                                [options]="projects" optionLabel="invName" optionValue="id" 
+                                [(ngModel)]="dataFilter.projectId" 
+                                (onChange)="setPage()">
+                                </p-dropdown>   
+                            <label class="font-normal"> Dự án </label>
+                        </span>
+                    </div>
+                    <div class="b-wr-12 wrapper-filter">
+                        <span class="p-float-label">
+                            <p-calendar 
+                                [showIcon]="true" [showClear]="true" [showButtonBar]="true" placeholder="dd/mm/yyyy"
+                                styleClass="input-filter" appendTo="body" dateFormat="dd/mm/yy"
+                                [showButtonBar]="true"
+                                [(ngModel)]="dataFilter.ngayChiTra" 
+                                (onSelect)="setPage()"
+                                (onClearClick)="setPage()">
+                            </p-calendar>
+                            <label class="font-normal" for="ngayChiTra"> Ngày chi trả </label>
+                        </span>
+                    </div>
+                    <div class="b-wr-12 wrapper-filter">
+                        <span class="p-float-label">
+                            <p-dropdown 
+                                styleClass="input-filter" appendTo="body" dateFormat="dd/mm/yy"
+                                [options]="InterestPaymentConst.typeExactDates" optionLabel="name" optionValue="code"
+                                [(ngModel)]="dataFilter.isExactDate"
+                                (onChange)="setPage()">
+                            </p-dropdown>
+                            <label class="font-normal" for="isExactDate"> Lọc theo </label>
+                        </span>
+                    </div>
+                    <div class="b-wr-8 wrapper-filter">
+                        <span class="p-float-label">
+                            <p-button
+                                styleClass="p-button custom-button"
+                                label="Refresh" icon="pi pi-replay"
+                                (click)="refreshFilter($event)">
+                            </p-button>
+                        </span>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+    <e-table
+        [rows]="rows"
+        [(page)]="page"
+        [dataKey]="'index'"
+        [columns]="columns"
+        [listAction]="listAction"
+        [columnCacheName]="constructor.name"
+        [(selectedItems)]="dataTableEmit.selectedItems"
+        (_onChangeCheckbox)="onRowSelect()"
+        [(isShowFilter)]="dataTableEmit.isShowFilter"
+        (_onPageChange)="setPage($event)"
+        (_onSort)="dataFilter.sortFields=$event; setPage()">
+    </e-table>
+</div>

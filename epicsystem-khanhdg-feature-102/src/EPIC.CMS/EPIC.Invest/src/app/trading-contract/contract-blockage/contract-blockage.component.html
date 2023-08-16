@@ -1,0 +1,90 @@
+<div class="e-page">
+    <p-toast></p-toast>
+    <p-confirmDialog [style]="{width: 'auto'}" [baseZIndex]="10000"></p-confirmDialog>
+    <!-- GIỮ CẤU TRÚC PAGE VÀ CÁC CLASS, ID -->
+        <!-- PAGE HEADER CONTENT -->
+        <!-- TABLE -->
+    <!--  -->
+    <div tableHeader class="wrapper-page-header" id="page-header">
+        <div class="b-header"> 
+            <div class="grid no-actions">
+                <div class="col-12 md:col-7 b-title">
+                    <h4 style="display:inline"> Phong tỏa, giải tỏa </h4>
+                </div>
+            </div>
+        </div>
+        <div id="filter-table">
+            <ng-container *ngIf="dataTableEmit?.isShowFilter" >
+                <div class="flex wrapper-line-filter">
+                    <div class="b-wr-20 wrapper-filter">
+                        <input-search
+                            [placeholder]="'Tìm kiếm...'"
+                            [(keyword)]="dataFilter.keyword"
+                            (_onChange)="setPage()">
+                        </input-search>
+                    </div>
+                    <div class="b-wr-12 wrapper-filter">
+                        <span class="p-float-label">
+                            <p-dropdown
+                                styleClass="input-filter" emptyMessage="Không có dữ liệu"
+                                [showClear]="true" placeholder="Tất cả"
+                                [options]="BlockageLiberationConst.status" optionLabel="name" optionValue="code" 
+                                [(ngModel)]="dataFilter.status"
+                                (onChange)="setPage()">
+                                </p-dropdown>   
+                            <label class="font-normal" for="dropdownStatus"> Trạng thái </label>
+                        </span>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+    <e-table
+        [rows]="rows"
+        [(page)]="page"
+        [columns]="columns"
+        [isLoading]="isLoading"
+        [listAction]="listAction"
+        [columnCacheName]="constructor.name"
+        [(isShowFilter)]="dataTableEmit.isShowFilter"
+        (_onPageChange)="setPage($event)"
+        (_onSort)="dataFilter.sortFields=$event; setPage()">
+    </e-table>
+</div>
+
+<!-- Giải toả -->
+<p-dialog [(visible)]="liberationDialog" [style]="{width: '500px'}" header="Giải toả" [modal]="true" class="p-fluid">
+    <ng-template pTemplate="content">
+        <div class="grid formgrid">
+            <div class="field col-12">
+                <label for="code">Loại phong toả</label>
+                <p-dropdown id="blockageType" name="blockageType" [options]="BlockageLiberationConst.blockageTypes"
+                    optionLabel="name" [(ngModel)]="blockageLiberation.type" optionValue="code" appendTo="body">
+                </p-dropdown>
+            </div>
+            <div class="field col-6">
+                <label> Ngày yêu cầu </label>
+                <p-calendar showButtonBar="true" dateFormat="dd/mm/yy" locale="vi" appendTo="body" readonlyInput="true"
+                    [(ngModel)]="blockageLiberation.liberationDate" [placeholder]="'dd/mm/yyyy'" showIcon="true">
+                </p-calendar>
+            </div>
+            <div class="field col-6">
+                <label> Số tiền </label>
+                <p-inputNumber
+                    class="custom-input-disabled" locale="de-DE"
+                    [(ngModel)]="blockageLiberation.totalValue"  
+                    [disabled]="true">
+                </p-inputNumber>
+            </div>
+            <div class="field col-12">
+                <label> Ghi chú </label>
+                <textarea [(ngModel)]="blockageLiberation.liberationDescription" pInputTextarea></textarea>
+            </div>
+        </div>
+    </ng-template>
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Hủy" icon="pi pi-times" (click)="hideDialog()" class="p-button-text"></button>
+        <button pButton pRipple label="Lưu" icon="pi pi-check" (click)="saveLiberation()"
+            class="p-button-text"></button>
+    </ng-template>
+</p-dialog>

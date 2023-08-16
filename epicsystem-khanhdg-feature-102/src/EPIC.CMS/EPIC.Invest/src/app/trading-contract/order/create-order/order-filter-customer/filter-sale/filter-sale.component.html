@@ -1,0 +1,31 @@
+
+<div>
+    <div class="flex flex-row flex-wrap mb-3">
+        <span class="block mt-2 md:mt-0 mr-2">
+            <input-search
+                [placeholder]="SaleConst.getInfoSearch(fieldSearch,'placeholder')"
+                [width]="300"
+                [(keyword)]="page.keyword"
+                (_onChange)="setPage()">
+            </input-search>
+        </span>
+        <p-dropdown 
+            class="custom-input-disabled" (onChange)="page.keyword.trim() && setPage()"
+            [options]="SaleConst.searchList" optionLabel="name" optionValue="field"
+            [(ngModel)]="fieldSearch">
+        </p-dropdown>
+    </div>
+    <e-table
+        [rows]="rows"
+        [(page)]="page"
+        [columns]="columns"
+        [isLoading]="isLoading"
+        [isShowIconFilter]="false"
+        [isShowPaginator]="false"
+        [scrollHeightConst]="150"
+        >
+    </e-table>
+</div>
+            
+      
+

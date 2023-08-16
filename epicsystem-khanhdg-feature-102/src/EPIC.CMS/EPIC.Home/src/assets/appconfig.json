@@ -1,0 +1,19 @@
+{
+	"remoteServiceBaseUrl": "https://localhost:5003",
+	"rocketchat": {
+		"api": "http://epic-api.stecom.vn:8091",
+		"iframeSrc": "http://epic-rocketchat.stecom.vn:3000"
+	},
+	"appBaseUrl": "http://localhost:4200",
+	"baseUrlEcore": "http://localhost:4201",
+	"baseUrlEbond": "http://localhost:4202",
+	"baseUrlEinvest": "http://localhost:4203",
+	"baseUrlEuser": "http://localhost:4204",
+	"baseUrlEgarner": "http://localhost:4206",
+	"baseUrlRealEState": "http://localhost:4207",
+	"baseUrlEloyalty": "http://localhost:4208",
+	"baseUrlEvents": "http://localhost:4209",
+	
+	"clientId": "client1",
+	"clientSecret": "secret1"
+}

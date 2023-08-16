@@ -1,0 +1,160 @@
+<form [formGroup]="postForm" (ngSubmit)="onSubmit()">
+
+    <div class="card">
+        <div class="p-fluid p-formgrid grid">
+            <!-- <div class="field col-4">
+                <label htmlFor="title">Mã thông báo</label>
+                <input formControlName="code" pInputText id="code" type="text" [ngClass]="{
+                        'ng-invalid ng-dirty': (postFormControl.code.touched) && postFormControl.code.errors?.required
+                    }" />
+            </div> -->
+            <div class="field col-5">
+                <label htmlFor="title">Tiêu đề thông báo</label>
+                <input formControlName="title" pInputText id="title" type="text" [ngClass]="{
+                        'ng-invalid ng-dirty': (postFormControl.title.touched) && postFormControl.title.errors?.required
+                    }" />
+            </div>
+            <div class="field col-6"></div>
+            <!-- <div class="field col-4">
+                <label htmlFor="title">Trạng thái</label> 
+                <p-dropdown formControlName="status" optionLabel="name" optionValue="value" [options]="statuses" [ngClass]="{
+                        'ng-invalid ng-dirty': (postFormControl.status.touched) && postFormControl.status.errors?.required
+                    }" appendTo="body">
+                </p-dropdown>
+            </div> -->
+        
+            <div class="field col-3">
+                <label htmlFor="title">Chủ đề</label>
+                <p-dropdown appendTo="body" formControlName="description" id="description" [options]="topicList" [(ngModel)]="selectedTopic" 
+                placeholder="Chọn chủ đề" optionLabel="name" optionValue="value" styleClass="w-full">
+                </p-dropdown>
+
+            </div>
+           
+            <div class="field col-3">
+                <label htmlFor="title">Hành động </label> 
+                <p-multiSelect formControlName="actions" optionLabel="value" optionValue="key" [options]="actions" [ngClass]="{
+                        'ng-invalid ng-dirty': (postFormControl.actions.touched) && postFormControl.actions.errors?.required
+                    }">
+                </p-multiSelect>
+            </div> 
+            <div class="field col-6"></div>
+            <!-- <div class="field col-8 md:col-8">
+                <label htmlFor="isFeatured">Nổi bật</label>
+                <div class="mt-1">
+                    <p-inputSwitch formControlName="isFeatured"></p-inputSwitch>
+                </div>
+            </div> -->
+            <div class="field col-12">
+                <label htmlFor="content">Mô tả thông báo APP </label>
+                <textarea pInputTextarea [rows]="5" formControlName="appNotificationDesc" id="appNotificationDesc" class="custom-input"> </textarea>
+            </div>
+            <div  class="field col-12" *ngIf="postForm.value.actions.includes('PUSH_NOTIFICATION')"> 
+                <label htmlFor="content">Loại nội dung thông báo app</label>
+                <p-selectButton  formControlName="contentType" [ngModelOptions]="{standalone: true}" optionValue="value" class="mb-2 mt-2" [options]="htmlMarkdownOptions" optionLabel="name"></p-selectButton>
+            </div>
+            <div *ngIf="postForm.value.actions.includes('PUSH_NOTIFICATION')" class="field {{ postForm.value.contentType == 'MARKDOWN' ? 'col-6' : 'col-12' }}">
+                <label htmlFor="content">Nội dung thông báo app</label>
+                <div *ngIf="postForm.value.contentType == 'MARKDOWN'">
+                    <textarea #myTextArea (click)="getCaretPos(myTextArea)" (keyup)="getCaretPos(myTextArea)" pInputTextarea [rows]="11" formControlName="notificationContent" id="notificationContent" class="custom-input"></textarea>
+                    <div style="width: 150px;">
+                        <p-button (click)="insertImageApp()" class="p-button-outlined p-button-info" label="Chèn ảnh" icon="pi pi-image" iconPos="left"></p-button>
+                    </div> 
+                </div>
+                
+                <div *ngIf="postForm.value.contentType == 'HTML'">
+                    <angular-editor formControlName="notificationContent" id="content" class="custom-input"  [placeholder]="'Nhập nội dung '" [config]="{height: '15rem', editable: true, sanitize: false }">
+                </angular-editor>
+                </div>
+            </div>
+            <div *ngIf="postForm.value.actions.includes('PUSH_NOTIFICATION') && postForm.value.contentType == 'MARKDOWN'"  class="field col-6 md:col-6 ">
+                <label htmlFor="content">Nội dung xem trước</label>  
+                <markdown class="border-box" [data]="postForm.value.notificationContent">
+                </markdown> 
+            </div>
+            <div *ngIf="postForm.value.actions.includes('SEND_SMS')"  class="field col-12 md:col-12">
+                <label htmlFor="content">Nội dung SMS</label>
+                <textarea  pInputTextarea [rows]="5" formControlName="smsContent" id="smsContent" class="custom-input"> </textarea>
+            </div>
+            <div  class="field col-12" *ngIf="postForm.value.actions.includes('SEND_EMAIL')"> 
+                <label htmlFor="content">Loại nội dung email</label>
+                <p-selectButton  formControlName="contentType" [ngModelOptions]="{standalone: true}" optionValue="value" class="mb-2 mt-2" [options]="htmlMarkdownOptions" optionLabel="name"></p-selectButton>
+            </div>
+            <div *ngIf="postForm.value.actions.includes('SEND_EMAIL')" class="field {{ postForm.value.contentType == 'MARKDOWN' ? 'col-6' : 'col-12' }}">
+                <label htmlFor="content">Nội dung</label>
+                <div *ngIf="postForm.value.contentType == 'MARKDOWN'">
+                    <textarea #myTextArea (click)="getCaretPos(myTextArea)" (keyup)="getCaretPos(myTextArea)" pInputTextarea [rows]="11" formControlName="emailContent" id="emailContent" class="custom-input"></textarea>
+                    <div style="width: 150px;">
+                        <p-button (click)="insertImage()" class="p-button-outlined p-button-info" label="Chèn ảnh" icon="pi pi-image" iconPos="left"></p-button>
+                    </div> 
+                </div>
+                
+                <div *ngIf="postForm.value.contentType == 'HTML'">
+                    <angular-editor formControlName="emailContent" id="content" class="custom-input"  [placeholder]="'Nhập nội dung '" [config]="{height: '15rem', editable: true, sanitize: false }">
+                </angular-editor>
+                </div>
+            </div>
+            <div *ngIf="postForm.value.actions.includes('SEND_EMAIL') && postForm.value.contentType == 'MARKDOWN'"  class="field col-6 md:col-6 ">
+                <label htmlFor="content">Nội dung xem trước</label>  
+                <markdown class="border-box" [data]="postForm.value.emailContent">
+                </markdown> 
+            </div>
+            <div class="col-4">
+                <div>
+                    <label htmlFor="mainImg">Ảnh đại diện</label> 
+                </div>
+                <div *ngIf="mainImg" class="gallery-media">
+                    <div class="gallery-image" style="background: url({{baseUrl}}/{{mainImg}});" >
+                    </div>
+                    <div class="desc" >
+                        <i (click)="removeFile(img)" class="remove-img pi pi-trash"></i>
+                    </div>
+                </div>
+                <div *ngIf="!mainImg || mainImg.length == 0" class="grid"> 
+                    <div class="col-12 mt-2">
+                        <button (click)="selectImg()" pButton type="button" label="Thêm ảnh"
+                            class="p-button-primary mb-1">
+                        </button> 
+                    </div> 
+                </div>
+            </div>
+            <div class="col-2"></div>
+            <div class="field col-3">
+                <label class="mt-1 mb-2" htmlFor="isNavigation">Điều hướng </label>
+                <div >
+                    <p-inputSwitch (onChange)="onSwitchNavigationChange($event)" formControlName="isNavigation"></p-inputSwitch>
+                </div>
+                <div class="mt-4 field" *ngIf="postForm?.value?.navigationType == 'IN_APP' && postForm?.value?.isNavigation">
+                    <label class="" htmlFor="title">Điều hướng cấp 1 </label>
+                    <p-dropdown (onChange)="onLevelOneNavigationChange($event)"  appendTo="body" formControlName="levelOneNavigation" [options]="NotificationTemplateConst.levelOneOptions"
+                         placeholder="Chọn điều hướng cấp 1" optionLabel="name" optionValue="value" styleClass="w-full">
+                    </p-dropdown>
+                    <label class="mt-3" htmlFor="title">Điều hướng cấp 2 </label>
+                    <p-dropdown [autoDisplayFirst]="false" appendTo="body" formControlName="secondLevelNavigation" [options]="secondLevelOptions" 
+                         optionLabel="secondLevel" optionValue="value" styleClass="w-full" >
+                    </p-dropdown>
+                </div>
+                <div class="mt-4 field" *ngIf="postForm?.value?.navigationType == 'LIEN_KET_KHAC' && postForm?.value?.isNavigation">
+                    <label htmlFor="title">Link điều hướng</label>
+                    <input formControlName="navigationLink" pInputText  type="text" />
+                </div>
+              
+            </div> 
+            <div class="field col-3">
+                <label class="mt-1" htmlFor="title">Loại điều hướng</label>
+                <p-dropdown appendTo="body" [disabled]="!postForm?.value?.isNavigation" formControlName="navigationType"  [options]="NotificationTemplateConst.navigationTypes"
+                    placeholder="Chọn loại điều hướng" optionLabel="name" optionValue="value" styleClass="w-full" (onChange)="onNavigationTypeChange($event)">
+                </p-dropdown>
+
+                <label class="mt-3" htmlFor="title">Button điều hướng </label>
+                <input [disabled]="true" pInputText type="text" [value]="NotificationTemplateConst.getButtonNavigation(postForm?.value?.navigationType, postForm?.value?.levelOneNavigation)" />
+            </div> 
+        </div>
+    </div> 
+    <p-confirmDialog header="Xác nhận" icon="pi pi-exclamation-triangle"></p-confirmDialog>
+    
+    <div class="p-dialog-footer" style="width: 100%; position: fixed; left: 0; bottom: 0;">
+        <button type="reset" pButton pRipple label="Hủy" icon="pi pi-times" class="p-button-text mr-2" (click)="close()"></button>
+        <button [disabled]="!postForm.valid" type="submit" pButton pRipple label="Lưu lại" icon="pi pi-save"></button>
+    </div>
+</form>

@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+  node-app:
+    build: .
+    image: node-app
+    ports:
+      - '3000:3000'
+    extra_hosts:
+      - "api.epicpartner.vn:10.0.0.20"
+      - "api-staging.epicpartner.vn:172.16.0.30"
+    depends_on:
+      - mongodb
+      - redis
+    volumes:
+      - .:/usr/src/node-app
+    networks:
+     - node-network
+
+  mongodb:
+    image: mongo:4.2.1-bionic
+    volumes:
+      - dbdata:/data/db
+    networks:
+     - node-network
+
+  redis:
+    image: bitnami/redis:latest
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    networks:
+      - node-network
+
+volumes:
+  dbdata:
+
+networks:
+ node-network:
+   driver: bridge

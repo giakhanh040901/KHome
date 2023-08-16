@@ -1,0 +1,519 @@
+<div class="row">
+    <div class="col-12 grid-margin">
+      <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12 px-0 d-flex align-items-center ">
+                    <span class="mb-0 h3 pr-1 " style="color: #172b4d;"> {{ titlePage }} </span>
+                </div>
+            </div>
+            <div class="row mt-2 mb-3">
+                <div class="col-md-6 pl-0 d-flex align-items-end">
+                    <button class="btn btn-sm btn-primary" (click)="create()"><i class="mdi mdi-plus-circle mr-1"></i> Thêm đại lý lưu ký </button>
+                </div>
+                <div class="col-md-6 d-flex justify-content-end pr-0">
+                    <div class="input-group input-search">
+                        <input type="text" class="form-control form-control-sm border-radius-default" name="keyword"
+                            [placeholder]="'Tìm kiếm...'" [(ngModel)]="keyword" (keyup)="changeKeyword()"
+                            (keyup.enter)="setPage({ offset: offset })"/>
+                        <div class="input-group-append">
+                        <button class="btn btn-sm btn-primary" type="button" (click)="setPage({ offset: offset })">
+                            <i class="icon-magnifier"></i>
+                        </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 px-0">
+                    <ngx-datatable class="ngx-datatable-custom frozen-right"
+                    #depositProviderTable
+                    [rows]="rows"
+                    [columnMode]="ColumnMode.force"
+                    [footerHeight]="42" [rowHeight]="50"
+                    [headerHeight]="50" [footerHeight]="42"
+                    [scrollbarV]="true" [scrollbarH]="true" [virtualization]="false"
+                    [externalPaging]="true" [count]="page.totalItems" [offset]="page.pageNumber" [limit]="page.pageSize"
+                    [messages]="datatableMessage"
+                    (page)="setPage($event)" [busy]="isLoading">
+
+                    <ngx-datatable-row-detail [rowHeight]="350" #myDetailRow (toggle)="onDetailToggle($event)">
+                        <ng-template let-row="row" let-expanded="expanded" ngx-datatable-row-detail-template>
+                            <div class="card wrapper-detail" style="overflow-y: scroll;">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label> Mã ĐLLK </label>
+                                            <p> {{ row.code ?? '-' }} </p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label> Tên ĐLLK </label>
+                                            <p> {{ row.name ?? '-' }} </p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label> Loại ĐLLK </label>
+                                            <p> {{ depositProviderConst.getNameType(row.type) ?? '-' }} </p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label> Tên tiếng anh </label>
+                                            <p> {{ row.nameEn ?? '-' }} </p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label> Tên viết tắt </label>
+                                            <p> {{ row.shortName ?? '-' }} </p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label> Số điện thoại </label>
+                                            <p> {{ row.phone ?? '-' }} </p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label> Email </label>
+                                            <p> {{ row.email ?? '-' }} </p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label> Mobile </label>
+                                            <p> {{ row.mobile ?? '-' }} </p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label> Mã số thuế </label>
+                                            <p> {{ row.taxCode ?? '-' }} </p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label> Fax </label>
+                                            <p> {{ row.fax ?? '-' }} </p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label> Địa chỉ </label>
+                                            <p> {{ row.address ?? '-' }} </p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label> Số TK ngân hàng </label>
+                                            <p> {{ row.bankAccNo ?? '-' }} </p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label> Tên ngân hàng </label>
+                                            <p> {{ row.bankName ?? '-' }} </p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label> Chi nhánh ngân hàng </label>
+                                            <p> {{ row.bankBranchName ?? '-' }} </p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label> Số đăng ký CP </label>
+                                            <p> {{ row.foundationNo ?? '-' }} </p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label> Ngày đăng ký CP </label>
+                                            <p> {{ row.foundationDate ? (row.foundationDate | dateview) : '-' }} </p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label> Nơi đăng ký CP </label>
+                                            <p> {{ row.foundationIssuer ?? '-' }} </p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label> Số đăng ký giấy phép ĐKKD </label>
+                                            <p> {{ row.licenseNo ?? '-' }} </p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label> Ngày cấp giấy phép ĐKKD </label>
+                                            <p> {{ row.licenseDate ? (row.licenseDate | dateview) : '-'  }} </p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label> Nơi cấp giấy phép ĐKKD </label>
+                                            <p> {{ row.licenseIssuer ?? '-' }} </p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label> Vốn điều lệ </label>
+                                            <p> {{ row.capital ? (row.capital | number:'1.0-2') : '-' }} </p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label> Họ tên người đại diện </label>
+                                            <p> {{ row.repName ?? '-' }} </p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label> Vị trí người đại diện </label>
+                                            <p> {{ row.repPosition ?? '-' }} </p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label> Số CMND/CCCD </label>
+                                            <p> {{ row.repIdNo ?? '-' }} </p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label> Ngày cấp CMND/CCCD </label>
+                                            <p> {{ row.repIdDate ? (row.repIdDate | dateview) : '-' }} </p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label> Nơi cấp CMND/CCCD </label>
+                                            <p> {{ row.repIdIssuer ?? '-' }} </p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label> Lĩnh vực kinh doanh </label>
+                                            <p> {{ row.description ?? '-' }} </p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label> Nội dung giới thiệu </label>
+                                            <p> {{ row.content ?? '-' }} </p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label> Đường dẫn pháp lý </label>
+                                            <p> {{ row.links ?? '-' }} </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-row-detail>
+
+                    <ngx-datatable-column [width]="30" [resizeable]="false" [sortable]="false" [draggable]="false" [canAutoResize]="false" frozenLeft="true">
+                        <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+                        <a style="font-size: 25px;"
+                            href="javascript:void(0)"
+                            [class.datatable-icon-right]="!expanded"
+                            [class.datatable-icon-down]="expanded"
+                            title="Expand/Collapse Row"
+                            (click)="toggleExpandRow(row, expanded)"
+                        >
+                        </a>
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column name="code" [width]="250" [sortable]="false" frozenLeft="true">
+                        <ng-template let-column="column" ngx-datatable-header-template> Mã ĐLLK </ng-template>
+                        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                            <div>
+                                {{ value }}
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                        <ngx-datatable-column name="name" [width]="250" [sortable]="false" frozenLeft="true">
+                            <ng-template let-column="column" ngx-datatable-header-template> Tên ĐLLK </ng-template>
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                <div>
+                                    {{ value }}
+                                </div>
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="type" [width]="300" [sortable]="false" frozenLeft="true">
+                            <ng-template let-column="column" ngx-datatable-header-template>Loại ĐLLK </ng-template>
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                <div [title]="value">
+                                    {{ depositProviderConst.getNameType(value) }}
+                                </div>
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="nameEn" [width]="250" [sortable]="false">
+                            <ng-template let-column="column" ngx-datatable-header-template><div class="ml-8px"> Tên Tiếng anh </div> </ng-template>
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                <div class="ml-8px">
+                                    {{ value }}
+                                </div>
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="shortName" [width]="160" [sortable]="false">
+                            <ng-template let-column="column" ngx-datatable-header-template>Tên viết tắt </ng-template>
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                <div>
+                                    {{ value }}
+                                </div>
+                            </ng-template>
+                        </ngx-datatable-column>
+
+
+
+                        <ngx-datatable-column name="address" [width]="300" [sortable]="false">
+                            <ng-template let-column="column" ngx-datatable-header-template>Địa chỉ </ng-template>
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                <div [title]="value">
+                                    {{ value | truncate:[50] }}
+                                </div>
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="phone" [width]="300" [sortable]="false">
+                            <ng-template let-column="column" ngx-datatable-header-template>Số điện thoại </ng-template>
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                <div [title]="value">
+                                    {{ value | truncate:[50] }}
+                                </div>
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="phone" [width]="300" [sortable]="false">
+                            <ng-template let-column="column" ngx-datatable-header-template>Số điện thoại </ng-template>
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                <div [title]="value">
+                                    {{ value }}
+                                </div>
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="Fax" [width]="300" [sortable]="false">
+                            <ng-template let-column="column" ngx-datatable-header-template>Fax </ng-template>
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                <div [title]="value">
+                                    {{ value }}
+                                </div>
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="mobile" [width]="300" [sortable]="false">
+                            <ng-template let-column="column" ngx-datatable-header-template>Mobile </ng-template>
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                <div [title]="value">
+                                    {{ value }}
+                                </div>
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="email" [width]="300" [sortable]="false">
+                            <ng-template let-column="column" ngx-datatable-header-template>Email </ng-template>
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                <div [title]="value">
+                                    {{ value }}
+                                </div>
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="taxCode" [width]="300" [sortable]="false">
+                            <ng-template let-column="column" ngx-datatable-header-template>Mã số thuế </ng-template>
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                <div [title]="value">
+                                    {{ value }}
+                                </div>
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="bankAccNo" [width]="300" [sortable]="false">
+                            <ng-template let-column="column" ngx-datatable-header-template>Số TK ngân hàng </ng-template>
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                <div [title]="value">
+                                    {{ value }}
+                                </div>
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="bankName" [width]="300" [sortable]="false">
+                            <ng-template let-column="column" ngx-datatable-header-template>Tên ngân hàng </ng-template>
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                <div [title]="value">
+                                    {{ value | truncate:[50] }}
+                                </div>
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="bankBranchName" [width]="300" [sortable]="false">
+                            <ng-template let-column="column" ngx-datatable-header-template>Chi nhánh ngân hàng </ng-template>
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                <div [title]="value">
+                                    {{ value | truncate:[50] }}
+                                </div>
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="bankBranchName" [width]="300" [sortable]="false">
+                            <ng-template let-column="column" ngx-datatable-header-template>Mobile </ng-template>
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                <div [title]="value">
+                                    {{ value }}
+                                </div>
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="foundationNo" [width]="300" [sortable]="false">
+                            <ng-template let-column="column" ngx-datatable-header-template> Số đăng kí CP </ng-template>
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                <div [title]="value">
+                                    {{ value }}
+                                </div>
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="foundationDate" [width]="300" [sortable]="false">
+                            <ng-template let-column="column" ngx-datatable-header-template>Ngày đăng kí CP </ng-template>
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                <div [title]="value">
+                                    {{ value | dateview }}
+                                </div>
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="foundationIssuer" [width]="300" [sortable]="false">
+                            <ng-template let-column="column" ngx-datatable-header-template> Nơi đăng kí CP </ng-template>
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                <div [title]="value">
+                                    {{ value | truncate:[50] }}
+                                </div>
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="licenseNo" [width]="300" [sortable]="false">
+                            <ng-template let-column="column" ngx-datatable-header-template> Số giấy phép đăng kí </ng-template>
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                <div [title]="value">
+                                    {{ value }}
+                                </div>
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="licenseDate" [width]="300" [sortable]="false">
+                            <ng-template let-column="column" ngx-datatable-header-template> Ngày cấp giấy phép DKKD </ng-template>
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                <div [title]="value">
+                                    {{ value | dateview }}
+                                </div>
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="licenseIssuer" [width]="300" [sortable]="false">
+                            <ng-template let-column="column" ngx-datatable-header-template> Nơi cấp giấy phép DKKD </ng-template>
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                <div [title]="value">
+                                    {{ value | truncate:[50] }}
+                                </div>
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="capital" [width]="300" [sortable]="false">
+                            <ng-template let-column="column" ngx-datatable-header-template> Vốn điều lệ </ng-template>
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                <div [title]="value">
+                                    {{ value | number:'1.0-2'}}
+                                </div>
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="business" [width]="300" [sortable]="false">
+                            <ng-template let-column="column" ngx-datatable-header-template> Lĩnh vực kinh doanh </ng-template>
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                <div [title]="value">
+                                    {{ value | truncate:[50] }}
+                                </div>
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="description" [width]="300" [sortable]="false">
+                            <ng-template let-column="column" ngx-datatable-header-template> Mô tả </ng-template>
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                <div [title]="value">
+                                    {{ value | truncate:[50] }}
+                                </div>
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="repName" [width]="300" [sortable]="false">
+                            <ng-template let-column="column" ngx-datatable-header-template> Họ tên người đại diện pháp luật </ng-template>
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                <div [title]="value">
+                                    {{ value | truncate:[50] }}
+                                </div>
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="repPosition" [width]="300" [sortable]="false">
+                            <ng-template let-column="column" ngx-datatable-header-template> Vị trí người đại diện </ng-template>
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                <div [title]="value">
+                                    {{ value | truncate:[50] }}
+                                </div>
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="repIdNo" [width]="300" [sortable]="false">
+                            <ng-template let-column="column" ngx-datatable-header-template> Số CMND/CCCD người đại diện </ng-template>
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                <div [title]="value">
+                                    {{ value }}
+                                </div>
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="repIdDate" [width]="300" [sortable]="false">
+                            <ng-template let-column="column" ngx-datatable-header-template> Ngày cấp CMND/CCCD người đại diện </ng-template>
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                <div [title]="value">
+                                    {{ value | dateview }}
+                                </div>
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="repIdIssuer" [width]="300" [sortable]="false">
+                            <ng-template let-column="column" ngx-datatable-header-template> Nơi cấp CMND/CCCD người đại diện </ng-template>
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                <div [title]="value">
+                                    {{ value | truncate:[50] }}
+                                </div>
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="content" [width]="300" [sortable]="false">
+                            <ng-template let-column="column" ngx-datatable-header-template> Nội dung giới thiệu </ng-template>
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                <div [title]="value">
+                                    {{ value | truncate:[50] }}
+                                </div>
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="links" [width]="300" [sortable]="false">
+                            <ng-template let-column="column" ngx-datatable-header-template> Đường dẫn pháp lý </ng-template>
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                <div [title]="value">
+                                    {{ value | truncate:[50] }}
+                                </div>
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="status" [width]="300" [sortable]="false">
+                            <ng-template let-column="column" ngx-datatable-header-template> Trạng thái </ng-template>
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                <div [title]="value">
+                                    {{ depositProviderConst.getStatusName(value) }}
+
+                                </div>
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column [width]="100" [sortable]="false" frozenRight="true">
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                <div class="dropdown" dropdown #dropdown="bs-dropdown" [autoClose]="true">
+                                    <button dropdownToggle class="btn btn-action-table dropdown-toggle" type="button" id="dropdownMenu"
+                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Thao tác
+                                    </button>
+                                    <div class="dropdown-menu table-dropdown-menu" *dropdownMenu aria-labelledby="dropdownMenu">
+                                        <span>
+
+                                            <a class="dropdown-item dropdown-item-wrapper" (click)="edit(row.depositProviderId)">
+                                                <i class="fas fa-pencil-alt"></i> Sửa
+                                            </a>
+                                            <a class="dropdown-item dropdown-item-wrapper" (click)="delete(row)">
+                                                <i class="fas fa-trash"></i>&nbsp; Xoá
+                                            </a>
+                                        </span>
+                                    </div>
+                                </div>
+                            </ng-template>
+                        </ngx-datatable-column>
+                    </ngx-datatable>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+</div>

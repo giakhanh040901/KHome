@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\EPIC.BondService\EPIC.DataAccess\EPIC.DataAccess.csproj" />
+    <ProjectReference Include="..\EPIC.PaymentEntities\EPIC.PaymentEntities.csproj" />
+    <ProjectReference Include="..\EPIC.PaymentSharedEntities\EPIC.PaymentSharedEntities.csproj" />
+  </ItemGroup>
+
+</Project>

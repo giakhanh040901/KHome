@@ -1,0 +1,262 @@
+<div class="col-12" style="padding-bottom: 70px">
+  <div class="card p-0 mb-0">
+    <h5 class="title-info">Hình ảnh voucher</h5>
+    <div class="p-fluid p-formgrid grid">
+      <div class="flex b-w-100">
+        <div class="col">
+          <div class="mb-2">Avatar</div>
+          <form-image
+            [style.maxWidth]="widthDivAvatar"
+            [imageSource]="selectedImageVoucher"
+            [widthLimit]="DEFAULT_IMAGE_SIZE.width"
+            [heightLimit]="DEFAULT_IMAGE_SIZE.height"
+            [isDisabled]="isDisable"
+            [maxFileSize]="2500000"
+            (_onChange)="onChangeAvatar($event)"
+          ></form-image>
+        </div>
+        <div class="col">
+          <div class="mb-2">Banner</div>
+          <form-image
+            [style.maxWidth]="widthDivBanner"
+            [imageSource]="selectedBannerVoucher"
+            [widthLimit]="DEFAULT_IMAGE_BANNER.width"
+            [heightLimit]="DEFAULT_IMAGE_BANNER.height"
+            [isDisabled]="isDisable"
+            [maxFileSize]="2500000"
+            (_onChange)="onChangeBanner($event)"
+          ></form-image>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card p-0 mb-0">
+    <h5 class="title-info">Thông tin chung</h5>
+    <div class="p-fluid p-formgrid grid">
+      <div class="flex b-w-100">
+        <div class="col-3">
+          <form-dropdown
+            [label]="'Loại hình'"
+            [options]="listKindOfVoucher"
+            [isRequired]="true"
+            [(ngModelValue)]="crudVoucher.kind"
+            [isDisabled]="isDisable"
+          ></form-dropdown>
+        </div>
+        <div class="col-3">
+          <form-dropdown
+            [label]="'Loại voucher'"
+            [options]="listTypeOfVoucher"
+            [isRequired]="true"
+            [(ngModelValue)]="crudVoucher.type"
+            [isDisabled]="isDisable"
+          ></form-dropdown>
+        </div>
+        <div class="col-3">
+          <form-input
+            [label]="'Mã lô voucher'"
+            [isRequired]="true"
+            [(ngModelValue)]="crudVoucher.code"
+            [placeholder]="'Nhập mã lô'"
+            [isDisabled]="isDisable"
+          ></form-input>
+        </div>
+        <div class="col-3">
+          <form-input
+            [label]="'Tên voucher'"
+            [isRequired]="true"
+            [(ngModelValue)]="crudVoucher.name"
+            [placeholder]="'Nhập tên voucher'"
+            [isDisabled]="isDisable"
+          ></form-input>
+        </div>
+      </div>
+      <div class="flex b-w-100">
+        <div class="col-6">
+          <form-input
+            [label]="'Tên hiển thị'"
+            [isRequired]="true"
+            [(ngModelValue)]="crudVoucher.displayName"
+            [placeholder]="'Nhập tên hiển thị voucher'"
+            [isDisabled]="isDisable"
+          ></form-input>
+        </div>
+        <div class="col-6" *ngIf="crudVoucher.kind !== this.listKindOfVoucher[0].value">
+          <form-input
+            [label]="'Link voucher'"
+            [(ngModelValue)]="crudVoucher.link"
+            [placeholder]="'Nhập link voucher'"
+            [isDisabled]="isDisable"
+          ></form-input>
+        </div>
+      </div>
+      <div class="flex b-w-100">
+        <div class="col">
+          <form-dropdown
+            [label]="'Đơn vị'"
+            [options]="listValueUnit"
+            [isRequired]="true"
+            [(ngModelValue)]="crudVoucher.valueUnit"
+            [isDisabled]="isDisable"
+            (_onChange)="onChangeValueUnit($event)"
+          ></form-dropdown>
+        </div>
+        <div class="col">
+          <ng-container *ngIf="crudVoucher.valueUnit === VND">
+            <form-input-number
+              [label]="'Giá trị (VND)'"
+              [isRequired]="true"
+              [(ngModelValue)]="crudVoucher.value"
+              [placeholder]="'Nhập giá trị'"
+              [isDisabled]="isDisable"
+            ></form-input-number>
+          </ng-container>
+          <ng-container *ngIf="crudVoucher.valueUnit === PERCENT">
+            <form-input
+              [label]="'Giá trị (%)'"
+              [type]="'number'"
+              [isRequired]="true"
+              [(ngModelValue)]="crudVoucher.value"
+              [placeholder]="'Nhập giá trị'"
+              [isDisabled]="isDisable"
+            ></form-input>
+          </ng-container>
+        </div>
+        <div class="col">
+          <form-input
+            [label]="'Điểm quy đổi'"
+            [type]="'number'"
+            [isRequired]="true"
+            [(ngModelValue)]="crudVoucher.point"
+            [placeholder]="'Nhập số điểm'"
+            [isDisabled]="isDisable"
+          ></form-input>
+        </div>
+        <div class="col">
+          <form-input
+            [label]="'Số lượng phát hành'"
+            [type]="'number'"
+            [isRequired]="true"
+            [(ngModelValue)]="crudVoucher.applyQuantity"
+            [placeholder]="'Nhập số lượng'"
+            [isDisabled]="isDisable"
+          ></form-input>
+        </div>
+        <div class="col">
+          <form-input
+            [label]="'Số lượt đổi tối đa mỗi khách'"
+            [type]="'number'"
+            [(ngModelValue)]="crudVoucher.changeQuantity"
+            [placeholder]="'Nhập số lượng'"
+            [isDisabled]="isDisable"
+          ></form-input>
+        </div>
+      </div>
+      <div class="flex b-w-100">
+        <div class="col-3">
+          <form-input-calendar
+            [label]="'Ngày hết hạn'"
+            [isRequired]="true"
+            [(ngModelValue)]="crudVoucher.expireDate"
+            [isDisabled]="isDisable"
+            [placeholder]="'dd/mm/yy'"
+            [showIcon]="!isDisable"
+          ></form-input-calendar>
+        </div>
+        <div class="col-3">
+          <form-input-calendar
+            [label]="'Ngày nhập lô voucher'"
+            [isRequired]="true"
+            [(ngModelValue)]="crudVoucher.batchEntryDate"
+            [isDisabled]="isDisable"
+            [placeholder]="'dd/mm/yy'"
+            [showIcon]="!isDisable"
+          ></form-input-calendar>
+        </div>
+        <div class="col-3">
+          <form-input-calendar
+            [label]="'Ngày áp dụng'"
+            [isRequired]="true"
+            [(ngModelValue)]="crudVoucher.applyDate"
+            [isDisabled]="isDisable"
+            [placeholder]="'dd/mm/yy'"
+            [showIcon]="!isDisable"
+          ></form-input-calendar>
+        </div>
+        <div class="col-3">
+          <form-input-calendar
+            [label]="'Ngày kết thúc'"
+            [(ngModelValue)]="crudVoucher.endDate"
+            [isDisabled]="isDisable"
+            [placeholder]="'dd/mm/yy'"
+            [showIcon]="!isDisable"
+          ></form-input-calendar>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card p-0 mb-0">
+    <h5 class="title-info">Nội dung mô tả</h5>
+    <div class="p-fluid p-formgrid grid">
+      <div class="flex b-w-100">
+        <div class="col">
+          <form-description-content
+            [contentType]="crudVoucher.contentType"
+            [content]="crudVoucher.content"
+            [isDisabled]="isDisable"
+            (_onChangeData)="onChangeDescriptionContent($event)"
+          ></form-description-content>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card p-0 mb-0">
+    <h5 class="title-info">Cài đặt khác</h5>
+    <div>
+      <form-input-switch
+        [(ngModelValue)]="crudVoucher.isShowApp"
+        [label]="'Hiển thị trên ứng dụng'"
+        [classLabel]="'ml-4'"
+        [trueValue]="YES_NO.YES"
+        [falseValue]="YES_NO.NO"
+        [isDisabled]="isDisable"
+      ></form-input-switch>
+    </div>
+    <div>
+      <form-input-switch
+        [(ngModelValue)]="crudVoucher.isHighlight"
+        [label]="'Đặt làm nổi bật'"
+        [classLabel]="'ml-4'"
+        [trueValue]="YES_NO.YES"
+        [falseValue]="YES_NO.NO"
+        [isDisabled]="isDisable"
+      ></form-input-switch>
+    </div>
+    <div>
+      <form-input-switch
+        [(ngModelValue)]="crudVoucher.isUsePrize"
+        [label]="'Sử dụng làm mã bốc thăm trúng thưởng'"
+        [classLabel]="'ml-4'"
+        [trueValue]="YES_NO.YES"
+        [falseValue]="YES_NO.NO"
+        [isDisabled]="isDisable"
+      ></form-input-switch>
+    </div>
+  </div>
+  <div *ngIf="!isDisable" class="p-dialog-footer" style="width: 100%; position: fixed; left: 0; bottom: 0">
+    <form-button
+      [isTypeRipple]="true"
+      [classButton]="'p-button-text p-confirm-dialog-reject'"
+      [label]="'Hủy'"
+      [icon]="'pi pi-times'"
+      (_onClick)="close($event)"
+    ></form-button>
+    <form-button
+      [isTypeRipple]="true"
+      [classButton]="'p-button-text p-confirm-dialog-approve'"
+      [label]="'Lưu'"
+      [icon]="'pi pi-check'"
+      (_onClick)="save($event)"
+    ></form-button>
+  </div>
+</div>

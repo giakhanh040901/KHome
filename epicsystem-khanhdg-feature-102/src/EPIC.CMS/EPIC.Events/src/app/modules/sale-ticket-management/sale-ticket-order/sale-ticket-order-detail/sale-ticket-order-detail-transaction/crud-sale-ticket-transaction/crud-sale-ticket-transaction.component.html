@@ -1,0 +1,115 @@
+<div class="w-full" style="padding-bottom: 70px">
+  <div class="card p-0 mb-0">
+    <h6 class="title-info">Thông tin thanh toán</h6>
+    <div class="p-fluid p-formgrid grid">
+      <div class="flex w-full">
+        <div class="col-3">
+          <form-input [label]="'Số giao dịch'" [(ngModelValue)]="crudDTO.tradingCode" [isDisabled]="true"></form-input>
+        </div>
+        <div class="col-3">
+          <form-input-calendar
+            [label]="'Ngày giao dịch'"
+            [isRequired]="true"
+            [(ngModelValue)]="crudDTO.tradingDate"
+            [isDisabled]="isDisable"
+            [placeholder]="'dd/mm/yy'"
+            [showIcon]="!isDisable"
+            [showTime]="true"
+          ></form-input-calendar>
+        </div>
+        <div class="col-3">
+          <form-dropdown
+            [label]="'Kiểu giao dịch'"
+            [options]="listRevenueExpenditure"
+            [isRequired]="true"
+            [(ngModelValue)]="crudDTO.tradingKind"
+            [isDisabled]="true"
+          ></form-dropdown>
+        </div>
+        <div class="col-3">
+          <form-dropdown
+            [label]="'Loại giao dịch'"
+            [options]="listTradingType"
+            [isRequired]="true"
+            [(ngModelValue)]="crudDTO.tradingType"
+            [isDisabled]="true"
+          ></form-dropdown>
+        </div>
+      </div>
+      <div class="flex w-full">
+        <div class="col-3">
+          <form-dropdown
+            [label]="'Loại thanh toán'"
+            [options]="listTransactionType"
+            [isRequired]="true"
+            [(ngModelValue)]="crudDTO.transactionType"
+            [isDisabled]="isDisable"
+          ></form-dropdown>
+        </div>
+        <div class="col-3">
+          <form-input-number
+            [label]="'Số tiền'"
+            [isRequired]="true"
+            [(ngModelValue)]="crudDTO.value"
+            [isDisabled]="isDisable"
+          ></form-input-number>
+        </div>
+        <div class="col-6" *ngIf="crudDTO.transactionType === CHUYEN_KHOAN">
+          <form-dropdown
+            [label]="'Tài khoản nhận tiền'"
+            [options]="listAccount"
+            [isRequired]="true"
+            [(ngModelValue)]="crudDTO.account"
+            [isDisabled]="isDisable"
+            [placeholder]="'Lựa chọn tài khoản'"
+          ></form-dropdown>
+        </div>
+      </div>
+      <div class="flex w-full">
+        <div class="col-12">
+          <form-textarea
+            [label]="'Mô tả'"
+            [rows]="2"
+            [(ngModelValue)]="crudDTO.description"
+            [placeholder]="'Nhập nội dung mô tả'"
+          ></form-textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card p-0 mb-0">
+    <h6 class="title-info">Người dùng</h6>
+    <div class="p-fluid p-formgrid grid">
+      <div class="flex w-full">
+        <div class="col-3">
+          <form-input [label]="'Người tạo'" [(ngModelValue)]="crudDTO.createUser" [isDisabled]="true"></form-input>
+        </div>
+        <div class="col-3">
+          <form-input [label]="'Ngày tạo'" [(ngModelValue)]="crudDTO.createDate" [isDisabled]="true"></form-input>
+        </div>
+        <div class="col-3">
+          <form-input [label]="'Người duyệt'" [(ngModelValue)]="crudDTO.approveUser" [isDisabled]="true"></form-input>
+        </div>
+        <div class="col-3">
+          <form-input [label]="'Ngày duyệt'" [(ngModelValue)]="crudDTO.approveDate" [isDisabled]="true"></form-input>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="!isDisable" class="p-dialog-footer" style="width: 100%; position: fixed; left: 0; bottom: 0">
+    <form-button
+      [isTypeRipple]="true"
+      [classButton]="'p-button-text p-confirm-dialog-reject'"
+      [label]="'Hủy'"
+      [icon]="'pi pi-times'"
+      (_onClick)="close($event)"
+    ></form-button>
+    <form-button
+      [isTypeRipple]="true"
+      [classButton]="'p-button-text p-confirm-dialog-approve'"
+      [label]="'Lưu'"
+      [icon]="'pi pi-check'"
+      (_onClick)="save($event)"
+    ></form-button>
+  </div>
+</div>

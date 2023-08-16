@@ -1,0 +1,51 @@
+
+<form class="form-horizontal" autocomplete="off" #createModal="ngForm" (ngSubmit)="save()" [busy]="isLoading">
+  <abp-modal-header [title]="title" (onCloseClick)="bsModalRef.hide()"></abp-modal-header>
+  <div class="grid-margin stretch-card mb-0">
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
+            <div class="form-group required col-md-12">
+              <label for="code">Mã danh mục (<span class="field-required">*</span>) </label>
+              <input type="text" class="form-control form-control-sm" name="code" id="code" #code required
+                  maxlength="50" placeholder="Mã danh mục" [(ngModel)]="productCategory.code" #codeModel="ngModel" #codeEl />
+              <abp-validation-summary [control]="codeModel" [controlEl]="codeEl"></abp-validation-summary>
+            </div>
+            <div class="form-group required col-md-12">
+              <label for="name" #nameValidation>Tên danh mục (<span class="field-required">*</span>) </label>
+              <input type="text" class="form-control form-control-sm" name="name" id="name" #name required
+                  maxlength="256" placeholder="Tên danh mục" [(ngModel)]="productCategory.name" #nameModel="ngModel" #nameEl />
+              <abp-validation-summary [control]="nameModel" [controlEl]="nameEl"></abp-validation-summary>
+            </div>
+            <div class="form-group required col-md-12">
+              <label for="description">Mô tả (<span class="field-required">*</span>) </label>
+              <textarea type="text" class="form-control form-control-sm" name="nameEn" id="description" #description required
+                  maxlength="1024" placeholder="Mô tả" [(ngModel)]="productCategory.description" #descriptionModel="ngModel" #descriptionEl></textarea>
+              <abp-validation-summary [control]="descriptionModel" [controlEl]="descriptionEl"></abp-validation-summary>
+            </div>
+            <div class="form-group required col-md-12">
+              <label for="content"> Nội dung mô tả </label>
+              <textarea type="text" class="form-control form-control-sm" name="content" id="content" #content maxlength="4000" rows="2"
+              [(ngModel)]="productCategory.content" placeholder="Nội dung mô tả"
+              #contentModel="ngModel" #contentEl> </textarea>
+              <abp-validation-summary [control]="contentModel" [controlEl]="contentEl"></abp-validation-summary>
+            </div>
+            <div class="form-group required col-md-12">
+              <label for="icon">Icon (<span class="field-required">*</span>) </label>
+              <textarea type="text" class="form-control form-control-sm" name="icon" id="icon" placeholder="Icon" #icon required
+                  rows="1" maxlength="1024" [(ngModel)]="productCategory.icon" #iconModel="ngModel" #iconEl> </textarea>
+              <abp-validation-summary [control]="iconModel" [controlEl]="iconEl"></abp-validation-summary>
+            </div>
+            <div class="form-group required col-md-12">
+              <label for="appRouter"> Router điều hướng trên App </label>
+              <textarea type="text" class="form-control form-control-sm" name="appRouter" id="appRouter" rows="1" #appRouter
+                  maxlength="512" placeholder="Router điều hướng trên App" [(ngModel)]="productCategory.appRouter" #appRouterModel="ngModel" #appRouterEl></textarea>
+              <abp-validation-summary [control]="appRouterModel" [controlEl]="appRouterEl"></abp-validation-summary>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+  <abp-modal-footer [cancelDisabled]="saving" [saveDisabled]="!createModal.form.valid || saving"
+      (onCancelClick)="bsModalRef.hide()"></abp-modal-footer>
+</form>
