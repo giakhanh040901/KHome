@@ -67,22 +67,6 @@ a {
     transition: margin-left 0.2s;
 }
 
-.layout-main-custom {
-    //margin-left: 60px;
-    // padding-top: 75px; original
-    // padding-top: 60px;
-    @include transition(margin-left $transitionDuration);
-
-    @include flex();
-    @include flex-justify-between();
-    @include flex-direction-column();
-    min-height:100vh;
-    -moz-transition: margin-left 0.2s;
-    -o-transition: margin-left 0.2s;
-    -webkit-transition: margin-left 0.2s;
-    transition: margin-left 0.2s;
-}
-
 .layout-footer{
     background-color: $contentBgColor;;
     padding: 10px 30px;
