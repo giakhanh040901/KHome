@@ -73,6 +73,9 @@ import { AcceptFilePipe } from './pipes/accept-file.pipe';
 import { HelpersService } from './services/helper.service';
 import { DialogService } from 'primeng/dynamicdialog';
 import { FileService } from './services/file-service';
+import { FormMultiSelectComponent } from './components/form-multi-select/form-multi-select.component';
+import { FormInputComponent } from './components/form-input/form-input.component';
+import { FormDropdownComponent } from './components/form-dropdown/form-dropdown.component';
 // import { AppLocalStorageService } from './services/storage.service';
 
 @NgModule({
@@ -102,6 +105,9 @@ import { FileService } from './services/file-service';
         EViewComponent,
         EUploadComponent,
         AcceptFilePipe,
+        FormMultiSelectComponent,
+        FormInputComponent,
+        FormDropdownComponent,
     ],
     exports: [
 		DateViewPipe,

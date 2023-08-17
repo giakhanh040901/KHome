@@ -195,13 +195,89 @@
 </p-menubar> -->
 
 <div class="">
-  <p-menubar [model]="items" class="">
+  <p-menubar [model]="items" styleClass="bg-white" style="background: #fff;">
     <ng-template pTemplate="start">
-      <img src="../../assets/layout/images/KHOME.png" height="100" class="ml-4"/>
+      <img src="../../assets/layout/images/KHOME.png" height="150" class="ml-4"/>
     </ng-template>
     <ng-template pTemplate="end">
       <!-- <input type="text" pInputText placeholder="Search" class="w-full" class="mr-4"/> -->
-      <p-button label="Đăng nhập" styleClass="p-button-outlined" class="ml-4"></p-button>
+      <p-button label="Đăng nhập" styleClass="p-button-outlined p-button-lg px-4 py-3" class="mr-8"></p-button>
     </ng-template>
   </p-menubar>
+  <div style="display: block;">
+    <div style="display:flex; flex: 0 0 auto; flex-direction: row;">
+      <div style="margin-top: 12rem; margin-left: 48px; flex: 1;">
+        <div style="font-size: 56px; line-height: 72px; color: black;">
+          <div>
+            <span>Cùng nhau vươn tới đỉnh cao</span>
+          </div>
+          <div>
+            <span>Thịnh vượng & Hạnh phúc</span>
+          </div>
+        </div>
+        <p-tabView styleClass="custom-tabview" [(activeIndex)]="activeIndex" (onChange)="changeTab($event)">
+          <!-- pause tạm -->
+          <!-- <p-tabPanel [header]="'product'" *ngIf="isGranted([PermissionRealStateConst.RealStateMoBan_ThongTinChung])">
+              <ng-template pTemplate="header">
+                  <span> Căn đang bán </span>
+              </ng-template>
+            <p-autoComplete [(ngModel)]="selectedCountry" [forceSelection]="true" [suggestions]="filteredCountries" (completeMethod)="filterCountry($event)" field="name"></p-autoComplete>
+          </p-tabPanel> -->
+          <p-tabPanel [header]="'project'" *ngIf="isGranted([PermissionRealStateConst.RealStateMoBan_ThongTinChung])">
+            <ng-template pTemplate="header">
+                <span style="font-weight: 600;"> Dự án </span>
+            </ng-template>
+            <div style="display: flex;">
+              <input type="text" pInputText placeholder="Tìm dự án" class="w-full" style="width: 100%;"/>
+              <div style="display: flex;">
+                <button pButton pRippletype="button" label="Tìm kiếm" icon="pi pi-search" style="margin-left: -24px; padding-left: 24px; padding-right: 24px; border-radius: 0px 8px 8px 0px; width: 130px; line-height: 3;"></button>
+              </div>
+            </div>
+            <!-- <app-open-sell-general-information 
+                *ngIf="tabViewActive['generalInfor']"
+                [openSellInfo]="openSellInfo" [openSellId]="openSellId"
+                [(rows)]="products" (getOpenSellProduct)="products=$event">
+            </app-open-sell-general-information> -->
+            <div #divFilter class="flex flex-column sm:flex-row w-full">
+              <form-input
+                class="col-2 pl-0"
+                [floatLabel]="true"
+                [placeholder]="'Nhập tên sự kiện/ SĐT khách hàng'"
+                [classInput]="'pr-0'"
+                [label]="'Tìm kiếm'"
+                [(ngModelValue)]="filter.keyword"
+                (_onChange)="changeFilter($event)"
+              ></form-input>
+              <form-multi-select
+                class="col-2"
+                [label]="'Sự kiện'"
+                [floatLabel]="true"
+                [options]="listEvent"
+                [(ngModelValue)]="filter.event"
+                (_onChange)="changeFilter($event)"
+              ></form-multi-select>
+              <form-multi-select
+                class="col-2"
+                [label]="'Trạng thái'"
+                [floatLabel]="true"
+                [options]="listStatus"
+                [(ngModelValue)]="filter.status"
+                (_onChange)="changeFilter($event)"
+              ></form-multi-select>
+              <form-multi-select
+                class="col-2"
+                [label]="'Nguồn đặt lệnh'"
+                [floatLabel]="true"
+                [options]="listSource"
+                [(ngModelValue)]="filter.source"
+                (_onChange)="changeFilter($event)"
+              ></form-multi-select>
+            </div>
+        </p-tabPanel>
+      </p-tabView>
+      </div>
+      <div style="flex: 1;">
+        <img src="../../assets/layout/images/hero-min.png" alt="" style="margin-top: -12rem; max-width: 100%;">
+      </div>
+    </div>
 </div>
