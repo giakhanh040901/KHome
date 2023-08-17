@@ -206,8 +206,8 @@
   </p-menubar>
   <div style="display: block;">
     <div style="display:flex; flex: 0 0 auto; flex-direction: row;">
-      <div style="margin-top: 12rem; margin-left: 48px; flex: 1;">
-        <div style="font-size: 56px; line-height: 72px; color: black;">
+      <div style="margin-top: 2rem; margin-left: 4rem; flex: 1;">
+        <div style="font-size: 3rem; line-height: 5rem; color: black;">
           <div>
             <span>Cùng nhau vươn tới đỉnh cao</span>
           </div>
@@ -230,7 +230,7 @@
             <div style="display: flex;">
               <input type="text" pInputText placeholder="Tìm dự án" class="w-full" style="width: 100%;"/>
               <div style="display: flex;">
-                <button pButton pRippletype="button" label="Tìm kiếm" icon="pi pi-search" style="margin-left: -24px; padding-left: 24px; padding-right: 24px; border-radius: 0px 8px 8px 0px; width: 130px; line-height: 3;"></button>
+                <button pButton pRippletype="button" label="Tìm kiếm" icon="pi pi-search" style="margin-left: -2rem; padding-left: 2rem; padding-right: 2rem; border-radius: 0px 4px 4px 0px; width: 10rem; line-height: 3;"></button>
               </div>
             </div>
             <!-- <app-open-sell-general-information 
@@ -238,41 +238,6 @@
                 [openSellInfo]="openSellInfo" [openSellId]="openSellId"
                 [(rows)]="products" (getOpenSellProduct)="products=$event">
             </app-open-sell-general-information> -->
-            <div #divFilter class="flex flex-column sm:flex-row w-full">
-              <form-input
-                class="col-2 pl-0"
-                [floatLabel]="true"
-                [placeholder]="'Nhập tên sự kiện/ SĐT khách hàng'"
-                [classInput]="'pr-0'"
-                [label]="'Tìm kiếm'"
-                [(ngModelValue)]="filter.keyword"
-                (_onChange)="changeFilter($event)"
-              ></form-input>
-              <form-multi-select
-                class="col-2"
-                [label]="'Sự kiện'"
-                [floatLabel]="true"
-                [options]="listEvent"
-                [(ngModelValue)]="filter.event"
-                (_onChange)="changeFilter($event)"
-              ></form-multi-select>
-              <form-multi-select
-                class="col-2"
-                [label]="'Trạng thái'"
-                [floatLabel]="true"
-                [options]="listStatus"
-                [(ngModelValue)]="filter.status"
-                (_onChange)="changeFilter($event)"
-              ></form-multi-select>
-              <form-multi-select
-                class="col-2"
-                [label]="'Nguồn đặt lệnh'"
-                [floatLabel]="true"
-                [options]="listSource"
-                [(ngModelValue)]="filter.source"
-                (_onChange)="changeFilter($event)"
-              ></form-multi-select>
-            </div>
         </p-tabPanel>
       </p-tabView>
       </div>
