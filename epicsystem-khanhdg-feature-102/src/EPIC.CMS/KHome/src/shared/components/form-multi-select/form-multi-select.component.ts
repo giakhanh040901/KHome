@@ -5,7 +5,7 @@ import { debounceTime } from 'rxjs/operators';
 import { LABEL } from '../form-dropdown/form-dropdown.component';
 
 @Component({
-  selector: 'app-form-multi-select',
+  selector: 'form-multi-select',
   templateUrl: './form-multi-select.component.html',
   styleUrls: ['./form-multi-select.component.scss']
 })

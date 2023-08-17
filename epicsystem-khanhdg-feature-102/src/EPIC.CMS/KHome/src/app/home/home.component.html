@@ -238,6 +238,46 @@
                 [openSellInfo]="openSellInfo" [openSellId]="openSellId"
                 [(rows)]="products" (getOpenSellProduct)="products=$event">
             </app-open-sell-general-information> -->
+            <ng-container filter>
+              <div #divFilter class="flex flex-column sm:flex-row w-full" style="padding: 2rem 0 2rem 0;">
+                <form-multi-select
+                  style="flex: 1;"
+                  class="col-2"
+                  [label]="'Chọn tỉnh thành'"
+                  [floatLabel]="true"
+                  [options]="listEvent"
+                  [(ngModelValue)]="filter.event"
+                  (_onChange)="changeFilter($event)"
+                ></form-multi-select>
+                <form-multi-select
+                  style="flex: 1;"
+                  class="col-2"
+                  [label]="'Loại BĐS'"
+                  [floatLabel]="true"
+                  [options]="listStatus"
+                  [(ngModelValue)]="filter.status"
+                  (_onChange)="changeFilter($event)"
+                ></form-multi-select>
+                <form-multi-select
+                  style="flex: 1;"
+                  class="col-2"
+                  [label]="'Số phòng ngủ'"
+                  [floatLabel]="true"
+                  [options]="listSource"
+                  [(ngModelValue)]="filter.source"
+                  (_onChange)="changeFilter($event)"
+                ></form-multi-select>
+                <form-multi-select
+                  style="flex: 1;"
+                  class="col-2"
+                  [label]="'Khoảng giá'"
+                  [floatLabel]="true"
+                  [options]="listSource"
+                  [(ngModelValue)]="filter.source"
+                  (_onChange)="changeFilter($event)"
+                ></form-multi-select>
+              </div>
+            </ng-container>
         </p-tabPanel>
       </p-tabView>
       </div>

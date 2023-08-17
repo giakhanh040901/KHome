@@ -125,7 +125,8 @@ import { FormDropdownComponent } from './components/form-dropdown/form-dropdown.
         EInputSwitchComponent,
         EUploadComponent,
         AcceptFilePipe,
-        EMarkdownHtmlComponent
+        EMarkdownHtmlComponent,
+        FormMultiSelectComponent
     ]
 })
 export class SharedModule {
