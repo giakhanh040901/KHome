@@ -197,7 +197,7 @@
 <div class="">
   <p-menubar [model]="items" styleClass="bg-white" style="background: #fff;">
     <ng-template pTemplate="start">
-      <img src="../../assets/layout/images/KHOME.png" height="150" class="ml-4"/>
+      <img src="../../assets/layout/images/KHomeLogo.png" height="100" class="ml-4"/>
     </ng-template>
     <ng-template pTemplate="end">
       <!-- <input type="text" pInputText placeholder="Search" class="w-full" class="mr-4"/> -->
@@ -227,62 +227,162 @@
             <ng-template pTemplate="header">
                 <span style="font-weight: 600;"> Dự án </span>
             </ng-template>
-            <div style="display: flex;">
-              <input type="text" pInputText placeholder="Tìm dự án" class="w-full" style="width: 100%;"/>
+            <!-- <div style="margin-right: -12rem;
+            z-index: 1000;
+            position: relative;
+            background-color: #fff;"> -->
               <div style="display: flex;">
-                <button pButton pRippletype="button" label="Tìm kiếm" icon="pi pi-search" style="margin-left: -2rem; padding-left: 2rem; padding-right: 2rem; border-radius: 0px 4px 4px 0px; width: 10rem; line-height: 3;"></button>
+                <input type="text" pInputText placeholder="Tìm dự án" class="w-full" style="width: 100%;"/>
+                <div style="display: flex;">
+                  <button pButton pRippletype="button" label="Tìm kiếm" icon="pi pi-search" style="margin-left: -2rem; padding-left: 2rem; padding-right: 2rem; border-radius: 0px 4px 4px 0px; width: 10rem; line-height: 3;"></button>
+                </div>
               </div>
-            </div>
-            <!-- <app-open-sell-general-information 
-                *ngIf="tabViewActive['generalInfor']"
-                [openSellInfo]="openSellInfo" [openSellId]="openSellId"
-                [(rows)]="products" (getOpenSellProduct)="products=$event">
-            </app-open-sell-general-information> -->
-            <ng-container filter>
-              <div #divFilter class="flex flex-column sm:flex-row w-full" style="padding: 2rem 0 2rem 0;">
-                <form-multi-select
-                  style="flex: 1;"
-                  class="col-2"
-                  [label]="'Chọn tỉnh thành'"
-                  [floatLabel]="true"
-                  [options]="listEvent"
-                  [(ngModelValue)]="filter.event"
-                  (_onChange)="changeFilter($event)"
-                ></form-multi-select>
-                <form-multi-select
-                  style="flex: 1;"
-                  class="col-2"
-                  [label]="'Loại BĐS'"
-                  [floatLabel]="true"
-                  [options]="listStatus"
-                  [(ngModelValue)]="filter.status"
-                  (_onChange)="changeFilter($event)"
-                ></form-multi-select>
-                <form-multi-select
-                  style="flex: 1;"
-                  class="col-2"
-                  [label]="'Số phòng ngủ'"
-                  [floatLabel]="true"
-                  [options]="listSource"
-                  [(ngModelValue)]="filter.source"
-                  (_onChange)="changeFilter($event)"
-                ></form-multi-select>
-                <form-multi-select
-                  style="flex: 1;"
-                  class="col-2"
-                  [label]="'Khoảng giá'"
-                  [floatLabel]="true"
-                  [options]="listSource"
-                  [(ngModelValue)]="filter.source"
-                  (_onChange)="changeFilter($event)"
-                ></form-multi-select>
-              </div>
-            </ng-container>
+              <!-- <app-open-sell-general-information 
+                  *ngIf="tabViewActive['generalInfor']"
+                  [openSellInfo]="openSellInfo" [openSellId]="openSellId"
+                  [(rows)]="products" (getOpenSellProduct)="products=$event">
+              </app-open-sell-general-information> -->
+              <ng-container filter>
+                <div #divFilter class="flex flex-column sm:flex-row w-full" style="padding: 2rem 0 2rem 0;">
+                  <form-multi-select
+                    style="flex: 1;"
+                    class="col-2"
+                    [label]="'Chọn tỉnh thành'"
+                    [floatLabel]="true"
+                    [options]="listEvent"
+                    [(ngModelValue)]="filter.event"
+                    (_onChange)="changeFilter($event)"
+                  ></form-multi-select>
+                  <form-multi-select
+                    style="flex: 1;"
+                    class="col-2"
+                    [label]="'Loại BĐS'"
+                    [floatLabel]="true"
+                    [options]="listStatus"
+                    [(ngModelValue)]="filter.status"
+                    (_onChange)="changeFilter($event)"
+                  ></form-multi-select>
+                  <form-multi-select
+                    style="flex: 1;"
+                    class="col-2"
+                    [label]="'Số phòng ngủ'"
+                    [floatLabel]="true"
+                    [options]="listSource"
+                    [(ngModelValue)]="filter.source"
+                    (_onChange)="changeFilter($event)"
+                  ></form-multi-select>
+                  <form-multi-select
+                    style="flex: 1;"
+                    class="col-2"
+                    [label]="'Khoảng giá'"
+                    [floatLabel]="true"
+                    [options]="listSource"
+                    [(ngModelValue)]="filter.source"
+                    (_onChange)="changeFilter($event)"
+                  ></form-multi-select>
+                </div>
+              </ng-container>
+
+            <!-- </div> -->
+            
         </p-tabPanel>
       </p-tabView>
+      <div style="display: flex; margin-top: 2rem; width: 30rem; justify-content: space-between; align-items: center;">
+        <a style="cursor: pointer;">
+          <span style="color: #000; font-size: 2rem; font-weight: 600; line-height: 4rem;">370+</span>
+          <div style="display: flex; color: #6f6f6f; align-items: center;">
+            <span style="font-size: 1.2rem; margin-right: 1rem;">dự án</span>
+            <span style="font-size: 1.2rem" class="pi pi-arrow-up-right"></span>
+          </div>
+        </a>
+        <div style="border-left: 1px solid #6f6f6f; height: 2.5rem;"></div>
+        <a style="cursor: pointer;">
+          <span style="color: #000; font-size: 2rem; font-weight: 600; line-height: 4rem;">886,000+</span>
+          <div style="display: flex; color: #6f6f6f; align-items: center;">
+            <span style="font-size: 1.2rem; margin-right: 1rem;">BĐS đã xác thực</span>
+            <span style="font-size: 1.2rem" class="pi pi-arrow-up-right"></span>
+          </div>
+        </a>
+      </div>
       </div>
       <div style="flex: 1;">
         <img src="../../assets/layout/images/hero-min.png" alt="" style="margin-top: -12rem; max-width: 100%;">
       </div>
     </div>
+  </div>
+  
+  <!-- Feature -->
+  <div class="" style="margin-left: 4rem; margin-right:4rem; margin-top: 12rem;">
+    <div>
+      <h2>Gợi ý cho bạn</h2>
+    </div>
+    <div style="display: flex; margin-top: 2rem;">
+      <div style="padding: 1rem 0 1rem 0; margin-right: 4rem; cursor: pointer;">
+        <span class="pi pi-thumbs-up" style="margin-bottom: 1rem; font-size: 1.3rem;"></span>
+        <div style="font-size: 1.3rem;">Phù hợp nhất</div>
+      </div>
+      <div style="padding: 1rem 0 1rem 0; margin-right: 4rem; cursor: pointer;">
+        <span class="pi pi-eye" style="margin-bottom: 1rem; font-size: 1.3rem;"></span>
+        <div style="font-size: 1.3rem;">Xem gần đây</div>
+      </div>
+      <div style="padding: 1rem 0 1rem 0; margin-right: 4rem; cursor: pointer;">
+        <span class="pi pi-heart" style="margin-bottom: 1rem; font-size: 1.3rem;"></span>
+        <div style="font-size: 1.3rem;">Căn yêu thích</div>
+      </div>
+    </div>
+    
+    <!-- List sản phẩm -->
+    <div class="p-fluid p-formgrid">
+      <div class="grid flex w-full mt-2">
+        <div class="col-3" style="padding-right: 1rem;">
+          <div>
+            <img src="../../assets/layout/images/product/TestHome.jpg" alt="" style="width: 100%;">
+          </div>
+          <div>
+            <div class="flex" style="margin-top: 1rem; align-items: baseline;">
+              <span style="font-size: 1.2rem; font-weight: 600;">Căn 2PN toà S2.01 - The Sapphire - Vinhomes Smart City</span>
+              <span style="font-size: 1.2rem;" class="pi pi-heart"></span>
+            </div>
+            <div style="margin-top: 1rem;">Q. Nam Từ Liêm, TP. Hà Nội</div>
+            <div class="flex">
+              <div></div>
+            </div>
+          </div>
+        </div>
+        <div class="col-3" style="padding-right: 1rem;">
+          <div>
+            <img src="../../assets/layout/images/product/TestHome.jpg" alt="" style="width: 100%;">
+          </div>
+          <div>
+            <div class="flex" style="margin-top: 1rem; justify-content: space-between; align-items: baseline;">
+              <span style="font-size: 1.2rem; font-weight: 600;">Căn 2PN toà D - Masteri West Heights</span>
+              <span style="font-size: 1.2rem;" class="pi pi-heart"></span>
+            </div>
+            <span>Q. Nam Từ Liêm, TP. Hà Nội</span>
+            <div class="flex">
+              <div></div>
+            </div>
+          </div>
+        </div>
+        <div class="col-3">
+          <h2>Siu</h2>
+        </div>
+        <div class="col-3">
+          <h2>Siu</h2>
+        </div>
+        <div class="col-3">
+          <h2>Siu</h2>
+        </div>
+        <div class="col-3">
+          <h2>Siu</h2>
+        </div>
+        <div class="col-3">
+          <h2>Siu</h2>
+        </div>
+        <div class="col-3">
+          <h2>Siu</h2>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

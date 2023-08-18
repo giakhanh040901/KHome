@@ -15,6 +15,7 @@
 
     &:enabled:focus {
         @include focused-input();
+        box-shadow: 0 0 0 0.03rem #bab5f3 !important;
     }
 
     &.ng-dirty.ng-invalid {
