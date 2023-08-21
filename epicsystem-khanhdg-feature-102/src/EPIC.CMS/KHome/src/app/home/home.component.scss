@@ -15,3 +15,8 @@
 div.height-chart {
     height: calc((100% - 40px - 0.5rem - 212px - 1.5rem - 2rem) / 2);
 }
+
+.info-text:hover{
+  cursor: pointer;
+  text-decoration: underline;
+}
