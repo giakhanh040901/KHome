@@ -150,6 +150,8 @@ import { RecentActivityComponent } from "./home/recent-activity/recent-activity.
 import { NgxSpinnerModule } from "ngx-spinner";
 import { NgxSkeletonLoaderModule } from "ngx-skeleton-loader";
 import { FilterBusinessCustomerComponent } from './components/filter-business-customer/filter-business-customer.component';
+import { ProductItemComponent } from './modules/product-item/product-item.component';
+import { ProjectComponent } from './modules/project/project.component';
 
 FullCalendarModule.registerPlugins([
 	dayGridPlugin,
@@ -287,6 +289,8 @@ FullCalendarModule.registerPlugins([
 		CardDashboardGalleriaComponent,
 		RecentActivityComponent,
   		FilterBusinessCustomerComponent,
+    	ProductItemComponent,
+     	ProjectComponent,
 	],
 
 	providers: [

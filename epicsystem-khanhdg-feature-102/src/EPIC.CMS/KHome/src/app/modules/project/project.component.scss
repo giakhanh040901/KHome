@@ -1,0 +1,103 @@
+/* [1] The container */
+.img-hover-zoom {
+    overflow: hidden; /* [1.2] Hide the overflowing of child elements */
+  }
+  
+/* [2] Transition property for smooth transformation of images */
+.img-hover-zoom p-image {
+transition: transform .5s ease;
+}
+
+/* [3] Finally, transforming the image when container gets hovered */
+.img-hover-zoom:hover p-image {
+transform: scale(1.5);
+}
+
+.custom-tabview .p-tabview-panels .p-element .p-tabview-panel {
+  border: none !important;
+  padding: 0px 0px !important;
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 20rem;
+  background-color: black;
+  color: #fff;
+  // text-align: justify;
+  border-radius: 6px;
+  padding: 0.5rem;
+  position: absolute;
+  z-index: 1;
+  bottom: 150%;
+  left: 50%;
+  margin-left: -10rem;
+}
+
+.tooltip .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: black transparent transparent transparent;
+}
+
+.tooltip:hover .tooltiptext,
+.tooltip:hover .tooltiptextbottom {
+  visibility: visible;
+}
+
+.tooltip .tooltiptextbottom::after {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent black transparent;
+}
+.tooltip .tooltiptextbottom {
+  visibility: hidden;
+  width: 20rem;
+  background-color: black;
+  color: #fff;
+  // text-align: justify;
+  border-radius: 6px;
+  padding: 0.5rem;
+  position: absolute;
+  z-index: 1;
+  top: 150%;
+  left: 50%;
+  margin-left: -10rem;
+}
+
+.btn-p1-p2 {
+  border-width: 1px;
+  border-color: #6f6f6f;
+  padding: 1rem 2rem;
+  border-radius: 2rem;
+  background-color: #fff;
+  font-size: 1.2rem;
+  width: 10rem;
+}
+
+
+.btn-p1-p2:hover {
+  cursor: pointer;
+  background: linear-gradient(180deg,#f3f3f3,#fff);
+}
+
+.btn-p1-p2:active {
+  cursor: pointer;
+  color: #094bf4;
+  border-color: #094bf4;
+}

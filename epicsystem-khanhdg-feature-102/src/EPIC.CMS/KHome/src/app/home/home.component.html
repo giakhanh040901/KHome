@@ -286,7 +286,7 @@
             <!-- </div> -->
             
         </p-tabPanel>
-      </p-tabView>
+        </p-tabView>
       <div style="display: flex; margin-top: 2rem; width: 30rem; justify-content: space-between; align-items: center;">
         <a style="cursor: pointer;">
           <span style="color: #000; font-size: 2rem; font-weight: 600; line-height: 4rem;">370+</span>
@@ -335,11 +335,13 @@
     <div class="p-fluid p-formgrid">
       <div class="grid flex w-full mt-2">
         <div class="col-3" style="padding-right: 1rem;">
-          <div>
+          <div style="overflow: hidden;">
             <!-- <img src="../../assets/layout/images/product/TestHome.jpg" alt="" style="width: 100%;"> -->
             <p-galleria [(value)]="images" [showIndicators]="true" [showThumbnails]="false" [responsiveOptions]="responsiveOption" >
               <ng-template pTemplate="item" let-item>
-                  <img [src]="item.itemImageSrc" style="width: 100%; display: block;" />
+                <div class="img-hover-zoom">
+                  <img class="" [src]="item.itemImageSrc" style="width: 100%; display: block;" />
+                </div>
               </ng-template>
             </p-galleria>
           </div>
@@ -384,16 +386,18 @@
           </div>
         </div>
         <div class="col-3" style="padding-right: 1rem;">
-          <div>
+          <div style="overflow: hidden;">
             <!-- <img src="../../assets/layout/images/product/TestHome.jpg" alt="" style="width: 100%;"> -->
             <p-galleria [(value)]="images" [showIndicators]="true" [showThumbnails]="false" [responsiveOptions]="responsiveOption" >
               <ng-template pTemplate="item" let-item>
-                  <img [src]="item.itemImageSrc" style="width: 100%; display: block;" />
+                <div class="img-hover-zoom">
+                  <img class="" [src]="item.itemImageSrc" style="width: 100%; display: block;" />
+                </div>
               </ng-template>
             </p-galleria>
           </div>
           <div>
-            <div class="flex" style="margin-top: 1rem; align-items: baseline;">
+            <div class="flex" style="align-items: baseline;">
               <span style="font-size: 1.2rem; font-weight: 600; padding-right: 2rem;">Căn 2PN toà S2.01 - The Sapphire - Vinhomes Smart City</span>
               <span style="font-size: 1.2rem;" class="pi pi-heart"></span>
             </div>
@@ -433,16 +437,18 @@
           </div>
         </div>
         <div class="col-3" style="padding-right: 1rem;">
-          <div>
+          <div style="overflow: hidden;">
             <!-- <img src="../../assets/layout/images/product/TestHome.jpg" alt="" style="width: 100%;"> -->
             <p-galleria [(value)]="images" [showIndicators]="true" [showThumbnails]="false" [responsiveOptions]="responsiveOption" >
               <ng-template pTemplate="item" let-item>
-                  <img [src]="item.itemImageSrc" style="width: 100%; display: block;" />
+                <div class="img-hover-zoom">
+                  <img class="" [src]="item.itemImageSrc" style="width: 100%; display: block;" />
+                </div>
               </ng-template>
             </p-galleria>
           </div>
           <div>
-            <div class="flex" style="margin-top: 1rem; align-items: baseline;">
+            <div class="flex" style="align-items: baseline;">
               <span style="font-size: 1.2rem; font-weight: 600; padding-right: 2rem;">Căn 2PN toà S2.01 - The Sapphire - Vinhomes Smart City</span>
               <span style="font-size: 1.2rem;" class="pi pi-heart"></span>
             </div>
@@ -482,16 +488,18 @@
           </div>
         </div>
         <div class="col-3" style="padding-right: 1rem;">
-          <div>
+          <div style="overflow: hidden;">
             <!-- <img src="../../assets/layout/images/product/TestHome.jpg" alt="" style="width: 100%;"> -->
             <p-galleria [(value)]="images" [showIndicators]="true" [showThumbnails]="false" [responsiveOptions]="responsiveOption" >
               <ng-template pTemplate="item" let-item>
-                  <img [src]="item.itemImageSrc" style="width: 100%; display: block;" />
+                <div class="img-hover-zoom">
+                  <img class="" [src]="item.itemImageSrc" style="width: 100%; display: block;" />
+                </div>
               </ng-template>
             </p-galleria>
           </div>
           <div>
-            <div class="flex" style="margin-top: 1rem; align-items: baseline;">
+            <div class="flex" style="align-items: baseline;">
               <span style="font-size: 1.2rem; font-weight: 600; padding-right: 2rem;">Căn 2PN toà S2.01 - The Sapphire - Vinhomes Smart City</span>
               <span style="font-size: 1.2rem;" class="pi pi-heart"></span>
             </div>
@@ -531,16 +539,18 @@
           </div>
         </div>
         <div class="col-3" style="padding-right: 1rem;">
-          <div>
+          <div style="overflow: hidden;">
             <!-- <img src="../../assets/layout/images/product/TestHome.jpg" alt="" style="width: 100%;"> -->
             <p-galleria [(value)]="images" [showIndicators]="true" [showThumbnails]="false" [responsiveOptions]="responsiveOption" >
               <ng-template pTemplate="item" let-item>
-                  <img [src]="item.itemImageSrc" style="width: 100%; display: block;" />
+                <div class="img-hover-zoom">
+                  <img class="" [src]="item.itemImageSrc" style="width: 100%; display: block;" />
+                </div>
               </ng-template>
             </p-galleria>
           </div>
           <div>
-            <div class="flex" style="margin-top: 1rem; align-items: baseline;">
+            <div class="flex" style="align-items: baseline;">
               <span style="font-size: 1.2rem; font-weight: 600; padding-right: 2rem;">Căn 2PN toà S2.01 - The Sapphire - Vinhomes Smart City</span>
               <span style="font-size: 1.2rem;" class="pi pi-heart"></span>
             </div>
@@ -580,16 +590,18 @@
           </div>
         </div>
         <div class="col-3" style="padding-right: 1rem;">
-          <div>
+          <div style="overflow: hidden;">
             <!-- <img src="../../assets/layout/images/product/TestHome.jpg" alt="" style="width: 100%;"> -->
             <p-galleria [(value)]="images" [showIndicators]="true" [showThumbnails]="false" [responsiveOptions]="responsiveOption" >
               <ng-template pTemplate="item" let-item>
-                  <img [src]="item.itemImageSrc" style="width: 100%; display: block;" />
+                <div class="img-hover-zoom">
+                  <img class="" [src]="item.itemImageSrc" style="width: 100%; display: block;" />
+                </div>
               </ng-template>
             </p-galleria>
           </div>
           <div>
-            <div class="flex" style="margin-top: 1rem; align-items: baseline;">
+            <div class="flex" style="align-items: baseline;">
               <span style="font-size: 1.2rem; font-weight: 600; padding-right: 2rem;">Căn 2PN toà S2.01 - The Sapphire - Vinhomes Smart City</span>
               <span style="font-size: 1.2rem;" class="pi pi-heart"></span>
             </div>
@@ -629,16 +641,18 @@
           </div>
         </div>
         <div class="col-3" style="padding-right: 1rem;">
-          <div>
+          <div style="overflow: hidden;">
             <!-- <img src="../../assets/layout/images/product/TestHome.jpg" alt="" style="width: 100%;"> -->
             <p-galleria [(value)]="images" [showIndicators]="true" [showThumbnails]="false" [responsiveOptions]="responsiveOption" >
               <ng-template pTemplate="item" let-item>
-                  <img [src]="item.itemImageSrc" style="width: 100%; display: block;" />
+                <div class="img-hover-zoom">
+                  <img class="" [src]="item.itemImageSrc" style="width: 100%; display: block;" />
+                </div>
               </ng-template>
             </p-galleria>
           </div>
           <div>
-            <div class="flex" style="margin-top: 1rem; align-items: baseline;">
+            <div class="flex" style="align-items: baseline;">
               <span style="font-size: 1.2rem; font-weight: 600; padding-right: 2rem;">Căn 2PN toà S2.01 - The Sapphire - Vinhomes Smart City</span>
               <span style="font-size: 1.2rem;" class="pi pi-heart"></span>
             </div>
@@ -678,16 +692,18 @@
           </div>
         </div>
         <div class="col-3" style="padding-right: 1rem;">
-          <div>
+          <div style="overflow: hidden;">
             <!-- <img src="../../assets/layout/images/product/TestHome.jpg" alt="" style="width: 100%;"> -->
             <p-galleria [(value)]="images" [showIndicators]="true" [showThumbnails]="false" [responsiveOptions]="responsiveOption" >
               <ng-template pTemplate="item" let-item>
-                  <img [src]="item.itemImageSrc" style="width: 100%; display: block;" />
+                <div class="img-hover-zoom">
+                  <img class="" [src]="item.itemImageSrc" style="width: 100%; display: block;" />
+                </div>
               </ng-template>
             </p-galleria>
           </div>
           <div>
-            <div class="flex" style="margin-top: 1rem; align-items: baseline;">
+            <div class="flex" style="align-items: baseline;">
               <span style="font-size: 1.2rem; font-weight: 600; padding-right: 2rem;">Căn 2PN toà S2.01 - The Sapphire - Vinhomes Smart City</span>
               <span style="font-size: 1.2rem;" class="pi pi-heart"></span>
             </div>
@@ -734,7 +750,7 @@
   </div>
 
   <!-- Project -->
-  <div style="background: url(https://onehousing.vn/_next/static/media/bg.a9cddc84.svg); width: 100%; height: 500vh;">
+  <div style="background: url(https://onehousing.vn/_next/static/media/bg.a9cddc84.svg); width: 100%; height: 320vh;">
     <div style="margin-left: 4rem; margin-right:4rem; padding-top: 6rem;">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-left: 3.2rem; margin-right: 3.6rem; margin-bottom: 1rem;">
         <div style="font-size: 2rem; color: #fff; font-weight: 600;">Dự án nổi bật</div>
@@ -744,7 +760,7 @@
                 font-weight: 600; background-color: transparent;"></button>
       </div>  
       <div>
-        <p-carousel [value]="products" [numVisible]="3" [numScroll]="1" [responsiveOptions]="responsiveOptions" [circular]="true">
+        <p-carousel [circular]="true" [autoplayInterval]="3000" [value]="products" [numVisible]="3" [numScroll]="1" [responsiveOptions]="responsiveOptions" [circular]="true">
           <ng-template let-product pTemplate="item">
               <!-- <div class="border-1 surface-border border-round m-2 text-center py-5 px-3">
                   <div class="mb-3">
@@ -762,28 +778,116 @@
               </div> -->
               
               <div class="border-round m-2" style="position: relative; overflow: hidden;">
-                <div class="imageProject">
+                <div class="img-hover-zoom" style="position: relative; overflow: hidden;">
                     <img class="" src="https://primefaces.org/cdn/primeng/images/demo/product/{{ product.image }}" [alt]="product.name" class="shadow-2" style="width: 100%; border-radius: 4px;"/>
+                    <div class="" style="position: absolute; bottom: 0; top: 0; right: 0; left: 0; background: linear-gradient(180deg,rgba(0,11,49,0),rgba(0,5,24,.75));">
+                      <div style="position: absolute; bottom: 0; margin-bottom: 1rem; margin-left: 1rem;">
+                          <h4 class="mb-1" style="color: #fff;">{{ product.name }}</h4>
+                          <h6 class="mt-0 mb-2" style="color: #fff;">{{ '$' + product.price }}</h6>
+                          <button class="buttonPrimary" pButton pRippletype="button" label="Xem tất cả" style="border-radius: 4px; width: 8rem; line-height: 2; border-color: #fff;
+                          font-size: 1rem; font-weight: 600; background-color: #fff; color: #000;"></button>
+                      </div>
+    
+                    </div>
                 </div>
-                <div class="" style="position: absolute; bottom: 0; top: 0; right: 0; left: 0; background: linear-gradient(180deg,rgba(0,11,49,0),rgba(0,5,24,.75));">
-                  <div style="position: absolute; bottom: 0; margin-bottom: 1rem; margin-left: 1rem;">
-                      <h4 class="mb-1" style="color: #fff;">{{ product.name }}</h4>
-                      <h6 class="mt-0 mb-2" style="color: #fff;">{{ '$' + product.price }}</h6>
-                      <button class="buttonPrimary" pButton pRippletype="button" label="Xem tất cả" style="border-radius: 4px; width: 8rem; line-height: 2; border-color: #fff;
-                      font-size: 1rem; font-weight: 600; background-color: #fff; color: #000;"></button>
-                  </div>
-
-                </div>
+                
             </div>
           </ng-template>
         </p-carousel>
+      </div>
+      <!-- Thông tin giới thiệu -->
+      <div class="p-fluid p-formgrid">
+        <div class="grid flex w-full mt-2">
+          <div class="col-4" style="color: #fff; margin-top: 2rem; padding-right: 8rem;">
+            <div style="font-size: 2rem; font-weight: 600;">
+              Mua nhà toàn diện cùng KHome
+            </div>
+          </div>
+          <div class="col-8" style="color: #000; margin-top: 2rem;">
+            <div class="p-fluid p-formgrid">
+              <div class="grid flex w-full mt-2">
+                <div class="col-6" style="color: #fff; margin-top: 2rem; padding-right: 4rem;">
+                  <div>
+                    <div style="width: 10rem;">
+                      <img src="../../assets/layout/images/product/image_upload_1665052626_an_onehousing_home_project.gif" alt="" style="width: 100%;">
+                    </div>
+                    <div style="margin-top: 1rem; font-size: 1.5rem; font-weight: 600;">
+                      Dự án từ chủ đầu tư hàng đầu Việt Nam
+                    </div>
+                    <div style="margin-top: 1rem; font-size: 1.1rem;">Nguồn hàng Bất động sản từ những chủ đầu tư hàng đầu thị trường</div>
+                  </div>
+                </div>
+                <div class="col-6" style="color: #fff; margin-top: 2rem; padding-right: 4rem; margin-top: 4rem;">
+                  <div>
+                    <div style="width: 10rem;">
+                      <img src="../../assets/layout/images/product/image_upload_1665052637_an_onehousing_home_buyhouse (1).gif" alt="" style="width: 100%;">
+                    </div>
+                    <div style="margin-top: 1rem; font-size: 1.5rem; font-weight: 600;">
+                      Đối tác tài chính uy tín
+                    </div>
+                    <div style="margin-top: 1rem; font-size: 1.1rem;">Là đối tác chiến lược của Techcombank, mang lại các giải pháp tài chính giúp hành trình mua nhà dễ dàng hơn</div>
+                  </div>
+                </div>
+                <div class="col-6" style="color: #fff; margin-top: 2rem; padding-right: 4rem;">
+                  <div>
+                    <div style="width: 10rem;">
+                      <img src="../../assets/layout/images/product/image_upload_1665052656_an_onehousing_home_experts (1).gif" alt="" style="width: 100%;">
+                    </div>
+                    <div style="margin-top: 1rem; font-size: 1.5rem; font-weight: 600;">
+                      Chuyên gia giàu kinh nghiệm
+                    </div>
+                    <div style="margin-top: 1rem; font-size: 1.1rem;">Đội ngũ chuyên gia nhiều năm kinh nghiệm trong lĩnh vực bất động sản</div>
+                  </div>
+                </div>
+                <div class="col-6" style="color: #fff; margin-top: 2rem; padding-right: 4rem; margin-top: 4rem;">
+                  <div>
+                    <div style="width: 10rem;">
+                      <img src="../../assets/layout/images/product/image_upload_1665052672_an_onehousing_home_lifestyle.gif" alt="" style="width: 100%;">
+                    </div>
+                    <div style="margin-top: 1rem; font-size: 1.5rem; font-weight: 600;">
+                      Cảm hứng sống chất
+                    </div>
+                    <div style="margin-top: 1rem; font-size: 1.1rem;">Truyền cảm hứng biến mọi ngôi nhà thành tổ ấm</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chuyên gia -->
+  <div style="margin-left: 4rem; margin-right:4rem; padding-top: 6rem;">
+    <!-- Thông tin giới thiệu -->
+    <div class="p-fluid p-formgrid">
+      <div class="grid flex w-full mt-2">
+        <div class="col-5" style="color: #000; margin-top: 2rem;">
+          <div style="font-size: 2.5rem; font-weight: 600;">
+            Đội ngũ Pro Agent chuyên nghiệp
+          </div>
+          <div style="margin-top: 2rem; font-size: 1.3rem;">KHome tự hào và vinh danh những gương mặt cá nhân, tập thể Pro Agent xuất sắc trong thời gian vừa qua.</div>
+        </div>
+        <div class="col-7" style="color: #000; margin-top: 2rem;">
+          <div class="card md:flex md:justify-content-center">
+            <p-galleria [circular]="true" [autoPlay]="true" [(value)]="images" [showIndicators]="true" [showThumbnails]="false" [responsiveOptions]="responsiveOption" >
+              <ng-template pTemplate="item" let-item>
+                <div class="">
+                  <img class="" [src]="item.itemImageSrc" style="width: 100%; display: block;" />
+                </div>
+              </ng-template>
+            </p-galleria>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
   <!-- Footer -->
   <div style="background-color: rgba(0,0,0,0.04);">
-    <div style="margin-left: 4rem; margin-right:4rem; margin-top: 2rem;">
+    <div style="margin-left: 4rem; margin-right:4rem; margin-top: 2rem; padding-bottom: 2rem;">
       <div class="p-fluid p-formgrid">
         <div class="grid flex w-full mt-2">
           <div class="col-4" style="color: #000; margin-top: 2rem;">

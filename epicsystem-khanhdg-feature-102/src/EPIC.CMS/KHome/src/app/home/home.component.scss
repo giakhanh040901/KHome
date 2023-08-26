@@ -1,3 +1,6 @@
+.p-menubar .p-menubar-root-list > .p-menuitem > .p-menuitem-link .p-menuitem-text {
+  color: #000 !important;
+}
 .label-icon {
   width: 12px;
   height: 12px;
@@ -179,4 +182,19 @@ div.height-chart {
 
 .imageProject:hover {
   transform: scale(1.5); 
+}
+
+/* [1] The container */
+.img-hover-zoom {
+  overflow: hidden; /* [1.2] Hide the overflowing of child elements */
+}
+
+/* [2] Transition property for smooth transformation of images */
+.img-hover-zoom img {
+  transition: transform .5s ease;
+}
+
+/* [3] Finally, transforming the image when container gets hovered */
+.img-hover-zoom:hover img {
+  transform: scale(1.5);
 }

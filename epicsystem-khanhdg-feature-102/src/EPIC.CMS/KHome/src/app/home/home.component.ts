@@ -76,9 +76,15 @@ export class HomeComponent extends CrudComponentBase {
   tabViewActive: {
 		product: boolean;
 		project: boolean;
+    utility: boolean;
+    recently: boolean;
+    favourite: boolean;
 	} = {
 		product: true,
-		project: false
+		project: false,
+    utility: false,
+    recently: false,
+    favourite: false,
 	};
 
 	@ViewChild(TabView) tabView: TabView;
@@ -232,7 +238,7 @@ export class HomeComponent extends CrudComponentBase {
     this.items = [
       {
           label: 'Mua',
-          icon: 'pi pi-fw pi-file',
+          // icon: 'pi pi-fw pi-file',
           items: [
               {
                   label: 'New',
@@ -263,7 +269,7 @@ export class HomeComponent extends CrudComponentBase {
       },
       {
           label: 'Bán',
-          icon: 'pi pi-fw pi-pencil',
+          // icon: 'pi pi-fw pi-pencil',
           items: [
               {
                   label: 'Left',
@@ -285,7 +291,7 @@ export class HomeComponent extends CrudComponentBase {
       },
       {
           label: 'Users',
-          icon: 'pi pi-fw pi-user',
+          // icon: 'pi pi-fw pi-user',
           items: [
               {
                   label: 'New',
@@ -319,7 +325,7 @@ export class HomeComponent extends CrudComponentBase {
       },
       {
           label: 'Events',
-          icon: 'pi pi-fw pi-calendar',
+          // icon: 'pi pi-fw pi-calendar',
           items: [
               {
                   label: 'Edit',
@@ -349,7 +355,7 @@ export class HomeComponent extends CrudComponentBase {
       },
       {
           label: 'Quit',
-          icon: 'pi pi-fw pi-power-off'
+          // icon: 'pi pi-fw pi-power-off'
       }
   ];
   
