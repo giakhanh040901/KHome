@@ -41,11 +41,11 @@ export class ProjectComponent extends CrudComponentBase {
   items: MenuItem[] | undefined;
   images: any[] | undefined;
   tabViewActive: {
-		product: boolean;
-		project: boolean;
+        price: boolean;
+		overview: boolean;
 	} = {
-		product: true,
-		project: false
+		price: true,
+		overview: false
 	};
   responsiveOptions: any[] | undefined;
   responsiveOption: any[] = [
