@@ -11,6 +11,8 @@ import { BusinessReportComponent } from './export-report/business-report/busines
 import { ManagementReportComponent } from './export-report/management-report/management-report.component';
 import { ProductItemComponent } from './modules/product-item/product-item.component';
 import { ProjectComponent } from './modules/project/project.component';
+import { ProductItemFindComponent } from './modules/product-item-find/product-item-find.component';
+import { ProjectFindComponent } from './modules/project-find/project-find.component';
 
 @NgModule({
 	imports: [
@@ -245,6 +247,8 @@ import { ProjectComponent } from './modules/project/project.component';
 					// },
 					{ path: "product", component: ProductItemComponent, canActivate: [AppRouteGuard] },
 					{ path: "project", component: ProjectComponent, canActivate: [AppRouteGuard] },
+					{ path: "product-item-find", component: ProductItemFindComponent, canActivate: [AppRouteGuard] },
+					{ path: "project-find", component: ProjectFindComponent, canActivate: [AppRouteGuard] },
 				],
 			},
 		]),

@@ -58,7 +58,7 @@
                                 <span> Giá căn </span>
                             </ng-template>
                             <div style="font-size: 1.8rem; font-weight: 600;">Giá bán</div>
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 2rem;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 2rem 4rem;">
                                 <div style="display: flex;">
                                     <div style="margin-right: 1rem;">
                                         <img src="../../../assets/layout/images/product/1.jpg" alt="" height="50">
@@ -286,18 +286,28 @@
                 <!-- Tab view -->
                 <div style="margin-top: 2rem;">
                     <div style="font-size: 1.8rem; font-weight: 600; margin-bottom: 2rem;">Gần đây</div>
-                    <!-- <p-tabView styleClass="custom-tabview" [(activeIndex)]="activeIndex" (onChange)="changeTab($event)">
+                    <p-tabView styleClass="custom-tabview" [(activeIndex)]="activeIndexPlus" (onChange)="changeTabRecent($event)">
                         <p-tabPanel [header]="'recently'" *ngIf="isGranted([PermissionRealStateConst.RealStateMoBan_ThongTinChung])">
                             <ng-template pTemplate="header">
                                 <span> Căn vừa xem </span>
                             </ng-template>
+                            <div style="height: 50vh;">
+                                <div style="display: flex; justify-content: center; margin-top: 3rem; margin-bottom: 4rem;">
+                                  <p-button label="Xem thêm" styleClass="p-button-raised p-button-lg px-5 py-3"></p-button>
+                                </div>
+                              </div>
                         </p-tabPanel>
                         <p-tabPanel [header]="'favourite'" *ngIf="isGranted([PermissionRealStateConst.RealStateMoBan_ThongTinChung])">
                           <ng-template pTemplate="header">
                               <span style="font-weight: 600;"> Căn yêu thích </span>
                           </ng-template>
+                          <div style="height: 50vh;">
+                            <div style="display: flex; justify-content: center; margin-top: 3rem; margin-bottom: 4rem;">
+                              <p-button label="Xem thêm" styleClass="p-button-raised p-button-lg px-5 py-3"></p-button>
+                            </div>
+                          </div>
                         </p-tabPanel>
-                    </p-tabView> -->
+                    </p-tabView>
                 </div>
             </div>
             <div class="col-3"></div>

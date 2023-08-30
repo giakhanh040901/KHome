@@ -1,30 +1,47 @@
-import { Component, Inject, Injector, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, Injector, OnInit } from '@angular/core';
 import { CrudComponentBase } from '@shared/crud-component-base';
 import { API_BASE_URL } from '@shared/service-proxies/service-proxies-base';
+import { ProductService } from '@shared/services/product.service';
 import { MenuItem, MessageService } from 'primeng/api';
-import { TabView } from 'primeng/tabview';
+import { forkJoin } from 'rxjs';
 import { BreadcrumbService } from 'src/app/layout/breadcrumb/breadcrumb.service';
 
 @Component({
-  selector: 'app-product-item',
-  templateUrl: './product-item.component.html',
-  styleUrls: ['./product-item.component.scss']
+  selector: 'app-product-item-find',
+  templateUrl: './product-item-find.component.html',
+  styleUrls: ['./product-item-find.component.scss']
 })
-export class ProductItemComponent extends CrudComponentBase {
+export class ProductItemFindComponent extends CrudComponentBase  {
 
   constructor(
     private breadcrumbService: BreadcrumbService,
     injector: Injector,
     messageService: MessageService,
     @Inject(API_BASE_URL) baseUrl?: string,
-    //private countryService: CountryService
+    public productService?: ProductService,
   ) {
     super(injector, messageService);
     this.breadcrumbService.setItems([{ label: "Trang chủ" }]);
     this.baseUrl = baseUrl || "";
   }
-  @ViewChild(TabView) tabView: TabView;
-  @ViewChild(TabView) tabViewRecent: TabView;
+  public filter: {
+    project: number | undefined;
+    dates: Date[] | undefined;
+  } = {
+    project: undefined,
+    dates: undefined,
+  };
+  rows = [];
+  rowsNoPaging = [];
+  projectId = 681;
+
+  fieldFilters = {
+    keyword: null,
+    projectId: null,
+    buildingDensityId: null,
+    classifyType: null,
+    status: null,
+  };
   public baseUrl: string = "";
   items: MenuItem[] | undefined;
   images: any[] | undefined;
@@ -74,11 +91,11 @@ export class ProductItemComponent extends CrudComponentBase {
           numVisible: 1,
           numScroll: 1
       }
-  ];
+    ];
 
-  this.getImages().then((images) => {
-    this.images = images;
-  });
+    this.getImages().then((images) => {
+        this.images = images;
+    });
     this.items = [
       {
           label: 'Mua',
@@ -202,9 +219,79 @@ export class ProductItemComponent extends CrudComponentBase {
           // icon: 'pi pi-fw pi-power-off'
       }
     ];
+    this.setPage({ page: this.offset });
   }
   getImages() {
     return Promise.resolve(this.getDatas());
+  }
+
+  setPage(pageInfo?: any) {
+    this.isLoading = true;
+    this.page.pageNumber = pageInfo?.page ?? this.offset;
+    if (pageInfo?.rows) this.page.pageSize = pageInfo?.rows;
+    this.page.keyword = this.fieldFilters.keyword;
+    forkJoin([
+      this.productService.findAll(
+        this.page,
+        this.projectId,
+        this.fieldFilters,
+        this.sortData
+      ),
+      this.productService.findAllPageSize(this.page, this.projectId),
+    ]).subscribe(
+      ([res, resNoPaging]) => {
+        this.isLoading = false;
+        if (this.handleResponseInterceptor(resNoPaging, "")) {
+          console.log('siuuu', resNoPaging)
+          this.rowsNoPaging = resNoPaging.data?.items.map((e: any) => {
+            // if (e?.isLock == YesNoConst.YES) {
+            //   e._isLock = true;
+            // }
+            // const findCard = ProductConst.listCard.find(
+            //   (card: any) => card.code === e.status
+            // );
+            // if (findCard) {
+            //   e.backgroundTopColor = findCard.backgroundColorFull;
+            //   e.titleColor = findCard.numberColorFull;
+            // }
+            return e;
+          });
+        }
+  
+        if (this.handleResponseInterceptor(res, "")) {
+          this.page.totalItems = res.data.totalItems;
+          console.log('totalItems', this.page.totalItems);
+          
+          if (res.data?.items) {
+            this.rows = res.data?.items.map((e: any) => {
+              // if (e?.isLock == YesNoConst.YES) {
+              //   e._isLock = true;
+              //   e.status = ProductConst.KHOA_CAN;
+              // }
+              // const findCard = ProductConst.listCard.find(
+              //   (card: any) => card.code === e.status
+              // );
+              // if (findCard) {
+              //   e.backgroundTopColor = findCard.backgroundColor;
+              //   e.titleColor = findCard.numberColor;
+              // }
+              // e.hide = false;
+              return e;
+            });
+            console.log('!!! rows ', this.rows);
+            
+            // this.dataView["grid"] && this.getListCard();
+          }
+          if (this.rows?.length) {
+            // this.genListAction(this.rows);
+            // this.setData(this.rows);
+          }
+        }
+      },
+      (err) => {
+        this.isLoading = false;
+      }
+    );
   }
 
   getDatas() {
@@ -301,13 +388,5 @@ export class ProductItemComponent extends CrudComponentBase {
         // }
     ];
   }
-
-  changeTab(event: any) {
-		let tabHeader = this.tabView.tabs[event.index].header;
-		this.tabViewActive[tabHeader] = true;
-	}
-  changeTabRecent(event: any) {
-    let tabHeader = this.tabViewRecent.tabs[event.index].header;
-    this.tabViewRecentActive[tabHeader] = true;
-  }
+  
 }

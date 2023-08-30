@@ -152,6 +152,8 @@ import { NgxSkeletonLoaderModule } from "ngx-skeleton-loader";
 import { FilterBusinessCustomerComponent } from './components/filter-business-customer/filter-business-customer.component';
 import { ProductItemComponent } from './modules/product-item/product-item.component';
 import { ProjectComponent } from './modules/project/project.component';
+import { ProductItemFindComponent } from './modules/product-item-find/product-item-find.component';
+import { ProjectFindComponent } from './modules/project-find/project-find.component';
 
 FullCalendarModule.registerPlugins([
 	dayGridPlugin,
@@ -291,6 +293,8 @@ FullCalendarModule.registerPlugins([
   		FilterBusinessCustomerComponent,
     	ProductItemComponent,
      	ProjectComponent,
+      	ProductItemFindComponent,
+      	ProjectFindComponent,
 	],
 
 	providers: [

@@ -1,30 +1,42 @@
-import { Component, Inject, Injector, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, Injector, OnInit } from '@angular/core';
 import { CrudComponentBase } from '@shared/crud-component-base';
 import { API_BASE_URL } from '@shared/service-proxies/service-proxies-base';
+import { ProjectOverviewService } from '@shared/services/project-overview.service';
 import { MenuItem, MessageService } from 'primeng/api';
-import { TabView } from 'primeng/tabview';
 import { BreadcrumbService } from 'src/app/layout/breadcrumb/breadcrumb.service';
 
 @Component({
-  selector: 'app-product-item',
-  templateUrl: './product-item.component.html',
-  styleUrls: ['./product-item.component.scss']
+  selector: 'app-project-find',
+  templateUrl: './project-find.component.html',
+  styleUrls: ['./project-find.component.scss']
 })
-export class ProductItemComponent extends CrudComponentBase {
+export class ProjectFindComponent extends CrudComponentBase  {
 
   constructor(
     private breadcrumbService: BreadcrumbService,
     injector: Injector,
     messageService: MessageService,
     @Inject(API_BASE_URL) baseUrl?: string,
-    //private countryService: CountryService
+    private projectOverviewService?: ProjectOverviewService
   ) {
     super(injector, messageService);
     this.breadcrumbService.setItems([{ label: "Trang chủ" }]);
     this.baseUrl = baseUrl || "";
   }
-  @ViewChild(TabView) tabView: TabView;
-  @ViewChild(TabView) tabViewRecent: TabView;
+  filter: {
+    keyword: string;
+    ownerId: number | undefined;
+    projectType: number | undefined;
+    productTypes: number[] | undefined;
+    status: number | undefined;
+  } = {
+    keyword: "",
+    ownerId: undefined,
+    projectType: undefined,
+    productTypes: undefined,
+    status: undefined,
+  };
+  rows = [];
   public baseUrl: string = "";
   items: MenuItem[] | undefined;
   images: any[] | undefined;
@@ -74,11 +86,11 @@ export class ProductItemComponent extends CrudComponentBase {
           numVisible: 1,
           numScroll: 1
       }
-  ];
+    ];
 
-  this.getImages().then((images) => {
-    this.images = images;
-  });
+    this.getImages().then((images) => {
+        this.images = images;
+    });
     this.items = [
       {
           label: 'Mua',
@@ -202,6 +214,7 @@ export class ProductItemComponent extends CrudComponentBase {
           // icon: 'pi pi-fw pi-power-off'
       }
     ];
+    this.setPage({ page: this.offset });
   }
   getImages() {
     return Promise.resolve(this.getDatas());
@@ -302,12 +315,48 @@ export class ProductItemComponent extends CrudComponentBase {
     ];
   }
 
-  changeTab(event: any) {
-		let tabHeader = this.tabView.tabs[event.index].header;
-		this.tabViewActive[tabHeader] = true;
-	}
-  changeTabRecent(event: any) {
-    let tabHeader = this.tabViewRecent.tabs[event.index].header;
-    this.tabViewRecentActive[tabHeader] = true;
-  }
+  setPage(pageInfo?: any) {
+    this.isLoading = true;
+    this.page.pageNumber = pageInfo?.page ?? this.offset;
+    if (pageInfo?.rows) this.page.pageSize = pageInfo?.rows;
+    this.page.keyword = this.filter.keyword;
+    this.projectOverviewService.getAllProject(this.page, this.filter, this.sortData).subscribe((res) => {
+        this.isLoading = false;
+        if (this.handleResponseInterceptor(res, "")) {
+            this.page.totalItems = res.data.totalItems;
+            if (res.data?.items) {
+                this.rows = res.data.items
+                console.log('!!! rows', this.rows);
+                
+                // this.rows = res.data.items.map(
+                // 	(item: any) =>
+                // 		({
+                // 			id: item.id,
+                // 			code: item.code,
+                // 			name: item.name,
+                // 			productType: item?.productTypes
+                // 				? ProjectOverviewConst.getNameProductTypes(
+                // 						item?.productTypes
+                // 					)
+                // 				: "",
+                // 			ownerName: item.ownerName,
+                // 			createdDate:
+                // 				item.createdDate && item.createdDate.length
+                // 					? this.formatDate(item.createdDate)
+                // 					: "",
+                // 			createdBy: item.createdBy,
+                // 			status: item.status,
+                // 		} as ProjectOverviewModel)
+                // );
+            }
+            if (this.rows?.length) {
+                // this.genListAction(this.rows);
+            }
+        }
+    },
+    (err) => {
+        this.isLoading = false;
+    }
+);
+}
 }

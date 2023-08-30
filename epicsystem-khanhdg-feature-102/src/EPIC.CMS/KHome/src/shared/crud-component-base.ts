@@ -118,6 +118,7 @@ export abstract class CrudComponentBase extends AppComponentBase{
     submitted = false;
 
     activeIndex = 0;
+    activeIndexPlus = 0;
 
     frozenRight: boolean = false;
 

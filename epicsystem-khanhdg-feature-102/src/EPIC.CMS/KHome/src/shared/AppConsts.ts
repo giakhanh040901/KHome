@@ -4458,6 +4458,57 @@ export class ProjectOverviewConst {
         },
     ] as IConstant[];
 
+    public static roomTypes = [
+        {
+            id: 1,
+            value: "1 PN"
+        },
+        {
+            id: 2,
+            value: "2 PN"
+        },
+        {
+            id: 3,
+            value: "3 PN"
+        },
+        {
+            id: 4,
+            value: "4 PN"
+        },
+        {
+            id: 5,
+            value: "5 PN"
+        },
+        {
+            id: 6,
+            value: "6 PN"
+        },
+        {
+            id: 7,
+            value: "7 PN"
+        },
+        {
+            id: 8,
+            value: "8 PN"
+        },
+        {
+            id: 9,
+            value: "1 PN + 1 WC"
+        },
+        {
+            id: 10,
+            value: "2 PN + 1 WC"
+        },
+        {
+            id: 11,
+            value: "2 PN + 2 WC"
+        },
+        {
+            id: 12,
+            value: "3 PN + 2 WC", 
+        },
+    ] as IConstant[];
+
     public static getNameProductTypes(types: number[]) {
         if (types.length == 1){
             let type = this.productTypes.find(item => item.id == types[0]);
