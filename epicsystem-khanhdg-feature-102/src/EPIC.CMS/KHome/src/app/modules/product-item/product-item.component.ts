@@ -1,6 +1,7 @@
 import { Component, Inject, Injector, OnInit, ViewChild } from '@angular/core';
 import { CrudComponentBase } from '@shared/crud-component-base';
 import { API_BASE_URL } from '@shared/service-proxies/service-proxies-base';
+import { ProductService } from '@shared/services/product.service';
 import { MenuItem, MessageService } from 'primeng/api';
 import { TabView } from 'primeng/tabview';
 import { BreadcrumbService } from 'src/app/layout/breadcrumb/breadcrumb.service';
@@ -17,7 +18,7 @@ export class ProductItemComponent extends CrudComponentBase {
     injector: Injector,
     messageService: MessageService,
     @Inject(API_BASE_URL) baseUrl?: string,
-    //private countryService: CountryService
+    public productService?: ProductService,
   ) {
     super(injector, messageService);
     this.breadcrumbService.setItems([{ label: "Trang chủ" }]);
@@ -57,6 +58,10 @@ export class ProductItemComponent extends CrudComponentBase {
         numVisible: 1
     }
 ];
+//   productId: number;
+  productId = 2782;
+  productInfo: any = {};
+
   ngOnInit(): void {
     this.responsiveOptions = [
       {
@@ -202,6 +207,13 @@ export class ProductItemComponent extends CrudComponentBase {
           // icon: 'pi pi-fw pi-power-off'
       }
     ];
+    this.isLoading = true;
+    this.productService.findById(this.productId).subscribe((res) => {
+      if (this.handleResponseInterceptor(res)) {
+        this.productInfo = res?.data;
+        console.log('!!! productInfo', this.productInfo);
+      }
+    });
   }
   getImages() {
     return Promise.resolve(this.getDatas());

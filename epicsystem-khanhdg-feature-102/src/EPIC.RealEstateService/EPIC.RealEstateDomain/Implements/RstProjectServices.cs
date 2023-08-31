@@ -200,6 +200,7 @@ namespace EPIC.RealEstateDomain.Implements
             ViewRstOwnerDto owner = _mapper.Map<ViewRstOwnerDto>(ownerFind);
             owner.BusinessCustomer = businessCustomer;
             result.Owner = owner;
+            result.OwnerName = businessCustomer.Name;
             return result;
         }
 

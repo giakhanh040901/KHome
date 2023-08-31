@@ -158,6 +158,10 @@ export class ProjectOverviewService extends ServiceProxyBase {
     });
   }
 
+  findById(id): Observable<any> {
+    return this.requestGet(`${this.baseAPI}/find-by-id/${id}`);
+  }
+
   public getAllUtilitiProject(
     page?: Page,
     type?: number,

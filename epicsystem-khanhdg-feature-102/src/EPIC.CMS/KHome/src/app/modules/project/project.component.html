@@ -3,7 +3,7 @@
 <div style="height: 100%; display: block;">
     <p-menubar [model]="items" styleClass="bg-white" style="background: #fff;">
         <ng-template pTemplate="start">
-          <img src="../../../assets/layout/images/KHomeLogo.png" height="100" class="ml-4"/>
+          <img src="../../../assets/layout/images/k1.png" height="100" class="ml-4"/>
         </ng-template>
         <ng-template pTemplate="end">
           <!-- <input type="text" pInputText placeholder="Search" class="w-full" class="mr-4"/> -->
@@ -55,7 +55,7 @@
         <div class="grid flex w-full">
             <div class="col-9">
                 <div style="display: flex; justify-content: space-between; align-items: baseline; font-weight: 600; color: #000;">
-                    <div style="font-size: 2rem; font-weight: 600; color: #000;">Vinhomes Ocean Park 2</div>
+                    <div style="font-size: 2rem; font-weight: 600; color: #000;">{{projectInfo.name}}</div>
                     <span style="font-size: 1.2rem;" class="pi pi-heart"></span>
                 </div>
 
@@ -81,7 +81,7 @@
                                     </div>
                                     <div style="display: flex; flex-direction: column; justify-content: space-between;;">
                                         <div style="color: #6f6f6f; font-size: 1.2rem;">Giá thoả thuận</div>
-                                        <div style="color: #6f6f6f; font-size: 1.2rem; margin-top: 0.2rem;">Đang cập nhật</div>
+                                        <div style="color: #6f6f6f; font-size: 1.2rem; margin-top: 0.2rem;">{{ projectInfo.expectedSellingPrice ?? 0}}</div>
                                     </div>
                                 </div>
                                 <div style="border-left: 1px solid #6f6f6f; height: 2.5rem;"></div>
@@ -111,16 +111,16 @@
                                 </div>
                                 <div style="display: flex; flex-direction: column; justify-content: space-between;">
                                     <div style="color: #6f6f6f; font-size: 1.2rem;">Chủ đầu tư</div>
-                                    <div style="color: #000; font-size: 1.3rem; margin-top: 0.2rem; font-weight: 600;">Công ty Cổ phần Vinhomes</div>
+                                    <div style="color: #000; font-size: 1.3rem; margin-top: 0.2rem; font-weight: 600;">{{ projectInfo.ownerName}}</div>
                                 </div>
                             </div>
                             <div class="col-6" style="display: flex;">
                                 <div style="margin-right: 0.5rem;">
                                     <img src="../../../assets/layout/images/stairs-up-svgrepo-com (1).png" alt="" height="50">
                                 </div>
-                                <div style="display: flex; flex-direction: column; justify-content: space-between;">
+                                <div style="display: flex; flex-direction: column;">
                                     <div style="color: #6f6f6f; font-size: 1.2rem;">Thời điểm bàn giao</div>
-                                    <div style="color: #000; font-size: 1.3rem; margin-top: 0.2rem; font-weight: 600;">Q1 - 2023</div>
+                                    <div style="color: #000; font-size: 1.3rem; margin-top: 0.2rem; font-weight: 600;">{{ projectInfo.expectedHandoverTime }}</div>
                                 </div>
                             </div>
                           </div>
@@ -130,7 +130,7 @@
                                 <div class="col-3" style="display: flex; justify-content: space-between; width: 100%; flex-direction: column; align-items: center;">
                                     <div style="display: flex; justify-content: space-between; width: 100%; font-size: 1.2rem;">
                                         <div>Quy mô</div>
-                                        <div style="font-weight: 600;">459.8 ha</div>
+                                        <div style="font-weight: 600;">{{ projectInfo.landArea }}</div>
                                     </div>
                                     <div style="border-top: 1px solid #9e9e9e; width: 100%; margin-top: 2rem; margin-bottom: 1rem;"></div>
                                 </div>
@@ -151,7 +151,7 @@
                                                 <span class="tooltiptext">Diện tích khuôn viên đất được công nhận trên hồ sơ pháp lý</span>
                                             </div>
                                         </div>
-                                        <div style="font-weight: 600;">35%</div>
+                                        <div style="font-weight: 600;">{{projectInfo.buildingDensity}}%</div>
                                     </div>
                                 </div>
                             </div> 
@@ -162,22 +162,22 @@
                               <div class="col-6">
                                   <div class="col-3" style="display: flex; justify-content: space-between; width: 100%; flex-direction: column; align-items: center;">
                                       <div style="display: flex; justify-content: space-between; width: 100%; font-size: 1.2rem;">
-                                          <div>Vị trí căn</div>
-                                          <div style="font-weight: 600;">Căn thường</div>
+                                          <div>Mã dự án</div>
+                                          <div style="font-weight: 600;">{{ projectInfo.code }}</div>
                                       </div>
                                       <div style="border-top: 1px solid #ede5e5; width: 100%; margin-top: 2rem; margin-bottom: 1rem;"></div>
                                   </div>
                                   <div class="col-3" style="display: flex; justify-content: space-between; width: 100%; flex-direction: column; align-items: center;">
                                       <div style="display: flex; justify-content: space-between; width: 100%; font-size: 1.2rem;">
-                                          <div>Vị trí căn</div>
-                                          <div style="font-weight: 600;">Căn thường</div>
+                                          <div>Tên tổng thầu</div>
+                                          <div style="font-weight: 600;">{{ projectInfo.contractorName }}</div>
                                       </div>
                                       <div style="border-top: 1px solid #ede5e5; width: 100%; margin-top: 2rem; margin-bottom: 1rem;"></div>
                                   </div>
                                   <div class="col-3" style="display: flex; justify-content: space-between; width: 100%; flex-direction: column; align-items: center;">
                                       <div style="display: flex; justify-content: space-between; width: 100%; font-size: 1.2rem;">
-                                          <div>Vị trí căn</div>
-                                          <div style="font-weight: 600;">Căn thường</div>
+                                          <div>Số căn</div>
+                                          <div style="font-weight: 600;">{{ projectInfo.numberOfUnit }}</div>
                                       </div>
                                       <div style="border-top: 1px solid #ede5e5; width: 100%; margin-top: 2rem; margin-bottom: 1rem;"></div>
                                   </div>
@@ -185,15 +185,15 @@
                               <div class="col-6">
                                   <div class="col-3" style="display: flex; justify-content: space-between; width: 100%; flex-direction: column; align-items: center;">
                                       <div style="display: flex; justify-content: space-between; width: 100%; font-size: 1.2rem;">
-                                          <div>Tình trạng sử dụng</div>
-                                          <div style="font-weight: 600;">Để trống</div>
+                                          <div>Loại hình dự án</div>
+                                          <div style="font-weight: 600;">{{ projectInfo.projectType }}</div>
                                       </div>
                                       <div style="border-top: 1px solid #ede5e5; width: 100%; margin-top: 2rem; margin-bottom: 1rem;"></div>
                                   </div>
                                   <div class="col-3" style="display: flex; justify-content: space-between; width: 100%; flex-direction: column; align-items: center;">
                                       <div style="display: flex; justify-content: space-between; width: 100%; font-size: 1.2rem;">
-                                          <div>Tình trạng bàn giao</div>
-                                          <div style="font-weight: 600;">Đã bàn giao</div>
+                                          <div>Tiến độ dự án</div>
+                                          <div style="font-weight: 600;">{{ projectInfo.projectStatus }}</div>
                                       </div>
                                       <div style="border-top: 1px solid #ede5e5; width: 100%; margin-top: 2rem; margin-bottom: 1rem;"></div>
                                   </div>
@@ -206,7 +206,7 @@
                                   </div>
                               </div> 
                               <div class="col-12">
-                                <div style="color: #6f6f6f;">OneHousing cung cấp thông tin tổng quan, phân tích chi tiết biệt thự, liền kề dự án Vinhomes Ocean Park 2</div>
+                                <div style="color: #6f6f6f;">KHome cung cấp thông tin tổng quan, phân tích chi tiết biệt thự, liền kề dự án {{projectInfo.name}}</div>
                               </div>
                             </div>
                           </div>
@@ -276,7 +276,7 @@
             <div style="color: #000; font-size: 1.8rem; font-weight: 600;">Căn đang bán</div>
             <div class="p-fluid p-formgrid">
                 <div class="grid flex w-full mt-2">
-                  <div class="col-3" style="padding-right: 1rem;">
+                  <div class="col-3" style="padding-right: 1rem;" *ngFor="let row of rows">
                     <div style="overflow: hidden;">
                       <!-- <img src="../../assets/layout/images/product/TestHome.jpg" alt="" style="width: 100%;"> -->
                       <p-galleria [(value)]="images" [showIndicators]="true" [showThumbnails]="false" [responsiveOptions]="responsiveOption" >
@@ -288,38 +288,38 @@
                       </p-galleria>
                     </div>
                     <div>
-                      <div class="flex" style="align-items: baseline;">
-                        <span style="font-size: 1.2rem; font-weight: 600; padding-right: 2rem;">Căn 2PN toà S2.01 - The Sapphire - Vinhomes Smart City</span>
+                      <div class="flex" style="align-items: baseline; justify-content: space-between;">
+                        <span style="font-size: 1.2rem; font-weight: 600; padding-right: 2rem;">{{row.name}}</span>
                         <span style="font-size: 1.2rem;" class="pi pi-heart"></span>
                       </div>
-                      <div style="margin-top: 1rem;">Q. Nam Từ Liêm, TP. Hà Nội</div>
+                      <div style="margin-top: 1rem;"></div>
                       <div class="flex" style="margin-top: 1rem; align-items: baseline;">
                         <div style="margin-right: 1rem; display: flex;">
-                          <div>
+                          <div style="margin-right: 0.2rem; padding-top: 0.2rem;">
                             <img src="assets/layout/images/stairs-up-svgrepo-com.png" style="width: 100%; height: 1rem;"/>
                           </div>
-                          <span>4 tầng</span>
+                          <span>{{row.numberFloor}} tầng</span>
                         </div>
                         <div style="margin-right: 1rem; display: flex; align-items: baseline;">
-                          <div>
+                          <div style="margin-right: 0.2rem; padding-top: 0.2rem;">
                             <img src="assets/layout/images/product/icon/area-svgrepo-com.png" style="width: 100%;  height: 1rem;"/>
                           </div>
-                          <span>127.5m<sup>2</sup></span>
+                          <span>{{row.priceArea}}m<sup>2</sup></span>
                         </div>
                         <div style="margin-right: 1rem; display: flex; align-items: baseline;">
-                          <div>
+                          <div style="margin-right: 0.2rem; padding-top: 0.2rem;">
                             <img src="assets/layout/images/product/icon/view-horizont-svgrepo-com.png" style="width: 100%;  height: 1rem;"/>
                           </div>
-                          <span>Tây Bắc</span>
+                          <span>{{row.doorDirection}}</span>
                         </div>
                       </div>
                       <div style="margin-top: 1rem; display: flex; justify-content: space-between;">
                         <div>
-                          <strong style="margin-right: 0.5rem; font-size: 1.2rem; color: #094bf4;">14.XX tỷ</strong>
-                          <span style="color: #000;">XX triệu/m<sup>2</sup></span>
+                          <strong style="margin-right: 0.5rem; font-size: 1.2rem; color: #094bf4;">{{row.price / 1000000000 | number :'1.0-2'}}tỷ</strong>
+                          <span style="color: #000;">{{ row.unitPrice / 1000000 }} triệu/m<sup>2</sup></span>
                         </div>
                         <div>
-                          <p-button label="So sánh" styleClass="p-button-outlined p-button-lg px-3 py-2"></p-button>
+                          <!-- <p-button label="So sánh" styleClass="p-button-outlined p-button-lg px-3 py-2"></p-button> -->
                           <!-- <button pButton pRippletype="button" label="So sánh" style="padding-left: 2rem; padding-right: 2rem; border-radius: 0px 4px 4px 0px; width: 10rem; line-height: 3; border-color: #094bf4;
                           font-size: 1rem;
                           font-weight: 600;"></button> -->
@@ -696,7 +696,7 @@
         <div class="grid flex w-full mt-2">
           <div class="col-4" style="color: #000; margin-top: 2rem;">
             <div>
-              <img src="../../assets/layout/images/KHomeLogo.png" height="100"/>
+              <img src="../../assets/layout/images/k1.png" height="100"/>
             </div>
             <div>
               <div style="display: flex; align-items: center; margin-top: 1rem;">
