@@ -1,4 +1,5 @@
 import { Component, Inject, Injector, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CrudComponentBase } from '@shared/crud-component-base';
 import { API_BASE_URL } from '@shared/service-proxies/service-proxies-base';
 import { ProductService } from '@shared/services/product.service';
@@ -22,10 +23,15 @@ export class ProjectComponent extends CrudComponentBase {
     @Inject(API_BASE_URL) baseUrl?: string,
     private projectOverviewService?: ProjectOverviewService,
     public productService?: ProductService,
+    private _routeActive?: ActivatedRoute,
+    private router?: Router,
   ) {
     super(injector, messageService);
     this.breadcrumbService.setItems([{ label: "Trang chủ" }]);
     this.baseUrl = baseUrl || "";
+    this.projectId = +this.cryptDecode(
+      this._routeActive.snapshot.paramMap.get("id")
+  );
   }
   @ViewChild(TabView) tabView: TabView;
   public baseUrl: string = "";
@@ -56,7 +62,8 @@ export class ProjectComponent extends CrudComponentBase {
   rowsNoPaging = [];
   rows = [];
   projectInfo: any = {};
-  projectId = 681;
+  projectId: number;
+  // projectId = 681;
   fieldFilters = {
     keyword: null,
     projectId: null,
@@ -322,71 +329,79 @@ export class ProjectComponent extends CrudComponentBase {
 		let tabHeader = this.tabView.tabs[event.index].header;
 		this.tabViewActive[tabHeader] = true;
 	}
-    setPage(pageInfo?: any) {
-        this.isLoading = true;
-        this.page.pageNumber = pageInfo?.page ?? this.offset;
-        if (pageInfo?.rows) this.page.pageSize = pageInfo?.rows;
-        this.page.keyword = this.fieldFilters.keyword;
-        forkJoin([
-          this.productService.findAll(
-            this.page,
-            this.projectId,
-            this.fieldFilters,
-            this.sortData
-          ),
-          this.productService.findAllPageSize(this.page, this.projectId),
-        ]).subscribe(
-          ([res, resNoPaging]) => {
-            this.isLoading = false;
-            if (this.handleResponseInterceptor(resNoPaging, "")) {
-              console.log('siuuu', resNoPaging)
-              this.rowsNoPaging = resNoPaging.data?.items.map((e: any) => {
+  setPage(pageInfo?: any) {
+      this.isLoading = true;
+      this.page.pageNumber = pageInfo?.page ?? this.offset;
+      if (pageInfo?.rows) this.page.pageSize = pageInfo?.rows;
+      this.page.keyword = this.fieldFilters.keyword;
+      forkJoin([
+        this.productService.findAll(
+          this.page,
+          this.projectId,
+          this.fieldFilters,
+          this.sortData
+        ),
+        this.productService.findAllPageSize(this.page, this.projectId),
+      ]).subscribe(
+        ([res, resNoPaging]) => {
+          this.isLoading = false;
+          if (this.handleResponseInterceptor(resNoPaging, "")) {
+            console.log('siuuu', resNoPaging)
+            this.rowsNoPaging = resNoPaging.data?.items.map((e: any) => {
+              // if (e?.isLock == YesNoConst.YES) {
+              //   e._isLock = true;
+              // }
+              // const findCard = ProductConst.listCard.find(
+              //   (card: any) => card.code === e.status
+              // );
+              // if (findCard) {
+              //   e.backgroundTopColor = findCard.backgroundColorFull;
+              //   e.titleColor = findCard.numberColorFull;
+              // }
+              return e;
+            });
+          }
+    
+          if (this.handleResponseInterceptor(res, "")) {
+            this.page.totalItems = res.data.totalItems;
+            if (res.data?.items) {
+              this.rows = res.data?.items.map((e: any) => {
                 // if (e?.isLock == YesNoConst.YES) {
                 //   e._isLock = true;
+                //   e.status = ProductConst.KHOA_CAN;
                 // }
                 // const findCard = ProductConst.listCard.find(
                 //   (card: any) => card.code === e.status
                 // );
                 // if (findCard) {
-                //   e.backgroundTopColor = findCard.backgroundColorFull;
-                //   e.titleColor = findCard.numberColorFull;
+                //   e.backgroundTopColor = findCard.backgroundColor;
+                //   e.titleColor = findCard.numberColor;
                 // }
+                // e.hide = false;
                 return e;
               });
+              console.log('!!! rows ', this.rows);
+              
+              // this.dataView["grid"] && this.getListCard();
             }
-      
-            if (this.handleResponseInterceptor(res, "")) {
-              this.page.totalItems = res.data.totalItems;
-              if (res.data?.items) {
-                this.rows = res.data?.items.map((e: any) => {
-                  // if (e?.isLock == YesNoConst.YES) {
-                  //   e._isLock = true;
-                  //   e.status = ProductConst.KHOA_CAN;
-                  // }
-                  // const findCard = ProductConst.listCard.find(
-                  //   (card: any) => card.code === e.status
-                  // );
-                  // if (findCard) {
-                  //   e.backgroundTopColor = findCard.backgroundColor;
-                  //   e.titleColor = findCard.numberColor;
-                  // }
-                  // e.hide = false;
-                  return e;
-                });
-                console.log('!!! rows ', this.rows);
-                
-                // this.dataView["grid"] && this.getListCard();
-              }
-              if (this.rows?.length) {
-                // this.genListAction(this.rows);
-                // this.setData(this.rows);
-              }
+            if (this.rows?.length) {
+              // this.genListAction(this.rows);
+              // this.setData(this.rows);
             }
-          },
-          (err) => {
-            this.isLoading = false;
           }
-        );
-      }
+        },
+        (err) => {
+          this.isLoading = false;
+        }
+      );
+  }
 
+  onClickHome() {
+    this.router.navigate(['/home']);
+  }
+  
+  onBtnProductItemClick(id){
+    // Navigate to /products page
+    this.router.navigate(['/product/' + this.cryptEncode(id)]);
+  }
 }

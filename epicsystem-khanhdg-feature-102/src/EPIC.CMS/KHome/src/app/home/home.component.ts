@@ -21,6 +21,7 @@ import { ProjectOverviewService } from "@shared/services/project-overview.servic
 import { ProjectOverviewModel } from "@shared/interface/project-manager/ProjectOverview.model";
 import { forkJoin } from "rxjs";
 import { ProductService } from "@shared/services/product.service";
+import { Router } from "@angular/router";
 interface AutoCompleteCompleteEvent {
   originalEvent: Event;
   query: string;
@@ -55,6 +56,7 @@ export class HomeComponent extends CrudComponentBase {
     //private countryService: CountryService
     private projectOverviewService?: ProjectOverviewService,
     public productService?: ProductService,
+    private router?: Router,
   ) {
     super(injector, messageService);
     Chart.register(ChartDataLabels);
@@ -2060,6 +2062,22 @@ setPage(pageInfo?: any) {
     }
   );
 }
+
+  onBtnProductItemClick(id){
+    // Navigate to /products page
+    this.router.navigate(['/product/' + this.cryptEncode(id)]);
+  }
+  onProjectFindBtnClick(){
+    // Navigate to /products page
+    this.router.navigate(['/project-find']);
+  }
+  onClickHome() {
+    this.router.navigate(['/home']);
+  }
+  onProductFindBtnClick(){
+    // Navigate to /products page
+    this.router.navigate(['/product-item-find']);
+  }
 // genListAction(data = []) {
 //   this.listAction = data.map((projectItem: any, index: number) => {
 //     const actions = [];

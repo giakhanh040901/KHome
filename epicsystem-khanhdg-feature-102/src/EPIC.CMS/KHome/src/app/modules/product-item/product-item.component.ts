@@ -1,4 +1,6 @@
 import { Component, Inject, Injector, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ProductConst } from '@shared/AppConsts';
 import { CrudComponentBase } from '@shared/crud-component-base';
 import { API_BASE_URL } from '@shared/service-proxies/service-proxies-base';
 import { ProductService } from '@shared/services/product.service';
@@ -19,11 +21,17 @@ export class ProductItemComponent extends CrudComponentBase {
     messageService: MessageService,
     @Inject(API_BASE_URL) baseUrl?: string,
     public productService?: ProductService,
+    private _routeActive?: ActivatedRoute,
+    private router?: Router,
   ) {
     super(injector, messageService);
     this.breadcrumbService.setItems([{ label: "Trang chủ" }]);
     this.baseUrl = baseUrl || "";
+    this.productId = +this.cryptDecode(
+        this._routeActive.snapshot.paramMap.get("id")
+    );
   }
+  ProductConst = ProductConst;
   @ViewChild(TabView) tabView: TabView;
   @ViewChild(TabView) tabViewRecent: TabView;
   public baseUrl: string = "";
@@ -58,8 +66,8 @@ export class ProductItemComponent extends CrudComponentBase {
         numVisible: 1
     }
 ];
-//   productId: number;
-  productId = 2782;
+  productId: number;
+//   productId = 2782;
   productInfo: any = {};
 
   ngOnInit(): void {
@@ -321,5 +329,12 @@ export class ProductItemComponent extends CrudComponentBase {
   changeTabRecent(event: any) {
     let tabHeader = this.tabViewRecent.tabs[event.index].header;
     this.tabViewRecentActive[tabHeader] = true;
+  }
+  onClickHome() {
+    this.router.navigate(['/home']);
+  }
+  onBtnProductItemClick(id){
+    // Navigate to /products page
+    this.router.navigate(['/product/' + this.cryptEncode(id)]);
   }
 }

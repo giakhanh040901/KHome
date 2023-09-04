@@ -10,6 +10,7 @@ namespace EPIC.RealEstateEntities.Dto.RstProductItem
     {
         public int Id { get; set; }
         public int ProjectId { get; set; }
+        public string ProjectName { get; set; }
 
         /// <summary>
         /// Trạng thái sổ đỏ (1: có sổ đỏ, 2: sổ đỏ 50 năm, 3: sổ lâu dài, 4: chưa có sổ đỏ)

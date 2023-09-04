@@ -1,4 +1,5 @@
 import { Component, Inject, Injector, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { CrudComponentBase } from '@shared/crud-component-base';
 import { API_BASE_URL } from '@shared/service-proxies/service-proxies-base';
 import { ProjectOverviewService } from '@shared/services/project-overview.service';
@@ -17,7 +18,8 @@ export class ProjectFindComponent extends CrudComponentBase  {
     injector: Injector,
     messageService: MessageService,
     @Inject(API_BASE_URL) baseUrl?: string,
-    private projectOverviewService?: ProjectOverviewService
+    private projectOverviewService?: ProjectOverviewService,
+    private router?: Router,
   ) {
     super(injector, messageService);
     this.breadcrumbService.setItems([{ label: "Trang chủ" }]);
@@ -359,4 +361,12 @@ export class ProjectFindComponent extends CrudComponentBase  {
     }
 );
 }
+    onProjectBtnClick(id){
+    // Navigate to /products page
+        this.router.navigate(['/project/' + this.cryptEncode(id)]);
+    }
+
+    onClickHome() {
+        this.router.navigate(['/home']);
+    }
 }

@@ -197,7 +197,9 @@
 <div class="">
   <p-menubar [model]="items" styleClass="bg-white" style="background: #fff;">
     <ng-template pTemplate="start">
-      <img src="../../assets/layout/images/k1.png" height="100" class="ml-4"/>
+      <a (click)="onClickHome()" style="cursor: pointer;">
+        <img src="../../../assets/layout/images/k1.png" height="100" class="ml-4"/>
+      </a>
     </ng-template>
     <ng-template pTemplate="end">
       <!-- <input type="text" pInputText placeholder="Search" class="w-full" class="mr-4"/> -->
@@ -223,7 +225,9 @@
               <div style="display: flex;">
                 <input type="text" pInputText placeholder="Tìm căn hộ" class="w-full" style="width: 100%;"/>
                 <div style="display: flex;">
-                  <button pButton pRippletype="button" label="Tìm kiếm" icon="pi pi-search" style="margin-left: -2rem; padding-left: 2rem; padding-right: 2rem; border-radius: 0px 4px 4px 0px; width: 10rem; line-height: 3;"></button>
+                  <a style="cursor: pointer;" (click)="onProductFindBtnClick()">
+                    <button pButton pRippletype="button" label="Tìm kiếm" icon="pi pi-search" style="margin-left: -2rem; padding-left: 2rem; padding-right: 2rem; border-radius: 0px 4px 4px 0px; width: 10rem; line-height: 3;"></button>
+                  </a>
                 </div>
               </div>
               <ng-container filter>
@@ -274,7 +278,9 @@
               <div style="display: flex;">
                 <input type="text" pInputText placeholder="Tìm dự án" class="w-full" style="width: 100%;"/>
                 <div style="display: flex;">
-                  <button pButton pRippletype="button" label="Tìm kiếm" icon="pi pi-search" style="margin-left: -2rem; padding-left: 2rem; padding-right: 2rem; border-radius: 0px 4px 4px 0px; width: 10rem; line-height: 3;"></button>
+                  <a style="cursor: pointer;" (click)="onProjectFindBtnClick()">
+                    <button pButton pRippletype="button" label="Tìm kiếm" icon="pi pi-search" style="margin-left: -2rem; padding-left: 2rem; padding-right: 2rem; border-radius: 0px 4px 4px 0px; width: 10rem; line-height: 3;"></button>
+                  </a>
                 </div>
               </div>
               
@@ -311,7 +317,7 @@
           </p-tabPanel>
         </p-tabView>
       <div style="display: flex; margin-top: 2rem; width: 30rem; justify-content: space-between; align-items: center;">
-        <a style="cursor: pointer;">
+        <a style="cursor: pointer;" (click)="onProjectFindBtnClick()">
           <span style="color: #000; font-size: 2rem; font-weight: 600; line-height: 4rem;">370+</span>
           <div style="display: flex; color: #6f6f6f; align-items: center;">
             <span style="font-size: 1.2rem; margin-right: 1rem;">dự án</span>
@@ -368,6 +374,7 @@
         </ng-template>
         <div class="p-fluid p-formgrid">
           <div class="grid flex w-full mt-2">
+            
             <div class="col-3" style="padding-right: 1rem;" *ngFor="let row of rows">
               <div style="overflow: hidden;">
                 <!-- <img src="../../assets/layout/images/product/TestHome.jpg" alt="" style="width: 100%;"> -->
@@ -379,402 +386,47 @@
                   </ng-template>
                 </p-galleria>
               </div>
-              <div>
-                <div class="flex" style="align-items: baseline; justify-content: space-between;">
-                  <span style="font-size: 1.2rem; font-weight: 600; padding-right: 2rem;">{{row.name}}</span>
-                  <span style="font-size: 1.2rem;" class="pi pi-heart"></span>
-                </div>
-                <div style="margin-top: 1rem;"></div>
-                <div class="flex" style="margin-top: 1rem; align-items: baseline;">
-                  <div style="margin-right: 1rem; display: flex;">
-                    <div style="margin-right: 0.2rem; padding-top: 0.2rem;">
-                      <img src="assets/layout/images/stairs-up-svgrepo-com.png" style="width: 100%; height: 1rem;"/>
+              <a (click)="onBtnProductItemClick(row.id)" style="cursor: pointer;">
+                <div>
+                  <div class="flex" style="align-items: baseline; justify-content: space-between;">
+                    <span style="font-size: 1.2rem; font-weight: 600; padding-right: 2rem;">{{row.name}}</span>
+                    <span style="font-size: 1.2rem;" class="pi pi-heart"></span>
+                  </div>
+                  <div style="margin-top: 1rem;"></div>
+                  <div class="flex" style="margin-top: 1rem; align-items: baseline;">
+                    <div style="margin-right: 1rem; display: flex;">
+                      <div style="margin-right: 0.2rem; padding-top: 0.2rem;">
+                        <img src="assets/layout/images/stairs-up-svgrepo-com.png" style="width: 100%; height: 1rem;"/>
+                      </div>
+                      <span>{{row.numberFloor}} tầng</span>
                     </div>
-                    <span>{{row.numberFloor}} tầng</span>
-                  </div>
-                  <div style="margin-right: 1rem; display: flex; align-items: baseline;">
-                    <div style="margin-right: 0.2rem; padding-top: 0.2rem;">
-                      <img src="assets/layout/images/product/icon/area-svgrepo-com.png" style="width: 100%;  height: 1rem;"/>
+                    <div style="margin-right: 1rem; display: flex; align-items: baseline;">
+                      <div style="margin-right: 0.2rem; padding-top: 0.2rem;">
+                        <img src="assets/layout/images/product/icon/area-svgrepo-com.png" style="width: 100%;  height: 1rem;"/>
+                      </div>
+                      <span>{{row.priceArea}}m<sup>2</sup></span>
                     </div>
-                    <span>{{row.priceArea}}m<sup>2</sup></span>
-                  </div>
-                  <div style="margin-right: 1rem; display: flex; align-items: baseline;">
-                    <div style="margin-right: 0.2rem; padding-top: 0.2rem;">
-                      <img src="assets/layout/images/product/icon/view-horizont-svgrepo-com.png" style="width: 100%;  height: 1rem;"/>
+                    <div style="margin-right: 1rem; display: flex; align-items: baseline;">
+                      <div style="margin-right: 0.2rem; padding-top: 0.2rem;">
+                        <img src="assets/layout/images/product/icon/view-horizont-svgrepo-com.png" style="width: 100%;  height: 1rem;"/>
+                      </div>
+                      <span>{{row.doorDirection}}</span>
                     </div>
-                    <span>{{row.doorDirection}}</span>
                   </div>
-                </div>
-                <div style="margin-top: 1rem; display: flex; justify-content: space-between;">
-                  <div>
-                    <strong style="margin-right: 0.5rem; font-size: 1.2rem; color: #094bf4;">{{row.price / 1000000000 | number :'1.0-2'}}tỷ</strong>
-                    <span style="color: #000;">{{ row.unitPrice / 1000000 }} triệu/m<sup>2</sup></span>
-                  </div>
-                  <div>
-                    <!-- <p-button label="So sánh" styleClass="p-button-outlined p-button-lg px-3 py-2"></p-button> -->
-                    <!-- <button pButton pRippletype="button" label="So sánh" style="padding-left: 2rem; padding-right: 2rem; border-radius: 0px 4px 4px 0px; width: 10rem; line-height: 3; border-color: #094bf4;
-                    font-size: 1rem;
-                    font-weight: 600;"></button> -->
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-3" style="padding-right: 1rem;">
-              <div style="overflow: hidden;">
-                <!-- <img src="../../assets/layout/images/product/TestHome.jpg" alt="" style="width: 100%;"> -->
-                <p-galleria [(value)]="images" [showIndicators]="true" [showThumbnails]="false" [responsiveOptions]="responsiveOption" >
-                  <ng-template pTemplate="item" let-item>
-                    <div class="img-hover-zoom">
-                      <img class="" [src]="item.itemImageSrc" style="width: 100%; display: block;" />
-                    </div>
-                  </ng-template>
-                </p-galleria>
-              </div>
-              <div>
-                <div class="flex" style="align-items: baseline;">
-                  <span style="font-size: 1.2rem; font-weight: 600; padding-right: 2rem;">Căn 2PN toà S2.01 - The Sapphire - Vinhomes Smart City</span>
-                  <span style="font-size: 1.2rem;" class="pi pi-heart"></span>
-                </div>
-                <div style="margin-top: 1rem;">Q. Nam Từ Liêm, TP. Hà Nội</div>
-                <div class="flex" style="margin-top: 1rem; align-items: baseline;">
-                  <div style="margin-right: 1rem; display: flex;">
+                  <div style="margin-top: 1rem; display: flex; justify-content: space-between;">
                     <div>
-                      <img src="assets/layout/images/stairs-up-svgrepo-com.png" style="width: 100%; height: 1rem;"/>
+                      <strong style="margin-right: 0.5rem; font-size: 1.2rem; color: #094bf4;">{{row.price / 1000000000 | number :'1.0-2'}}tỷ</strong>
+                      <span style="color: #000;">{{ row.unitPrice / 1000000 }} triệu/m<sup>2</sup></span>
                     </div>
-                    <span>4 tầng</span>
-                  </div>
-                  <div style="margin-right: 1rem; display: flex; align-items: baseline;">
                     <div>
-                      <img src="assets/layout/images/product/icon/area-svgrepo-com.png" style="width: 100%;  height: 1rem;"/>
+                      <!-- <p-button label="So sánh" styleClass="p-button-outlined p-button-lg px-3 py-2"></p-button> -->
+                      <!-- <button pButton pRippletype="button" label="So sánh" style="padding-left: 2rem; padding-right: 2rem; border-radius: 0px 4px 4px 0px; width: 10rem; line-height: 3; border-color: #094bf4;
+                      font-size: 1rem;
+                      font-weight: 600;"></button> -->
                     </div>
-                    <span>127.5m<sup>2</sup></span>
-                  </div>
-                  <div style="margin-right: 1rem; display: flex; align-items: baseline;">
-                    <div>
-                      <img src="assets/layout/images/product/icon/view-horizont-svgrepo-com.png" style="width: 100%;  height: 1rem;"/>
-                    </div>
-                    <span>Tây Bắc</span>
                   </div>
                 </div>
-                <div style="margin-top: 1rem; display: flex; justify-content: space-between;">
-                  <div>
-                    <strong style="margin-right: 0.5rem; font-size: 1.2rem; color: #094bf4;">14.XX tỷ</strong>
-                    <span style="color: #000;">XX triệu/m<sup>2</sup></span>
-                  </div>
-                  <div>
-                    <p-button label="So sánh" styleClass="p-button-outlined p-button-lg px-3 py-2"></p-button>
-                    <!-- <button pButton pRippletype="button" label="So sánh" style="padding-left: 2rem; padding-right: 2rem; border-radius: 0px 4px 4px 0px; width: 10rem; line-height: 3; border-color: #094bf4;
-                    font-size: 1rem;
-                    font-weight: 600;"></button> -->
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-3" style="padding-right: 1rem;">
-              <div style="overflow: hidden;">
-                <!-- <img src="../../assets/layout/images/product/TestHome.jpg" alt="" style="width: 100%;"> -->
-                <p-galleria [(value)]="images" [showIndicators]="true" [showThumbnails]="false" [responsiveOptions]="responsiveOption" >
-                  <ng-template pTemplate="item" let-item>
-                    <div class="img-hover-zoom">
-                      <img class="" [src]="item.itemImageSrc" style="width: 100%; display: block;" />
-                    </div>
-                  </ng-template>
-                </p-galleria>
-              </div>
-              <div>
-                <div class="flex" style="align-items: baseline;">
-                  <span style="font-size: 1.2rem; font-weight: 600; padding-right: 2rem;">Căn 2PN toà S2.01 - The Sapphire - Vinhomes Smart City</span>
-                  <span style="font-size: 1.2rem;" class="pi pi-heart"></span>
-                </div>
-                <div style="margin-top: 1rem;">Q. Nam Từ Liêm, TP. Hà Nội</div>
-                <div class="flex" style="margin-top: 1rem; align-items: baseline;">
-                  <div style="margin-right: 1rem; display: flex;">
-                    <div>
-                      <img src="assets/layout/images/stairs-up-svgrepo-com.png" style="width: 100%; height: 1rem;"/>
-                    </div>
-                    <span>4 tầng</span>
-                  </div>
-                  <div style="margin-right: 1rem; display: flex; align-items: baseline;">
-                    <div>
-                      <img src="assets/layout/images/product/icon/area-svgrepo-com.png" style="width: 100%;  height: 1rem;"/>
-                    </div>
-                    <span>127.5m<sup>2</sup></span>
-                  </div>
-                  <div style="margin-right: 1rem; display: flex; align-items: baseline;">
-                    <div>
-                      <img src="assets/layout/images/product/icon/view-horizont-svgrepo-com.png" style="width: 100%;  height: 1rem;"/>
-                    </div>
-                    <span>Tây Bắc</span>
-                  </div>
-                </div>
-                <div style="margin-top: 1rem; display: flex; justify-content: space-between;">
-                  <div>
-                    <strong style="margin-right: 0.5rem; font-size: 1.2rem; color: #094bf4;">14.XX tỷ</strong>
-                    <span style="color: #000;">XX triệu/m<sup>2</sup></span>
-                  </div>
-                  <div>
-                    <p-button label="So sánh" styleClass="p-button-outlined p-button-lg px-3 py-2"></p-button>
-                    <!-- <button pButton pRippletype="button" label="So sánh" style="padding-left: 2rem; padding-right: 2rem; border-radius: 0px 4px 4px 0px; width: 10rem; line-height: 3; border-color: #094bf4;
-                    font-size: 1rem;
-                    font-weight: 600;"></button> -->
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-3" style="padding-right: 1rem;">
-              <div style="overflow: hidden;">
-                <!-- <img src="../../assets/layout/images/product/TestHome.jpg" alt="" style="width: 100%;"> -->
-                <p-galleria [(value)]="images" [showIndicators]="true" [showThumbnails]="false" [responsiveOptions]="responsiveOption" >
-                  <ng-template pTemplate="item" let-item>
-                    <div class="img-hover-zoom">
-                      <img class="" [src]="item.itemImageSrc" style="width: 100%; display: block;" />
-                    </div>
-                  </ng-template>
-                </p-galleria>
-              </div>
-              <div>
-                <div class="flex" style="align-items: baseline;">
-                  <span style="font-size: 1.2rem; font-weight: 600; padding-right: 2rem;">Căn 2PN toà S2.01 - The Sapphire - Vinhomes Smart City</span>
-                  <span style="font-size: 1.2rem;" class="pi pi-heart"></span>
-                </div>
-                <div style="margin-top: 1rem;">Q. Nam Từ Liêm, TP. Hà Nội</div>
-                <div class="flex" style="margin-top: 1rem; align-items: baseline;">
-                  <div style="margin-right: 1rem; display: flex;">
-                    <div>
-                      <img src="assets/layout/images/stairs-up-svgrepo-com.png" style="width: 100%; height: 1rem;"/>
-                    </div>
-                    <span>4 tầng</span>
-                  </div>
-                  <div style="margin-right: 1rem; display: flex; align-items: baseline;">
-                    <div>
-                      <img src="assets/layout/images/product/icon/area-svgrepo-com.png" style="width: 100%;  height: 1rem;"/>
-                    </div>
-                    <span>127.5m<sup>2</sup></span>
-                  </div>
-                  <div style="margin-right: 1rem; display: flex; align-items: baseline;">
-                    <div>
-                      <img src="assets/layout/images/product/icon/view-horizont-svgrepo-com.png" style="width: 100%;  height: 1rem;"/>
-                    </div>
-                    <span>Tây Bắc</span>
-                  </div>
-                </div>
-                <div style="margin-top: 1rem; display: flex; justify-content: space-between;">
-                  <div>
-                    <strong style="margin-right: 0.5rem; font-size: 1.2rem; color: #094bf4;">14.XX tỷ</strong>
-                    <span style="color: #000;">XX triệu/m<sup>2</sup></span>
-                  </div>
-                  <div>
-                    <p-button label="So sánh" styleClass="p-button-outlined p-button-lg px-3 py-2"></p-button>
-                    <!-- <button pButton pRippletype="button" label="So sánh" style="padding-left: 2rem; padding-right: 2rem; border-radius: 0px 4px 4px 0px; width: 10rem; line-height: 3; border-color: #094bf4;
-                    font-size: 1rem;
-                    font-weight: 600;"></button> -->
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-3" style="padding-right: 1rem;">
-              <div style="overflow: hidden;">
-                <!-- <img src="../../assets/layout/images/product/TestHome.jpg" alt="" style="width: 100%;"> -->
-                <p-galleria [(value)]="images" [showIndicators]="true" [showThumbnails]="false" [responsiveOptions]="responsiveOption" >
-                  <ng-template pTemplate="item" let-item>
-                    <div class="img-hover-zoom">
-                      <img class="" [src]="item.itemImageSrc" style="width: 100%; display: block;" />
-                    </div>
-                  </ng-template>
-                </p-galleria>
-              </div>
-              <div>
-                <div class="flex" style="align-items: baseline;">
-                  <span style="font-size: 1.2rem; font-weight: 600; padding-right: 2rem;">Căn 2PN toà S2.01 - The Sapphire - Vinhomes Smart City</span>
-                  <span style="font-size: 1.2rem;" class="pi pi-heart"></span>
-                </div>
-                <div style="margin-top: 1rem;">Q. Nam Từ Liêm, TP. Hà Nội</div>
-                <div class="flex" style="margin-top: 1rem; align-items: baseline;">
-                  <div style="margin-right: 1rem; display: flex;">
-                    <div>
-                      <img src="assets/layout/images/stairs-up-svgrepo-com.png" style="width: 100%; height: 1rem;"/>
-                    </div>
-                    <span>4 tầng</span>
-                  </div>
-                  <div style="margin-right: 1rem; display: flex; align-items: baseline;">
-                    <div>
-                      <img src="assets/layout/images/product/icon/area-svgrepo-com.png" style="width: 100%;  height: 1rem;"/>
-                    </div>
-                    <span>127.5m<sup>2</sup></span>
-                  </div>
-                  <div style="margin-right: 1rem; display: flex; align-items: baseline;">
-                    <div>
-                      <img src="assets/layout/images/product/icon/view-horizont-svgrepo-com.png" style="width: 100%;  height: 1rem;"/>
-                    </div>
-                    <span>Tây Bắc</span>
-                  </div>
-                </div>
-                <div style="margin-top: 1rem; display: flex; justify-content: space-between;">
-                  <div>
-                    <strong style="margin-right: 0.5rem; font-size: 1.2rem; color: #094bf4;">14.XX tỷ</strong>
-                    <span style="color: #000;">XX triệu/m<sup>2</sup></span>
-                  </div>
-                  <div>
-                    <p-button label="So sánh" styleClass="p-button-outlined p-button-lg px-3 py-2"></p-button>
-                    <!-- <button pButton pRippletype="button" label="So sánh" style="padding-left: 2rem; padding-right: 2rem; border-radius: 0px 4px 4px 0px; width: 10rem; line-height: 3; border-color: #094bf4;
-                    font-size: 1rem;
-                    font-weight: 600;"></button> -->
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-3" style="padding-right: 1rem;">
-              <div style="overflow: hidden;">
-                <!-- <img src="../../assets/layout/images/product/TestHome.jpg" alt="" style="width: 100%;"> -->
-                <p-galleria [(value)]="images" [showIndicators]="true" [showThumbnails]="false" [responsiveOptions]="responsiveOption" >
-                  <ng-template pTemplate="item" let-item>
-                    <div class="img-hover-zoom">
-                      <img class="" [src]="item.itemImageSrc" style="width: 100%; display: block;" />
-                    </div>
-                  </ng-template>
-                </p-galleria>
-              </div>
-              <div>
-                <div class="flex" style="align-items: baseline;">
-                  <span style="font-size: 1.2rem; font-weight: 600; padding-right: 2rem;">Căn 2PN toà S2.01 - The Sapphire - Vinhomes Smart City</span>
-                  <span style="font-size: 1.2rem;" class="pi pi-heart"></span>
-                </div>
-                <div style="margin-top: 1rem;">Q. Nam Từ Liêm, TP. Hà Nội</div>
-                <div class="flex" style="margin-top: 1rem; align-items: baseline;">
-                  <div style="margin-right: 1rem; display: flex;">
-                    <div>
-                      <img src="assets/layout/images/stairs-up-svgrepo-com.png" style="width: 100%; height: 1rem;"/>
-                    </div>
-                    <span>4 tầng</span>
-                  </div>
-                  <div style="margin-right: 1rem; display: flex; align-items: baseline;">
-                    <div>
-                      <img src="assets/layout/images/product/icon/area-svgrepo-com.png" style="width: 100%;  height: 1rem;"/>
-                    </div>
-                    <span>127.5m<sup>2</sup></span>
-                  </div>
-                  <div style="margin-right: 1rem; display: flex; align-items: baseline;">
-                    <div>
-                      <img src="assets/layout/images/product/icon/view-horizont-svgrepo-com.png" style="width: 100%;  height: 1rem;"/>
-                    </div>
-                    <span>Tây Bắc</span>
-                  </div>
-                </div>
-                <div style="margin-top: 1rem; display: flex; justify-content: space-between;">
-                  <div>
-                    <strong style="margin-right: 0.5rem; font-size: 1.2rem; color: #094bf4;">14.XX tỷ</strong>
-                    <span style="color: #000;">XX triệu/m<sup>2</sup></span>
-                  </div>
-                  <div>
-                    <p-button label="So sánh" styleClass="p-button-outlined p-button-lg px-3 py-2"></p-button>
-                    <!-- <button pButton pRippletype="button" label="So sánh" style="padding-left: 2rem; padding-right: 2rem; border-radius: 0px 4px 4px 0px; width: 10rem; line-height: 3; border-color: #094bf4;
-                    font-size: 1rem;
-                    font-weight: 600;"></button> -->
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-3" style="padding-right: 1rem;">
-              <div style="overflow: hidden;">
-                <!-- <img src="../../assets/layout/images/product/TestHome.jpg" alt="" style="width: 100%;"> -->
-                <p-galleria [(value)]="images" [showIndicators]="true" [showThumbnails]="false" [responsiveOptions]="responsiveOption" >
-                  <ng-template pTemplate="item" let-item>
-                    <div class="img-hover-zoom">
-                      <img class="" [src]="item.itemImageSrc" style="width: 100%; display: block;" />
-                    </div>
-                  </ng-template>
-                </p-galleria>
-              </div>
-              <div>
-                <div class="flex" style="align-items: baseline;">
-                  <span style="font-size: 1.2rem; font-weight: 600; padding-right: 2rem;">Căn 2PN toà S2.01 - The Sapphire - Vinhomes Smart City</span>
-                  <span style="font-size: 1.2rem;" class="pi pi-heart"></span>
-                </div>
-                <div style="margin-top: 1rem;">Q. Nam Từ Liêm, TP. Hà Nội</div>
-                <div class="flex" style="margin-top: 1rem; align-items: baseline;">
-                  <div style="margin-right: 1rem; display: flex;">
-                    <div>
-                      <img src="assets/layout/images/stairs-up-svgrepo-com.png" style="width: 100%; height: 1rem;"/>
-                    </div>
-                    <span>4 tầng</span>
-                  </div>
-                  <div style="margin-right: 1rem; display: flex; align-items: baseline;">
-                    <div>
-                      <img src="assets/layout/images/product/icon/area-svgrepo-com.png" style="width: 100%;  height: 1rem;"/>
-                    </div>
-                    <span>127.5m<sup>2</sup></span>
-                  </div>
-                  <div style="margin-right: 1rem; display: flex; align-items: baseline;">
-                    <div>
-                      <img src="assets/layout/images/product/icon/view-horizont-svgrepo-com.png" style="width: 100%;  height: 1rem;"/>
-                    </div>
-                    <span>Tây Bắc</span>
-                  </div>
-                </div>
-                <div style="margin-top: 1rem; display: flex; justify-content: space-between;">
-                  <div>
-                    <strong style="margin-right: 0.5rem; font-size: 1.2rem; color: #094bf4;">14.XX tỷ</strong>
-                    <span style="color: #000;">XX triệu/m<sup>2</sup></span>
-                  </div>
-                  <div>
-                    <p-button label="So sánh" styleClass="p-button-outlined p-button-lg px-3 py-2"></p-button>
-                    <!-- <button pButton pRippletype="button" label="So sánh" style="padding-left: 2rem; padding-right: 2rem; border-radius: 0px 4px 4px 0px; width: 10rem; line-height: 3; border-color: #094bf4;
-                    font-size: 1rem;
-                    font-weight: 600;"></button> -->
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-3" style="padding-right: 1rem;">
-              <div style="overflow: hidden;">
-                <!-- <img src="../../assets/layout/images/product/TestHome.jpg" alt="" style="width: 100%;"> -->
-                <p-galleria [(value)]="images" [showIndicators]="true" [showThumbnails]="false" [responsiveOptions]="responsiveOption" >
-                  <ng-template pTemplate="item" let-item>
-                    <div class="img-hover-zoom">
-                      <img class="" [src]="item.itemImageSrc" style="width: 100%; display: block;" />
-                    </div>
-                  </ng-template>
-                </p-galleria>
-              </div>
-              <div>
-                <div class="flex" style="align-items: baseline;">
-                  <span style="font-size: 1.2rem; font-weight: 600; padding-right: 2rem;">Căn 2PN toà S2.01 - The Sapphire - Vinhomes Smart City</span>
-                  <span style="font-size: 1.2rem;" class="pi pi-heart"></span>
-                </div>
-                <div style="margin-top: 1rem;">Q. Nam Từ Liêm, TP. Hà Nội</div>
-                <div class="flex" style="margin-top: 1rem; align-items: baseline;">
-                  <div style="margin-right: 1rem; display: flex;">
-                    <div>
-                      <img src="assets/layout/images/stairs-up-svgrepo-com.png" style="width: 100%; height: 1rem;"/>
-                    </div>
-                    <span>4 tầng</span>
-                  </div>
-                  <div style="margin-right: 1rem; display: flex; align-items: baseline;">
-                    <div>
-                      <img src="assets/layout/images/product/icon/area-svgrepo-com.png" style="width: 100%;  height: 1rem;"/>
-                    </div>
-                    <span>127.5m<sup>2</sup></span>
-                  </div>
-                  <div style="margin-right: 1rem; display: flex; align-items: baseline;">
-                    <div>
-                      <img src="assets/layout/images/product/icon/view-horizont-svgrepo-com.png" style="width: 100%;  height: 1rem;"/>
-                    </div>
-                    <span>Tây Bắc</span>
-                  </div>
-                </div>
-                <div style="margin-top: 1rem; display: flex; justify-content: space-between;">
-                  <div>
-                    <strong style="margin-right: 0.5rem; font-size: 1.2rem; color: #094bf4;">14.XX tỷ</strong>
-                    <span style="color: #000;">XX triệu/m<sup>2</sup></span>
-                  </div>
-                  <div>
-                    <p-button label="So sánh" styleClass="p-button-outlined p-button-lg px-3 py-2"></p-button>
-                    <!-- <button pButton pRippletype="button" label="So sánh" style="padding-left: 2rem; padding-right: 2rem; border-radius: 0px 4px 4px 0px; width: 10rem; line-height: 3; border-color: #094bf4;
-                    font-size: 1rem;
-                    font-weight: 600;"></button> -->
-                  </div>
-                </div>
-              </div>
+              </a>
             </div>
           </div>
         </div>
@@ -1209,7 +861,7 @@
         <!-- <p-button label="Xem tất cả" styleClass="p-button-outlined p-button-secondary p-button-lg px-4 py-3" class="mr-8"></p-button> -->
         <button class="buttonPrimary" pButton pRippletype="button" label="Xem tất cả" style="padding-left: 2rem; padding-right: 2rem; border-radius: 4px; width: 10rem; line-height: 3; border-color: #fff;
                 font-size: 1rem;
-                font-weight: 600; background-color: transparent;"></button>
+                font-weight: 600; background-color: transparent;" (click)="onProjectFindBtnClick()"></button>
       </div>  
       <div>
         <p-carousel [circular]="true" [autoplayInterval]="3000" [value]="products" [numVisible]="3" [numScroll]="1" [responsiveOptions]="responsiveOptions" [circular]="true">

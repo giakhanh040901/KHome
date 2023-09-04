@@ -1,4 +1,5 @@
 import { Component, Inject, Injector, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { CrudComponentBase } from '@shared/crud-component-base';
 import { API_BASE_URL } from '@shared/service-proxies/service-proxies-base';
 import { ProductService } from '@shared/services/product.service';
@@ -19,6 +20,7 @@ export class ProductItemFindComponent extends CrudComponentBase  {
     messageService: MessageService,
     @Inject(API_BASE_URL) baseUrl?: string,
     public productService?: ProductService,
+    private router?: Router,
   ) {
     super(injector, messageService);
     this.breadcrumbService.setItems([{ label: "Trang chủ" }]);
@@ -388,5 +390,18 @@ export class ProductItemFindComponent extends CrudComponentBase  {
         // }
     ];
   }
-  
+
+  onClickHome() {
+    this.router.navigate(['/home']);
+  }
+
+  onProductFindBtnClick(){
+    // Navigate to /products page
+    this.router.navigate(['/product-item-find']);
+  }
+
+  onBtnProductItemClick(id){
+    // Navigate to /products page
+    this.router.navigate(['/product/' + this.cryptEncode(id)]);
+  }
 }

@@ -337,7 +337,12 @@ namespace EPIC.RealEstateDomain.Implements
             _logger.LogInformation($"{nameof(FindById)}: id = {id}");
             var partnerId = CommonUtils.GetCurrentPartnerId(_httpContext);
             var productItem = _rstProductItemEFRepository.FindById(id, partnerId).ThrowIfNull<RstProductItem>(_dbContext, ErrorCode.RstProductItemNotFound);
+            var project = _dbContext.RstProjects.FirstOrDefault(p => p.Id == productItem.ProjectId);
             var result = _mapper.Map<RstProductItemDto>(productItem);
+            if (project != null)
+            {
+                result.ProjectName = project.Name;
+            }
             result.ProductItemExtends = _mapper.Map<List<RstProductItemExtendDto>>(_rstProductItemExtendRepository.GetAll(id));
             return result;
         }

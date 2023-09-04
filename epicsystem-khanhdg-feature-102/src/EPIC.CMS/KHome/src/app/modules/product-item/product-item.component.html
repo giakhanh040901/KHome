@@ -3,7 +3,9 @@
 <div style="height: 100%; display: block;">
     <p-menubar [model]="items" styleClass="bg-white" style="background: #fff;">
         <ng-template pTemplate="start">
-          <img src="../../../assets/layout/images/KHomeLogo.png" height="100" class="ml-4"/>
+          <a (click)="onClickHome()" style="cursor: pointer;">
+            <img src="../../../assets/layout/images/k1.png" height="100" class="ml-4"/>
+          </a>
         </ng-template>
         <ng-template pTemplate="end">
           <!-- <input type="text" pInputText placeholder="Search" class="w-full" class="mr-4"/> -->
@@ -130,7 +132,7 @@
                                         </div>
                                         <div style="display: flex; flex-direction: column; justify-content: space-between;">
                                             <div style="color: #6f6f6f;">Tổng diện tích sàn</div>
-                                            <div style="color: #000; font-size: 1.3rem; margin-top: 0.2rem;">258m<sup>2</sup></div>
+                                            <div style="color: #000; font-size: 1.3rem; margin-top: 0.2rem;">{{ productInfo.constructionArea}}<sup>2</sup></div>
                                         </div>
                                     </div>
                                     <div style="border-left: 1px solid #6f6f6f; height: 2.5rem;"></div>
@@ -163,28 +165,28 @@
                                 <div class="col-3" style="display: flex; justify-content: space-between; width: 100%; flex-direction: column; align-items: center;">
                                     <div style="display: flex; justify-content: space-between; width: 100%; font-size: 1.2rem;">
                                         <div>Vị trí căn</div>
-                                        <div style="font-weight: 600;">{{ productInfo.productLocation}}</div>
+                                        <div style="font-weight: 600;">{{ ProductConst.getLocationTypes(productInfo.productLocation)}}</div>
                                     </div>
                                     <div style="border-top: 1px solid #9e9e9e; width: 100%; margin-top: 2rem; margin-bottom: 1rem;"></div>
                                 </div>
                                 <div class="col-3" style="display: flex; justify-content: space-between; width: 100%; flex-direction: column; align-items: center;">
                                     <div style="display: flex; justify-content: space-between; width: 100%; font-size: 1.2rem;">
-                                        <div>Vị trí căn</div>
-                                        <div style="font-weight: 600;">Căn thường</div>
+                                        <div>Hướng cửa</div>
+                                        <div style="font-weight: 600;">{{ ProductConst.getDoorDirectionTypes(productInfo.doorDirection) }}</div>
                                     </div>
                                     <div style="border-top: 1px solid #9e9e9e; width: 100%; margin-top: 2rem; margin-bottom: 1rem;"></div>
                                 </div>
                                 <div class="col-3" style="display: flex; justify-content: space-between; width: 100%; flex-direction: column; align-items: center;">
                                     <div style="display: flex; justify-content: space-between; width: 100%; font-size: 1.2rem;">
-                                        <div>Vị trí căn</div>
-                                        <div style="font-weight: 600;">Căn thường</div>
+                                        <div>Loại sản phẩm</div>
+                                        <div style="font-weight: 600;">{{ ProductConst.getclassifyTypeName(productInfo.classifyType) }}</div>
                                     </div>
                                     <div style="border-top: 1px solid #9e9e9e; width: 100%; margin-top: 2rem; margin-bottom: 1rem;"></div>
                                 </div>
                                 <div class="col-3" style="display: flex; justify-content: space-between; width: 100%; flex-direction: column; align-items: center;">
                                     <div style="display: flex; justify-content: space-between; width: 100%; font-size: 1.2rem;">
-                                        <div>Vị trí căn</div>
-                                        <div style="font-weight: 600;">Căn thường</div>
+                                        <div>Trạng thái sổ đỏ</div>
+                                        <div style="font-weight: 600;">{{ ProductConst.getRedBookTypesName(productInfo.redBookType)}}</div>
                                     </div>
                                     <!-- <div style="border-top: 1px solid #9e9e9e; width: 100%; margin-top: 1rem; margin-bottom: 1rem;"></div> -->
                                 </div>
@@ -192,29 +194,29 @@
                             <div class="col-6">
                                 <div class="col-3" style="display: flex; justify-content: space-between; width: 100%; flex-direction: column; align-items: center;">
                                     <div style="display: flex; justify-content: space-between; width: 100%; font-size: 1.2rem;">
-                                        <div>Tình trạng sử dụng</div>
-                                        <div style="font-weight: 600;">Để trống</div>
+                                        <div>Loại bàn giao</div>
+                                        <div style="font-weight: 600;">{{ ProductConst.getHandingTypes(productInfo.handingType)}}</div>
                                     </div>
                                     <div style="border-top: 1px solid #9e9e9e; width: 100%; margin-top: 2rem; margin-bottom: 1rem;"></div>
                                 </div>
                                 <div class="col-3" style="display: flex; justify-content: space-between; width: 100%; flex-direction: column; align-items: center;">
                                     <div style="display: flex; justify-content: space-between; width: 100%; font-size: 1.2rem;">
-                                        <div>Tình trạng bàn giao</div>
-                                        <div style="font-weight: 600;">Đã bàn giao</div>
+                                        <div>Trạng thái căn hộ</div>
+                                        <div style="font-weight: 600;">{{ ProductConst.getStatusListProducts(productInfo.status)}}</div>
                                     </div>
                                     <div style="border-top: 1px solid #9e9e9e; width: 100%; margin-top: 2rem; margin-bottom: 1rem;"></div>
                                 </div>
                                 <div class="col-3" style="display: flex; justify-content: space-between; width: 100%; flex-direction: column; align-items: center;">
                                     <div style="display: flex; justify-content: space-between; width: 100%; font-size: 1.2rem;">
                                         <div>Dự án</div>
-                                        <div style="font-weight: 600;">Vinhomes Ocean Park 2</div>
+                                        <div style="font-weight: 600;">{{ productInfo.projectName}}</div>
                                     </div>
                                     <div style="border-top: 1px solid #9e9e9e; width: 100%; margin-top: 2rem; margin-bottom: 1rem;"></div>
                                 </div>
                                 <div class="col-3" style="display: flex; justify-content: space-between; width: 100%; flex-direction: column; align-items: center;">
                                     <div style="display: flex; justify-content: space-between; width: 100%; font-size: 1.2rem;">
                                         <div>Mã bất động sản</div>
-                                        <div style="font-weight: 600;">YPUHGD</div>
+                                        <div style="font-weight: 600;">{{ productInfo.code}}</div>
                                     </div>
                                     <!-- <div style="border-top: 1px solid #9e9e9e; width: 100%; margin-top: 1rem; margin-bottom: 1rem;"></div> -->
                                 </div>

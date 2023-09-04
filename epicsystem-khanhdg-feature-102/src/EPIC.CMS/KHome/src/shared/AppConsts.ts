@@ -5396,6 +5396,11 @@ export class ProductConst {
         return type ? type[atribution] : '';
     }
 
+    public static getclassifyTypeName(code) {
+        const type = this.classifyTypes.find(rt => rt.code == code);
+        return type ? type.name : '';
+    }
+
     public static classifyTypeGroupFirst = [
         this.CAN_HO_THONG_THUONG,
         this.CAN_HO_STUDIO,
@@ -5444,6 +5449,11 @@ export class ProductConst {
         return type ? type[atribution] : '';
     }
 
+    public static getRedBookTypesName(code) {
+        const type = this.redBookTypes.find(rt => rt.code == code);
+        return type ? type.name : '';
+    }
+
     // Hướng cửa | Hướng ban công
     public static doorDirectionNames = [
         "Đông", 
@@ -5468,6 +5478,12 @@ export class ProductConst {
             code: index + 1,
         }
     });
+
+    public static getDoorDirectionTypes(code) {
+        const type = this.doorDirections.find(direction => direction.code == code);
+        return type ? type.name : '';
+    }
+
 
     // Số lượng phòng
     public static roomQuantityName = [
@@ -5506,6 +5522,29 @@ export class ProductConst {
         'Căn thông tầng',
     ];
 
+    public static productLocationTypes = [
+        {
+            name: 'Căn giữa',
+            code: 1,
+        },
+        {
+            name: 'Căn góc',
+            code: 2,
+        },
+        {
+            name: 'Cổng chính',
+            code: 3,
+        },
+        {
+            name: 'Tòa riêng',
+            code: 4,
+        },
+        {
+            name: 'Căn thông tầng',
+            code: 5,
+        },
+    ];
+
     public static locations = this.locationNames.map((name, index) => {
         return {
             name: name,
@@ -5516,6 +5555,11 @@ export class ProductConst {
     public static getLocationName(code, atribution = 'name') {
         const location = this.locations.find(location => location.code == code);
         return location ? location[atribution] : '';
+    }
+
+    public static getLocationTypes(code) {
+        const location = this.locations.find(location => location.code == code);
+        return location ? location.name : '';
     }
 
     public static SINGLE_TYPE = 1;
@@ -5564,6 +5608,12 @@ export class ProductConst {
         const type = this.handingTypes.find(type => type.code == code);
         return type ? type[atribution] : '';
     }
+
+    public static getHandingTypes(code) {
+        const type = this.handingTypes.find(type => type.code == code);
+        return type ? type.name : '';
+    }
+
 
     public static KHOI_TAO = 1;
     public static GIU_CHO = 2;
@@ -5716,6 +5766,11 @@ export class ProductConst {
     public static getStatusListProduct(code, atribution = 'name') {
         const status = this.statusListProduct.find(s => s.code == code);
         return status ? status[atribution] : null;
+    }
+
+    public static getStatusListProducts(code) {
+        const status = this.statusListProduct.find(s => s.code == code);
+        return status ? status.name : null;
     }
 }
 
