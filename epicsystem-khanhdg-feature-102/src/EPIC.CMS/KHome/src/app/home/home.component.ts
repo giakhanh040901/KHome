@@ -68,6 +68,7 @@ export class HomeComponent extends CrudComponentBase {
   projectId = 681;
 
   rows = [];
+  projectList = [];
   filters: {
 		keyword: string;
 		ownerId: number | undefined;
@@ -432,6 +433,7 @@ export class HomeComponent extends CrudComponentBase {
       this.images = images;
     });
     this.setPage({ page: this.offset });
+    this.setProjectPage({ page: this.offset });
   }
 
   getSeverity(status: string) {
@@ -2078,43 +2080,55 @@ setPage(pageInfo?: any) {
     // Navigate to /products page
     this.router.navigate(['/product-item-find']);
   }
-// genListAction(data = []) {
-//   this.listAction = data.map((projectItem: any, index: number) => {
-//     const actions = [];
 
-//     if (
-//       this.isGranted([
-//         this.PermissionRealStateConst
-//           .RealStateProjectOverview_ThongTinProjectOverview,
-//       ])
-//     ) {
-//       actions.push({
-//         data: projectItem,
-//         label: "Thông tin chi tiết",
-//         icon: "pi pi-info-circle",
-//         command: ($event) => {
-//           this.detail($event.item.data);
-//         },
-//       });
-//     }
+  onProjectBtnClick(id){
+    // Navigate to /products page
+        this.router.navigate(['/project/' + this.cryptEncode(id)]);
+    }
 
-//     if (
-//       this.isGranted([
-//         this.PermissionRealStateConst.RealStateProjectOverview_Xoa,
-//       ]) &&
-//       projectItem.status === ProjectOverviewConst.KHOI_TAO
-//     ) {
-//       actions.push({
-//         data: projectItem,
-//         label: "Xóa",
-//         icon: "pi pi-trash",
-//         command: ($event) => {
-//           this.delete($event.item.data);
-//         },
-//       });
-//     }
+  setProjectPage(pageInfo?: any) {
+    this.isLoading = true;
+    this.page.pageNumber = pageInfo?.page ?? this.offset;
+    if (pageInfo?.rows) this.page.pageSize = pageInfo?.rows;
+    // this.page.keyword = this.filter.keyword;
+    this.projectOverviewService.getAllProject(this.page, this.filter, this.sortData).subscribe((res) => {
+        this.isLoading = false;
+        if (this.handleResponseInterceptor(res, "")) {
+            this.page.totalItems = res.data.totalItems;
+            if (res.data?.items) {
+                this.projectList = res.data.items
+                console.log('!!! listProject', this.projectList);
+                
+                // this.rows = res.data.items.map(
+                // 	(item: any) =>
+                // 		({
+                // 			id: item.id,
+                // 			code: item.code,
+                // 			name: item.name,
+                // 			productType: item?.productTypes
+                // 				? ProjectOverviewConst.getNameProductTypes(
+                // 						item?.productTypes
+                // 					)
+                // 				: "",
+                // 			ownerName: item.ownerName,
+                // 			createdDate:
+                // 				item.createdDate && item.createdDate.length
+                // 					? this.formatDate(item.createdDate)
+                // 					: "",
+                // 			createdBy: item.createdBy,
+                // 			status: item.status,
+                // 		} as ProjectOverviewModel)
+                // );
+            }
+            if (this.rows?.length) {
+                // this.genListAction(this.rows);
+            }
+        }
+    },
+    (err) => {
+        this.isLoading = false;
+    }
+  );
+  }
 
-//     return actions;
-//   });
-// }
 }

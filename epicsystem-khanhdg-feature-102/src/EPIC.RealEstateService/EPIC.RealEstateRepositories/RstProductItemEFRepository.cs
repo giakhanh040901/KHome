@@ -151,7 +151,7 @@ namespace EPIC.RealEstateRepositories
                                                       && openSell.Status != RstDistributionStatus.HUY_DUYET
                                                       select openSellDetail).Any() && productItem.Status == 1
                                    where productItem.ProjectId == input.ProjectId && productItem.Deleted == YesNo.NO
-                                    && (partnerId == null || productItem.PartnerId == partnerId) && (input.Name == null || productItem.Name.Contains(input.Name))
+                                    && (partnerId == null || productItem.PartnerId == partnerId) && (input.Name == null || productItem.Name.ToLower().Contains(input.Name.ToLower()))
                                     && (input.Code == null || productItem.Code.Contains(input.Code)) && (input.ClassifyType == null || productItem.ClassifyType == input.ClassifyType)
                                     && (input.BuildingDensityId == null || productItem.BuildingDensityId == input.BuildingDensityId)
                                     && (input.Status == null || productItem.Status == input.Status 

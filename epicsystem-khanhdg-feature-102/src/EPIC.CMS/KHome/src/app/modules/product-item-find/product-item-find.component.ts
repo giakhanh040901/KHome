@@ -1,5 +1,6 @@
 import { Component, Inject, Injector, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ProductConst } from '@shared/AppConsts';
 import { CrudComponentBase } from '@shared/crud-component-base';
 import { API_BASE_URL } from '@shared/service-proxies/service-proxies-base';
 import { ProductService } from '@shared/services/product.service';
@@ -26,6 +27,7 @@ export class ProductItemFindComponent extends CrudComponentBase  {
     this.breadcrumbService.setItems([{ label: "Trang chủ" }]);
     this.baseUrl = baseUrl || "";
   }
+  ProductConst = ProductConst;
   public filter: {
     project: number | undefined;
     dates: Date[] | undefined;
@@ -404,4 +406,8 @@ export class ProductItemFindComponent extends CrudComponentBase  {
     // Navigate to /products page
     this.router.navigate(['/product/' + this.cryptEncode(id)]);
   }
+
+  changeFilter(e) {
+		this.setPage({ page: this.offset });
+	}
 }

@@ -1,5 +1,6 @@
 import { Component, Inject, Injector, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ProductConst, ProjectOverviewConst } from '@shared/AppConsts';
 import { CrudComponentBase } from '@shared/crud-component-base';
 import { API_BASE_URL } from '@shared/service-proxies/service-proxies-base';
 import { ProductService } from '@shared/services/product.service';
@@ -33,6 +34,8 @@ export class ProjectComponent extends CrudComponentBase {
       this._routeActive.snapshot.paramMap.get("id")
   );
   }
+  ProductConst = ProductConst;
+  ProjectOverviewConst = ProjectOverviewConst;
   @ViewChild(TabView) tabView: TabView;
   public baseUrl: string = "";
   items: MenuItem[] | undefined;
@@ -404,4 +407,8 @@ export class ProjectComponent extends CrudComponentBase {
     // Navigate to /products page
     this.router.navigate(['/product/' + this.cryptEncode(id)]);
   }
+
+  changeFilter(value) {
+		this.setPage({ page: this.offset });
+	}
 }

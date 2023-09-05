@@ -389,11 +389,11 @@
               <a (click)="onBtnProductItemClick(row.id)" style="cursor: pointer;">
                 <div>
                   <div class="flex" style="align-items: baseline; justify-content: space-between;">
-                    <span style="font-size: 1.2rem; font-weight: 600; padding-right: 2rem;">{{row.name}}</span>
+                    <span style="font-size: 1.2rem; font-weight: 600; padding-right: 2rem; color: #000;">{{row.name}}</span>
                     <span style="font-size: 1.2rem;" class="pi pi-heart"></span>
                   </div>
                   <div style="margin-top: 1rem;"></div>
-                  <div class="flex" style="margin-top: 1rem; align-items: baseline;">
+                  <div class="flex" style="margin-top: 1rem; align-items: baseline; color: #6f6f6f;">
                     <div style="margin-right: 1rem; display: flex;">
                       <div style="margin-right: 0.2rem; padding-top: 0.2rem;">
                         <img src="assets/layout/images/stairs-up-svgrepo-com.png" style="width: 100%; height: 1rem;"/>
@@ -864,24 +864,9 @@
                 font-weight: 600; background-color: transparent;" (click)="onProjectFindBtnClick()"></button>
       </div>  
       <div>
-        <p-carousel [circular]="true" [autoplayInterval]="3000" [value]="products" [numVisible]="3" [numScroll]="1" [responsiveOptions]="responsiveOptions" [circular]="true">
+        <!-- <p-carousel [circular]="true" [autoplayInterval]="3000" [value]="products" [numVisible]="3" [numScroll]="1" [responsiveOptions]="responsiveOptions" [circular]="true">
           <ng-template let-product pTemplate="item">
-              <!-- <div class="border-1 surface-border border-round m-2 text-center py-5 px-3">
-                  <div class="mb-3">
-                      <img src="https://primefaces.org/cdn/primeng/images/demo/product/{{ product.image }}" [alt]="product.name" class="w-6 shadow-2" />
-                  </div>
-                  <div>
-                      <h4 class="mb-1">{{ product.name }}</h4>
-                      <h6 class="mt-0 mb-3">{{ '$' + product.price }}</h6>
-                      <p-tag [value]="product.inventoryStatus" [severity]="getSeverity(product.inventoryStatus)"></p-tag>
-                      <div class="car-buttons mt-5">
-                          <p-button type="button" styleClass="p-button p-button-rounded mr-2" icon="pi pi-search"></p-button>
-                          <p-button type="button" styleClass="p-button-success p-button-rounded mr-2" icon="pi pi-star-fill"></p-button>
-                      </div>
-                  </div>
-              </div> -->
-              
-              <div class="border-round m-2" style="position: relative; overflow: hidden;">
+            <div class="border-round m-2" style="position: relative; overflow: hidden;">
                 <div class="img-hover-zoom" style="position: relative; overflow: hidden;">
                     <img class="" src="https://primefaces.org/cdn/primeng/images/demo/product/{{ product.image }}" [alt]="product.name" class="shadow-2" style="width: 100%; border-radius: 4px;"/>
                     <div class="" style="position: absolute; bottom: 0; top: 0; right: 0; left: 0; background: linear-gradient(180deg,rgba(0,11,49,0),rgba(0,5,24,.75));">
@@ -894,6 +879,28 @@
     
                     </div>
                 </div>
+                
+            </div>
+          </ng-template>
+        </p-carousel> -->
+
+        <p-carousel [circular]="true" [autoplayInterval]="3000" [value]="projectList" [numVisible]="3" [numScroll]="1" [responsiveOptions]="responsiveOptions" [circular]="true">
+          <ng-template let-project pTemplate="item">
+            <div class="border-round m-2" style="position: relative; overflow: hidden;">
+              <a style="cursor: pointer;" (click)="onProjectBtnClick(project.id)">
+                <div class="img-hover-zoom" style="position: relative; overflow: hidden;">
+                    <img class="" src="../../assets/layout/images/product/TestHome.jpg" [alt]="project.name" class="shadow-2" style="width: 100%; border-radius: 4px;"/>
+                    <div class="" style="position: absolute; bottom: 0; top: 0; right: 0; left: 0; background: linear-gradient(180deg,rgba(0,11,49,0),rgba(0,5,24,.75));">
+                      <div style="position: absolute; bottom: 0; margin-bottom: 1rem; margin-left: 1rem;">
+                          <h4 class="mb-1" style="color: #fff;">{{ project.name }}</h4>
+                          <h6 class="mt-0 mb-2" style="color: #fff;">{{ project.address }}</h6>
+                          <button class="buttonPrimary" pButton pRippletype="button" label="Xem tất cả" style="border-radius: 4px; width: 8rem; line-height: 2; border-color: #fff;
+                          font-size: 1rem; font-weight: 600; background-color: #fff; color: #000;"></button>
+                      </div>
+    
+                    </div>
+                </div>
+              </a>
                 
             </div>
           </ng-template>

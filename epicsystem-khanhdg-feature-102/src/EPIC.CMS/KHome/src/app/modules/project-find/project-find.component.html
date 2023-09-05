@@ -16,43 +16,75 @@
             <div class="grid flex w-full mt-2" style="align-items: center;">
                 <div class="col-4">
                     <div style="display: flex;">
-                        <input type="text" pInputText placeholder="Tìm dự án" class="w-full" style="width: 100%;"/>
-                        <div style="display: flex;">
-                          <button pButton pRippletype="button" label="Tìm kiếm" icon="pi pi-search" style="margin-left: -2rem; padding-left: 2rem; padding-right: 2rem; border-radius: 0px 4px 4px 0px; width: 10rem; line-height: 3;"></button>
-                        </div>
+                      <input-search
+                          [(keyword)]="filter.keyword"
+                          (_onChange)="setPage()"
+                          class="w-full" style="width: 100%;">
+                      </input-search>
+                      <!-- <div style="display: flex;">
+                        <button pButton pRippletype="button" label="Tìm kiếm" icon="pi pi-search" style="margin-left: -2rem; padding-left: 2rem; padding-right: 2rem; border-radius: 0px 4px 4px 0px; width: 10rem;"></button>
+                      </div> -->
                     </div>
                 </div>
                 <div class="col-8">
                     <ng-container filter>
                       <div #divFilter class="flex flex-column sm:flex-row w-full" style="padding: 2rem 0 2rem 0;">
-                        <form-multi-select
+                        <!-- <form-multi-select
                           style="flex: 1; padding: 0.5rem 0.75rem;"
                           class="col-2"
                           [label]="'Chọn tỉnh thành'"
                           [floatLabel]="true"
                           
-                        ></form-multi-select>
-                        <form-multi-select
+                        ></form-multi-select> -->
+
+                        <span class="p-float-label b-custom ml-2 col-3">
+                          <p-dropdown 
+                              id="ownerFilter" name="ownerFilter" 
+                              [showClear]="true" placeholder="Tất cả" [options]="ownerFilters" optionLabel="name" optionValue="code" [(ngModel)]="filter.ownerId"
+                              (onChange)="changeFilter($event.value)">
+                          </p-dropdown>
+                          <label class="font-normal" for="ownerFilter">Chủ đầu tư</label>
+                        </span>
+                        <!-- <form-multi-select
                           style="flex: 1;"
                           class="col-2"
                           [label]="'Loại BĐS'"
                           [floatLabel]="true"
-                          
-                        ></form-multi-select>
-                        <form-multi-select
+                          [options]="productTypes" 
+                          optionLabel="value"  optionValue="id" [showClear]="true"
+                          [(ngModel)]="filter.productTypes" (onChange)="changeFilter($event.value)"
+                        ></form-multi-select> -->
+                        <span class="p-float-label b-custom col-3">
+                          <p-multiSelect 
+                            [options]="productTypes" 
+                            optionLabel="value"  optionValue="id" 
+                            [(ngModel)]="filter.productTypes" (onChange)="changeFilter($event.value)"
+                            placeholder="Tất cả">
+                          </p-multiSelect>
+                          <label class="font-normal" for="ownerFilter">Loại BĐS</label>
+                        </span>
+                        <!-- <form-multi-select
                           style="flex: 1;"
                           class="col-2"
                           [label]="'Số phòng ngủ'"
                           [floatLabel]="true"
                           
-                        ></form-multi-select>
-                        <form-multi-select
+                        ></form-multi-select> -->
+                        <!-- <form-multi-select
                           style="flex: 1;"
                           class="col-2"
                           [label]="'Khoảng giá'"
                           [floatLabel]="true"
                           
-                        ></form-multi-select>
+                        ></form-multi-select> -->
+                        <span class="p-float-label b-custom ml-2 col-3">
+                          <p-dropdown id="statusFilter" name="statusFilter" 
+                              [showClear]="true" placeholder="Tất cả" [options]="statusFilters" optionLabel="name"
+                              optionValue="code" [(ngModel)]="filter.status"
+                              (onChange)="changeFilter($event.value)">
+                          </p-dropdown>
+                          <label class="font-normal" for="statusFilter">Trạng thái</label>
+                      </span>
                       </div>
                     </ng-container>
                 </div>
@@ -61,17 +93,12 @@
     </div>
     <div style="margin: 2rem 4rem;">
       <div style="display: flex; justify-content: space-between; align-items: center;">
-        <div style="font-size: 1.2rem;">Có <span style="font-size: 1.3rem; font-weight: 600;">902</span> căn đăng bán thuộc <span style="font-size: 1.3rem; font-weight: 600;">Thành phố Hà Nội:</span></div>
-        <div>
+        <div style="font-size: 1.2rem;">Có <span style="font-size: 1.3rem; font-weight: 600;">{{page.totalItems}}</span> dự án thuộc <span style="font-size: 1.3rem; font-weight: 600;">KHome gợi ý cho bạn:</span></div>
+        <!-- <div>
           <span class="p-float-label b-custom ml-2">
-            <!-- <p-dropdown 
-                id="ownerFilter" name="ownerFilter" [style]="{ width: '16rem' }"
-                [showClear]="true" placeholder="Tất cả" [options]="ownerFilters" optionLabel="name" optionValue="code" [(ngModel)]="filter.ownerId"
-                (onChange)="changeFilter($event.value)">
-            </p-dropdown> -->
             <label class="font-normal" for="ownerFilter">Sắp xếp theo</label>
           </span>
-        </div>
+        </div> -->
       </div>
     </div>
     <div style="margin-top: 2rem; margin-bottom: 4rem; margin-left: 4rem; margin-right:4rem;">
@@ -91,11 +118,11 @@
                 </div>
                 <a style="cursor: pointer;" (click)="onProjectBtnClick(row.id)">
                   <div>
-                    <div class="flex" style="align-items: baseline; justify-content: space-between;">
+                    <div class="flex" style="align-items: baseline; justify-content: space-between; color: #000;">
                       <span style="font-size: 1.2rem; font-weight: 600; padding-right: 2rem;">{{row.name}}</span>
                       <span style="font-size: 1.2rem;" class="pi pi-heart"></span>
                     </div>
-                    <div style="margin-top: 1rem;">{{row.address}}</div>
+                    <div style="margin-top: 1rem; color: #6f6f6f;">{{row.address}}</div>
                   </div>
                 </a>
               </div>

@@ -1,5 +1,6 @@
-import { Component, Inject, Injector, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, Injector, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { IDropdown, ProjectOverviewConst } from '@shared/AppConsts';
 import { CrudComponentBase } from '@shared/crud-component-base';
 import { API_BASE_URL } from '@shared/service-proxies/service-proxies-base';
 import { ProjectOverviewService } from '@shared/services/project-overview.service';
@@ -20,11 +21,14 @@ export class ProjectFindComponent extends CrudComponentBase  {
     @Inject(API_BASE_URL) baseUrl?: string,
     private projectOverviewService?: ProjectOverviewService,
     private router?: Router,
+    private changeDetectorRef?: ChangeDetectorRef,
   ) {
     super(injector, messageService);
     this.breadcrumbService.setItems([{ label: "Trang chủ" }]);
     this.baseUrl = baseUrl || "";
   }
+  ownerFilters: IDropdown[] = [];
+  ProjectOverviewConst = ProjectOverviewConst;
   filter: {
     keyword: string;
     ownerId: number | undefined;
@@ -317,6 +321,17 @@ export class ProjectFindComponent extends CrudComponentBase  {
     ];
   }
 
+  ngAfterViewInit() {
+    this.projectOverviewService._listOwner$.subscribe((res: any) => {
+        if (res) {
+            this.ownerFilters = res;
+        }
+    });
+
+    this.changeDetectorRef.detectChanges();
+    this.changeDetectorRef.markForCheck();
+  }
+
   setPage(pageInfo?: any) {
     this.isLoading = true;
     this.page.pageNumber = pageInfo?.page ?? this.offset;
@@ -369,4 +384,20 @@ export class ProjectFindComponent extends CrudComponentBase  {
     onClickHome() {
         this.router.navigate(['/home']);
     }
+
+    changeFilter(value) {
+		this.setPage({ page: this.offset });
+	}
+
+    public get listProductType() {
+		return ProjectOverviewConst.productTypes;
+	}
+
+    public get productTypes() {
+		return ProjectOverviewConst.productTypes;
+	}
+
+    public get statusFilters() {
+		return ProjectOverviewConst.statusFilters;
+	}
 }

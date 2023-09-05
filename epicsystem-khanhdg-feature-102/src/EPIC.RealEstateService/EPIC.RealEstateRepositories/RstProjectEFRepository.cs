@@ -136,7 +136,7 @@ namespace EPIC.RealEstateRepositories
 
             var projectQuery = from project in _dbSet
                                where project.Deleted == YesNo.NO
-                               && (input.Keyword == null || project.Code.Contains(input.Keyword) || project.Name.Contains(input.Keyword))
+                               && (input.Keyword == null || project.Code.Contains(input.Keyword) || project.Name.ToLower().Contains(input.Keyword.ToLower()))
                                && (input.Code == null || project.Code.Contains(input.Code))
                                && (input.Name == null || project.Name.Contains(input.Name))
                                && (input.Status == null || project.Status == input.Status)

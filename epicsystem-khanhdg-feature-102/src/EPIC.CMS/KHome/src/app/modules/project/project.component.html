@@ -83,7 +83,7 @@
                                     </div>
                                     <div style="display: flex; flex-direction: column; justify-content: space-between;;">
                                         <div style="color: #6f6f6f; font-size: 1.2rem;">Giá thoả thuận</div>
-                                        <div style="color: #6f6f6f; font-size: 1.2rem; margin-top: 0.2rem;">{{ projectInfo.expectedSellingPrice ?? 0}}</div>
+                                        <div style="color: #6f6f6f; font-size: 1.2rem; margin-top: 0.2rem;">{{ projectInfo.expectedSellingPrice / 1000000000 | number :'1.0-2'}} tỷ</div>
                                     </div>
                                 </div>
                                 <div style="border-left: 1px solid #6f6f6f; height: 2.5rem;"></div>
@@ -188,7 +188,9 @@
                                   <div class="col-3" style="display: flex; justify-content: space-between; width: 100%; flex-direction: column; align-items: center;">
                                       <div style="display: flex; justify-content: space-between; width: 100%; font-size: 1.2rem;">
                                           <div>Loại hình dự án</div>
-                                          <div style="font-weight: 600;">{{ projectInfo.projectType }}</div>
+                                          <!-- {{ ProjectOverviewConst.getNameProductTypes(projectInfo.productTypes) }} -->
+                                          <!-- <div style="font-weight: 600;">{{ projectInfo.projectType }}</div> -->
+                                          <div style="font-weight: 600;">{{ ProjectOverviewConst.getNameProductTypes(projectInfo.productTypes) }}</div>
                                       </div>
                                       <div style="border-top: 1px solid #ede5e5; width: 100%; margin-top: 2rem; margin-bottom: 1rem;"></div>
                                   </div>
@@ -276,6 +278,77 @@
         </div>
         <div style="margin-top: 2rem; margin-bottom: 4rem;">
             <div style="color: #000; font-size: 1.8rem; font-weight: 600;">Căn đang bán</div>
+            <div>
+              <div class="p-fluid p-formgrid">
+                  <div class="grid flex w-full mt-2" style="align-items: center;">
+                      <div class="col-4">
+                          <div style="display: flex;">
+                              <!-- <input type="text" pInputText placeholder="Tìm dự án" class="w-full" style="width: 100%;"/> -->
+                              <input-search
+                                          [(keyword)]="fieldFilters.keyword"
+                                          (_onChange)="setPage()"
+                                          class="w-full" style="width: 100%;">
+                              </input-search>
+                              <!-- <div style="display: flex;">
+                                <a style="cursor: pointer;" (click)="onProductFindBtnClick()">
+                                  <button pButton pRippletype="button" label="Tìm kiếm" icon="pi pi-search" style="margin-left: -2rem; padding-left: 2rem; padding-right: 2rem; border-radius: 0px 4px 4px 0px; width: 10rem;"></button>
+                                </a>
+                              </div> -->
+                          </div>
+                      </div>
+                      <div class="col-8">
+                          <ng-container filter>
+                            <div #divFilter class="flex flex-column sm:flex-row w-full" style="padding: 2rem 0 2rem 0;">
+                              <!-- <form-multi-select
+                                style="flex: 1; padding: 0.5rem 0.75rem;"
+                                class="col-2"
+                                [label]="'Chọn tỉnh thành'"
+                                [floatLabel]="true"
+                                
+                              ></form-multi-select>
+                              <form-multi-select
+                                style="flex: 1;"
+                                class="col-2"
+                                [label]="'Loại BĐS'"
+                                [floatLabel]="true"
+                                
+                              ></form-multi-select>
+                              <form-multi-select
+                                style="flex: 1;"
+                                class="col-2"
+                                [label]="'Số phòng ngủ'"
+                                [floatLabel]="true"
+                                
+                              ></form-multi-select>
+                              <form-multi-select
+                                style="flex: 1;"
+                                class="col-2"
+                                [label]="'Khoảng giá'"
+                                [floatLabel]="true"
+                                
+                              ></form-multi-select> -->
+      
+                              <span class="p-float-label b-custom ml-2 col-3">
+                                <p-dropdown id="classifyType" name="classifyType" [styleClass]="'b-w-100'" appendTo="body"
+                                    [showClear]="true" placeholder="Tất cả" [options]="ProductConst.classifyTypes"
+                                    optionLabel="name" optionValue="code" [(ngModel)]="fieldFilters.classifyType"
+                                    (onChange)="changeFilter($event.value)">
+                                </p-dropdown>
+                                <label class="font-normal" for="classifyType">Phân loại sản phẩm </label>
+                              </span>
+                              <span class="p-float-label b-custom ml-2 col-3">
+                                <p-dropdown id="status" name="status" [styleClass]="'b-w-100'" appendTo="body" [showClear]="true"
+                                    placeholder="Tất cả" [options]="ProductConst.statuses" optionLabel="name" optionValue="code"
+                                    [(ngModel)]="fieldFilters.status" (onChange)="changeFilter($event.value)">
+                                </p-dropdown>
+                                <label class="font-normal" for="status">Trạng thái</label>
+                              </span>
+                            </div>
+                          </ng-container>
+                      </div>
+                  </div>
+              </div>
+          </div>
             <div class="p-fluid p-formgrid">
                 <div class="grid flex w-full mt-2">
                   <div class="col-3" style="padding-right: 1rem;" *ngFor="let row of rows">
@@ -292,11 +365,11 @@
                     <a style="cursor: pointer;" (click)="onBtnProductItemClick(row.id)">
                       <div>
                         <div class="flex" style="align-items: baseline; justify-content: space-between;">
-                          <span style="font-size: 1.2rem; font-weight: 600; padding-right: 2rem;">{{row.name}}</span>
+                          <span style="font-size: 1.2rem; font-weight: 600; padding-right: 2rem; color: #000;">{{row.name}}</span>
                           <span style="font-size: 1.2rem;" class="pi pi-heart"></span>
                         </div>
                         <div style="margin-top: 1rem;"></div>
-                        <div class="flex" style="margin-top: 1rem; align-items: baseline;">
+                        <div class="flex" style="margin-top: 1rem; align-items: baseline; color: #6f6f6f;">
                           <div style="margin-right: 1rem; display: flex;">
                             <div style="margin-right: 0.2rem; padding-top: 0.2rem;">
                               <img src="assets/layout/images/stairs-up-svgrepo-com.png" style="width: 100%; height: 1rem;"/>
