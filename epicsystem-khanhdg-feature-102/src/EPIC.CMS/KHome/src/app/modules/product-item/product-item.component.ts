@@ -31,6 +31,11 @@ export class ProductItemComponent extends CrudComponentBase {
         this._routeActive.snapshot.paramMap.get("id")
     );
   }
+  loanPrice: number;
+  loanRate: number;
+  interestRate= 10;
+  loanDuration = 35;
+  monthlyPay: number;
   ProductConst = ProductConst;
   @ViewChild(TabView) tabView: TabView;
   @ViewChild(TabView) tabViewRecent: TabView;
@@ -219,9 +224,94 @@ export class ProductItemComponent extends CrudComponentBase {
     this.productService.findById(this.productId).subscribe((res) => {
       if (this.handleResponseInterceptor(res)) {
         this.productInfo = res?.data;
-        console.log('!!! productInfo', this.productInfo);
+        console.log('!!! loanPrice', this.loanPrice);
+        console.log('Giá căn hộ', this.productInfo.price);
+        this.calculateLoanRateFromLoanPrice(this.loanPrice);
+        this.calculateLoanPriceFromLoanRate(this.loanRate);
+        this.calculateLoanPriceFromPrice(this.productInfo.price);
+        this.calculateLoanDuration(this.loanDuration);
+        this.calculateInterestRate(this.interestRate);
       }
     });
+    
+  }
+
+  calculateLoanRateFromLoanPrice(loanPrice) {
+    // let value = name == 'unitPrice' ? +event.value : +event.target.value;
+    // let onUnitPrice = Boolean(name == 'unitPrice' && this.productInfo.priceArea);
+    // let onPriceArea = Boolean(name == 'priceArea' && this.productInfo.unitPrice);
+    // if((onUnitPrice || onPriceArea) && value >= 0) {
+    //   this.productInfo.price = value * (onUnitPrice ? this.productInfo.priceArea : this.productInfo.unitPrice);
+    // }
+    
+    console.log("Loan Price", loanPrice);
+    let months = this.loanDuration * 12;
+    this.loanRate = (loanPrice/ this.productInfo.price) * 100
+    if(this.loanRate < 1) {
+        this.loanRate = 0
+    }
+    else if(this.loanRate > 100) {
+        this.loanRate = 100
+    }
+    console.log('Tỷ lệ vay %', this.loanRate);
+    let rate = (this.interestRate / 12) / 100
+    console.log(rate);
+    this.monthlyPay = loanPrice *(rate*(1+rate)**months) / ((1+rate)**months - 1)
+    console.log('Hàng tháng', this.monthlyPay)
+    
+  }
+
+  calculateLoanPriceFromLoanRate(loanRate) {
+    // let value = name == 'unitPrice' ? +event.value : +event.target.value;
+    // let onUnitPrice = Boolean(name == 'unitPrice' && this.productInfo.priceArea);
+    // let onPriceArea = Boolean(name == 'priceArea' && this.productInfo.unitPrice);
+    // if((onUnitPrice || onPriceArea) && value >= 0) {
+    //   this.productInfo.price = value * (onUnitPrice ? this.productInfo.priceArea : this.productInfo.unitPrice);
+    // }
+    
+    
+    this.loanPrice = (loanRate * this.productInfo.price) / 100
+    let months = this.loanDuration * 12;
+    let rate = (this.interestRate / 12) / 100
+    console.log(rate);
+    this.monthlyPay = this.loanPrice *(rate*(1+rate)**months) / ((1+rate)**months - 1)
+    console.log('Hàng tháng', this.monthlyPay)
+  }
+  calculateLoanPriceFromPrice(price) {
+    // let value = name == 'unitPrice' ? +event.value : +event.target.value;
+    // let onUnitPrice = Boolean(name == 'unitPrice' && this.productInfo.priceArea);
+    // let onPriceArea = Boolean(name == 'priceArea' && this.productInfo.unitPrice);
+    // if((onUnitPrice || onPriceArea) && value >= 0) {
+    //   this.productInfo.price = value * (onUnitPrice ? this.productInfo.priceArea : this.productInfo.unitPrice);
+    // }
+    let months = this.loanDuration * 12;
+    this.loanRate = 70
+    let rate = (this.interestRate / 12) / 100
+    console.log(rate);
+    this.loanPrice = (price * this.loanRate) / 100
+    this.monthlyPay = this.loanPrice *(rate*(1+rate)**months) / ((1+rate)**months - 1)
+    console.log('Hàng tháng', this.monthlyPay)
+    
+  }
+  calculateLoanDuration(loanDuration) {
+    // if (loanDuration == 0) {
+    //     this.monthlyPay = 0
+    // }
+    let months = loanDuration * 12;
+    let rate = (this.interestRate / 12) / 100
+    console.log(rate);
+    this.monthlyPay = this.loanPrice *(rate*(1+rate)**months) / ((1+rate)**months - 1)
+    console.log('Hàng tháng', this.monthlyPay)
+  }
+  calculateInterestRate(interestRate) {
+    // if (loanDuration == 0) {
+    //     this.monthlyPay = 0
+    // }
+    let months = this.loanDuration * 12;
+    let rate = (interestRate / 12) / 100
+    console.log(rate);
+    this.monthlyPay = this.loanPrice *(rate*(1+rate)**months) / ((1+rate)**months - 1)
+    console.log('Hàng tháng', this.monthlyPay)
   }
   getImages() {
     return Promise.resolve(this.getDatas());

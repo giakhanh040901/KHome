@@ -9,7 +9,7 @@
         </ng-template>
         <ng-template pTemplate="end">
           <!-- <input type="text" pInputText placeholder="Search" class="w-full" class="mr-4"/> -->
-          <p-button label="Đăng nhập" styleClass="p-button-outlined p-button-lg px-4 py-3" class="mr-8"></p-button>
+          <!-- <p-button label="Đăng nhập" styleClass="p-button-outlined p-button-lg px-4 py-3" class="mr-8"></p-button> -->
         </ng-template>
     </p-menubar>
     <!-- Hình ảnh căn hộ -->
@@ -248,26 +248,50 @@
                     <div class="grid flex w-full">
                         <div class="col-6">
                             <div class="p-inputgroup" style="width: 100%; margin-top: 1rem; margin-bottom: 1rem;">
-                                <input pInputText placeholder="Giá trị bất động sản" style="padding-top: 1rem; padding-bottom: 1rem;"/>
+                              <span class="p-float-label">
+                                <input id="price" pInputText [(ngModel)]="productInfo.price" style="padding-top: 1rem; padding-bottom: 1rem;"
+                                (keyup)="calculateLoanPriceFromPrice(productInfo.price)"/>
+                                <label htmlFor="price">Giá trị bất động sản</label>
+                              </span>
                                 <span class="p-inputgroup-addon" style="width: 4rem; color: #bbbbbb; font-size: 1.2rem;">đ</span>
                             </div>
                             <div style="display: flex;">
                                 <div class="p-inputgroup" style="width: 100%; margin-top: 1rem; margin-bottom: 1rem;">
-                                    <input pInputText placeholder="Số tiền vay" style="padding-top: 1rem; padding-bottom: 1rem;"/>
-                                    <span class="p-inputgroup-addon" style="width: 4rem; color: #bbbbbb; font-size: 1.2rem; border-top-right-radius: 0; border-bottom-right-radius: 0;">đ</span>
+                                  <span class="p-float-label">
+                                    <input id="loanPrice" [(ngModel)]="loanPrice"  pInputText style="padding-top: 1rem; padding-bottom: 1rem;"
+                                    (keyup)="calculateLoanRateFromLoanPrice(loanPrice)"/>
+                                    <!-- <p-inputNumber 
+                                        [(ngModel)]="loanPrice" placeholder="Số tiền vay" class="b-disabled"
+                                        (onInput)="calculateLoanRateFromLoanPrice(loanPrice)" locale="de-DE"
+                                        >
+                                    </p-inputNumber> -->
+                                    <label htmlFor="loanPrice">Số tiền vay</label>
+                                  </span>
+                                  <span class="p-inputgroup-addon" style="width: 4rem; color: #bbbbbb; font-size: 1.2rem; border-top-right-radius: 0; border-bottom-right-radius: 0;">đ</span>
                                 </div>
                                 <div class="p-inputgroup" style="width: 100%; margin-top: 1rem; margin-bottom: 1rem;">
-                                    <input pInputText placeholder="Tỷ lệ vay" style="padding-top: 1rem; padding-bottom: 1rem; border-top-left-radius: 0; border-bottom-left-radius: 0;"/>
-                                    <span class="p-inputgroup-addon" style="width: 4rem; color: #bbbbbb; font-size: 1.2rem;">%</span>
+                                  <span class="p-float-label">
+                                    <input id="loanRate" (keyup)="calculateLoanPriceFromLoanRate(loanRate)"  [(ngModel)]="loanRate" pInputText style="padding-top: 1rem; padding-bottom: 1rem; border-top-left-radius: 0; border-bottom-left-radius: 0;"/>
+                                    <label htmlFor="loanRate">Tỷ lệ vay</label>
+                                  </span>
+                                  <span class="p-inputgroup-addon" style="width: 4rem; color: #bbbbbb; font-size: 1.2rem;">%</span>
                                 </div>
                             </div>
                             <div class="p-inputgroup" style="width: 100%; margin-top: 1rem; margin-bottom: 1rem;">
-                                <input pInputText placeholder="Thời hạn vay" style="padding-top: 1rem; padding-bottom: 1rem;"/>
-                                <span class="p-inputgroup-addon" style="width: 4rem; color: #bbbbbb; font-size: 1.2rem;">năm</span>
+                              <span class="p-float-label">
+                                <input id="loanDuration" [(ngModel)]="loanDuration" pInputText style="padding-top: 1rem; padding-bottom: 1rem;"
+                                (keyup)="calculateLoanDuration(loanDuration)"/>
+                                <label htmlFor="loanDuration">Thời hạn vay</label>
+                              </span>
+                              <span class="p-inputgroup-addon" style="width: 4rem; color: #bbbbbb; font-size: 1.2rem;">năm</span>
                             </div>
                             <div class="p-inputgroup" style="width: 100%; margin-top: 1rem; margin-bottom: 1rem;">
-                                <input pInputText placeholder="Lãi suất hàng năm" style="padding-top: 1rem; padding-bottom: 1rem;"/>
-                                <span class="p-inputgroup-addon" style="width: 4rem; color: #bbbbbb; font-size: 1.2rem;">%</span>
+                              <span class="p-float-label">
+                                <input id="interestRate" [(ngModel)]="interestRate" pInputText style="padding-top: 1rem; padding-bottom: 1rem;"
+                                (keyup)="calculateInterestRate(interestRate)"/>
+                                <label htmlFor="interestRate">Lãi suất hàng năm</label>
+                              </span>
+                              <span class="p-inputgroup-addon" style="width: 4rem; color: #bbbbbb; font-size: 1.2rem;">%</span>
                             </div>
                         </div>
                         <div class="col-6" style="background: linear-gradient(180deg,#f3f3f3,#fff);">
@@ -279,7 +303,7 @@
                             <div>
                                 <div style="display: flex; justify-content: space-between; background-color: #fff; height: 10rem; margin: 2rem 4rem; padding: 2rem 2rem;">
                                     <div>Hàng tháng</div>
-                                    <div style="font-size: 1.2rem; color: #094bf4; font-weight: 600;">60,349,004đ<span style="color: #6f6f6f; font-size: 1rem;">/tháng</span></div>
+                                    <div style="font-size: 1.2rem; color: #094bf4; font-weight: 600;">{{monthlyPay | number :'1.0-2'}}đ<span style="color: #6f6f6f; font-size: 1rem;">/tháng</span></div>
                                 </div>
                             </div>
                         </div>
