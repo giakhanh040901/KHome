@@ -25,27 +25,27 @@ namespace EPIC.IdentityRepositories
         private readonly OracleHelper _oracleHelper;
         private readonly ILogger _logger;
 
-        private const string PROC_USER_FIND_ALL = "PKG_USERS.PROC_USER_FIND_ALL";
-        private const string PROC_USER_ADD = "PKG_USERS.PROC_USER_ADD";
-        private const string PROC_USER_DELETE = "PKG_USERS.PROC_USER_DELETE";
-        private const string PROC_USER_GET_BY_ID = "PKG_USERS.PROC_USER_GET_BY_ID";
-        private const string PROC_USER_FIND_BY_INVESTOR_ID = "PKG_USERS.PROC_USER_FIND_BY_INVES_ID";
-        private const string PROC_USER_UPDATE = "PKG_USERS.PROC_USER_UPDATE";
-        private const string PROC_USER_GET_BY_USERNAME = "PKG_USERS.PROC_USER_GET_BY_USERNAME";
-        private const string PROC_USER_ACTIVATE = "PKG_USERS.PROC_USER_ACTIVATE";
-        private const string PROC_USER_CHANGE_PASSWORD = "PKG_USERS.PROC_USER_CHANGE_PASSWORD";
-        private const string PROC_USER_TRADING_PROVIDER_ADD = "PKG_USERS_TRADING_PROVIDER.PROC_USER_TRADING_PROVIDER_ADD";
-        private const string PROC_USER_CHANGE_PASSWORD_TEMP = "PKG_USERS.PROC_USER_CHANGE_PASSWORD_TEMP";
-        private const string PROC_USER_GET_BY_TYPE_IS_INVESTOR = "PKG_USERS.PROC_USER_GET_BY_TYPE";
-        private const string PROC_USER_ACCOUNT_INVESTOR = "PKG_USERS.PROC_USER_ACCOUNT_INVESTOR";
-        private const string PROC_USER_GET_PARTNER_ALL = "PKG_USERS.PROC_USER_GET_PARTNER_ALL";
-        private const string PROC_USER_GET_TRADING_ALL = "PKG_USERS.PROC_USER_GET_TRADING_ALL";
-        private const string PROC_USER_GET_OTP_BY_ID = "PKG_USERS.PROC_USER_OTP_BY_ID";
-        private const string PROC_USER_GET_OTP_BY_PHONE = "PKG_USERS.PROC_USER_OTP_BY_PHONE";
-        private const string PROC_LOGIN = "PKG_USERS.PROC_LOGIN";
-        private const string PROC_USER_GET_LIST_TRADINGS = "PKG_USERS.PROC_USER_GET_LIST_TRADINGS";
-        private const string PROC_APP_CHAT_SAVE_ROOM_INFO = "PKG_USERS.PROC_APP_CHAT_SAVE_ROOM_INFO";
-        private const string PROC_APP_CHAT_GET_ROOM_INFO = "PKG_USERS.PROC_APP_CHAT_GET_ROOM_INFO";
+        private const string PROC_USER_FIND_ALL = "EPIC.PKG_USERS.PROC_USER_FIND_ALL";
+        private const string PROC_USER_ADD = "EPIC.PKG_USERS.PROC_USER_ADD";
+        private const string PROC_USER_DELETE = "EPIC.PKG_USERS.PROC_USER_DELETE";
+        private const string PROC_USER_GET_BY_ID = "EPIC.PKG_USERS.PROC_USER_GET_BY_ID";
+        private const string PROC_USER_FIND_BY_INVESTOR_ID = "EPIC.PKG_USERS.PROC_USER_FIND_BY_INVES_ID";
+        private const string PROC_USER_UPDATE = "EPIC.PKG_USERS.PROC_USER_UPDATE";
+        private const string PROC_USER_GET_BY_USERNAME = "EPIC.PKG_USERS.PROC_USER_GET_BY_USERNAME";
+        private const string PROC_USER_ACTIVATE = "EPIC.PKG_USERS.PROC_USER_ACTIVATE";
+        private const string PROC_USER_CHANGE_PASSWORD = "EPIC.PKG_USERS.PROC_USER_CHANGE_PASSWORD";
+        private const string PROC_USER_TRADING_PROVIDER_ADD = "EPIC.PKG_USERS_TRADING_PROVIDER.PROC_USER_TRADING_PROVIDER_ADD";
+        private const string PROC_USER_CHANGE_PASSWORD_TEMP = "EPIC.PKG_USERS.PROC_USER_CHANGE_PASSWORD_TEMP";
+        private const string PROC_USER_GET_BY_TYPE_IS_INVESTOR = "EPIC.PKG_USERS.PROC_USER_GET_BY_TYPE";
+        private const string PROC_USER_ACCOUNT_INVESTOR = "EPIC.PKG_USERS.PROC_USER_ACCOUNT_INVESTOR";
+        private const string PROC_USER_GET_PARTNER_ALL = "EPIC.PKG_USERS.PROC_USER_GET_PARTNER_ALL";
+        private const string PROC_USER_GET_TRADING_ALL = "EPIC.PKG_USERS.PROC_USER_GET_TRADING_ALL";
+        private const string PROC_USER_GET_OTP_BY_ID = "EPIC.PKG_USERS.PROC_USER_OTP_BY_ID";
+        private const string PROC_USER_GET_OTP_BY_PHONE = "EPIC.PKG_USERS.PROC_USER_OTP_BY_PHONE";
+        private const string PROC_LOGIN = "EPIC.PKG_USERS.PROC_LOGIN";
+        private const string PROC_USER_GET_LIST_TRADINGS = "EPIC.PKG_USERS.PROC_USER_GET_LIST_TRADINGS";
+        private const string PROC_APP_CHAT_SAVE_ROOM_INFO = "EPIC.PKG_USERS.PROC_APP_CHAT_SAVE_ROOM_INFO";
+        private const string PROC_APP_CHAT_GET_ROOM_INFO = "EPIC.PKG_USERS.PROC_APP_CHAT_GET_ROOM_INFO";
 
         #region fcm token
         private const string PROC_SAVE_FCM_TOKEN = "PKG_USERS.PROC_SAVE_FCM_TOKEN";
