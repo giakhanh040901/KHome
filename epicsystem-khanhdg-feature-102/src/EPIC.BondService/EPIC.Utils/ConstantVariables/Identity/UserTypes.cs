@@ -21,7 +21,7 @@ namespace EPIC.Utils.ConstantVariables.Identity
         { 
             SUPER_ADMIN, ROOT_EPIC, EPIC, 
             ROOT_PARTNER, PARTNER,
-            ROOT_TRADING_PROVIDER, TRADING_PROVIDER 
+            ROOT_TRADING_PROVIDER, TRADING_PROVIDER,INVESTOR
         };
 
         public static readonly string[] ROOT_ADMIN_TYPES = new string[]

@@ -15,9 +15,9 @@ namespace EPIC.CoreRepositories
         private readonly OracleHelper _oracleHelper;
         private readonly ILogger _logger;
 
-        private const string PROC_INVESTOR_SALE_LIST_TRADIN = "PKG_INVESTOR_SALE.PROC_INVESTOR_SALE_LIST_TRADIN";
-        private const string PROC_GET_LIST_SALE = "PKG_INVESTOR_SALE.PROC_GET_LIST_SALE";
-        private const string PROC_BUSINESS_LIST_TRADING = "PKG_INVESTOR_SALE.PROC_BUSINESS_LIST_TRADING";
+        private const string PROC_INVESTOR_SALE_LIST_TRADIN = "EPIC.PKG_INVESTOR_SALE.PROC_INVESTOR_SALE_LIST_TRADIN";
+        private const string PROC_GET_LIST_SALE = "EPIC.PKG_INVESTOR_SALE.PROC_GET_LIST_SALE";
+        private const string PROC_BUSINESS_LIST_TRADING = "EPIC.PKG_INVESTOR_SALE.PROC_BUSINESS_LIST_TRADING";
 
         public InvestorSaleRepository(string connectionString, ILogger logger)
         {

@@ -73,17 +73,17 @@ namespace EPIC.IdentityServer.GrantValidators
                     return;
                 }
 
-                if (user.UserType == UserTypes.INVESTOR)
-                {
-                    await _events.RaiseAsync(new UserLoginFailureEvent(context.UserName, "user is investor", interactive: false));
-                    context.Result = new GrantValidationResult(TokenRequestErrors.InvalidGrant, "user is investor",
-                        new Dictionary<string, object>()
-                        {
-                                { CustomResponseKey.CODE, ErrorCode.UserInvestorCanNotLoginCMS },
-                                { CustomResponseKey.MESSAGE, "Tài khoản không có quyền đăng nhập trên CMS" }
-                        });
-                    return;
-                }
+                //if (user.UserType == UserTypes.INVESTOR)
+                //{
+                //    await _events.RaiseAsync(new UserLoginFailureEvent(context.UserName, "user is investor", interactive: false));
+                //    context.Result = new GrantValidationResult(TokenRequestErrors.InvalidGrant, "user is investor",
+                //        new Dictionary<string, object>()
+                //        {
+                //                { CustomResponseKey.CODE, ErrorCode.UserInvestorCanNotLoginCMS },
+                //                { CustomResponseKey.MESSAGE, "Tài khoản không có quyền đăng nhập trên CMS" }
+                //        });
+                //    return;
+                //}
 
                 bool result = _userService.ValidatePassword(context.UserName, context.Password);
                 if (result)
