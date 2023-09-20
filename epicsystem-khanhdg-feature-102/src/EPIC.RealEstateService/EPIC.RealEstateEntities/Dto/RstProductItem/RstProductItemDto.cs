@@ -1,4 +1,5 @@
 ﻿using EPIC.RealEstateEntities.Dto.RstProductItemExtend;
+using EPIC.RealEstateEntities.Dto.RstProductItemMedia;
 using EPIC.RealEstateEntities.Dto.RstProjectStructure;
 using EPIC.Utils.ConstantVariables.RealEstate;
 using System;
@@ -197,5 +198,7 @@ namespace EPIC.RealEstateEntities.Dto.RstProductItem
         /// Các thông tin khác của sản phẩm
         /// </summary>
         public List<RstProductItemExtendDto> ProductItemExtends { get; set; }
+
+        public IEnumerable<AppRstProductItemMediaDto> ProductItemMedias { get; set; } 
     }
 }

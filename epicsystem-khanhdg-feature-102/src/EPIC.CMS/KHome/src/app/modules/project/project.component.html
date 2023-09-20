@@ -1,15 +1,14 @@
 <app-loading-page *ngIf="isLoadingPage"></app-loading-page>
 
 <div style="height: 100%; display: block;">
-    <p-menubar [model]="items" styleClass="bg-white" style="background: #fff;">
+    <p-menubar styleClass="bg-white" style="background: #fff;">
         <ng-template pTemplate="start">
           <a (click)="onClickHome()" style="cursor: pointer;">
             <img src="../../../assets/layout/images/k1.png" height="100" class="ml-4"/>
           </a>
         </ng-template>
         <ng-template pTemplate="end">
-          <!-- <input type="text" pInputText placeholder="Search" class="w-full" class="mr-4"/> -->
-          <!-- <p-button label="Đăng nhập" styleClass="p-button-outlined p-button-lg px-4 py-3" class="mr-8"></p-button> -->
+          <app-topbar></app-topbar>
         </ng-template>
     </p-menubar>
     <!-- Hình ảnh căn hộ -->
@@ -42,14 +41,24 @@
         
 
         <div class="card md:flex md:justify-content-center" style="margin-top: 2rem;">
-            <p-galleria [autoPlay]="true" [circular]="true" [(value)]="images" [showIndicators]="true" [showThumbnails]="false" [responsiveOptions]="responsiveOption" >
+            <p-galleria [autoPlay]="true" [circular]="true" [(value)]="projectInfo.urlImage" [showIndicators]="true" [showThumbnails]="false" [responsiveOptions]="responsiveOption" >
+              <ng-template pTemplate="item" let-item>
+                <div class="">
+                  <p-image [src]="baseUrl+'/'+item" alt="Image" width="100%" [preview]="true" height="500rem"></p-image>
+                </div>
+              </ng-template>
+            </p-galleria>
+        </div>
+        
+        <!-- <div class="card md:flex md:justify-content-center" style="margin-top: 2rem;">
+          <p-galleria [autoPlay]="true" [circular]="true" [(value)]="images" [showIndicators]="true" [showThumbnails]="false" [responsiveOptions]="responsiveOption" >
               <ng-template pTemplate="item" let-item>
                 <div class="">
                   <p-image [src]="item.itemImageSrc" alt="Image" width="100%" [preview]="true"></p-image>
                 </div>
               </ng-template>
             </p-galleria>
-        </div>
+        </div> -->
     </div>
 
     <!-- Thông tin căn hộ -->
@@ -58,12 +67,12 @@
             <div class="col-9">
                 <div style="display: flex; justify-content: space-between; align-items: baseline; font-weight: 600; color: #000;">
                     <div style="font-size: 2rem; font-weight: 600; color: #000;">{{projectInfo.name}}</div>
-                    <span style="font-size: 1.2rem;" class="pi pi-heart"></span>
+                    <!-- <span style="font-size: 1.2rem;" class="pi pi-heart"></span> -->
                 </div>
 
                 <div style="margin-top: 1rem; display: flex; cursor: pointer; color: #094bf4; align-items: center;">
-                    <span class="pi pi-plus-circle" style="margin-right: 0.5rem; font-weight: 600;"></span>
-                    <div style="font-size: 1.1rem; font-weight: 600;">So sánh</div>
+                    <!-- <span class="pi pi-plus-circle" style="margin-right: 0.5rem; font-weight: 600;"></span>
+                    <div style="font-size: 1.1rem; font-weight: 600;">So sánh</div> -->
                 </div>
                 
                 <!-- Tab view -->
@@ -354,10 +363,10 @@
                   <div class="col-3" style="padding-right: 1rem;" *ngFor="let row of rows">
                     <div style="overflow: hidden;">
                       <!-- <img src="../../assets/layout/images/product/TestHome.jpg" alt="" style="width: 100%;"> -->
-                      <p-galleria [(value)]="images" [showIndicators]="true" [showThumbnails]="false" [responsiveOptions]="responsiveOption" >
+                      <p-galleria [(value)]="row.productItemMedias" [showIndicators]="true" [showThumbnails]="false" [responsiveOptions]="responsiveOption" >
                         <ng-template pTemplate="item" let-item>
                           <div class="img-hover-zoom">
-                            <img class="" [src]="item.itemImageSrc" style="width: 100%; display: block;" />
+                            <img class="" [src]="baseUrl+'/'+item.urlImage" style="width: 100%; display: block;" />
                           </div>
                         </ng-template>
                       </p-galleria>
@@ -366,7 +375,7 @@
                       <div>
                         <div class="flex" style="align-items: baseline; justify-content: space-between;">
                           <span style="font-size: 1.2rem; font-weight: 600; padding-right: 2rem; color: #000;">{{row.name}}</span>
-                          <span style="font-size: 1.2rem;" class="pi pi-heart"></span>
+                          <!-- <span style="font-size: 1.2rem;" class="pi pi-heart"></span> -->
                         </div>
                         <div style="margin-top: 1rem;"></div>
                         <div class="flex" style="margin-top: 1rem; align-items: baseline; color: #6f6f6f;">

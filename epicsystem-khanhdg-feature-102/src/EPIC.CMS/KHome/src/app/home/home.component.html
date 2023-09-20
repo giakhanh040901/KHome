@@ -195,17 +195,28 @@
 </p-menubar> -->
 
 <div class="">
-  <p-menubar [model]="items" styleClass="bg-white" style="background: #fff;">
+  <!-- <p-menubar [model]="items" styleClass="bg-white" style="background: #fff;">
     <ng-template pTemplate="start">
       <a (click)="onClickHome()" style="cursor: pointer;">
         <img src="../../../assets/layout/images/k1.png" height="100" class="ml-4"/>
       </a>
     </ng-template>
     <ng-template pTemplate="end">
-      <!-- <input type="text" pInputText placeholder="Search" class="w-full" class="mr-4"/> -->
-      <!-- <p-button label="Đăng nhập" styleClass="p-button-outlined p-button-lg px-4 py-3" class="mr-8"></p-button> -->
+      <app-topbar></app-topbar>
+    </ng-template>
+  </p-menubar> -->
+
+  <p-menubar styleClass="bg-white" style="background: #fff;">
+    <ng-template pTemplate="start">
+      <a (click)="onClickHome()" style="cursor: pointer;">
+        <img src="../../../assets/layout/images/k1.png" height="100" class="ml-4"/>
+      </a>
+    </ng-template>
+    <ng-template pTemplate="end">
+      <app-topbar></app-topbar>
     </ng-template>
   </p-menubar>
+  <!-- <app-topbar></app-topbar> -->
   <div style="display: block;">
     <div style="display:flex; flex: 0 0 auto; flex-direction: row;">
       <div style="margin-top: 2rem; margin-left: 4rem; flex: 1;">
@@ -378,10 +389,10 @@
             <div class="col-3" style="padding-right: 1rem;" *ngFor="let row of rows">
               <div style="overflow: hidden;">
                 <!-- <img src="../../assets/layout/images/product/TestHome.jpg" alt="" style="width: 100%;"> -->
-                <p-galleria [(value)]="images" [showIndicators]="true" [showThumbnails]="false" [responsiveOptions]="responsiveOption" >
+                <p-galleria [(value)]="row.productItemMedias" [showIndicators]="true" [showThumbnails]="false" [responsiveOptions]="responsiveOption" >
                   <ng-template pTemplate="item" let-item>
                     <div class="img-hover-zoom">
-                      <img class="" [src]="item.itemImageSrc" style="width: 100%; display: block;" />
+                      <img class="" [src]="baseUrl+'/'+item.urlImage" style="width: 100%; display: block; height: 18rem;" />
                     </div>
                   </ng-template>
                 </p-galleria>
@@ -390,7 +401,7 @@
                 <div>
                   <div class="flex" style="align-items: baseline; justify-content: space-between;">
                     <span style="font-size: 1.2rem; font-weight: 600; padding-right: 2rem; color: #000;">{{row.name}}</span>
-                    <span style="font-size: 1.2rem;" class="pi pi-heart"></span>
+                    <!-- <span style="font-size: 1.2rem;" class="pi pi-heart"></span> -->
                   </div>
                   <div style="margin-top: 1rem;"></div>
                   <div class="flex" style="margin-top: 1rem; align-items: baseline; color: #6f6f6f;">
@@ -431,7 +442,7 @@
           </div>
         </div>
         <div style="display: flex; justify-content: center; margin-top: 3rem; margin-bottom: 4rem;">
-          <p-button label="Xem thêm" styleClass="p-button-raised p-button-lg px-5 py-3"></p-button>
+          <!-- <p-button label="Xem thêm" styleClass="p-button-raised p-button-lg px-5 py-3"></p-button> -->
         </div>
         
       </p-tabPanel>
@@ -887,7 +898,7 @@
             <div class="border-round m-2" style="position: relative; overflow: hidden;">
               <a style="cursor: pointer;" (click)="onProjectBtnClick(project.id)">
                 <div class="img-hover-zoom" style="position: relative; overflow: hidden;">
-                    <img class="" src="../../assets/layout/images/product/TestHome.jpg" [alt]="project.name" class="shadow-2" style="width: 100%; border-radius: 4px;"/>
+                    <img class="" [src]="baseUrl+'/'+project.urlAvatarImage" [alt]="project.name" class="shadow-2" style="width: 100%; border-radius: 4px; height: 22rem;"/>
                     <div class="" style="position: absolute; bottom: 0; top: 0; right: 0; left: 0; background: linear-gradient(180deg,rgba(0,11,49,0),rgba(0,5,24,.75));">
                       <div style="position: absolute; bottom: 0; margin-bottom: 1rem; margin-left: 1rem;">
                           <h4 class="mb-1" style="color: #fff;">{{ project.name }}</h4>

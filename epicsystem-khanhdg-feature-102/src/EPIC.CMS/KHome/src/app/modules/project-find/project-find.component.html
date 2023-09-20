@@ -1,14 +1,13 @@
 <app-loading-page *ngIf="isLoadingPage"></app-loading-page>
 <div style="height: 100%; display: block;">
-    <p-menubar [model]="items" styleClass="bg-white" style="background: #fff;">
+    <p-menubar styleClass="bg-white" style="background: #fff;">
         <ng-template pTemplate="start">
           <a (click)="onClickHome()" style="cursor: pointer;">
             <img src="../../../assets/layout/images/k1.png" height="100" class="ml-4"/>
           </a>
         </ng-template>
         <ng-template pTemplate="end">
-          <!-- <input type="text" pInputText placeholder="Search" class="w-full" class="mr-4"/> -->
-          <!-- <p-button label="Đăng nhập" styleClass="p-button-outlined p-button-lg px-4 py-3" class="mr-8"></p-button> -->
+          <app-topbar></app-topbar>
         </ng-template>
     </p-menubar>
     <div style="margin: 2rem 4rem;">
@@ -108,10 +107,10 @@
               <div class="col-3" style="padding-right: 1rem;" *ngFor="let row of rows">
                 <div style="overflow: hidden;">
                   <!-- <img src="../../assets/layout/images/product/TestHome.jpg" alt="" style="width: 100%;"> -->
-                  <p-galleria [(value)]="images" [showIndicators]="true" [showThumbnails]="false" [responsiveOptions]="responsiveOption" >
+                  <p-galleria [(value)]="row.urlImage" [showIndicators]="true" [showThumbnails]="false" [responsiveOptions]="responsiveOption" >
                     <ng-template pTemplate="item" let-item>
                       <div class="img-hover-zoom">
-                        <img class="" [src]="item.itemImageSrc" style="width: 100%; display: block;" />
+                        <img class="" [src]="baseUrl+'/'+item" style="width: 100%; display: block; height: 16rem;" />
                       </div>
                     </ng-template>
                   </p-galleria>
@@ -120,7 +119,7 @@
                   <div>
                     <div class="flex" style="align-items: baseline; justify-content: space-between; color: #000;">
                       <span style="font-size: 1.2rem; font-weight: 600; padding-right: 2rem;">{{row.name}}</span>
-                      <span style="font-size: 1.2rem;" class="pi pi-heart"></span>
+                      <!-- <span style="font-size: 1.2rem;" class="pi pi-heart"></span> -->
                     </div>
                     <div style="margin-top: 1rem; color: #6f6f6f;">{{row.address}}</div>
                   </div>
@@ -130,7 +129,7 @@
           </div>
         </div>
         <div style="display: flex; justify-content: center; margin-top: 3rem; margin-bottom: 4rem;">
-            <p-button label="Xem thêm" styleClass="p-button-raised p-button-lg px-5 py-3"></p-button>
+            <!-- <p-button label="Xem thêm" styleClass="p-button-raised p-button-lg px-5 py-3"></p-button> -->
         </div>
     </div>
     <!-- Footer -->

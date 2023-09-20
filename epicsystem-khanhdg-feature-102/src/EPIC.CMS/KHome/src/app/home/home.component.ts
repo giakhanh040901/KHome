@@ -7,6 +7,7 @@ import { CrudComponentBase } from "@shared/crud-component-base";
 import { DashBoardServiceProxy } from "@shared/service-proxies/dashboard-service";
 import * as moment from "moment";
 import {
+  AppConsts,
   DashboardConst,
   IConstant,
   IDropdown,
@@ -65,7 +66,7 @@ export class HomeComponent extends CrudComponentBase {
   }
   rowsNoPaging = [];
   // projectId: number;
-  projectId = 681;
+  projectId = 26;
 
   rows = [];
   projectList = [];
@@ -203,7 +204,8 @@ export class HomeComponent extends CrudComponentBase {
   ProjectOverviewConst = ProjectOverviewConst;
 
   ngOnInit() {
-    console.log('!!! siu ', ProjectOverviewConst.productTypes);
+    this.baseUrl = AppConsts.remoteServiceBaseUrl ?? this.baseUrl;
+    console.log('!!! siu ', this.baseUrl);
     
     // get default filter.dates
     this.getDefaultFilterDate();

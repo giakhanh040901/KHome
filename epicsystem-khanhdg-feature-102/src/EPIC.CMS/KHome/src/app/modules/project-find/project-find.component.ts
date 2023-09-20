@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, Inject, Injector, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { IDropdown, ProjectOverviewConst } from '@shared/AppConsts';
+import { AppConsts, IDropdown, ProjectOverviewConst } from '@shared/AppConsts';
 import { CrudComponentBase } from '@shared/crud-component-base';
 import { API_BASE_URL } from '@shared/service-proxies/service-proxies-base';
 import { ProjectOverviewService } from '@shared/services/project-overview.service';
@@ -76,6 +76,7 @@ export class ProjectFindComponent extends CrudComponentBase  {
     }
 ];
   ngOnInit(): void {
+    this.baseUrl = AppConsts.remoteServiceBaseUrl ?? this.baseUrl;
     this.responsiveOptions = [
       {
           breakpoint: '1199px',
