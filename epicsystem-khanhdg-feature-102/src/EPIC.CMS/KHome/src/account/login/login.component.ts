@@ -5,6 +5,7 @@ import { AppConsts } from '@shared/AppConsts';
 import { MessageService } from 'primeng/api';
 import { TokenService } from '@shared/services/token.service';
 import { CookieManagerService } from '@shared/services/cookie.service';
+import { Router } from '@angular/router';
 
 @Component({
     templateUrl: './login.component.html',
@@ -19,7 +20,8 @@ export class LoginComponent extends AppComponentBase {
         private injector: Injector,
         messageService: MessageService,
         public authService: AppAuthService,
-        private _cookieService: CookieManagerService
+        private _cookieService: CookieManagerService,
+        private router?: Router,
     ) {
         super(injector, messageService);
     }
@@ -28,4 +30,8 @@ export class LoginComponent extends AppComponentBase {
         this.submitting = true;
         this.authService.authenticate(() => (this.submitting = false));
     }
+
+    onClickRegister() {
+        this.router.navigate(['account/register']);
+      }
 }

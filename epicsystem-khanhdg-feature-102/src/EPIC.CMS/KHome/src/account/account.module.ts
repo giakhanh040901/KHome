@@ -16,6 +16,7 @@ import { PasswordModule } from 'primeng/password';
 import { MessageModule } from 'primeng/message';
 import { MessagesModule } from 'primeng/messages';
 import {ToastModule} from 'primeng/toast';
+import { RegisterComponent } from './register/register.component';
 
 @NgModule({
     imports: [
@@ -36,6 +37,7 @@ import {ToastModule} from 'primeng/toast';
     declarations: [
         AccountComponent,
         LoginComponent,
+        RegisterComponent,
     ],
     providers: [
         { provide: API_BASE_URL, useFactory: () => AppConsts.remoteServiceBaseUrl },
