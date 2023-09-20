@@ -361,6 +361,16 @@ namespace EPIC.RealEstateDomain.Implements
             List<RstProductItemDto> resultItem = _mapper.Map<List<RstProductItemDto>>(productItemQuery.Items);
             foreach (var item in resultItem)
             {
+                item.ProductItemMedias = _dbContext.RstProductItemMedias.Where(i => i.ProductItemId == item.Id).Select(e => new AppRstProductItemMediaDto
+                {
+                    Id = e.Id,
+                    GroupTitle = e.GroupTitle,
+                    ProductItemId = e.ProductItemId,
+                    Location = e.Location,
+                    MediaType = e.MediaType,
+                    UrlImage = e.UrlImage,
+                    UrlPath = e.UrlPath
+                });
                 if (item.Status == RstProductItemStatus.KHOI_TAO)
                 {
                     item.Status = RstProductItemStatus.LOGIC_CHUA_MO_BAN;

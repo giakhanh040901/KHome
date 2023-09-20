@@ -1,6 +1,6 @@
 import { Component, Inject, Injector, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ProductConst, ProjectOverviewConst } from '@shared/AppConsts';
+import { AppConsts, ProductConst, ProjectOverviewConst } from '@shared/AppConsts';
 import { CrudComponentBase } from '@shared/crud-component-base';
 import { API_BASE_URL } from '@shared/service-proxies/service-proxies-base';
 import { ProductService } from '@shared/services/product.service';
@@ -75,6 +75,7 @@ export class ProjectComponent extends CrudComponentBase {
     status: null,
   };
   ngOnInit(): void {
+    this.baseUrl = AppConsts.remoteServiceBaseUrl ?? this.baseUrl;
     this.responsiveOptions = [
       {
           breakpoint: '1199px',

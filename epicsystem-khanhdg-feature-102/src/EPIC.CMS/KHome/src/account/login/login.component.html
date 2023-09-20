@@ -24,8 +24,15 @@
                         <i class="pi pi-lock"></i>
                     </div>
                     <div class="buttons">
-                        <button pButton type="button" (click)="login()"  label="Đăng nhập" [disabled]="submitting"></button>
-                        <a href="#" class="secondary-button">Quên mật khẩu?</a>
+                        <button pButton type="button" (click)="login()"  label="Đăng nhập" [disabled]="submitting" style="margin-top: 0 !important;"></button>
+                        <div style="display: flex; align-items: flex-end; flex-direction: column;">
+                            <a href="#" class="secondary-button">Quên mật khẩu?</a>
+                            <div>
+                                Chưa có tài khoản
+                                <a href="#" class="secondary-button">Đăng ký</a>
+
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

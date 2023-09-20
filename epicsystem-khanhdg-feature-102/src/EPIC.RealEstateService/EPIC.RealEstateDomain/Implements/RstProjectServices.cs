@@ -196,6 +196,7 @@ namespace EPIC.RealEstateDomain.Implements
             result.GuaranteeBanks = _rstProjectGuaranteeBankRepository.EntityNoTracking.Where(r => r.ProjectId == id).Select(b => b.BankId).ToList();
             // Lấy thêm thông tin mở rộng khác
             result.ProjectExtends = _mapper.Map<List<RstProjectExtendDto>>(_rstProjectExtendEFRepository.GetAll(id));
+            result.UrlImage = _dbContext.RstProjectMedias.Where(o => o.ProjectId == id).Select(o => o.UrlImage);
             // Thông tin chủ đầu tư
             ViewRstOwnerDto owner = _mapper.Map<ViewRstOwnerDto>(ownerFind);
             owner.BusinessCustomer = businessCustomer;
@@ -283,6 +284,8 @@ namespace EPIC.RealEstateDomain.Implements
                 //Ngân hàng đảm bảo
                 resultItem.GuaranteeBanks = _rstProjectGuaranteeBankRepository.EntityNoTracking.Where(r => r.ProjectId == item.Id).Select(b => b.BankId).ToList();
 
+                resultItem.UrlImage = _dbContext.RstProjectMedias.Where(o => o.ProjectId == item.Id).Select(o => o.UrlImage).ToList();
+                resultItem.UrlAvatarImage = _dbContext.RstProjectMedias.Where(o => o.ProjectId == item.Id && o.Location == RstMediaLocations.ANH_DAI_DIEN_DU_AN).Select(o => o.UrlImage).FirstOrDefault();
                 // Thông tin chủ đầu tư
                 var ownerFind = _rstOwnerEFRepository.FindById(item.OwnerId);
                 if (ownerFind != null)

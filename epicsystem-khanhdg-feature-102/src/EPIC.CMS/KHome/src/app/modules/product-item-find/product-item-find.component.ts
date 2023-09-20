@@ -1,6 +1,6 @@
 import { Component, Inject, Injector, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ProductConst } from '@shared/AppConsts';
+import { AppConsts, ProductConst } from '@shared/AppConsts';
 import { CrudComponentBase } from '@shared/crud-component-base';
 import { API_BASE_URL } from '@shared/service-proxies/service-proxies-base';
 import { ProductService } from '@shared/services/product.service';
@@ -37,7 +37,7 @@ export class ProductItemFindComponent extends CrudComponentBase  {
   };
   rows = [];
   rowsNoPaging = [];
-  projectId = 681;
+  projectId = 26;
 
   fieldFilters = {
     keyword: null,
@@ -79,6 +79,7 @@ export class ProductItemFindComponent extends CrudComponentBase  {
     }
 ];
   ngOnInit(): void {
+    this.baseUrl = AppConsts.remoteServiceBaseUrl ?? this.baseUrl;
     this.responsiveOptions = [
       {
           breakpoint: '1199px',

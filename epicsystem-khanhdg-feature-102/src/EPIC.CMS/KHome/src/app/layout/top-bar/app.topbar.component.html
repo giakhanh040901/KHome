@@ -1,6 +1,6 @@
 <div class="layout-topbar">
     <div class="layout-topbar-wrapper">
-        <div class="layout-topbar-left">
+        <!-- <div class="layout-topbar-left">
             <div class="layout-topbar-logo-wrapper">
                 <a href="#" class="layout-topbar-logo">
                     <img src="assets/layout/images/logo-mirage@2x.png" alt="mirage-layout" />
@@ -20,11 +20,6 @@
                 </p-multiSelect>  
             </span> 
 
-            <!-- <span class="p-input-icon-right">
-                <i class="pi pi-search"></i>
-                <input type="text" pInputText placeholder="Tìm kiếm"/>
-            </span> -->
-
             <a href="#" class="sidebar-menu-button" (click)="appMain.onMenuButtonClick($event)">
                 <i class="pi pi-bars"></i>
             </a>
@@ -36,13 +31,13 @@
             <a href="#" class="topbar-menu-mobile-button" (click)="appMain.onTopbarMobileMenuButtonClick($event)">
                 <i class="pi pi-ellipsis-v"></i>
             </a>
-        </div>
+        </div> -->
         <div class="layout-topbar-right fadeInDown">
             <ul class="layout-topbar-actions">
                 <li #profile class="topbar-item profile-item" [ngClass]="{'active-topmenuitem': appMain.activeTopbarItem === profile}">
                     <a href="#" (click)="appMain.onTopbarItemClick($event,profile)">
                     <span class="profile-image-wrapper">
-                        <img style="border-radius: 50%;" [src]="avatar" alt="mirage-layout" />
+                        <img style="border-radius: 50%;" src="assets/layout/images/k1.png" alt="mirage-layout" />
                     </span>
                     <span class="profile-info-wrapper">
                         <h3>{{ userInfo?.userName }}</h3>
@@ -52,7 +47,7 @@
                     <ul class="profile-item-submenu fadeInDown">
                         <div class="b-new-div-account-display">
                              <div class="b-avt-detail">
-                                 <img class="b-avt-detail" [src]="avatar">
+                                 <img class="b-avt-detail" src="assets/layout/images/k1.png">
                              </div>
                              <div class="b-name-detail">
                                  <p class="b-display-name">{{ userInfo?.displayName }}</p>

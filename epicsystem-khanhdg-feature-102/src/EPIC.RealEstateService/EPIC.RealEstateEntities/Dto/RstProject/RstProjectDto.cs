@@ -229,5 +229,15 @@ namespace EPIC.RealEstateEntities.Dto.RstProject
         /// Thông tin khác của dự án
         /// </summary>
         public List<RstProjectExtendDto> ProjectExtends { get; set; }
+
+        /// <summary>
+        /// Đường dẫn hình ảnh dự án
+        /// </summary>
+        public IEnumerable<string> UrlImage {  get; set; }
+
+        /// <summary>
+        /// Ảnh đại diện dự án
+        /// </summary>
+        public string UrlAvatarImage { get; set; }
     }
 }

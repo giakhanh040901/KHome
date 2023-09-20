@@ -1,15 +1,14 @@
 <app-loading-page *ngIf="isLoadingPage"></app-loading-page>
 
 <div style="height: 100%; display: block;">
-    <p-menubar [model]="items" styleClass="bg-white" style="background: #fff;">
+    <p-menubar styleClass="bg-white" style="background: #fff;">
         <ng-template pTemplate="start">
           <a (click)="onClickHome()" style="cursor: pointer;">
             <img src="../../../assets/layout/images/k1.png" height="100" class="ml-4"/>
           </a>
         </ng-template>
         <ng-template pTemplate="end">
-          <!-- <input type="text" pInputText placeholder="Search" class="w-full" class="mr-4"/> -->
-          <!-- <p-button label="Đăng nhập" styleClass="p-button-outlined p-button-lg px-4 py-3" class="mr-8"></p-button> -->
+          <app-topbar></app-topbar>
         </ng-template>
     </p-menubar>
     <!-- Hình ảnh căn hộ -->
@@ -24,16 +23,16 @@
                 <div class="col-6" style="color: #000;">
                     <div class="grid flex w-full">
                         <div class="col-6">
-                            <p-image src="../../../assets/layout/images/product/1.jpg" alt="Image" width="100%" [preview]="true"></p-image>
+                            <p-image src="../../../assets/layout/images/product/1585033148-can-ho-mau-athena-fulland.jpg" alt="Image" width="100%" [preview]="true" height="250rem"></p-image>
                         </div>
                         <div class="col-6">
-                            <p-image src="../../../assets/layout/images/product/1.jpg" alt="Image" width="100%" [preview]="true"></p-image>
+                            <p-image src="../../../assets/layout/images/product/1585033149-can-ho-mau-charmington-iris.jpg" alt="Image" width="100%" [preview]="true" height="250rem"></p-image>
                         </div>
                         <div class="col-6">
-                            <p-image src="../../../assets/layout/images/product/1.jpg" alt="Image" width="100%" [preview]="true"></p-image>
+                            <p-image src="../../../assets/layout/images/product/1585033149-can-ho-mau-cosmo-tay-ho.jpg" alt="Image" width="100%" [preview]="true" height="250rem"></p-image>
                         </div>
                         <div class="col-6">
-                            <p-image src="../../../assets/layout/images/product/1.jpg" alt="Image" width="100%" [preview]="true"></p-image>
+                            <p-image src="../../../assets/layout/images/product/1585033152-can-ho-mau-ecolife-capital.jpg" alt="Image" width="100%" [preview]="true" height="250rem"></p-image>
                         </div>
                     </div>
                 </div>
@@ -49,7 +48,7 @@
                 <div style="display: flex; justify-content: space-between; align-items: baseline; font-weight: 600; color: #000;">
                   <!-- <div style="font-size: 2rem; font-weight: 600; color: #000;">Biệt thự hướng Nội khu - Chà Là - Vinhomes Ocean Park 2</div> -->
                   <div style="font-size: 2rem; font-weight: 600; color: #000;">{{productInfo.name}}</div>
-                    <span style="font-size: 1.2rem;" class="pi pi-heart"></span>
+                    <!-- <span style="font-size: 1.2rem;" class="pi pi-heart"></span> -->
                 </div>
                 
                 <!-- Tab view -->
@@ -243,7 +242,7 @@
                         </p-tabPanel>
                     </p-tabView>
                 </div>
-                <div style="margin-top: 2rem">
+                <div style="margin-top: 2rem; margin-bottom: 2rem;">
                     <div style="color: #000; font-size: 1.8rem; font-weight: 600;">Công cụ tính khoản vay</div>
                     <div class="grid flex w-full">
                         <div class="col-6">
@@ -311,7 +310,7 @@
                 </div>
 
                 <!-- Tab view -->
-                <div style="margin-top: 2rem;">
+                <!-- <div style="margin-top: 2rem;">
                     <div style="font-size: 1.8rem; font-weight: 600; margin-bottom: 2rem;">Gần đây</div>
                     <p-tabView styleClass="custom-tabview" [(activeIndex)]="activeIndexPlus" (onChange)="changeTabRecent($event)">
                         <p-tabPanel [header]="'recently'" *ngIf="isGranted([PermissionRealStateConst.RealStateMoBan_ThongTinChung])">
@@ -335,7 +334,7 @@
                           </div>
                         </p-tabPanel>
                     </p-tabView>
-                </div>
+                </div> -->
             </div>
             <div class="col-3"></div>
         </div>
@@ -374,47 +373,47 @@
           <div class="col-4" style="color: #000; margin-top: 2rem;">
             <div class="grid flex w-full">
               <div class="col-4">
-                <div style="font-size: 1.2rem; font-weight: 600;">Dịch vụ</div>
+                <!-- <div style="font-size: 1.2rem; font-weight: 600;">Dịch vụ</div>
                 <div>
                   <div class="info-text" style="color: #4c566a; margin-top: 2rem;">Tư vấn bán</div>
                   <div class="info-text" style="color: #4c566a; margin-top: 1rem;">Vay thế chấp</div>
                   <div class="info-text" style="color: #4c566a;  margin-top: 1rem;">Định giá căn nhà</div>
                   <div class="info-text" style="color: #4c566a;  margin-top: 1rem;">Thông tin dự án</div>
-                </div>
+                </div> -->
               </div>
               <div class="col-4">
-                <div style="font-size: 1.2rem; font-weight: 600;">Dịch vụ</div>
+                <!-- <div style="font-size: 1.2rem; font-weight: 600;">Dịch vụ</div>
                 <div>
                   <div class="info-text" style="color: #4c566a;  margin-top: 2rem;">Tư vấn bán</div>
                   <div class="info-text" style="color: #4c566a;  margin-top: 1rem;">Vay thế chấp</div>
                   <div class="info-text" style="color: #4c566a;  margin-top: 1rem;">Định giá căn nhà</div>
                   <div class="info-text" style="color: #4c566a;  margin-top: 1rem;">Thông tin dự án</div>
-                </div>
+                </div> -->
               </div>
               <div class="col-4">
-                <div style="font-size: 1.2rem; font-weight: 600;">Dịch vụ</div>
+                <!-- <div style="font-size: 1.2rem; font-weight: 600;">Dịch vụ</div>
                 <div>
                   <div class="info-text" style="color: #4c566a;  margin-top: 2rem;">Tư vấn bán</div>
                   <div class="info-text" style="color: #4c566a;  margin-top: 1rem;">Vay thế chấp</div>
                   <div class="info-text" style="color: #4c566a;  margin-top: 1rem;">Định giá căn nhà</div>
                   <div class="info-text" style="color: #4c566a;  margin-top: 1rem;">Thông tin dự án</div>
-                </div>
+                </div> -->
               </div>
             </div>
           </div>
           <div class="col-4" style="color: #000; margin-top: 2rem;">
             <div class="grid flex w-full">
               <div class="col-6">
-                <div style="font-size: 1.2rem; font-weight: 600;">Dịch vụ</div>
+                <!-- <div style="font-size: 1.2rem; font-weight: 600;">Dịch vụ</div>
                 <div>
                   <div class="info-text" style="color: #4c566a; margin-top: 2rem;">Tư vấn bán</div>
                   <div class="info-text" style="color: #4c566a; margin-top: 1rem;">Vay thế chấp</div>
                   <div class="info-text" style="color: #4c566a;  margin-top: 1rem;">Định giá căn nhà</div>
                   <div class="info-text" style="color: #4c566a;  margin-top: 1rem;">Thông tin dự án</div>
-                </div>
+                </div> -->
               </div>
               <div class="col-6">
-                <div style="font-size: 1.2rem; font-weight: 600;">Dịch vụ</div>
+                <div style="font-size: 1.2rem; font-weight: 600;">Về chúng tôi</div>
                 <div>
                   <div style="color: #4c566a;  margin-top: 2rem; display: flex; align-items: center;">
                     <span class="pi pi-facebook" style="margin-right: 1rem;"></span>
