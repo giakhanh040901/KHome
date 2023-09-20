@@ -28,8 +28,8 @@ namespace EPIC.CoreAPI.Controllers
     /// <summary>
     /// Quản lý khách hàng cá nhân
     /// </summary>
-    [Authorize]
-    [AuthorizeAdminUserTypeFilter]
+    //[Authorize]
+    //[AuthorizeAdminUserTypeFilter]
     [Route("api/core/manager-investor")]
     [ApiController]
     public class ManagerInvestorController : BaseController
@@ -1193,6 +1193,23 @@ namespace EPIC.CoreAPI.Controllers
             try
             {
                 _investorV2Services.UpdateReferralCode(investorId, referralCode?.Trim());
+                return new APIResponse(Utils.StatusCode.Success, null, 200, "Ok");
+            }
+            catch (Exception ex)
+            {
+                return OkException(ex);
+            }
+        }
+
+        /// <summary>
+        /// Tạo tài khoản khách hàng trên trang bán
+        /// </summary>
+        [HttpPost("register-investor")]
+        public APIResponse RegisterInvestor(RegisterCustomerDto input)
+        {
+            try
+            {
+                _managerInvestorServices.RegisterInvestor(input);
                 return new APIResponse(Utils.StatusCode.Success, null, 200, "Ok");
             }
             catch (Exception ex)

@@ -150,5 +150,6 @@ namespace EPIC.CoreDomain.Interfaces
         /// </summary>
         void DeletedInvestor(int? investorId, string phone);
         PagingResult<ViewManagerInvestorTemporaryDto> GetListToRequests(FindListInvestorDto dto);
+        void RegisterInvestor(RegisterCustomerDto input);
     }
 }

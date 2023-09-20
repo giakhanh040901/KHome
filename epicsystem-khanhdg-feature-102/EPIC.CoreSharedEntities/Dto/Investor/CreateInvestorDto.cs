@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -78,6 +79,7 @@ namespace EPIC.CoreSharedEntities.Dto.Investor
     {
         private string _email;
         private string _phone;
+        private string _address;
 
         [Required(ErrorMessage = "Email không được bỏ trống")]
         [EmailAddress(ErrorMessage = "Email không hợp lệ")]
@@ -94,6 +96,11 @@ namespace EPIC.CoreSharedEntities.Dto.Investor
         {
             get => _phone;
             set => _phone = value?.Trim();
+        }
+        public string Address
+        {
+            get => _address;
+            set => _address = value?.Trim();
         }
     }
 
@@ -136,6 +143,13 @@ namespace EPIC.CoreSharedEntities.Dto.Investor
         {
             get => _fcmToken;
             set => _fcmToken = value?.Trim();
+        }
+
+        private string _name;
+        public string Name
+        {
+            get => _name;
+            set => _name = value?.Trim();
         }
     }
 

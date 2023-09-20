@@ -3,22 +3,19 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace EPIC.CoreSharedEntities.Dto.Investor
 {
-    /// <summary>
-    /// Ràng buộc có email khoặc phone
-    /// </summary>
-    public class InvestorEmailPhoneDto
+    public class RegisterCustomerDto
     {
         private string _email;
         private string _phone;
         private string _address;
+        private string _name;
 
-        [RequiredWithOtherFields(ErrorMessage = "Email không được bỏ trống", OtherFields = new string[] { "Phone" })]
+        [Required(ErrorMessage = "Email không được bỏ trống")]
         [EmailAddress(ErrorMessage = "Email không hợp lệ")]
         public string Email
         {
@@ -26,7 +23,7 @@ namespace EPIC.CoreSharedEntities.Dto.Investor
             set => _email = value?.Trim();
         }
 
-        [RequiredWithOtherFields(ErrorMessage = "Số điện thoại không được bỏ trống", OtherFields = new string[] { "Email" })]
+        [Required(ErrorMessage = "Số điện thoại không được bỏ trống")]
         [MaxLength(10, ErrorMessage = "Số điện thoại không dài quá 10 ký tự")]
         [RegularExpression(RegexPatterns.PhoneNumber, ErrorMessage = "Bắt đầu bằng số 0 và chỉ được phép nhập số")]
         public string Phone
@@ -39,6 +36,12 @@ namespace EPIC.CoreSharedEntities.Dto.Investor
         {
             get => _address;
             set => _address = value?.Trim();
+        }
+
+        public string Name
+        {
+            get => _name;
+            set => _name = value?.Trim();
         }
     }
 }
