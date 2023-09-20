@@ -86,7 +86,7 @@ namespace EPIC.DataAccess.Base
                 new OracleParameter("SEQ_NAME", OracleDbType.Varchar2) { Direction = ParameterDirection.Input, Value = seqName },
                 new OracleParameter("SEQ_OUT", OracleDbType.Decimal) { Direction = ParameterDirection.Output }
             };
-            _dbContext.Database.ExecuteSqlRaw("BEGIN GET_SEQ(:SEQ_NAME, :SEQ_OUT); END;", @params);
+            _dbContext.Database.ExecuteSqlRaw("BEGIN EPIC.GET_SEQ(:SEQ_NAME, :SEQ_OUT); END;", @params);
             var result = @params[1].Value;
             decimal valueResult = decimal.Parse(result.ToString());
             return valueResult;

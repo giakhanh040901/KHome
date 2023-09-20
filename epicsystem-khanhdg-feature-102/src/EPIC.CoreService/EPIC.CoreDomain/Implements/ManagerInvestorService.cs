@@ -47,6 +47,7 @@ using Humanizer;
 using EPIC.LoyaltyRepositories;
 using EPIC.Utils.Linq;
 using DocumentFormat.OpenXml.Bibliography;
+using Users = EPIC.IdentityEntities.DataEntities.Users;
 //using EPIC.CoreEntities.Dto.Investor;
 
 namespace EPIC.CoreDomain.Implements
@@ -2374,6 +2375,54 @@ namespace EPIC.CoreDomain.Implements
             _dbContext.RemoveRange(_dbContext.Sales.Where(i => i.InvestorId == investorQuery.InvestorId));
 
             _dbContext.SaveChanges();
+        }
+
+        /// <summary>
+        /// Tạo tài khoản khách hàng trên trang bán
+        /// </summary>
+        /// <param name="input"></param>
+        public void RegisterInvestor(RegisterCustomerDto input)
+        {
+            var transaction = _dbContext.Database.BeginTransaction();
+            if(_dbContext.Investors.Any(i => i.Phone == input.Phone && i.Deleted == YesNo.NO))
+            {
+                _investorEFRepository.ThrowException(ErrorCode.InvestorPhoneExisted);
+            }
+            if (_dbContext.Investors.Any(i => i.Email == input.Email && i.Deleted == YesNo.NO))
+            {
+                _investorEFRepository.ThrowException(ErrorCode.InvestorEmailExisted);
+            }
+            var investor = _dbContext.Investors.Add(new Investor
+            {
+                InvestorId = (int)_investorEFRepository.NextKey(Investor.SEQ),
+                Name = input.Name,
+                Phone = input.Phone,
+                Email = input.Email,
+                CreatedBy = input.Phone,
+                CreatedDate = DateTime.Now,
+                Address = input.Address,
+                Status = Status.ACTIVE,
+                Isonline = YesNo.YES,
+                Deleted = YesNo.NO
+            }).Entity;
+            _dbContext.SaveChanges();
+            var user = _dbContext.Users.Add(new Users
+            {
+                UserId = (int)_usersEFRepository.NextKey(Users.SEQ),
+                UserType = UserTypes.INVESTOR,
+                InvestorId = investor.InvestorId,
+                UserName = input.Phone,
+                DisplayName = input.Name,
+                Status = Status.ACTIVE,
+                IsDeleted = YesNo.NO,
+                IsFirstTime = YesNo.YES,
+                Email = input.Email,
+                CreatedBy = input.Phone,
+                Password = CommonUtils.CreateMD5("123456"),
+                CreatedDate = DateTime.Now,
+            }).Entity;
+            _dbContext.SaveChanges(); 
+            transaction.Commit();
         }
     }
 }
