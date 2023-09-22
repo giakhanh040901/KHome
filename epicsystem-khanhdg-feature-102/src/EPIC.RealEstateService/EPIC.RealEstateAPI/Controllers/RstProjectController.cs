@@ -16,8 +16,8 @@ using System.Net;
 
 namespace EPIC.RealEstateAPI.Controllers
 {
-    [Authorize]
-    [AuthorizeAdminUserTypeFilter]
+    //[Authorize]
+    //[AuthorizeAdminUserTypeFilter]
     [Route("api/real-estate/project")]
     [ApiController]
     public class RstProjectController : BaseController

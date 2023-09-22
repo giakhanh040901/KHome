@@ -142,7 +142,7 @@ namespace EPIC.RealEstateAPI.Controllers.AppControllers
         /// <returns></returns>
         [HttpPost("add")]
         [ProducesResponseType(typeof(APIResponse<AppRstOrderDataSuccessDto>), (int)HttpStatusCode.OK)]
-        public async Task<APIResponse> InvestorOrderAdd([FromForm] AppCreateRstOrderDto input)
+        public async Task<APIResponse> InvestorOrderAdd([FromBody] AppCreateRstOrderDto input)
         {
             try
             {
@@ -355,6 +355,21 @@ namespace EPIC.RealEstateAPI.Controllers.AppControllers
             try
             {
                 var result = _rstRatingServices.FindLastOrder();
+                return new APIResponse(Utils.StatusCode.Success, result, 200, "Ok");
+            }
+            catch (Exception ex)
+            {
+                return OkException(ex);
+            }
+        }
+
+        [HttpGet("find-all-by-investor")]
+        [ProducesResponseType(typeof(APIResponse<AppRstOrderDetailDto>), (int)HttpStatusCode.OK)]
+        public APIResponse FindAllProductItemByInvestor()
+        {
+            try
+            {
+                var result = _rstOrderServices.FindAllProductItemByInvestor();
                 return new APIResponse(Utils.StatusCode.Success, result, 200, "Ok");
             }
             catch (Exception ex)

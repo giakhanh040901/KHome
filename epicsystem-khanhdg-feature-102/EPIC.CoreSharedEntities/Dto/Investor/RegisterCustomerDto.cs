@@ -14,6 +14,7 @@ namespace EPIC.CoreSharedEntities.Dto.Investor
         private string _phone;
         private string _address;
         private string _name;
+        private string _password;
 
         [Required(ErrorMessage = "Email không được bỏ trống")]
         [EmailAddress(ErrorMessage = "Email không hợp lệ")]
@@ -25,7 +26,7 @@ namespace EPIC.CoreSharedEntities.Dto.Investor
 
         [Required(ErrorMessage = "Số điện thoại không được bỏ trống")]
         [MaxLength(10, ErrorMessage = "Số điện thoại không dài quá 10 ký tự")]
-        [RegularExpression(RegexPatterns.PhoneNumber, ErrorMessage = "Bắt đầu bằng số 0 và chỉ được phép nhập số")]
+        [RegularExpression(RegexPatterns.PhoneNumber, ErrorMessage = " Số điện thoại bắt đầu bằng số 0 và chỉ được phép nhập số")]
         public string Phone
         {
             get => _phone;
@@ -42,6 +43,12 @@ namespace EPIC.CoreSharedEntities.Dto.Investor
         {
             get => _name;
             set => _name = value?.Trim();
+        }
+
+        public string Password
+        {
+            get => _password;
+            set => _password = value?.Trim();
         }
     }
 }

@@ -18,13 +18,13 @@ namespace EPIC.RealEstateEntities.Dto.RstOrder
         /// <summary>
         /// Id item giỏ hàng kho đặt lệnh từ App
         /// </summary>
-        [RequiredWithOtherFields(ErrorMessage = "Item giỏ hàng không được bỏ trống", OtherFields = new string[] { "OpenSellDetailId" })]
+        //[RequiredWithOtherFields(ErrorMessage = "Item giỏ hàng không được bỏ trống", OtherFields = new string[] { "OpenSellDetailId" })]
         public int? CartId { get; set; }
 
         /// <summary>
         /// Id của mở bán nếu ko thông qua giỏ hàng
         /// </summary>
-        [RequiredWithOtherFields(ErrorMessage = "Sản phẩm mở bán không được bỏ trống", OtherFields = new string[] { "CartId" })]
+        //[RequiredWithOtherFields(ErrorMessage = "Sản phẩm mở bán không được bỏ trống", OtherFields = new string[] { "CartId" })]
         public int? OpenSellDetailId { get; set; }
 
         /// <summary>
@@ -45,22 +45,22 @@ namespace EPIC.RealEstateEntities.Dto.RstOrder
         /// <summary>
         /// Mã giới thiệu đặt lệnh
         /// </summary>
-        private string _saleReferralCode;
-        public string SaleReferralCode 
-        { 
-            get => _saleReferralCode; 
-            set => _saleReferralCode = value?.Trim(); 
-        }
+        //private string _saleReferralCode;
+        //public string SaleReferralCode 
+        //{ 
+        //    get => _saleReferralCode; 
+        //    set => _saleReferralCode = value?.Trim(); 
+        //}
 
         /// <summary>
         /// Danh sách ảnh mặt trước
         /// </summary>
-        public List<IFormFile> IdFrontImages { get; set; }
+        //public List<IFormFile> IdFrontImages { get; set; }
 
         /// <summary>
         /// Danh sách ảnh mặt sau
         /// </summary>
-        public List<IFormFile> IdBackImages { get; set; }
+        //public List<IFormFile> IdBackImages { get; set; }
 
         /// <summary>
         /// Danh sách người đồng sở hữu để ở dạng json
@@ -71,5 +71,7 @@ namespace EPIC.RealEstateEntities.Dto.RstOrder
             get => _orderCoOwners; 
             set => _orderCoOwners = value?.Trim(); 
         }
+
+        public int Id { get; set; }
     }
 }

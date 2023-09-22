@@ -5,6 +5,7 @@ using EPIC.RealEstateEntities.DataEntities;
 using EPIC.RealEstateEntities.Dto.RstHistoryUpdate;
 using EPIC.RealEstateEntities.Dto.RstOrder;
 using EPIC.RealEstateEntities.Dto.RstOrderCoOwner;
+using EPIC.RealEstateEntities.Dto.RstProductItem;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -151,6 +152,7 @@ namespace EPIC.RealEstateDomain.Interfaces
         /// Khi hợp đồng hết thời gian giữ chỗ mà Căn hộ vẫn đang mở bán Status = 1
         /// </summary>
         void AppExtendedKeepTime(int orderId);
+        List<RstProductItemDto> FindAllProductItemByInvestor();
 
         #endregion
     }

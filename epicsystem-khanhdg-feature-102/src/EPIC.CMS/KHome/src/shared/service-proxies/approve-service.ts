@@ -9,7 +9,7 @@ import {
     of as _observableOf,
 } from "rxjs";
 import { Injectable, Inject, Optional, Injector } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders, HttpResponseBase } from "@angular/common/http";
 
 import { API_BASE_URL, ServiceProxyBase } from "./service-proxies-base";
 import { Page } from "@shared/model/page";
@@ -28,6 +28,7 @@ export class ApproveServiceProxy extends ServiceProxyBase {
     ) {
         super(messageService, _cookieService, http, baseUrl);
     }
+    private readonly baseApiRegister = "/api/core/manager-investor";
     
     getAll(page: Page, dataFilter: ApproveFilter): Observable<any> {
         let url_ = "/api/real-estate/approve/find-all?";   
@@ -74,4 +75,53 @@ export class ApproveServiceProxy extends ServiceProxyBase {
         let url_ = "/api/invest/withdrawal/" + action + '/' + body.id;
         return this.requestPut(body, url_);
     }
+
+    public requestPostNoToken<T>(body: any | undefined, url: String): Observable<T> {
+		let url_ = this.baseUrl + url;
+        console.log('baseUrl', this.baseUrl);
+        
+		console.log("url!!!!", url);
+		
+		url_ = url_.replace(/[?&]$/, "");
+
+		const content_ = JSON.stringify(body);
+
+		const fnc = (url_, content_) => {
+			let options_: any = {
+				body: content_,
+				observe: "response",
+				responseType: "blob",
+				headers: new HttpHeaders({
+					"Content-Type": "application/json",
+					Accept: "text/plain",
+				}),
+			};
+
+			return this.http
+				.request("post", url_, options_)
+				.pipe(
+					_observableMergeMap((response_: any) => {
+						return this.processResponse(response_);
+					})
+				)
+				.pipe(
+					_observableCatch((response_: any) => {
+						if (response_ instanceof HttpResponseBase) {
+							try {
+								return this.processResponse(<any>response_);
+							} catch (e) {
+								return <Observable<any>>(<any>_observableThrow(e));
+							}
+						} else return <Observable<any>>(<any>_observableThrow(response_));
+					})
+				);
+		};
+		return fnc(url_, content_);
+	}
+
+    public registerCustomer(body: any) {
+        console.log('vào đây chưaaa');
+        
+        return this.requestPostNoToken(body, `${this.baseApiRegister}/register-investor`);
+      }
 }

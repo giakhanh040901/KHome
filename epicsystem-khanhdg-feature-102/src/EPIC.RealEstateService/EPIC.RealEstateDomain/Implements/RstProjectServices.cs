@@ -181,12 +181,12 @@ namespace EPIC.RealEstateDomain.Implements
         /// </summary>
         public RstProjectDto FindById(int id)
         {
-            var partnerId = CommonUtils.GetCurrentPartnerId(_httpContext);
+            //var partnerId = CommonUtils.GetCurrentPartnerId(_httpContext);
             var username = CommonUtils.GetCurrentUsername(_httpContext);
-            _logger.LogInformation($"{nameof(FindById)} : id = {id}, partnerId={partnerId}, username={username}");
+            _logger.LogInformation($"{nameof(FindById)} : id = {id}, username={username}");
             RstProjectDto result = new();
 
-            var projectFind = _rstProjectEFRepository.FindById(id, partnerId).ThrowIfNull(_dbContext, ErrorCode.RstProjectNotFound);
+            var projectFind = _rstProjectEFRepository.FindById(id).ThrowIfNull(_dbContext, ErrorCode.RstProjectNotFound);
             var ownerFind = _rstOwnerEFRepository.FindById(projectFind.OwnerId).ThrowIfNull(_dbContext, ErrorCode.RstOwnerNotFound);
             var businessCustomer = _businessCustomerEFRepository.FindById(ownerFind.BusinessCustomerId);
 
@@ -267,11 +267,12 @@ namespace EPIC.RealEstateDomain.Implements
         {
             _logger.LogInformation($"{nameof(FindAll)}: input = {JsonSerializer.Serialize(input)}");
 
-            int partnerId = CommonUtils.GetCurrentPartnerId(_httpContext);
+            //int partnerId = CommonUtils.GetCurrentPartnerId(_httpContext);
 
             var resultPaging = new PagingResult<ViewRstProjectDto>();
             var result = new List<ViewRstProjectDto>();
-            var projectQuery = _rstProjectEFRepository.FindAll(input, partnerId);
+            //var projectQuery = _rstProjectEFRepository.FindAll(input, partnerId);
+            var projectQuery = _rstProjectEFRepository.FindAll(input);
             foreach (var item in projectQuery.Items)
             {
                 var resultItem = new ViewRstProjectDto();

@@ -534,10 +534,10 @@ namespace EPIC.RealEstateEntities.EntityFramework
             modelBuilder.HasSequence(RstOrder.SEQ, DbSchemas.EPIC_REAL_ESTATE);
             modelBuilder.Entity<RstOrder>()
                 .HasOne<RstProductItem>().WithMany().HasForeignKey(p => p.ProductItemId);
-            modelBuilder.Entity<RstOrder>()
-                .HasOne<RstDistributionPolicy>().WithMany().HasForeignKey(p => p.DistributionPolicyId);
-            modelBuilder.Entity<RstOrder>()
-                .HasOne<RstOpenSellDetail>().WithMany().HasForeignKey(p => p.OpenSellDetailId);
+            //modelBuilder.Entity<RstOrder>()
+            //    .HasOne<RstDistributionPolicy>().WithMany().HasForeignKey(p => p.DistributionPolicyId);
+            //modelBuilder.Entity<RstOrder>()
+            //    .HasOne<RstOpenSellDetail>().WithMany().HasForeignKey(p => p.OpenSellDetailId);
             #endregion
 
             #region Sổ lệnh đồng sở hữu

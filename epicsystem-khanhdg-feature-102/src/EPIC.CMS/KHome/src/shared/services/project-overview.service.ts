@@ -27,6 +27,7 @@ export class ProjectOverviewService extends ServiceProxyBase {
   private readonly baseAPIOwner = "/api/real-estate/owner";
   private readonly baseAPIBank = "/api/core/bank";
   private readonly baseAPIProvince = "/api/core/province";
+  private readonly baseApiRegister = "/api/core/manager-investor";
   constructor(
     messageService: MessageService,
     _cookieService: CookieService,
@@ -266,5 +267,9 @@ export class ProjectOverviewService extends ServiceProxyBase {
     }
     // CANCEL SP
     return this.requestPut(body,  `${this.baseAPI}/cancel`);
+  }
+
+  public registerCustomer(body: any) {
+    return this.requestPost(body, `${this.baseApiRegister}/register-investor`);
   }
 }

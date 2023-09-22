@@ -175,8 +175,8 @@ namespace EPIC.RealEstateDomain.Implements
         public List<ViewRstOwnerDto> GetAllOwnerByPartner()
         {
             _logger.LogInformation($"{nameof(RstOwnerServices)}->{nameof(GetAllOwnerByPartner)}");
-            int partnerId = CommonUtils.GetCurrentPartnerId(_httpContext);
-            return _realEstateOwnerEFRepository.GetAllByPartner(partnerId);
+            //int partnerId = CommonUtils.GetCurrentPartnerId(_httpContext);
+            return _realEstateOwnerEFRepository.GetAllByPartner();
         }
 
         /// <summary>

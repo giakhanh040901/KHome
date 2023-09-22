@@ -154,6 +154,7 @@ import { ProductItemComponent } from './modules/product-item/product-item.compon
 import { ProjectComponent } from './modules/project/project.component';
 import { ProductItemFindComponent } from './modules/product-item-find/product-item-find.component';
 import { ProjectFindComponent } from './modules/project-find/project-find.component';
+import { OrderComponent } from './modules/order/order.component';
 
 FullCalendarModule.registerPlugins([
 	dayGridPlugin,
@@ -295,6 +296,7 @@ FullCalendarModule.registerPlugins([
      	ProjectComponent,
       	ProductItemFindComponent,
       	ProjectFindComponent,
+       OrderComponent,
 	],
 
 	providers: [

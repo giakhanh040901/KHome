@@ -77,6 +77,8 @@ namespace EPIC.CoreDomain.Implements
         private readonly SharedNotificationApiUtils _sharedEmailApiUtils;
         private readonly NotificationServices _sendEmailServices;
         private readonly IRocketChatServices _rocketChatServices;
+        private readonly SysVarEFRepository _sysVarRepository;
+        private readonly CifCodeEFRepository _cifCodeRepository;
         private readonly EpicSchemaDbContext _dbContext;
 
         public ManagerInvestorServices(
@@ -117,6 +119,8 @@ namespace EPIC.CoreDomain.Implements
             _ocr = new OCRUtils(_recognitionApiConfig, _logger);
             _sendEmailServices = sendEmailServices;
             _rocketChatServices = rocketChatServices;
+            _sysVarRepository = new SysVarEFRepository(dbContext);
+            _cifCodeRepository = new CifCodeEFRepository(dbContext, logger);
         }
 
         public List<InvestorDto> FindAllList(string keyword)
@@ -2411,17 +2415,21 @@ namespace EPIC.CoreDomain.Implements
                 UserId = (int)_usersEFRepository.NextKey(Users.SEQ),
                 UserType = UserTypes.INVESTOR,
                 InvestorId = investor.InvestorId,
-                UserName = input.Phone,
+                UserName = input.Name,
                 DisplayName = input.Name,
                 Status = Status.ACTIVE,
                 IsDeleted = YesNo.NO,
                 IsFirstTime = YesNo.YES,
                 Email = input.Email,
                 CreatedBy = input.Phone,
-                Password = CommonUtils.CreateMD5("123456"),
+                Password = CommonUtils.CreateMD5(input.Password),
                 CreatedDate = DateTime.Now,
             }).Entity;
-            _dbContext.SaveChanges(); 
+
+            _dbContext.SaveChanges();
+            var cifCodeLen = Convert.ToInt32(_sysVarRepository.GetVarByName("AUTH", "CIF_CODE_LENGTH")?.VarValue);
+            _cifCodeRepository.CreateCifCodeByInvestorId(investor.InvestorId, cifCodeLen);
+            _dbContext.SaveChanges();
             transaction.Commit();
         }
     }

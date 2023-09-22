@@ -869,6 +869,48 @@ export class ServiceProxyBase {
 
 		return fnc(url_, formData);
 	}
+
+	
+	public requestPostNoToken<T>(body: any | undefined, url: String): Observable<T> {
+		let url_ = this.baseUrl + url;
+		console.log("url!!!!", url);
+		
+		url_ = url_.replace(/[?&]$/, "");
+
+		const content_ = JSON.stringify(body);
+
+		const fnc = (url_, content_) => {
+			let options_: any = {
+				body: content_,
+				observe: "response",
+				responseType: "blob",
+				headers: new HttpHeaders({
+					"Content-Type": "application/json",
+					Accept: "text/plain",
+				}),
+			};
+
+			return this.http
+				.request("post", url_, options_)
+				.pipe(
+					_observableMergeMap((response_: any) => {
+						return this.processResponse(response_);
+					})
+				)
+				.pipe(
+					_observableCatch((response_: any) => {
+						if (response_ instanceof HttpResponseBase) {
+							try {
+								return this.processResponse(<any>response_);
+							} catch (e) {
+								return <Observable<any>>(<any>_observableThrow(e));
+							}
+						} else return <Observable<any>>(<any>_observableThrow(response_));
+					})
+				);
+		};
+		return fnc(url_, content_);
+	}
 }
 
 export class ApiException extends Error {

@@ -48,7 +48,7 @@ namespace EPIC.CoreRepositories
         /// <param name="lenCifCode"></param>
         public void CreateCifCodeByInvestorId(int investorId, int lenCifCode = 10)
         {
-            var id = (int)NextKey();
+            var id = (int)NextKey(CifCodes.SEQ);
 
             _dbSet.Add(new CifCodes
             {

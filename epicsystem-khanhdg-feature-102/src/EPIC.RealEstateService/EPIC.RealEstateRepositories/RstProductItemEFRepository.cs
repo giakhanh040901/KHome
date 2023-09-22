@@ -304,6 +304,14 @@ namespace EPIC.RealEstateRepositories
             return result;
         }
 
+        public RstProductItemPriceDto ProductItemPrice(decimal price)
+        {
+            RstProductItemPriceDto result = new();
+            result.LockPrice = price * 5 / 100;
+            result.DepositPrice = result.LockPrice = price * 5 / 100;
+            return result;
+        }
+
         /// <summary>
         /// Tính giá trị lock căn, giá trị đặt cọc theo chính sách phân phối
         /// </summary>

@@ -108,4 +108,8 @@ export class AppTopBarComponent extends CrudComponentBase {
 	public get isShowTradingProviders() {
 		return this.isPartner && this.isGranted([PermissionRealStateConst.RealStateMenuQLGiaoDichCoc]) && this.router.url.includes(TRADING_CONTRACT_ROUTER);
 	}
+
+	orderFind() {
+		this.router.navigate(['/order']);
+	}
 }

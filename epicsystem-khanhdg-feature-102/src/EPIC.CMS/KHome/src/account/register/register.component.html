@@ -9,34 +9,36 @@
                 <div class="logo">
                     <img src="assets/layout/images/logo-mirage@2x.png" alt="mirage-layout" />
                 </div>
-                <h1>Xin HAHAHA!</h1>
+                <h1>Xin chào!</h1>
                 <p>Đăng ký để bắt đầu công việc của bạn.</p>
                 <div class="forms">
                     <div class="login-input-wrapper mb-1">
                         <label for="username">Tên khách hàng</label>
                         <!-- <input id="username" #username pInputText (keyup.enter)="login()" [(ngModel)]="authService.authenticateModel.username" placeholder="Tài khoản" /> -->
-                        <input id="username" #username pInputText  placeholder="Tài khoản" />
+                        <input id="username" #username pInputText [(ngModel)]="register.name"  placeholder="Tài khoản" />
                         <i class="pi pi-user"></i>
                     </div>
 
                     <div class="login-input-wrapper mt-4">
-                        <label for="password">Số điện thoại</label>
-                        <input type="password" id="password" pPassword  placeholder="Số điện thoại" [feedback]="false"/>
+                        <label for="password">Mật khẩu</label>
+                        <input type="password" id="password" [(ngModel)]="register.password" pPassword  placeholder="Mật khẩu" [feedback]="false"/>
                         <i class="pi pi-lock"></i>
                     </div>
                     <div class="login-input-wrapper mt-4">
-                        <label for="password">Email</label>
-                        <input type="password" id="password" pPassword  placeholder="Email" [feedback]="false"/>
-                        <i class="pi pi-lock"></i>
+                        <label for="phone">Số điện thoại</label>
+                        <input type="text" id="phone" pInputText [(ngModel)]="register.phone"  placeholder="Số điện thoại"/>
+                        <i class="pi pi-phone"></i>
                     </div>
                     <div class="login-input-wrapper mt-4">
-                        <label for="password">Địa chỉ</label>
-                        <input type="password" id="password" pPassword  placeholder="Địa chỉ" [feedback]="false"/>
-                        <i class="pi pi-lock"></i>
+                        <label for="email">Email</label>
+                        <input type="text" id="email" [(ngModel)]="register.email" pInputText  placeholder="Email"/>
+                        <i class="pi pi-envelope"></i>
                     </div>
+                    
                     <div class="buttons">
-                        <button pButton type="button"  label="Đăng nhập" [disabled]="submitting" style="margin-top: 0 !important;"></button>
+                        <button pButton type="button" (click)="onClickLogin()" label="Quay lại" [disabled]="submitting" style="margin-top: 0 !important;"></button>
                         <div style="display: flex; align-items: flex-end; flex-direction: column;">
+                            <button pButton type="button" (click)="save($event)" label="Đăng ký" [disabled]="submitting" style="margin-top: 0 !important;"></button>
                             <!-- <a href="#" class="secondary-button">Quên mật khẩu?</a>
                             <div>
                                 Chưa có tài khoản

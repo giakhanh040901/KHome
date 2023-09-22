@@ -88,12 +88,12 @@ namespace EPIC.RealEstateRepositories
 
             return _dbSet.FirstOrDefault(o => o.Id == id && o.Deleted == YesNo.NO);
         }
-        public List<ViewRstOwnerDto> GetAllByPartner(int partnerId)
+        public List<ViewRstOwnerDto> GetAllByPartner()
         {
-            _logger.LogInformation($"{nameof(RstOwnerEFRepository)}->{nameof(GetAllByPartner)}: partnerId = {partnerId}");
+            _logger.LogInformation($"{nameof(RstOwnerEFRepository)}->{nameof(GetAllByPartner)}");
             return (from owner in _dbSet
                     join businessCustomer in _epicSchemaDbContext.BusinessCustomers on owner.BusinessCustomerId equals businessCustomer.BusinessCustomerId
-                    where owner.PartnerId == partnerId && owner.Deleted == YesNo.NO && businessCustomer.Deleted == YesNo.NO
+                    where owner.Deleted == YesNo.NO && businessCustomer.Deleted == YesNo.NO
                     select new ViewRstOwnerDto
                     {
                         Id = owner.Id,

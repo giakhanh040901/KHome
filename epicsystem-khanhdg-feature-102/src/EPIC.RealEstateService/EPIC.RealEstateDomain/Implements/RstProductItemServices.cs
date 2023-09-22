@@ -335,8 +335,8 @@ namespace EPIC.RealEstateDomain.Implements
         public RstProductItemDto FindById(int id)
         {
             _logger.LogInformation($"{nameof(FindById)}: id = {id}");
-            var partnerId = CommonUtils.GetCurrentPartnerId(_httpContext);
-            var productItem = _rstProductItemEFRepository.FindById(id, partnerId).ThrowIfNull<RstProductItem>(_dbContext, ErrorCode.RstProductItemNotFound);
+            //var partnerId = CommonUtils.GetCurrentPartnerId(_httpContext);
+            var productItem = _rstProductItemEFRepository.FindById(id).ThrowIfNull<RstProductItem>(_dbContext, ErrorCode.RstProductItemNotFound);
             var project = _dbContext.RstProjects.FirstOrDefault(p => p.Id == productItem.ProjectId);
             var result = _mapper.Map<RstProductItemDto>(productItem);
             if (project != null)
@@ -354,10 +354,10 @@ namespace EPIC.RealEstateDomain.Implements
         /// <returns></returns>
         public PagingResult<RstProductItemDto> FindAll(FilterRstProductItemDto input)
         {
-            int partnerId = CommonUtils.GetCurrentPartnerId(_httpContext);
-            _logger.LogInformation($"{nameof(FindAll)}: input = {JsonSerializer.Serialize(input)}, partnerId = {partnerId}");
+            //int partnerId = CommonUtils.GetCurrentPartnerId(_httpContext);
+            _logger.LogInformation($"{nameof(FindAll)}: input = {JsonSerializer.Serialize(input)}");
 
-            var productItemQuery = _rstProductItemEFRepository.FindAll(input, partnerId);
+            var productItemQuery = _rstProductItemEFRepository.FindAll(input);
             List<RstProductItemDto> resultItem = _mapper.Map<List<RstProductItemDto>>(productItemQuery.Items);
             foreach (var item in resultItem)
             {

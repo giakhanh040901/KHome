@@ -4,7 +4,7 @@
     <p-menubar styleClass="bg-white" style="background: #fff;">
         <ng-template pTemplate="start">
           <a (click)="onClickHome()" style="cursor: pointer;">
-            <img src="../../../assets/layout/images/k1.png" height="100" class="ml-4"/>
+            <img src="../../../assets/layout/images/k1.png" height="100" class="ml-4" style="margin-left: 2.2rem !important;"/>
           </a>
         </ng-template>
         <ng-template pTemplate="end">
@@ -79,12 +79,12 @@
                 <div style="margin-top: 2rem;">
                     <p-tabView styleClass="custom-tabview" [(activeIndex)]="activeIndex" (onChange)="changeTab($event)">
                         <!-- pause tạm -->
-                        <p-tabPanel [header]="'price'" *ngIf="isGranted([PermissionRealStateConst.RealStateMoBan_ThongTinChung])">
+                        <p-tabPanel [header]="'price'">
                             <ng-template pTemplate="header">
                                 <span> Giá bán </span>
                             </ng-template>
                             <div style="font-size: 1.8rem; font-weight: 600;">Giá bán</div>
-                            <div style="color: #6f6f6f; font-size: 1.2rem; margin-top: 0.5rem;">Biệt thự Vinhomes Ocean Park 2 tháng 8/2023</div>
+                            <div style="color: #6f6f6f; font-size: 1.2rem; margin-top: 0.5rem;">Biệt thự {{projectInfo.name}}</div>
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 2rem;  background-color: #ebf4fc; padding: 2rem 4rem">
                                 <div style="display: flex; align-items: center;">
                                     <div style="margin-right: 1rem;">
@@ -109,7 +109,7 @@
                         </p-tabPanel>
 
                         <!-- Tab mô tả căn nhà -->
-                        <p-tabPanel [header]="'overview'" *ngIf="isGranted([PermissionRealStateConst.RealStateMoBan_ThongTinChung])">
+                        <p-tabPanel [header]="'overview'">
                           <ng-template pTemplate="header">
                               <span style="font-weight: 600;"> Tổng quan </span>
                           </ng-template>
@@ -213,7 +213,7 @@
                                   <div class="col-3" style="display: flex; justify-content: space-between; width: 100%; flex-direction: column; align-items: center;">
                                       <div style="display: flex; justify-content: space-between; width: 100%; font-size: 1.2rem;">
                                           <div>Dự án</div>
-                                          <div style="font-weight: 600;">Vinhomes Ocean Park 2</div>
+                                          <div style="font-weight: 600;">{{projectInfo.name}}</div>
                                       </div>
                                       <div style="border-top: 1px solid #ede5e5; width: 100%; margin-top: 2rem; margin-bottom: 1rem;"></div>
                                   </div>
@@ -226,7 +226,7 @@
                         </p-tabPanel>
                         
                         <!-- Tiện ích -->
-                        <p-tabPanel [header]="'utility'" *ngIf="isGranted([PermissionRealStateConst.RealStateMoBan_ThongTinChung])">
+                        <p-tabPanel [header]="'utility'">
                             <ng-template pTemplate="header">
                                 <span style="font-weight: 600;"> Tiện ích </span>
                             </ng-template>
@@ -366,7 +366,7 @@
                       <p-galleria [(value)]="row.productItemMedias" [showIndicators]="true" [showThumbnails]="false" [responsiveOptions]="responsiveOption" >
                         <ng-template pTemplate="item" let-item>
                           <div class="img-hover-zoom">
-                            <img class="" [src]="baseUrl+'/'+item.urlImage" style="width: 100%; display: block;" />
+                            <img class="" [src]="baseUrl+'/'+item.urlImage" style="width: 100%; display: block; height: 16rem;" />
                           </div>
                         </ng-template>
                       </p-galleria>

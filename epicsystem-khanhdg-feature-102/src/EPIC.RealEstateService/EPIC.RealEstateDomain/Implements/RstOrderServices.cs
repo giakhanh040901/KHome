@@ -51,6 +51,7 @@ using System.ServiceModel;
 using System.Text.Json;
 using System.Threading.Tasks;
 using EPIC.CoreRepositoryExtensions;
+using EPIC.RealEstateEntities.Dto.RstProductItemMedia;
 
 namespace EPIC.RealEstateDomain.Implements
 {
@@ -1243,30 +1244,30 @@ namespace EPIC.RealEstateDomain.Implements
             var ipAddress = CommonUtils.GetCurrentRemoteIpAddress(_httpContext);
             _logger.LogInformation($"{nameof(InvestorOrderAddCommon)}: input = {JsonSerializer.Serialize(input)}, investorId = {investorId}, username = {username}");
 
-            RstOpenSellDetailInfoDto openSellDetailQuery = null;
+            //RstOpenSellDetailInfoDto openSellDetailQuery = null;
 
-            if (input.OpenSellDetailId != null)
-            {
-                // Tìm kiếm thông tin của sản phẩm mở bán
-                openSellDetailQuery = _rstOpenSellDetailEFRepository.OpenSellDetailInfo(input.OpenSellDetailId ?? 0).ThrowIfNull(_dbContext, ErrorCode.RstOpenSellDetailNotFound);
-            }
-            if (input.CartId != null)
-            {
-                var cartQuery = _rstCartEFRepository.GetByIdAndInvestorId(investorId, input.CartId ?? 0).ThrowIfNull(_dbContext, ErrorCode.RstCartNotFoundByInvestor);
-                openSellDetailQuery = _mapper.Map<RstOpenSellDetailInfoDto>(cartQuery);
-            }
+            //if (input.OpenSellDetailId != null)
+            //{
+            //    // Tìm kiếm thông tin của sản phẩm mở bán
+            //    openSellDetailQuery = _rstOpenSellDetailEFRepository.OpenSellDetailInfo(input.OpenSellDetailId ?? 0).ThrowIfNull(_dbContext, ErrorCode.RstOpenSellDetailNotFound);
+            //}
+            //if (input.CartId != null)
+            //{
+            //    var cartQuery = _rstCartEFRepository.GetByIdAndInvestorId(investorId, input.CartId ?? 0).ThrowIfNull(_dbContext, ErrorCode.RstCartNotFoundByInvestor);
+            //    openSellDetailQuery = _mapper.Map<RstOpenSellDetailInfoDto>(cartQuery);
+            //}
 
-            if (openSellDetailQuery == null)
-            {
-                _rstOrderEFRepository.ThrowException(ErrorCode.RstOpenSellDetailNotFound);
-            }
+            //if (openSellDetailQuery == null)
+            //{
+            //    _rstOrderEFRepository.ThrowException(ErrorCode.RstOpenSellDetailNotFound);
+            //}
             //Kiểm tra xem là nhà đầu tư cá nhân hay là nhà đầu tư doanh nghiệp
             var findCifCode = _cifCodeEFRepository.FindByInvestor(investorId).ThrowIfNull(_dbContext, ErrorCode.CoreCifCodeNotFound);
 
             var investorQuery = _investorEFRepository.GetInvestorById(investorId, false).ThrowIfNull(_dbContext, ErrorCode.InvestorNotFound);
             var phone = investorQuery.Phone;
             //Kiểm tra thông tin giấy tờ tùy thân
-            var investorIdentification = _investorEFRepository.GetIdentificationById(input.InvestorIdenId ?? 0).ThrowIfNull(_dbContext, ErrorCode.InvestorIdentificationNotFound);
+            //var investorIdentification = _investorEFRepository.GetIdentificationById(input.InvestorIdenId ?? 0).ThrowIfNull(_dbContext, ErrorCode.InvestorIdentificationNotFound);
 
             //Kiểm tra thông tin địa chỉ nhận bản cứng
             if (input.ContractAddressId != null)
@@ -1275,34 +1276,36 @@ namespace EPIC.RealEstateDomain.Implements
             }
 
             // Giá đặt cọc của dự án
-            var productItemPrice = _rstProductItemEFRepository.ProductItemPriceByDistribution(openSellDetailQuery.Price, openSellDetailQuery.DistributionId);
-            if (productItemPrice.DistributionPolicyId == 0)
-            {
-                _rstOrderEFRepository.ThrowException(ErrorCode.RstDistributionPolicyNotFound);
-            }
+            var productItemFind = _rstProductItemEFRepository.Entity.FirstOrDefault(o => o.Id == input.Id).ThrowIfNull(_dbContext, ErrorCode.RstProductItemNotFound);
+            var productItemPrice = _rstProductItemEFRepository.ProductItemPrice(productItemFind.Price.Value);
+            //if (productItemPrice.DistributionPolicyId == 0)
+            //{
+            //    _rstOrderEFRepository.ThrowException(ErrorCode.RstDistributionPolicyNotFound);
+            //}
 
             RstOrder inputInsert = _mapper.Map<RstOrder>(input);
-            inputInsert.ProductItemId = openSellDetailQuery.ProductItemId;
-            inputInsert.TradingProviderId = openSellDetailQuery.TradingProviderId;
-            inputInsert.OpenSellDetailId = openSellDetailQuery.OpenSellDetailId;
+            inputInsert.ProductItemId = input.Id;
+            //inputInsert.TradingProviderId = openSellDetailQuery.TradingProviderId;
+            //inputInsert.OpenSellDetailId = openSellDetailQuery.OpenSellDetailId;
             inputInsert.DepositMoney = productItemPrice.DepositPrice;
-            inputInsert.DistributionPolicyId = productItemPrice.DistributionPolicyId;
+            //inputInsert.DistributionPolicyId = productItemPrice.DistributionPolicyId;
             inputInsert.CifCode = findCifCode.CifCode;
             inputInsert.IpAddressCreated = ipAddress;
+            inputInsert.InvestorId = investorId;
             // Tính đến thời gian hết hạn cọc
-            inputInsert.ExpTimeDeposit = _rstOpenSellEFRepository.ExpTimeDeposit(openSellDetailQuery.OpenSellId);
+            //inputInsert.ExpTimeDeposit = _rstOpenSellEFRepository.ExpTimeDeposit(openSellDetailQuery.OpenSellId);
             // Tìm kiếm thông tin sale nếu có mã giới thiệu
-            if (!string.IsNullOrWhiteSpace(input.SaleReferralCode))
-            {
-                var findSale = _saleEFRepository.AppFindSaleOrderByReferralCode(input.SaleReferralCode, openSellDetailQuery.TradingProviderId);
-                if (findSale != null)
-                {
-                    inputInsert.SaleReferralCode = findSale.ReferralCode;
-                    inputInsert.DepartmentId = findSale.DepartmentId;
-                    inputInsert.SaleReferralCodeSub = findSale.ReferralCodeSub;
-                    inputInsert.DepartmentIdSub = findSale.DepartmentIdSub;
-                }
-            }
+            //if (!string.IsNullOrWhiteSpace(input.SaleReferralCode))
+            //{
+            //    var findSale = _saleEFRepository.AppFindSaleOrderByReferralCode(input.SaleReferralCode, openSellDetailQuery.TradingProviderId);
+            //    if (findSale != null)
+            //    {
+            //        inputInsert.SaleReferralCode = findSale.ReferralCode;
+            //        inputInsert.DepartmentId = findSale.DepartmentId;
+            //        inputInsert.SaleReferralCodeSub = findSale.ReferralCodeSub;
+            //        inputInsert.DepartmentIdSub = findSale.DepartmentIdSub;
+            //    }
+            //}
 
             // Thêm lệnh. Sale đặt hộ thì lưu thêm sale id
             if (isSelfDoing)
@@ -1322,7 +1325,8 @@ namespace EPIC.RealEstateDomain.Implements
 
             var transaction = _dbContext.Database.BeginTransaction();
             var insertOrder = _rstOrderEFRepository.AppInvestorOrderAdd(inputInsert, investorId, username);
-
+            var productItemQuery = _rstProductItemEFRepository.Entity.FirstOrDefault(c => c.Id == inputInsert.ProductItemId && c.Deleted == YesNo.NO).ThrowIfNull(_dbContext, ErrorCode.RstProductItemNotFound);
+            productItemQuery.Status = RstProductItemStatus.GIU_CHO;
             // Nếu có id từ giỏ hàng
             if (input.CartId != null)
             {
@@ -1334,7 +1338,7 @@ namespace EPIC.RealEstateDomain.Implements
 
             // Nếu mở bán cài thời gian giữ chỗ
             // Không cài thời gian thì hợp đồng nào thanh toán trước thì giữ chỗ trước
-            if (openSellDetailQuery.KeepTime != null)
+            /*if (openSellDetailQuery.KeepTime != null)
             {
                 //Đổ trạng thái căn hộ và trạng thái sản phẩm của mở bán sang giữ chỗ
                 var productItemQuery = _rstProductItemEFRepository.Entity.FirstOrDefault(c => c.Id == inputInsert.ProductItemId && c.Deleted == YesNo.NO).ThrowIfNull(_dbContext, ErrorCode.RstProductItemNotFound);
@@ -1343,17 +1347,17 @@ namespace EPIC.RealEstateDomain.Implements
                 openSellDetail.Status = RstProductItemStatus.GIU_CHO;
                 //_rstHistoryUpdateEFRepository.Add(new RstHistoryUpdate(productItemQuery.Id, null, null, null, RstHistoryUpdateTables.RST_PRODUCT_ITEM, ActionTypes.CAP_NHAT, $"{RstHistoryUpdateSummary.HOLD} - KH: {phone}", DateTime.Now, RstHistoryTypes.GiuCho), username);
                 //_rstHistoryUpdateEFRepository.Add(new RstHistoryUpdate(openSellDetail.Id, null, null, null, RstHistoryUpdateTables.RST_OPEN_SELL_DETAIL, ActionTypes.CAP_NHAT, $"{RstHistoryUpdateSummary.HOLD} - KH: {phone}", DateTime.Now, RstHistoryTypes.GiuCho), username);
-            }
+            }*/
             _dbContext.SaveChanges();
 
             // Nếu đặt lệnh không qua giỏ hàng, tìm sản phẩm mở bán đã có trong giỏ hàng cập nhật trạng thái khác
-            var openSellInCart = _rstCartEFRepository.Entity.FirstOrDefault(c => input.CartId == null && c.InvestorId == investorId && c.OpenSellDetailId == input.OpenSellDetailId
-                                && c.Status == RstCartStatus.KhoiTao && c.Deleted == YesNo.NO);
-            if (openSellInCart != null)
-            {
-                openSellInCart.Status = RstCartStatus.DaGiaoDichKhac;
-                openSellInCart.TransDate = DateTime.Now;
-            }
+            //var openSellInCart = _rstCartEFRepository.Entity.FirstOrDefault(c => input.CartId == null && c.InvestorId == investorId && c.OpenSellDetailId == input.OpenSellDetailId
+            //                    && c.Status == RstCartStatus.KhoiTao && c.Deleted == YesNo.NO);
+            //if (openSellInCart != null)
+            //{
+            //    openSellInCart.Status = RstCartStatus.DaGiaoDichKhac;
+            //    openSellInCart.TransDate = DateTime.Now;
+            //}
 
             #region Giấy tờ người đồng sở hữu
             if (input.OrderCoOwners != null)
@@ -1372,21 +1376,21 @@ namespace EPIC.RealEstateDomain.Implements
                     }
                     else
                     {
-                        if (input.IdFrontImages.FirstOrDefault(r => r.FileName == orderCoOwnerItem.IdFrontImageUrl) == null
-                            || input.IdFrontImages.FirstOrDefault(r => r.FileName == orderCoOwnerItem.IdFrontImageUrl) == null)
-                        {
-                            continue;
-                        }
-                        string frontImageUrl = _fileServices.UploadFileID(new ImageAPI.Models.UploadFileModel
-                        {
-                            File = input.IdFrontImages.FirstOrDefault(r => r.FileName == orderCoOwnerItem.IdFrontImageUrl),
-                            Folder = FileFolder.INVESTOR,
-                        });
-                        string backImageUrl = _fileServices.UploadFileID(new ImageAPI.Models.UploadFileModel
-                        {
-                            File = input.IdFrontImages.FirstOrDefault(r => r.FileName == orderCoOwnerItem.IdFrontImageUrl),
-                            Folder = FileFolder.INVESTOR,
-                        });
+                        //if (input.IdFrontImages.FirstOrDefault(r => r.FileName == orderCoOwnerItem.IdFrontImageUrl) == null
+                        //    || input.IdFrontImages.FirstOrDefault(r => r.FileName == orderCoOwnerItem.IdFrontImageUrl) == null)
+                        //{
+                        //    continue;
+                        //}
+                        //string frontImageUrl = _fileServices.UploadFileID(new ImageAPI.Models.UploadFileModel
+                        //{
+                        //    File = input.IdFrontImages.FirstOrDefault(r => r.FileName == orderCoOwnerItem.IdFrontImageUrl),
+                        //    Folder = FileFolder.INVESTOR,
+                        //});
+                        //string backImageUrl = _fileServices.UploadFileID(new ImageAPI.Models.UploadFileModel
+                        //{
+                        //    File = input.IdFrontImages.FirstOrDefault(r => r.FileName == orderCoOwnerItem.IdFrontImageUrl),
+                        //    Folder = FileFolder.INVESTOR,
+                        //});
                         _rstOrderCoOwnerRepository.Add(new RstOrderCoOwner
                         {
                             OrderId = insertOrder.Id,
@@ -1394,8 +1398,8 @@ namespace EPIC.RealEstateDomain.Implements
                             Phone = orderCoOwnerItem.Phone,
                             Address = orderCoOwnerItem.Address,
                             IdType = orderCoOwnerItem.IdType,
-                            IdBackImageUrl = frontImageUrl,
-                            IdFrontImageUrl = backImageUrl,
+                            //IdBackImageUrl = frontImageUrl,
+                            //IdFrontImageUrl = backImageUrl,
                             CreatedBy = username
                         });
                     }
@@ -1403,44 +1407,44 @@ namespace EPIC.RealEstateDomain.Implements
                 _dbContext.SaveChanges();
             }
             #endregion
-            insertOrder.ProjectName = openSellDetailQuery.ProjectName;
-            insertOrder.Hotline = openSellDetailQuery.Hotline;
+            //insertOrder.ProjectName = openSellDetailQuery.ProjectName;
+            //insertOrder.Hotline = openSellDetailQuery.Hotline;
             insertOrder.Phone = investorQuery.Phone;
-            insertOrder.FullName = investorIdentification.Fullname;
-            insertOrder.ProductItemPrice = openSellDetailQuery.Price;
-            insertOrder.ProductItemCode = openSellDetailQuery.Code;
-            insertOrder.KeepTime = openSellDetailQuery.KeepTime;
+            //insertOrder.FullName = investorIdentification.Fullname;
+            //insertOrder.ProductItemPrice = openSellDetailQuery.Price;
+            //insertOrder.ProductItemCode = openSellDetailQuery.Code;
+            //insertOrder.KeepTime = openSellDetailQuery.KeepTime;
 
-            insertOrder.TradingBankAccounts = await TradingBankAccountOfOpenSell(insertOrder.Id, openSellDetailQuery.OpenSellId, insertOrder.ContractCode, insertOrder.DepositMoney);
-            _rstHistoryUpdateEFRepository.Add(new RstHistoryUpdate(insertOrder.Id, "Đang mở bán", "Giữ chỗ", "Trạng thái",
-                        RstHistoryUpdateTables.RST_ORDER, ActionTypes.THEM_MOI, $"KH: {phone} - Đặt lệnh", DateTime.Now), username);
+            //insertOrder.TradingBankAccounts = await TradingBankAccountOfOpenSell(insertOrder.Id, openSellDetailQuery.OpenSellId, insertOrder.ContractCode, insertOrder.DepositMoney);
+            //_rstHistoryUpdateEFRepository.Add(new RstHistoryUpdate(insertOrder.Id, "Đang mở bán", "Giữ chỗ", "Trạng thái",
+            //            RstHistoryUpdateTables.RST_ORDER, ActionTypes.THEM_MOI, $"KH: {phone} - Đặt lệnh", DateTime.Now), username);
 
-            _rstHistoryUpdateEFRepository.Add(new RstHistoryUpdate(openSellDetailQuery.ProductItemId, "Đang mở bán", "Giữ chỗ", "Trạng thái",
-                        RstHistoryUpdateTables.RST_PRODUCT_ITEM, ActionTypes.THEM_MOI, $"KH: {phone} - Đặt lệnh", DateTime.Now), username);
+            //_rstHistoryUpdateEFRepository.Add(new RstHistoryUpdate(openSellDetailQuery.ProductItemId, "Đang mở bán", "Giữ chỗ", "Trạng thái",
+            //            RstHistoryUpdateTables.RST_PRODUCT_ITEM, ActionTypes.THEM_MOI, $"KH: {phone} - Đặt lệnh", DateTime.Now), username);
 
-            _rstHistoryUpdateEFRepository.Add(new RstHistoryUpdate(openSellDetailQuery.OpenSellDetailId, "Đang mở bán", "Giữ chỗ", "Trạng thái",
-                        RstHistoryUpdateTables.RST_OPEN_SELL_DETAIL, ActionTypes.THEM_MOI, $"KH: {phone} - Đặt lệnh", DateTime.Now), username);
-            var data = _rstOrderContractFileServices.GetReplaceTextContractFile(new RstExportContracDto()
-            {
-                ProductItemId = inputInsert.ProductItemId,
-                ProjectId = openSellDetailQuery.ProjectId,
-                OpenSellDetailId = inputInsert.OpenSellDetailId,
-                InvestorId = findCifCode.InvestorId,
-                BusinessCustomerId = findCifCode.BusinessCustomerId,
-                IdentificationId = inputInsert.InvestorIdenId ?? 0
-            });
+            //_rstHistoryUpdateEFRepository.Add(new RstHistoryUpdate(openSellDetailQuery.OpenSellDetailId, "Đang mở bán", "Giữ chỗ", "Trạng thái",
+            //            RstHistoryUpdateTables.RST_OPEN_SELL_DETAIL, ActionTypes.THEM_MOI, $"KH: {phone} - Đặt lệnh", DateTime.Now), username);
+            //var data = _rstOrderContractFileServices.GetReplaceTextContractFile(new RstExportContracDto()
+            //{
+            //    ProductItemId = inputInsert.ProductItemId,
+            //    ProjectId = openSellDetailQuery.ProjectId,
+            //    OpenSellDetailId = inputInsert.OpenSellDetailId,
+            //    InvestorId = findCifCode.InvestorId,
+            //    BusinessCustomerId = findCifCode.BusinessCustomerId,
+            //    IdentificationId = inputInsert.InvestorIdenId ?? 0
+            //});
             transaction.Commit();
-            _backgroundJobs.Enqueue(() => _rstOrderContractFileServices.CreateContractFileOrderApp(inputInsert, data, inputInsert.TradingProviderId));
+            //_backgroundJobs.Enqueue(() => _rstOrderContractFileServices.CreateContractFileOrderApp(inputInsert, data, inputInsert.TradingProviderId));
             // Nếu cài thời gian giữ chỗ ở mở bán
-            if (openSellDetailQuery.KeepTime != null)
-            {
-                string jobId = _backgroundJobs.Schedule(() => _rstBackgroundJobServices.UpdateDepositExpire(insertOrder.Id), TimeSpan.FromSeconds(openSellDetailQuery.KeepTime ?? 0));
-                var orderFind = _rstOrderEFRepository.Entity.FirstOrDefault(o => o.Id == inputInsert.Id)
-                    .ThrowIfNull(_dbContext, ErrorCode.RstOrderNotFound);
-                orderFind.DepositJobId = jobId;
-                _dbContext.SaveChanges();
-                await _rstSignalRBroadcastServices.BroadcastOpenSellDetailChangeStatus(openSellDetailQuery.OpenSellDetailId);
-            }
+            //if (openSellDetailQuery.KeepTime != null)
+            //{
+            //    string jobId = _backgroundJobs.Schedule(() => _rstBackgroundJobServices.UpdateDepositExpire(insertOrder.Id), TimeSpan.FromSeconds(openSellDetailQuery.KeepTime ?? 0));
+            //    var orderFind = _rstOrderEFRepository.Entity.FirstOrDefault(o => o.Id == inputInsert.Id)
+            //        .ThrowIfNull(_dbContext, ErrorCode.RstOrderNotFound);
+            //    orderFind.DepositJobId = jobId;
+            //    _dbContext.SaveChanges();
+            //    await _rstSignalRBroadcastServices.BroadcastOpenSellDetailChangeStatus(openSellDetailQuery.OpenSellDetailId);
+            //}
             return insertOrder;
         }
 
@@ -1758,6 +1762,34 @@ namespace EPIC.RealEstateDomain.Implements
                         }
                     }
                     result.Add(resultBankItem);
+                }
+            }
+            return result;
+        }
+
+        public List<RstProductItemDto> FindAllProductItemByInvestor()
+        {
+            //int partnerId = CommonUtils.GetCurrentPartnerId(_httpContext);
+            _logger.LogInformation($"{nameof(FindAll)}");
+            var result = new List<RstProductItemDto>();
+            var investorId = CommonUtils.GetCurrentInvestorId(_httpContext);
+            var orderFind = _dbContext.RstOrders.Where(o => o.InvestorId == investorId && o.Deleted == YesNo.NO);
+            if (orderFind.Any() )
+            {
+                foreach( var productItemId in orderFind.Select(o => o.ProductItemId)) {
+                    var productItemFind = _dbContext.RstProductItems.FirstOrDefault(o => o.Id == productItemId && o.Deleted == YesNo.NO);
+                    var item = _mapper.Map<RstProductItemDto>(productItemFind);
+                    item.ProductItemMedias = _dbContext.RstProductItemMedias.Where(i => i.ProductItemId == productItemId).Select(e => new AppRstProductItemMediaDto
+                    {
+                        Id = e.Id,
+                        GroupTitle = e.GroupTitle,
+                        ProductItemId = e.ProductItemId,
+                        Location = e.Location,
+                        MediaType = e.MediaType,
+                        UrlImage = e.UrlImage,
+                        UrlPath = e.UrlPath
+                    });
+                    result.Add(item);
                 }
             }
             return result;

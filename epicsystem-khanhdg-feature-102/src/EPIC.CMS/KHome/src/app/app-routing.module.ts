@@ -14,6 +14,7 @@ import { ProjectComponent } from './modules/project/project.component';
 import { ProductItemFindComponent } from './modules/product-item-find/product-item-find.component';
 import { ProjectFindComponent } from './modules/project-find/project-find.component';
 import { RegisterComponent } from 'src/account/register/register.component';
+import { OrderComponent } from './modules/order/order.component';
 
 @NgModule({
 	imports: [
@@ -250,6 +251,7 @@ import { RegisterComponent } from 'src/account/register/register.component';
 					{ path: "project/:id", component: ProjectComponent, canActivate: [AppRouteGuard] },
 					{ path: "product-item-find", component: ProductItemFindComponent, canActivate: [AppRouteGuard] },
 					{ path: "project-find", component: ProjectFindComponent, canActivate: [AppRouteGuard] },
+					{ path: "order", component: OrderComponent, canActivate: [AppRouteGuard] },
 					// { path: "register", component: RegisterComponent, canActivate: [AppRouteGuard] },
 				],
 			},

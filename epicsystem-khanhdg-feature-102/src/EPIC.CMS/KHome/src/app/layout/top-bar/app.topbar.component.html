@@ -1,4 +1,4 @@
-<div class="layout-topbar">
+<div class="layout-topbar" style="border-bottom: none !important; ">
     <div class="layout-topbar-wrapper">
         <!-- <div class="layout-topbar-left">
             <div class="layout-topbar-logo-wrapper">
@@ -45,7 +45,7 @@
                     </span>
                     </a>
                     <ul class="profile-item-submenu fadeInDown">
-                        <div class="b-new-div-account-display">
+                        <div class="b-new-div-account-display" style="height: 28rem !important;">
                              <div class="b-avt-detail">
                                  <img class="b-avt-detail" src="assets/layout/images/k1.png">
                              </div>
@@ -56,6 +56,9 @@
                              <div class="b-manage-account">
                                  <p (click)="editUser()" class="b-manage-account-text">Quản lý tài khoản của bạn</p>
                              </div>
+                             <div class="b-logout-detail">
+                                <p (click)="orderFind()">Xem danh sách sản phẩm</p>
+                            </div>
                              <div class="b-logout-detail">
                                 <button (click)="logout()">Đăng xuất</button>
                              </div>

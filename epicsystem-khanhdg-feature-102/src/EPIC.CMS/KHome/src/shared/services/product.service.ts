@@ -10,6 +10,7 @@ import { Observable } from "rxjs";
 @Injectable()
 export class ProductService extends ServiceProxyBase { 
     private endPoint = `/api/real-estate/product-item`;
+    private baseUrlApp = `/api/real-estate/investor-order`;
     public listCard: any[] = [];
     public lastestProduct: any;
     constructor(
@@ -118,6 +119,16 @@ export class ProductService extends ServiceProxyBase {
 
     lastestProductItem(projectId: number) {
         const url_ = "/api/real-estate/product-item/order-new-project/" + projectId;
+        return this.requestGet(url_);
+    }
+
+    createOrder(body): Observable<any> {
+        console.log('vào đây chưaaa', body);
+        return this.requestPost(body, `${this.baseUrlApp}/add`);
+    }
+
+    findProductByInvestor(): Observable<any> {
+        let url_ = `${this.baseUrlApp}/find-all-by-investor`
         return this.requestGet(url_);
     }
 }

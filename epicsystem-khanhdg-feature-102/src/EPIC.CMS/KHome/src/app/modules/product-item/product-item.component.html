@@ -4,7 +4,7 @@
     <p-menubar styleClass="bg-white" style="background: #fff;">
         <ng-template pTemplate="start">
           <a (click)="onClickHome()" style="cursor: pointer;">
-            <img src="../../../assets/layout/images/k1.png" height="100" class="ml-4"/>
+            <img src="../../../assets/layout/images/k1.png" height="100" class="ml-4" style="margin-left: 2.2rem !important;"/>
           </a>
         </ng-template>
         <ng-template pTemplate="end">
@@ -50,12 +50,21 @@
                   <div style="font-size: 2rem; font-weight: 600; color: #000;">{{productInfo.name}}</div>
                     <!-- <span style="font-size: 1.2rem;" class="pi pi-heart"></span> -->
                 </div>
+
+                <div style="margin-top: 1rem; cursor: pointer; color: #094bf4;">
+                  <a (click)="onOrder($event)" style="cursor: pointer; display: flex;  align-items: center;">
+                    <span class="pi pi-plus-circle" style="margin-right: 0.5rem; font-weight: 600;"></span>
+                    <div style="font-size: 1.1rem; font-weight: 600;">Thêm căn hộ</div>
+                  </a>
+                  <!-- <span class="pi pi-plus-circle" style="margin-right: 0.5rem; font-weight: 600;"></span>
+                  <div style="font-size: 1.1rem; font-weight: 600;">So sánh</div> -->
+                </div>
                 
                 <!-- Tab view -->
                 <div style="margin-top: 2rem;">
                     <p-tabView styleClass="custom-tabview" [(activeIndex)]="activeIndex" (onChange)="changeTab($event)">
                         <!-- pause tạm -->
-                        <p-tabPanel [header]="'product'" *ngIf="isGranted([PermissionRealStateConst.RealStateMoBan_ThongTinChung])">
+                        <p-tabPanel [header]="'product'">
                             <ng-template pTemplate="header">
                                 <span> Giá căn </span>
                             </ng-template>
@@ -85,7 +94,7 @@
                         </p-tabPanel>
 
                         <!-- Tab mô tả căn nhà -->
-                        <p-tabPanel [header]="'project'" *ngIf="isGranted([PermissionRealStateConst.RealStateMoBan_ThongTinChung])">
+                        <p-tabPanel [header]="'project'">
                           <ng-template pTemplate="header">
                               <span style="font-weight: 600;"> Mô tả căn nhà </span>
                           </ng-template>
@@ -224,7 +233,7 @@
                         </p-tabPanel>
                         
                         <!-- Tiện ích -->
-                        <p-tabPanel [header]="'utility'" *ngIf="isGranted([PermissionRealStateConst.RealStateMoBan_ThongTinChung])">
+                        <p-tabPanel [header]="'utility'">
                             <ng-template pTemplate="header">
                                 <span style="font-weight: 600;"> Tiện ích </span>
                             </ng-template>

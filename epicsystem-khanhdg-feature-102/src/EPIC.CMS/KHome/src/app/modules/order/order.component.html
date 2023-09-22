@@ -11,88 +11,44 @@
         </ng-template>
     </p-menubar>
     <div style="margin: 2rem 4rem;">
-        <div class="p-fluid p-formgrid">
+        <!-- <div class="p-fluid p-formgrid">
             <div class="grid flex w-full mt-2" style="align-items: center;">
                 <div class="col-4">
                     <div style="display: flex;">
-                      <input-search
-                          [(keyword)]="filter.keyword"
-                          (_onChange)="setPage()"
-                          class="w-full" style="width: 100%;">
-                      </input-search>
-                      <!-- <div style="display: flex;">
-                        <button pButton pRippletype="button" label="Tìm kiếm" icon="pi pi-search" style="margin-left: -2rem; padding-left: 2rem; padding-right: 2rem; border-radius: 0px 4px 4px 0px; width: 10rem;"></button>
-                      </div> -->
+                        <input-search
+                                    [(keyword)]="fieldFilters.keyword"
+                                    (_onChange)="setPage()"
+                                    class="w-full" style="width: 100%;">
+                        </input-search>
                     </div>
                 </div>
                 <div class="col-8">
                     <ng-container filter>
                       <div #divFilter class="flex flex-column sm:flex-row w-full" style="padding: 2rem 0 2rem 0;">
-                        <!-- <form-multi-select
-                          style="flex: 1; padding: 0.5rem 0.75rem;"
-                          class="col-2"
-                          [label]="'Chọn tỉnh thành'"
-                          [floatLabel]="true"
-                          
-                        ></form-multi-select> -->
-
                         <span class="p-float-label b-custom ml-2 col-3">
-                          <p-dropdown 
-                              id="ownerFilter" name="ownerFilter" 
-                              [showClear]="true" placeholder="Tất cả" [options]="ownerFilters" optionLabel="name" optionValue="code" [(ngModel)]="filter.ownerId"
+                          <p-dropdown id="classifyType" name="classifyType" [styleClass]="'b-w-100'" appendTo="body"
+                              [showClear]="true" placeholder="Tất cả" [options]="ProductConst.classifyTypes"
+                              optionLabel="name" optionValue="code" [(ngModel)]="fieldFilters.classifyType"
                               (onChange)="changeFilter($event.value)">
                           </p-dropdown>
-                          <label class="font-normal" for="ownerFilter">Chủ đầu tư</label>
+                          <label class="font-normal" for="classifyType">Phân loại sản phẩm </label>
                         </span>
-                        <!-- <form-multi-select
-                          style="flex: 1;"
-                          class="col-2"
-                          [label]="'Loại BĐS'"
-                          [floatLabel]="true"
-                          [options]="productTypes" 
-                          optionLabel="value"  optionValue="id" [showClear]="true"
-                          [(ngModel)]="filter.productTypes" (onChange)="changeFilter($event.value)"
-                        ></form-multi-select> -->
-                        <span class="p-float-label b-custom col-3">
-                          <p-multiSelect 
-                            [options]="productTypes" 
-                            optionLabel="value"  optionValue="id" 
-                            [(ngModel)]="filter.productTypes" (onChange)="changeFilter($event.value)"
-                            placeholder="Tất cả">
-                          </p-multiSelect>
-                          <label class="font-normal" for="ownerFilter">Loại BĐS</label>
-                        </span>
-                        <!-- <form-multi-select
-                          style="flex: 1;"
-                          class="col-2"
-                          [label]="'Số phòng ngủ'"
-                          [floatLabel]="true"
-                          
-                        ></form-multi-select> -->
-                        <!-- <form-multi-select
-                          style="flex: 1;"
-                          class="col-2"
-                          [label]="'Khoảng giá'"
-                          [floatLabel]="true"
-                          
-                        ></form-multi-select> -->
                         <span class="p-float-label b-custom ml-2 col-3">
-                          <p-dropdown id="statusFilter" name="statusFilter" 
-                              [showClear]="true" placeholder="Tất cả" [options]="statusFilters" optionLabel="name"
-                              optionValue="code" [(ngModel)]="filter.status"
-                              (onChange)="changeFilter($event.value)">
+                          <p-dropdown id="status" name="status" [styleClass]="'b-w-100'" appendTo="body" [showClear]="true"
+                              placeholder="Tất cả" [options]="ProductConst.statuses" optionLabel="name" optionValue="code"
+                              [(ngModel)]="fieldFilters.status" (onChange)="changeFilter($event.value)">
                           </p-dropdown>
-                          <label class="font-normal" for="statusFilter">Trạng thái</label>
-                      </span>
+                          <label class="font-normal" for="status">Trạng thái</label>
+                        </span>
                       </div>
                     </ng-container>
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
     <div style="margin: 2rem 4rem;">
       <div style="display: flex; justify-content: space-between; align-items: center;">
-        <div style="font-size: 1.2rem;">Có <span style="font-size: 1.3rem; font-weight: 600;">{{page.totalItems}}</span> dự án thuộc <span style="font-size: 1.3rem; font-weight: 600;">KHome gợi ý cho bạn:</span></div>
+        <div style="font-size: 1.2rem;">Danh sách căn hộ đã đặt:</div>
         <!-- <div>
           <span class="p-float-label b-custom ml-2">
             <label class="font-normal" for="ownerFilter">Sắp xếp theo</label>
@@ -101,33 +57,68 @@
       </div>
     </div>
     <div style="margin-top: 2rem; margin-bottom: 4rem; margin-left: 4rem; margin-right:4rem;">
-        <div class="p-fluid p-formgrid">
-          <div class="p-fluid p-formgrid">
-            <div class="grid flex w-full mt-2">
-              <div class="col-3" style="padding-right: 1rem;" *ngFor="let row of rows">
-                <div style="overflow: hidden;">
-                  <!-- <img src="../../assets/layout/images/product/TestHome.jpg" alt="" style="width: 100%;"> -->
-                  <p-galleria [(value)]="row.urlImage" [showIndicators]="true" [showThumbnails]="false" [responsiveOptions]="responsiveOption" >
-                    <ng-template pTemplate="item" let-item>
-                      <div class="img-hover-zoom">
-                        <img class="" [src]="baseUrl+'/'+item" style="width: 100%; display: block; height: 16rem;" />
-                      </div>
-                    </ng-template>
-                  </p-galleria>
-                </div>
-                <a style="cursor: pointer;" (click)="onProjectBtnClick(row.id)">
-                  <div>
-                    <div class="flex" style="align-items: baseline; justify-content: space-between; color: #000;">
-                      <span style="font-size: 1.2rem; font-weight: 600; padding-right: 2rem;">{{row.name}}</span>
-                      <!-- <span style="font-size: 1.2rem;" class="pi pi-heart"></span> -->
-                    </div>
-                    <div style="margin-top: 1rem; color: #6f6f6f;">{{row.address}}</div>
+      <div class="p-fluid p-formgrid">
+        <div class="grid flex w-full mt-2">
+          <div class="col-3" style="padding-right: 1rem;" *ngFor="let row of rows">
+            <div style="overflow: hidden;">
+              <!-- <img src="../../assets/layout/images/product/TestHome.jpg" alt="" style="width: 100%;"> -->
+              <p-galleria [(value)]="row.productItemMedias" [showIndicators]="true" [showThumbnails]="false" [responsiveOptions]="responsiveOption" >
+                <ng-template pTemplate="item" let-item>
+                  <div class="img-hover-zoom">
+                    <img class="" [src]="baseUrl+'/'+item.urlImage" style="width: 100%; display: block; height: 18rem;" />
                   </div>
-                </a>
-              </div>
+                </ng-template>
+              </p-galleria>
             </div>
+            <a style="cursor: pointer;" (click)="onBtnProductItemClick(row.id)">
+              <div>
+                <div class="flex" style="align-items: baseline; justify-content: space-between;">
+                  <span style="font-size: 1.2rem; font-weight: 600; padding-right: 2rem; color: #000;">{{row.name}}</span>
+                  <!-- <span style="font-size: 1.2rem;" class="pi pi-heart"></span> -->
+                </div>
+                <div style="margin-top: 1rem;"></div>
+                <div class="flex" style="margin-top: 1rem; align-items: baseline; color: #6f6f6f;">
+                  <div style="margin-right: 1rem; display: flex;">
+                    <div style="margin-right: 0.2rem; padding-top: 0.2rem;">
+                      <img src="assets/layout/images/stairs-up-svgrepo-com.png" style="width: 100%; height: 1rem;"/>
+                    </div>
+                    <span>{{row.numberFloor}} tầng</span>
+                  </div>
+                  <div style="margin-right: 1rem; display: flex; align-items: baseline;">
+                    <div style="margin-right: 0.2rem; padding-top: 0.2rem;">
+                      <img src="assets/layout/images/product/icon/area-svgrepo-com.png" style="width: 100%;  height: 1rem;"/>
+                    </div>
+                    <span>{{row.priceArea}}m<sup>2</sup></span>
+                  </div>
+                  <div style="margin-right: 1rem; display: flex; align-items: baseline;">
+                    <div style="margin-right: 0.2rem; padding-top: 0.2rem;">
+                      <img src="assets/layout/images/product/icon/view-horizont-svgrepo-com.png" style="width: 100%;  height: 1rem;"/>
+                    </div>
+                    <span>{{row.doorDirection}}</span>
+                  </div>
+                </div>
+                <div style="margin-top: 1rem; display: flex; justify-content: space-between;">
+                  <div>
+                    <strong style="margin-right: 0.5rem; font-size: 1.2rem; color: #094bf4;">{{row.price / 1000000000 | number :'1.0-2'}}tỷ</strong>
+                    <span style="color: #000;">{{ row.unitPrice / 1000000 }} triệu/m<sup>2</sup></span>
+                  </div>
+                  <div>
+                    <!-- <p-button label="So sánh" styleClass="p-button-outlined p-button-lg px-3 py-2"></p-button> -->
+                    <!-- <button pButton pRippletype="button" label="So sánh" style="padding-left: 2rem; padding-right: 2rem; border-radius: 0px 4px 4px 0px; width: 10rem; line-height: 3; border-color: #094bf4;
+                    font-size: 1rem;
+                    font-weight: 600;"></button> -->
+                  </div>
+                </div>
+              </div>
+            </a>
           </div>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="7">Không có dữ liệu.</td>
+            </tr>
+        </ng-template>
         </div>
+      </div>
         <div style="display: flex; justify-content: center; margin-top: 3rem; margin-bottom: 4rem;">
             <!-- <p-button label="Xem thêm" styleClass="p-button-raised p-button-lg px-5 py-3"></p-button> -->
         </div>

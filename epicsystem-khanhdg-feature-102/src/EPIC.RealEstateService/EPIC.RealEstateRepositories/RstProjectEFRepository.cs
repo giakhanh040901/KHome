@@ -135,14 +135,16 @@ namespace EPIC.RealEstateRepositories
             var productItem = _epicSchemaDbContext.RstProductItems;
 
             var projectQuery = from project in _dbSet
-                               where project.Deleted == YesNo.NO
+                               from distribution in _epicSchemaDbContext.RstDistributions.Where(o => o.ProjectId == project.Id && o.Deleted == YesNo.NO)
+                               from openSell in _epicSchemaDbContext.RstOpenSells.Where(o => o.ProjectId == project.Id && o.Deleted == YesNo.NO)
+                               where project.Deleted == YesNo.NO && openSell.Status == RstDistributionStatus.DANG_BAN && distribution.Status == RstDistributionStatus.DANG_BAN
                                && (input.Keyword == null || project.Code.Contains(input.Keyword) || project.Name.ToLower().Contains(input.Keyword.ToLower()))
                                && (input.Code == null || project.Code.Contains(input.Code))
                                && (input.Name == null || project.Name.Contains(input.Name))
                                && (input.Status == null || project.Status == input.Status)
                                && (input.OwnerId == null || project.OwnerId == input.OwnerId)
                                && (input.ProjectType == null || input.ProjectType == project.ProjectType)
-                               && (project.PartnerId == partnerId)
+                               //&& (project.PartnerId == partnerId)
                                select new ViewRstProjectDto
                                {
                                    Id = project.Id,

@@ -1,199 +1,5 @@
 <app-loading-page *ngIf="isLoadingPage"></app-loading-page>
 
-<!-- <div class="grid px-4 py-2" [style.background]="'#FAF9FB'">
-  <div class="flex b-w-100 mb-2">
-    <div class="col-9">
-      <div class="flex justify-content-between mb-2">
-        <h4>Tổng quan</h4>
-        <p-dropdown
-          [options]="listProject"
-          optionLabel="name"
-          optionValue="code"
-          [autoDisplayFirst]="false"
-          placeholder="Chọn dự án"
-          [showClear]="true"
-          [(ngModel)]="filter.project"
-          (onChange)="onChangeProjectFilter($event)"
-        >
-        </p-dropdown>
-      </div>
-      <div class="flex mb-4">
-        <card-dashboard-overview
-          class="col mr-4"
-          [styleCard]="{ backgroundColor: '#AD96EA', textColor: '#FFFFFF' }"
-          [title]="'SL sản phẩm'"
-          [description]="'Tổng số sản phẩm'"
-          [value]="dataOverview.totalProduct"
-          [infor]="'Dự án đang bán'"
-          [valueInfor]="dataOverview.saleProject"
-        ></card-dashboard-overview>
-        <card-dashboard-overview
-          class="col mr-4"
-          [styleCard]="{ backgroundColor: '#EF4770', textColor: '#FFFFFF' }"
-          [title]="'SL sản phẩm đã bán'"
-          [description]="'SL căn KH đặt mua'"
-          [value]="dataOverview.totalProductSell"
-          [infor]="'Tỷ lệ'"
-          [valueInfor]="dataOverview.ratioProductSell + '%'"
-        ></card-dashboard-overview>
-        <card-dashboard-overview
-          class="col"
-          [styleCard]="{ backgroundColor: '#FFFFFF', textColor: '#212633' }"
-          [title]="'SL khách hàng'"
-          [description]="'Tổng số lượng khách'"
-          [value]="dataOverview.totalCustomer"
-          [infor]="'Đặt mua nhiều nhất'"
-          [valueInfor]="dataOverview.customerMaxsell"
-        ></card-dashboard-overview>
-      </div>
-      <div class="card height-chart">
-        <div class="flex justify-content-between py-4">
-          <h4>Biểu đồ bán hàng theo thời gian</h4>
-          <span class="p-float-label b-custom">
-            <e-calendar
-              [placeholder]="'dd-mm-yyyy đến dd-mm-yyyy'"
-              [(value)]="filter.dates"
-              [selectionMode]="'range'"
-              [inputId]="'tradingDate'"
-              [styleInline]="{'width':'18rem', 'border':'none'}"
-              (_onChange)="selectDays($event)"
-              (_onClear)="onClearDays($event)"
-              >
-          </e-calendar>
-          </span>
-        </div>
-        <div [style.height]="'calc(100% - 82px)'">
-          <p-chart
-            type="line"
-            height="230"
-            [data]="dataLine"
-            [options]="optionsLine"
-          ></p-chart>
-          <div
-            class="flex justify-content-center py-4"
-            [style.height]="'calc(100% - 230px)'"
-          >
-            <div class="flex align-items-center">
-              <div class="label-icon mr-2"></div>
-              <span class="label-text">Số lượng căn bán trong ngày</span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="card height-chart">
-        <div class="py-4">
-          <h4>Biểu đồ theo tỷ lệ bán hàng</h4>
-        </div>
-        <div>
-          <p-chart
-            type="bar"
-            height="230"
-            [data]="dataBar"
-            [options]="optionsBar"
-          ></p-chart>
-        </div>
-      </div>
-    </div>
-    <div class="col-3">
-      <div class="px-2" [style.background]="'#FFF'">
-        <div>
-          <p-galleria
-            [value]="listGalleria"
-            [showIndicators]="true"
-            [showThumbnails]="false"
-          >
-            <ng-template pTemplate="item" let-item>
-              <card-dashboard-galleria
-                class="block w-full"
-                [srcImg]="item.srcImg"
-                [title]="item.title"
-                [project]="item.project"
-              ></card-dashboard-galleria>
-            </ng-template>
-          </p-galleria>
-        </div>
-        <div>
-          <div class="py-3">
-            <span class="font-bold text-xl" [style.color]="'#212633'"
-              >Hoạt động gần đây</span
-            >
-          </div>
-          <ng-container *ngFor="let item of listRecentActivity">
-            <recent-activity
-              [avatar]="item.avatar"
-              [name]="item.name"
-              [infor]="item.infor"
-              [time]="item.time"
-            ></recent-activity>
-          </ng-container>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="flex b-w-100">
-    <div class="col-12">
-      <div class="card">
-        <div class="py-4">
-          <h4>Biểu đồ số lượng căn theo từng loại hình và mức bán</h4>
-        </div>
-        <div>
-          <p-chart
-            type="bar"
-            height="230"
-            [data]="dataCombo"
-            [options]="optionsCombo"
-          ></p-chart>
-        </div>
-      </div>
-    </div>
-  </div>
-</div> -->
-
-
-<!-- <ul class="layout-topbar-actions">
-  <li #profile class="topbar-item profile-item">
-      <a href="#">
-      <span class="profile-image-wrapper">
-          <img style="border-radius: 50%;" alt="mirage-layout" />
-      </span>
-      <span class="profile-info-wrapper">
-          <h3></h3>
-      </span>
-      </a>
-      <ul class="profile-item-submenu fadeInDown">
-          <div class="b-new-div-account-display">
-               <div class="b-avt-detail">
-                   <img class="b-avt-detail">
-               </div>
-               <div class="b-name-detail">
-                   <p class="b-display-name"></p>
-                   <p class="b-email-detail"></p>
-               </div>
-               <div class="b-manage-account">
-                   <p class="b-manage-account-text">Quản lý tài khoản của bạn</p>
-               </div>
-               <div class="b-logout-detail">
-                  <button>Đăng xuất</button>
-               </div>
-          </div>
-       </ul>
-
-  </li>
-</ul> -->
-
-
-<!-- <p-menubar>
-  <ng-template pTemplate="start">
-      <img src="https://primefaces.org/cdn/primeng/images/primeng.svg" height="40" class="mr-2" />
-  </ng-template>
-  <ng-template>
-    <h3>Test</h3>
-</ng-template>
-  <ng-template pTemplate="end">
-      <input type="text" pInputText placeholder="Search" class="w-full" />
-  </ng-template>
-</p-menubar> -->
-
 <div class="">
   <!-- <p-menubar [model]="items" styleClass="bg-white" style="background: #fff;">
     <ng-template pTemplate="start">
@@ -209,7 +15,7 @@
   <p-menubar styleClass="bg-white" style="background: #fff;">
     <ng-template pTemplate="start">
       <a (click)="onClickHome()" style="cursor: pointer;">
-        <img src="../../../assets/layout/images/k1.png" height="100" class="ml-4"/>
+        <img src="../../../assets/layout/images/k1.png" height="100" class="ml-4" style="margin-left: 2.2rem !important;"/>
       </a>
     </ng-template>
     <ng-template pTemplate="end">
@@ -336,7 +142,7 @@
           </div>
         </a>
         <div style="border-left: 1px solid #6f6f6f; height: 2.5rem;"></div>
-        <a style="cursor: pointer;">
+        <a style="cursor: pointer;" (click)="onProductFindBtnClick()">
           <span style="color: #000; font-size: 2rem; font-weight: 600; line-height: 4rem;">886,000+</span>
           <div style="display: flex; color: #6f6f6f; align-items: center;">
             <span style="font-size: 1.2rem; margin-right: 1rem;">BĐS đã xác thực</span>
@@ -346,7 +152,7 @@
       </div>
       </div>
       <div style="flex: 1;">
-        <img src="../../assets/layout/images/hero-min.png" alt="" style="margin-top: -12rem; max-width: 100%;">
+        <img src="../../assets/layout/images/banner.jpg" alt="" style="margin-top: -9rem; max-width: 100%;">
       </div>
     </div>
   </div>
@@ -375,7 +181,7 @@
           </ng-template>
         <p-autoComplete [(ngModel)]="selectedCountry" [forceSelection]="true" [suggestions]="filteredCountries" (completeMethod)="filterCountry($event)" field="name"></p-autoComplete>
       </p-tabPanel> -->
-      <p-tabPanel [header]="'fit'" *ngIf="isGranted([PermissionRealStateConst.RealStateMoBan_ThongTinChung])">
+      <p-tabPanel [header]="'fit'">
         <ng-template pTemplate="header">
             <!-- <span style="font-weight: 600;"> Dự án </span> -->
             <div style="padding: 1rem 0 1rem 0; margin-right: 4rem; cursor: pointer;">
@@ -863,7 +669,7 @@
   </div>
 
   <!-- Project -->
-  <div style="background: url(https://onehousing.vn/_next/static/media/bg.a9cddc84.svg); width: 100%; height: 250vh;">
+  <div style="background: url(https://onehousing.vn/_next/static/media/bg.a9cddc84.svg); width: 100%; height: 300vh;">
     <div style="margin-left: 4rem; margin-right:4rem; padding-top: 6rem;">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-left: 3.2rem; margin-right: 3.6rem; margin-bottom: 1rem;">
         <div style="font-size: 2rem; color: #fff; font-weight: 600;">Dự án nổi bật</div>

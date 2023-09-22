@@ -309,14 +309,14 @@ namespace EPIC.RealEstateRepositories
             _logger.LogInformation($"{nameof(RstOrderEFRepository)}->{nameof(AppInvestorOrderAdd)}: input = {JsonSerializer.Serialize(input)}, investorId = {investorId}, username = {username}, isCheck ={isCheck}");
 
             //kiểm tra trạng thái chính sách
-            var policyFind = _epicSchemaDbContext.RstDistributionPolicys.FirstOrDefault(p => p.Id == input.DistributionPolicyId && p.Deleted == YesNo.NO);
-            if (policyFind.Status == Status.INACTIVE)
-            {
-                ThrowException(ErrorCode.RstDistributionPolicyNotActive);
-            }
+            //var policyFind = _epicSchemaDbContext.RstDistributionPolicys.FirstOrDefault(p => p.Id == input.DistributionPolicyId && p.Deleted == YesNo.NO);
+            //if (policyFind.Status == Status.INACTIVE)
+            //{
+            //    ThrowException(ErrorCode.RstDistributionPolicyNotActive);
+            //}
 
             // Kiểm tra xem sản phẩm mở bán có hợp lệ hay không
-            CheckOpenSellDetail(input.OpenSellDetailId, true);
+            //CheckOpenSellDetail(input.OpenSellDetailId, true);
             AppRstOrderDataSuccessDto result = new();
             // Nếu là kiểm tra thì không lưu
             if (!isCheck)
@@ -331,7 +331,7 @@ namespace EPIC.RealEstateRepositories
                 result.ContractCode = insertOrder.ContractCode;
                 result.ExpTimeDeposit = insertOrder.ExpTimeDeposit;
                 result.DepositMoney = insertOrder.DepositMoney;
-                result.OpenSellDetailId = insertOrder.OpenSellDetailId;
+                //result.OpenSellDetailId = insertOrder.OpenSellDetailId;
             }
             return result;
         }

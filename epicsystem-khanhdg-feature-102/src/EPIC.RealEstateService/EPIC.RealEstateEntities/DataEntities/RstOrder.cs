@@ -182,6 +182,8 @@ namespace EPIC.RealEstateEntities.DataEntities
         [ColumnSnackCase(nameof(TradingBankAccountId))]
         public int? TradingBankAccountId { get; set; }
 
+        [ColumnSnackCase(nameof(InvestorId))]
+        public int? InvestorId { get; set; }
         #region audit
         [ColumnSnackCase(nameof(CreatedDate), TypeName = "DATE")]
         public DateTime? CreatedDate { get; set; }
